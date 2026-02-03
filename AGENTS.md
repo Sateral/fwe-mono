@@ -79,6 +79,9 @@ bun run db:migrate
 bun run db:migrate:deploy
 bun run db:studio
 bun run db:seed
+ bun run db:up
+ bun run db:down
+ bun run db:logs
 ```
 
 ---

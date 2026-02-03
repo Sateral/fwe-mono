@@ -17,6 +17,13 @@ bun run lint
 bun run check-types
 ```
 
+Local database (Docker):
+
+```sh
+bun run db:up
+bun run db:migrate
+```
+
 Run a single app:
 
 ```sh
