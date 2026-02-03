@@ -1,24 +1,16 @@
-import { ProfileSetupForm } from "@/components/auth/profile-setup-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { auth } from "@/lib/auth";
-import { cmsApi } from "@/lib/cms-api";
-import { getUserOrders } from "@/lib/order-service";
 import { format } from "date-fns";
-import {
-  CalendarDays,
-  Mail,
-  MapPin,
-  Package,
-  ShoppingBag,
-} from "lucide-react";
-import { headers } from "next/headers";
+import { CalendarDays, Mail, MapPin, Package, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { ProfileSetupForm } from "@/components/auth/profile-setup-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getServerSession } from "@/lib/auth-server";
+import { cmsApi } from "@/lib/cms-api";
+import { getUserOrders } from "@/lib/order-service";
+
 export default async function ProfilePage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getServerSession();
 
   if (!session?.user) {
     redirect("/sign-in");
@@ -35,7 +27,7 @@ export default async function ProfilePage() {
         ? order
         : latest;
     },
-    null
+    null,
   );
   const lastOrderDate = lastOrder
     ? format(new Date(lastOrder.createdAt), "MMM d, yyyy")
@@ -100,9 +92,7 @@ export default async function ProfilePage() {
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Total spent</span>
-                <span className="font-semibold">
-                  ${totalSpent.toFixed(2)}
-                </span>
+                <span className="font-semibold">${totalSpent.toFixed(2)}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Last order</span>

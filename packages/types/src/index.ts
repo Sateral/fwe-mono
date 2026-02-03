@@ -1,6 +1,7 @@
 import type { CreateOrderInput } from "@fwe/validators";
 
 export type ModifierType = "SINGLE_SELECT" | "MULTI_SELECT";
+export type MealType = "SIGNATURE" | "ROTATING";
 export type OrderStatus =
   | "PENDING"
   | "PAID"
@@ -22,6 +23,7 @@ export interface ApiMeal {
   imageUrl: string | null;
   isFeatured: boolean;
   isActive: boolean;
+  mealType: MealType;
   price: number;
   calories: number;
   protein: number;

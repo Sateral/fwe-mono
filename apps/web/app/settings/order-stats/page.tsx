@@ -1,6 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { auth } from "@/lib/auth";
-import { getUserOrders } from "@/lib/order-service";
 import { format } from "date-fns";
 import {
   CalendarDays,
@@ -9,14 +6,15 @@ import {
   ShoppingBag,
   Truck,
 } from "lucide-react";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getServerSession } from "@/lib/auth-server";
+import { getUserOrders } from "@/lib/order-service";
+
 export default async function OrderStatsPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getServerSession();
 
   if (!session?.user) {
     redirect("/sign-in");
@@ -27,14 +25,15 @@ export default async function OrderStatsPage() {
   const totalSpent = orders.reduce((sum, order) => sum + order.totalAmount, 0);
   const averageOrder = totalOrders > 0 ? totalSpent / totalOrders : 0;
   const deliveryCount = orders.filter(
-    (order) => order.deliveryMethod === "DELIVERY"
+    (order) => order.deliveryMethod === "DELIVERY",
   ).length;
   const pickupCount = orders.filter(
-    (order) => order.deliveryMethod === "PICKUP"
+    (order) => order.deliveryMethod === "PICKUP",
   ).length;
   const recentOrders = [...orders]
     .sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     )
     .slice(0, 5);
   const lastOrderDate =

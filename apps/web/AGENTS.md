@@ -159,6 +159,7 @@ Prisma (CMS):
 
 - `CMS_API_URL`
 - `INTERNAL_API_SECRET`
+- `NEXT_PUBLIC_AUTH_BASE_URL` (optional; defaults to `/api/auth` proxy)
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
 - `CRON_SECRET`

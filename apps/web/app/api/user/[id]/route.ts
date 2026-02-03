@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
+
+import { getServerSession } from "@/lib/auth-server";
 import { cmsApi } from "@/lib/cms-api";
-import { auth } from "@/lib/auth";
 
 /**
  * GET /api/user/[id]
@@ -9,13 +9,11 @@ import { auth } from "@/lib/auth";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getServerSession();
 
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -36,7 +34,7 @@ export async function GET(
     console.error("[API] Error fetching user:", error);
     return NextResponse.json(
       { error: "Failed to fetch user" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -47,13 +45,11 @@ export async function GET(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getServerSession();
 
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -70,11 +66,8 @@ export async function PATCH(
     return NextResponse.json(updatedUser);
   } catch (error) {
     console.error("[API] Error updating user profile:", error);
-    const message = error instanceof Error ? error.message : "Failed to update profile";
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    const message =
+      error instanceof Error ? error.message : "Failed to update profile";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
-

@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
 import { z } from "zod";
-import { stripe } from "@/lib/stripe";
-import { auth } from "@/lib/auth";
+
 import { getMealById } from "@/actions/meal-services";
+import { getServerSession } from "@/lib/auth-server";
 import { mealsApi } from "@/lib/cms-api";
-import { calculateMealUnitPrice } from "@/lib/price-utils";
 import {
   formatLineItemDescription,
-  formatSubstitutionsSummary,
   formatModifiersSummary,
+  formatSubstitutionsSummary,
 } from "@/lib/format-utils";
+import { calculateMealUnitPrice } from "@/lib/price-utils";
 import { checkoutRateLimiter } from "@/lib/rate-limit";
+import { stripe } from "@/lib/stripe";
 
 // ============================================
 // Validation Schema
@@ -60,9 +60,7 @@ export async function POST(request: NextRequest) {
 
   try {
     // Authenticate user
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getServerSession();
 
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -75,7 +73,7 @@ export async function POST(request: NextRequest) {
     if (!validationResult.success) {
       return NextResponse.json(
         { error: "Invalid request", details: validationResult.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -112,7 +110,7 @@ export async function POST(request: NextRequest) {
       meal,
       selectedModifiers,
       selectedSubstitutions,
-      data.proteinBoost
+      data.proteinBoost,
     );
 
     const totalAmount = verifiedUnitPrice * data.quantity;
@@ -125,15 +123,15 @@ export async function POST(request: NextRequest) {
       data.proteinBoost,
       data.notes,
       data.deliveryMethod,
-      data.pickupLocation
+      data.pickupLocation,
     );
 
     const substitutionsSummary = formatSubstitutionsSummary(
-      data.substitutions
+      data.substitutions,
     ).slice(0, 200);
     const modifiersSummary = formatModifiersSummary(data.modifiers).slice(
       0,
-      200
+      200,
     );
 
     // Fetch active rotation to lock in at checkout time
@@ -143,7 +141,7 @@ export async function POST(request: NextRequest) {
     if (!activeRotation) {
       return NextResponse.json(
         { error: "Ordering is currently closed. Please try again later." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -169,7 +167,7 @@ export async function POST(request: NextRequest) {
       // Metadata for webhook to create order
       metadata: {
         userId: session.user.id,
-        userName: session.user.name,
+        userName: session.user.name ?? "",
         mealId: meal.id,
         mealSlug: meal.slug,
         mealName: meal.name,
@@ -185,7 +183,7 @@ export async function POST(request: NextRequest) {
               data.substitutions.map((s) => ({
                 groupName: s.groupName,
                 optionName: s.optionName,
-              }))
+              })),
             )
           : "",
         modifiers: data.modifiers
@@ -193,13 +191,13 @@ export async function POST(request: NextRequest) {
               data.modifiers.map((m) => ({
                 groupName: m.groupName,
                 optionNames: m.optionNames,
-              }))
+              })),
             )
           : "",
         substitutionsSummary,
         modifiersSummary,
         proteinBoost: data.proteinBoost ? "true" : "false",
-        deliveryMethod: data.deliveryMethod,
+        deliveryMethod: data.deliveryMethod ?? "DELIVERY",
         pickupLocation:
           data.deliveryMethod === "PICKUP" ? data.pickupLocation || "" : "",
         notes: data.notes?.slice(0, 400) || "",
@@ -216,7 +214,7 @@ export async function POST(request: NextRequest) {
     console.error("Checkout error:", error);
     return NextResponse.json(
       { error: "Failed to create checkout session" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

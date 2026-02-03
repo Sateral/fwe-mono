@@ -39,6 +39,7 @@ export const orderService = {
             options: true,
           },
         },
+        tags: true,
       },
     },
     user: true,
@@ -165,9 +166,7 @@ export const orderService = {
     return await prisma.order.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
-      include: {
-        meal: true,
-      },
+      include: this.orderInclude,
     });
   },
 

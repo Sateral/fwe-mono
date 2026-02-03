@@ -13,6 +13,11 @@ export const mealService = {
             options: true,
           },
         },
+        modifierGroups: {
+          include: {
+            options: true,
+          },
+        },
         tags: true,
       },
       orderBy: {

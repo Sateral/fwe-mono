@@ -1,23 +1,22 @@
+import {
+  ArrowRight,
+  CheckCircle,
+  ChefHat,
+  Clock,
+  Package,
+  ShoppingBag,
+  Utensils,
+} from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+
+import Container from "@/components/container";
+import { Button } from "@/components/ui/button";
 import {
   getOrderByStripeSessionId,
   type OrderSubstitution,
 } from "@/lib/order-service";
-import {
-  CheckCircle,
-  Package,
-  Clock,
-  ArrowRight,
-  ChefHat,
-  Utensils,
-  ShoppingBag,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import Container from "@/components/container";
 import { fulfillOrder } from "@/lib/stripe-service";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import ProcessingClient from "./processing-client";
 
 interface SuccessPageProps {
@@ -45,11 +44,6 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
       console.error("[SuccessPage] Failed to sync order:", error);
     }
   }
-
-  // Fetch session for display logic (optional)
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
 
   if (!session_id) {
     redirect("/menu");
