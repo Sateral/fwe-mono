@@ -38,7 +38,10 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
       if (defaultOption) {
         defaults[group.id] = defaultOption.id;
       } else if (group.options.length > 0) {
-        defaults[group.id] = group.options[0].id;
+        const firstOption = group.options[0];
+        if (firstOption) {
+          defaults[group.id] = firstOption.id;
+        }
       }
     });
     return defaults;

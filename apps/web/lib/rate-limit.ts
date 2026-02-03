@@ -146,7 +146,8 @@ function defaultGetIdentifier(request: NextRequest): string {
   // Try various headers for the real IP
   const forwardedFor = request.headers.get("x-forwarded-for");
   if (forwardedFor) {
-    return forwardedFor.split(",")[0].trim();
+    const firstIp = forwardedFor.split(",")[0] ?? "";
+    return firstIp.trim();
   }
 
   const realIp = request.headers.get("x-real-ip");

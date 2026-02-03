@@ -124,8 +124,9 @@ export function useBulkUpdateOrderStatus() {
         if (result.status === "fulfilled") {
           succeeded.push(result.value as OrderWithRelations);
         } else {
+          const orderId = orderIds[index] ?? "unknown";
           failed.push({
-            id: orderIds[index],
+            id: orderId,
             error: result.reason?.message ?? "Unknown error",
           });
         }

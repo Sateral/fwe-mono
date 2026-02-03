@@ -57,9 +57,10 @@ export function CustomerOrdersDialog({
     [orders],
   );
 
-  if (!orders.length) return null;
+  const firstOrder = orders[0];
+  if (!firstOrder) return null;
 
-  const customer = orders[0].user as OrderUser | null;
+  const customer = firstOrder.user as OrderUser | null;
   const customerName = customer?.name || "Guest";
   const customerEmail = customer?.email || "";
   const customerPhone = customer?.phone || null;

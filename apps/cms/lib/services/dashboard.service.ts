@@ -56,7 +56,7 @@ export const dashboardService = {
 
     // Format for the chart
     return result.map((item) => ({
-      date: new Date(item.date).toISOString().split("T")[0],
+      date: new Date(item.date).toISOString().split("T")[0] ?? "",
       revenue: Number(item.revenue),
     }));
   },
