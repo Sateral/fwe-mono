@@ -2,8 +2,8 @@
 
 This workspace contains two Next.js apps that power a chef's meal-prep business:
 
-- `fwe-clean` (customer-facing storefront)
-- `fwe-cms` (admin/CMS dashboard + data/API source of truth)
+- `web` (customer-facing storefront)
+- `cms` (admin/CMS dashboard + data/API source of truth)
 
 The long-term goal is to merge both into a single TurboRepo monorepo with shared
 packages (Prisma/db, shared types, UI, validation, config).
@@ -35,7 +35,7 @@ meal-prep orders. Meals can be:
 
 ## Workspace Index (Current State)
 
-### `fwe-cms` (Admin/CMS + API)
+### `cms` (Admin/CMS + API)
 
 **Purpose:** Source of truth for meals, rotations, orders, and reporting.
 
@@ -71,7 +71,7 @@ meal-prep orders. Meals can be:
 
 ---
 
-### `fwe-clean` (Customer storefront)
+### `web` (Customer storefront)
 
 **Purpose:** Public ordering flow and Stripe checkout. Uses CMS APIs.
 
@@ -100,8 +100,8 @@ meal-prep orders. Meals can be:
 
 ## Data Flow (Current)
 
-1. Customer app (`fwe-clean`) calls CMS endpoints with internal API key.
-2. CMS (`fwe-cms`) validates input with Zod and executes services.
+1. Customer app (`web`) calls CMS endpoints with internal API key.
+2. CMS (`cms`) validates input with Zod and executes services.
 3. Prisma writes to DB.
 4. Admin dashboard surfaces data for prep and planning.
 
@@ -222,8 +222,8 @@ Prisma (CMS):
 
 ```
 apps/
-  cms/        (current fwe-cms)
-  web/        (current fwe-clean)
+  cms/        (current cms)
+  web/        (current web)
 packages/
   db/         (Prisma schema + client)
   validators/ (Zod schemas)

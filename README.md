@@ -4,8 +4,8 @@ Turborepo workspace for the FWE storefront and CMS apps.
 
 ## Apps
 
-- `apps/web`: customer storefront (formerly `fwe-clean`)
-- `apps/cms`: admin/CMS and API (formerly `fwe-cms`)
+- `apps/web`: customer storefront
+- `apps/cms`: admin/CMS and API
 
 ## Commands
 
