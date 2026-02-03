@@ -5,6 +5,10 @@ import prisma from "@/lib/prisma";
 import { userService } from "./services/user.service";
 
 export const auth = betterAuth({
+  baseURL:
+    process.env.BETTER_AUTH_URL ??
+    process.env.BETTER_AUTH_BASE_URL ??
+    "http://localhost:3001",
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
@@ -32,5 +36,7 @@ export const auth = betterAuth({
   },
   // Trusted origins from environment variable
   // In production, set TRUSTED_ORIGINS=https://yourdomain.com,https://cms.yourdomain.com
-  trustedOrigins: process.env.TRUSTED_ORIGINS?.split(",").map(origin => origin.trim()) || [],
+  trustedOrigins:
+    process.env.TRUSTED_ORIGINS?.split(",").map((origin) => origin.trim()) ||
+    [],
 });
