@@ -1714,6 +1714,7 @@ export type FailedOrderScalarFieldEnum = (typeof FailedOrderScalarFieldEnum)[key
 
 export const OrderIntentScalarFieldEnum = {
   id: 'id',
+  clientRequestId: 'clientRequestId',
   userId: 'userId',
   mealId: 'mealId',
   rotationId: 'rotationId',
@@ -2064,6 +2065,20 @@ export type EnumOrderIntentStatusFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'OrderIntentStatus[]'
  */
 export type ListEnumOrderIntentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderIntentStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Role'
+ */
+export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
+    
+
+
+/**
+ * Reference to a field of type 'Role[]'
+ */
+export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
     
 
 /**

@@ -17,6 +17,9 @@ import { mealService } from "@/lib/services/meal.service";
  * - tag=TagName: Filter by dietary tag
  */
 export async function GET(request: Request) {
+  const authError = requireInternalAuth(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const featured = searchParams.get("featured");

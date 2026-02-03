@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+
+import { requireInternalAuth } from "@/lib/api-auth";
 import { mealService } from "@/lib/services/meal.service";
 
 // ============================================
@@ -11,8 +13,11 @@ import { mealService } from "@/lib/services/meal.service";
  */
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
+  const authError = requireInternalAuth(request);
+  if (authError) return authError;
+
   try {
     const { slug } = await params;
     console.log(`[API] GET /api/meals/slug/${slug}`);
@@ -28,7 +33,7 @@ export async function GET(
     console.error("[API] Failed to fetch meal by slug:", error);
     return NextResponse.json(
       { error: "Failed to fetch meal" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

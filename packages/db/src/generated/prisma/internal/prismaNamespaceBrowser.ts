@@ -231,6 +231,7 @@ export type FailedOrderScalarFieldEnum = (typeof FailedOrderScalarFieldEnum)[key
 
 export const OrderIntentScalarFieldEnum = {
   id: 'id',
+  clientRequestId: 'clientRequestId',
   userId: 'userId',
   mealId: 'mealId',
   rotationId: 'rotationId',

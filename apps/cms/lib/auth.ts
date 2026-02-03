@@ -1,6 +1,7 @@
 import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { admin, createAuthMiddleware } from "better-auth/plugins";
+import { Role } from "@fwe/db";
 import prisma from "@/lib/prisma";
 import { userService } from "./services/user.service";
 
@@ -15,7 +16,12 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  plugins: [admin()],
+  plugins: [
+    admin({
+      defaultRole: Role.USER,
+      adminRoles: [Role.ADMIN],
+    }),
+  ],
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       if (ctx.path !== "/sign-in/email") {
@@ -26,7 +32,7 @@ export const auth = betterAuth({
 
       if (email) {
         const user = await userService.findByEmail(email);
-        if (!user || user.role !== "admin") {
+        if (!user || user.role !== Role.ADMIN) {
           throw new APIError("FORBIDDEN", {
             message: "You are not authorized to access this page",
           });
@@ -34,9 +40,25 @@ export const auth = betterAuth({
       }
     }),
   },
-  // Trusted origins from environment variable
+  // Trusted origins from environment variable.
+  // Supports either a CSV string or a JSON array string.
   // In production, set TRUSTED_ORIGINS=https://yourdomain.com,https://cms.yourdomain.com
-  trustedOrigins:
-    process.env.TRUSTED_ORIGINS?.split(",").map((origin) => origin.trim()) ||
-    [],
+  trustedOrigins: (() => {
+    const raw = process.env.TRUSTED_ORIGINS;
+    if (!raw) return [];
+
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed.map((origin) => String(origin).trim()).filter(Boolean);
+      }
+    } catch {
+      // Fall back to CSV parsing.
+    }
+
+    return raw
+      .split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean);
+  })(),
 });

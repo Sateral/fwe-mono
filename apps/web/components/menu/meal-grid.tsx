@@ -1,17 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import MealCard from "./meal-card";
 import MealDetailModal from "./meal-detail-modal";
 import type { Meal } from "@/types";
 
 interface MealGridProps {
   meals: Meal[];
-  rotatingMealIds?: Set<string>;
+  rotatingMealIds?: string[];
 }
 
 const MealGrid = ({ meals, rotatingMealIds }: MealGridProps) => {
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
+  const rotatingMealIdSet = useMemo(
+    () => new Set(rotatingMealIds ?? []),
+    [rotatingMealIds],
+  );
 
   return (
     <>
@@ -20,7 +24,7 @@ const MealGrid = ({ meals, rotatingMealIds }: MealGridProps) => {
           <MealCard
             key={meal.id}
             meal={meal}
-            isRotating={rotatingMealIds?.has(meal.id) ?? false}
+            isRotating={rotatingMealIdSet.has(meal.id)}
             onClick={() => setSelectedMeal(meal)}
           />
         ))}

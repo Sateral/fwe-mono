@@ -25,7 +25,7 @@ export async function GET(request: Request) {
         data: { status: "ARCHIVED" },
       });
       console.log(
-        `[Cron:RotationFlip] Archived rotation ${currentRotation.id} (Week of ${currentRotation.weekStart})`
+        `[Cron:RotationFlip] Archived rotation ${currentRotation.id} (Week of ${currentRotation.weekStart})`,
       );
     } else {
       console.log(`[Cron:RotationFlip] No currently PUBLISHED rotation found.`);
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
     // Ideally, we look for the next chronological rotation.
 
     // Let's assume we want the rotation for "Next Week".
-    // If today is Friday Night (transition time), next week starts roughly in 2 days (Monday).
+    // If today is Tuesday night, next week starts in ~1 day (Wednesday).
 
     const nextRotation = await prisma.weeklyRotation.findFirst({
       where: {
@@ -57,7 +57,7 @@ export async function GET(request: Request) {
         data: { status: "PUBLISHED" },
       });
       console.log(
-        `[Cron:RotationFlip] Published rotation ${nextRotation.id} (Week of ${nextRotation.weekStart})`
+        `[Cron:RotationFlip] Published rotation ${nextRotation.id} (Week of ${nextRotation.weekStart})`,
       );
 
       return NextResponse.json({
@@ -67,7 +67,7 @@ export async function GET(request: Request) {
       });
     } else {
       console.warn(
-        `[Cron:RotationFlip] WARNING: No DRAFT rotation found to publish!`
+        `[Cron:RotationFlip] WARNING: No DRAFT rotation found to publish!`,
       );
       return NextResponse.json({
         success: false,
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
     console.error("Rotation Flip Error:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -22,7 +22,7 @@ monorepo. The CMS is the source of truth for data and authentication.
 
 ## Business Rules (Ordering Window)
 
-- Ordering is open **Tuesday 12:00am → Monday 11:59pm** (local business time).
+- Ordering is open **Wednesday 12:00am → Tuesday 11:59pm** (local business time).
 - Orders placed in the current window are **prepared and delivered next week**.
 - While customers order for Week N, the chef prepares Week N-1.
 
@@ -42,6 +42,7 @@ monorepo. The CMS is the source of truth for data and authentication.
 - All auth and protected endpoints live in `apps/cms`.
 - `apps/web` should use CMS APIs (no direct DB access).
 - Internal API access uses `x-internal-api-key`.
+- CMS is admin-only; customers should never access CMS routes.
 - Do not leak internal errors to public clients.
 
 ---
@@ -52,16 +53,18 @@ monorepo. The CMS is the source of truth for data and authentication.
 
 - `DATABASE_URL`
 - `BETTER_AUTH_URL`
+- `TRUSTED_ORIGINS`
 - `INTERNAL_API_SECRET`
+- `WEB_BASE_URL`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `CRON_SECRET`
 
 **Web**
 
 - `CMS_API_URL`
 - `INTERNAL_API_SECRET`
 - `NEXT_PUBLIC_AUTH_BASE_URL` (optional; defaults to `/api/auth` proxy)
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
-- `CRON_SECRET`
 
 ---
 

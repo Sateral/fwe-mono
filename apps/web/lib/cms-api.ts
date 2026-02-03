@@ -14,6 +14,7 @@ import type {
 import type {
   CreateFailedOrderInput,
   CreateOrderInput,
+  CheckoutSessionRequest,
   UpdateProfileInput,
 } from "@fwe/validators";
 
@@ -145,7 +146,7 @@ export const mealsApi = {
   /**
    * Get available meals for ordering.
    * Returns signature meals + orderable rotation meals.
-   * Week runs Sat-Fri. Orders placed now are delivered next week.
+   * Week runs Wed-Tue. Orders placed now are delivered next week.
    */
   async getAvailable(): Promise<{
     meals: ApiMeal[];
@@ -223,6 +224,20 @@ export const ordersApi = {
   },
 
   /**
+   * Ensure an order exists for a Stripe session.
+   */
+  async ensureByStripeSession(sessionId: string): Promise<ApiOrder | null> {
+    try {
+      return await apiRequest<ApiOrder | null>(
+        `/api/orders/stripe-session/${sessionId}`,
+        { method: "POST" },
+      );
+    } catch {
+      return null;
+    }
+  },
+
+  /**
    * Get all orders for a user.
    */
   async getUserOrders(userId: string): Promise<ApiOrder[]> {
@@ -239,6 +254,22 @@ export const ordersApi = {
     return apiRequest<ApiOrder>(`/api/orders/${id}`, {
       method: "PATCH",
       body: JSON.stringify({ fulfillmentStatus }),
+    });
+  },
+};
+
+// ============================================
+// Checkout API (Stripe Session)
+// ============================================
+
+export const checkoutApi = {
+  async createSession(input: CheckoutSessionRequest): Promise<{
+    url: string | null;
+    id: string;
+  }> {
+    return apiRequest<{ url: string | null; id: string }>(`/api/checkout`, {
+      method: "POST",
+      body: JSON.stringify(input),
     });
   },
 };

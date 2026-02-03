@@ -13,10 +13,10 @@ import { redirect } from "next/navigation";
 import Container from "@/components/container";
 import { Button } from "@/components/ui/button";
 import {
+  ensureOrderByStripeSession,
   getOrderByStripeSessionId,
   type OrderSubstitution,
 } from "@/lib/order-service";
-import { fulfillOrder } from "@/lib/stripe-service";
 import ProcessingClient from "./processing-client";
 
 interface SuccessPageProps {
@@ -36,10 +36,10 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
   // Layer 1: Attempt to fulfill order immediately on page load
   if (session_id) {
     try {
-      await fulfillOrder(session_id);
+      await ensureOrderByStripeSession(session_id);
     } catch (error) {
-      // We swallow the error here because the Webhook (Layer 2)
-      // or Cron (Layer 3) will likely catch it.
+      // We swallow the error here because the CMS Webhook (Layer 2)
+      // or CMS Cron (Layer 3) will likely catch it.
       // We don't want to crash the success page for the user.
       console.error("[SuccessPage] Failed to sync order:", error);
     }

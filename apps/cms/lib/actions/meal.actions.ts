@@ -1,5 +1,6 @@
 "use server";
 
+import { Role } from "@fwe/db";
 import { mealSchema, type MealFormValues } from "@fwe/validators";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
@@ -13,7 +14,7 @@ async function requireAdmin() {
     headers: await headers(),
   });
 
-  if (!session || session.user.role !== "admin") {
+  if (!session || session.user.role !== Role.ADMIN) {
     throw new Error("Unauthorized: Admin access required");
   }
 

@@ -19,6 +19,7 @@
         "@dnd-kit/sortable": "^10.0.0",
         "@dnd-kit/utilities": "^3.2.2",
         "@fwe/db": "*",
+        "@fwe/utils": "*",
         "@fwe/validators": "*",
         "@hookform/resolvers": "^5.2.2",
         "@prisma/adapter-pg": "^7.3.0",
@@ -58,6 +59,7 @@
         "react-hook-form": "^7.66.1",
         "recharts": "^2.15.4",
         "sonner": "^2.0.7",
+        "stripe": "^20.0.0",
         "tailwind-merge": "^3.4.0",
         "vaul": "^1.1.2",
         "zod": "^4.1.13",
@@ -91,7 +93,6 @@
         "@radix-ui/react-label": "^2.1.8",
         "@radix-ui/react-separator": "^1.1.8",
         "@radix-ui/react-slot": "^1.2.4",
-        "@stripe/stripe-js": "^8.5.3",
         "better-auth": "^1.4.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
@@ -106,7 +107,6 @@
         "react-hook-form": "^7.66.1",
         "recharts": "2.15.4",
         "sonner": "^2.0.7",
-        "stripe": "^20.0.0",
         "tailwind-merge": "^3.4.0",
         "tsx": "^4.20.6",
         "zod": "^4.1.13",
@@ -174,6 +174,15 @@
     "packages/typescript-config": {
       "name": "@repo/typescript-config",
       "version": "0.0.0",
+    },
+    "packages/utils": {
+      "name": "@fwe/utils",
+      "version": "0.1.0",
+      "devDependencies": {
+        "@repo/typescript-config": "*",
+        "@types/node": "^20",
+        "typescript": "^5",
+      },
     },
     "packages/validators": {
       "name": "@fwe/validators",
@@ -344,6 +353,8 @@
     "@fwe/db": ["@fwe/db@workspace:packages/db"],
 
     "@fwe/types": ["@fwe/types@workspace:packages/types"],
+
+    "@fwe/utils": ["@fwe/utils@workspace:packages/utils"],
 
     "@fwe/validators": ["@fwe/validators@workspace:packages/validators"],
 
@@ -598,8 +609,6 @@
     "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 
     "@standard-schema/utils": ["@standard-schema/utils@0.3.0", "", {}, "sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g=="],
-
-    "@stripe/stripe-js": ["@stripe/stripe-js@8.7.0", "", {}, "sha512-tNUerSstwNC1KuHgX4CASGO0Md3CB26IJzSXmVlSuFvhsBP4ZaEPpY4jxWOn9tfdDscuVT4Kqb8cZ2o9nLCgRQ=="],
 
     "@swc/helpers": ["@swc/helpers@0.5.15", "", { "dependencies": { "tslib": "^2.8.0" } }, "sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g=="],
 

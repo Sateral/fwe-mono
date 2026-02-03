@@ -19,7 +19,9 @@ import { NextRequest, NextResponse } from "next/server";
  * @param request - The incoming request
  * @returns true if the API key is valid, false otherwise
  */
-export function validateInternalApiKey(request: Request | NextRequest): boolean {
+export function validateInternalApiKey(
+  request: Request | NextRequest,
+): boolean {
   const apiKey = request.headers.get("x-internal-api-key");
 
   if (!apiKey) {
@@ -31,7 +33,7 @@ export function validateInternalApiKey(request: Request | NextRequest): boolean 
 
   if (!expectedKey) {
     console.error(
-      "[API Auth] INTERNAL_API_SECRET not configured in environment"
+      "[API Auth] INTERNAL_API_SECRET not configured in environment",
     );
     return false;
   }
@@ -71,53 +73,10 @@ export function unauthorizedResponse(message = "Unauthorized") {
  * ```
  */
 export function requireInternalAuth(
-  request: Request | NextRequest
+  request: Request | NextRequest,
 ): NextResponse | null {
   if (!validateInternalApiKey(request)) {
     return unauthorizedResponse("Invalid or missing API key");
   }
   return null;
 }
-
-/**
- * Check if a route should skip authentication (for public endpoints).
- * Currently, we authenticate all internal routes, but this can be
- * extended if needed.
- */
-export function isPublicRoute(pathname: string): boolean {
-  const publicRoutes = [
-    "/api/meals", // GET meals is public (for menu display)
-    "/api/rotation", // GET rotation is public (for menu display)
-  ];
-
-  // Only GET requests to these routes are public
-  return publicRoutes.some((route) => pathname.startsWith(route));
-}
-
-/**
- * Determines if a request should require internal authentication.
- * GET requests to meal/rotation endpoints are public.
- * All write operations (POST, PATCH, DELETE) require auth.
- */
-export function shouldRequireAuth(
-  request: Request | NextRequest,
-  pathname: string
-): boolean {
-  const method = request.method.toUpperCase();
-
-  // All write operations require auth
-  if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
-    return true;
-  }
-
-  // GET requests to sensitive routes require auth
-  const sensitiveGetRoutes = [
-    "/api/orders",
-    "/api/failed-orders",
-    "/api/users",
-    "/api/dashboard",
-  ];
-
-  return sensitiveGetRoutes.some((route) => pathname.startsWith(route));
-}
-

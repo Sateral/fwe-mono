@@ -19,8 +19,7 @@ export default async function MenuPage() {
   const { meals, rotationMeals, cutoffTime, deliveryWeekDisplay } =
     await getAvailableMeals();
 
-  // Create a set of rotating meal IDs for easy lookup
-  const rotatingMealIds = new Set(rotationMeals?.map((m) => m.id) || []);
+  const rotatingMealIds = rotationMeals?.map((meal) => meal.id) ?? [];
 
   return (
     <div className={`${plusJakartaSans.className} bg-background pt-24`}>

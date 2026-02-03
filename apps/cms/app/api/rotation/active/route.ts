@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { format } from "date-fns";
+
+import { requireInternalAuth } from "@/lib/api-auth";
 import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
 
 /**
@@ -15,7 +17,10 @@ import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
  * This is used by:
  * - Checkout flow to lock in which rotation an order belongs to
  */
-export async function GET() {
+export async function GET(request: Request) {
+  const authError = requireInternalAuth(request);
+  if (authError) return authError;
+
   try {
     const { rotation, deliveryWeekStart, deliveryWeekEnd, orderCutoff } =
       await weeklyRotationService.getOrCreateOrderingRotation();
@@ -35,14 +40,14 @@ export async function GET() {
     };
 
     console.log(
-      `[API/rotation/active] Returning rotation ${rotation.id} for delivery week ${response.deliveryWeekDisplay}`
+      `[API/rotation/active] Returning rotation ${rotation.id} for delivery week ${response.deliveryWeekDisplay}`,
     );
     return NextResponse.json(response);
   } catch (error) {
     console.error("Failed to fetch active rotation:", error);
     return NextResponse.json(
       { error: "Failed to fetch active rotation" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,5 +1,6 @@
 import { RotationStatus } from "@fwe/db";
-import { addWeeks, format } from "date-fns";
+import { addWeeks, format, subDays } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 import prisma from "@/lib/prisma";
 
@@ -54,9 +55,7 @@ const TORONTO_TIMEZONE = "America/Toronto";
  * Get current time in Toronto timezone
  */
 function getTorontoNow(): Date {
-  return new Date(
-    new Date().toLocaleString("en-US", { timeZone: TORONTO_TIMEZONE }),
-  );
+  return toZonedTime(new Date(), TORONTO_TIMEZONE);
 }
 
 /**
@@ -97,6 +96,19 @@ function getOrderCutoff(deliveryWeekStart: Date): Date {
   cutoff.setDate(cutoff.getDate() - 1); // Go back to Tuesday before Wednesday
   cutoff.setHours(23, 59, 59, 999);
   return cutoff;
+}
+
+/**
+ * Get the ordering window for a delivery week.
+ * Orders placed in Week N (Wed-Tue) are for Delivery Week N+1.
+ * Range: [Wednesday 00:00, Following Wednesday 00:00)
+ */
+export function getOrderingWindowForDeliveryWeek(deliveryWeekStart: Date) {
+  const weekStart = getWeekStart(deliveryWeekStart);
+  const windowStart = subDays(weekStart, 7);
+  const windowEnd = weekStart;
+
+  return { windowStart, windowEnd };
 }
 
 /**

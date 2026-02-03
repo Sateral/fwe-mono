@@ -267,6 +267,8 @@ model FailedOrder {
 model OrderIntent {
   id String @id @default(cuid())
 
+  clientRequestId String? @unique
+
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
@@ -344,7 +346,7 @@ model User {
   id            String    @id @default(cuid())
   name          String
   email         String    @unique
-  role          String    @default("user")
+  role          Role      @default(USER)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   emailVerified Boolean   @default(false)

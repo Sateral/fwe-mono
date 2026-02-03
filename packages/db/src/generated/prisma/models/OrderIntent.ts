@@ -40,6 +40,7 @@ export type OrderIntentSumAggregateOutputType = {
 
 export type OrderIntentMinAggregateOutputType = {
   id: string | null
+  clientRequestId: string | null
   userId: string | null
   mealId: string | null
   rotationId: string | null
@@ -60,6 +61,7 @@ export type OrderIntentMinAggregateOutputType = {
 
 export type OrderIntentMaxAggregateOutputType = {
   id: string | null
+  clientRequestId: string | null
   userId: string | null
   mealId: string | null
   rotationId: string | null
@@ -80,6 +82,7 @@ export type OrderIntentMaxAggregateOutputType = {
 
 export type OrderIntentCountAggregateOutputType = {
   id: number
+  clientRequestId: number
   userId: number
   mealId: number
   rotationId: number
@@ -116,6 +119,7 @@ export type OrderIntentSumAggregateInputType = {
 
 export type OrderIntentMinAggregateInputType = {
   id?: true
+  clientRequestId?: true
   userId?: true
   mealId?: true
   rotationId?: true
@@ -136,6 +140,7 @@ export type OrderIntentMinAggregateInputType = {
 
 export type OrderIntentMaxAggregateInputType = {
   id?: true
+  clientRequestId?: true
   userId?: true
   mealId?: true
   rotationId?: true
@@ -156,6 +161,7 @@ export type OrderIntentMaxAggregateInputType = {
 
 export type OrderIntentCountAggregateInputType = {
   id?: true
+  clientRequestId?: true
   userId?: true
   mealId?: true
   rotationId?: true
@@ -265,6 +271,7 @@ export type OrderIntentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type OrderIntentGroupByOutputType = {
   id: string
+  clientRequestId: string | null
   userId: string
   mealId: string
   rotationId: string
@@ -310,6 +317,7 @@ export type OrderIntentWhereInput = {
   OR?: Prisma.OrderIntentWhereInput[]
   NOT?: Prisma.OrderIntentWhereInput | Prisma.OrderIntentWhereInput[]
   id?: Prisma.StringFilter<"OrderIntent"> | string
+  clientRequestId?: Prisma.StringNullableFilter<"OrderIntent"> | string | null
   userId?: Prisma.StringFilter<"OrderIntent"> | string
   mealId?: Prisma.StringFilter<"OrderIntent"> | string
   rotationId?: Prisma.StringFilter<"OrderIntent"> | string
@@ -337,6 +345,7 @@ export type OrderIntentWhereInput = {
 
 export type OrderIntentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  clientRequestId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   rotationId?: Prisma.SortOrder
@@ -364,6 +373,7 @@ export type OrderIntentOrderByWithRelationInput = {
 
 export type OrderIntentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  clientRequestId?: string
   stripeSessionId?: string
   stripePaymentIntentId?: string
   AND?: Prisma.OrderIntentWhereInput | Prisma.OrderIntentWhereInput[]
@@ -390,10 +400,11 @@ export type OrderIntentWhereUniqueInput = Prisma.AtLeast<{
   rotation?: Prisma.XOR<Prisma.WeeklyRotationScalarRelationFilter, Prisma.WeeklyRotationWhereInput>
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
   paymentEvents?: Prisma.PaymentEventListRelationFilter
-}, "id" | "stripeSessionId" | "stripePaymentIntentId">
+}, "id" | "clientRequestId" | "stripeSessionId" | "stripePaymentIntentId">
 
 export type OrderIntentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  clientRequestId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   rotationId?: Prisma.SortOrder
@@ -424,6 +435,7 @@ export type OrderIntentScalarWhereWithAggregatesInput = {
   OR?: Prisma.OrderIntentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.OrderIntentScalarWhereWithAggregatesInput | Prisma.OrderIntentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
+  clientRequestId?: Prisma.StringNullableWithAggregatesFilter<"OrderIntent"> | string | null
   userId?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
   mealId?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
   rotationId?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
@@ -446,6 +458,7 @@ export type OrderIntentScalarWhereWithAggregatesInput = {
 
 export type OrderIntentCreateInput = {
   id?: string
+  clientRequestId?: string | null
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -470,6 +483,7 @@ export type OrderIntentCreateInput = {
 
 export type OrderIntentUncheckedCreateInput = {
   id?: string
+  clientRequestId?: string | null
   userId: string
   mealId: string
   rotationId: string
@@ -494,6 +508,7 @@ export type OrderIntentUncheckedCreateInput = {
 
 export type OrderIntentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -518,6 +533,7 @@ export type OrderIntentUpdateInput = {
 
 export type OrderIntentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -542,6 +558,7 @@ export type OrderIntentUncheckedUpdateInput = {
 
 export type OrderIntentCreateManyInput = {
   id?: string
+  clientRequestId?: string | null
   userId: string
   mealId: string
   rotationId: string
@@ -564,6 +581,7 @@ export type OrderIntentCreateManyInput = {
 
 export type OrderIntentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -583,6 +601,7 @@ export type OrderIntentUpdateManyMutationInput = {
 
 export type OrderIntentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -620,6 +639,7 @@ export type OrderIntentNullableScalarRelationFilter = {
 
 export type OrderIntentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientRequestId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   rotationId?: Prisma.SortOrder
@@ -648,6 +668,7 @@ export type OrderIntentAvgOrderByAggregateInput = {
 
 export type OrderIntentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientRequestId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   rotationId?: Prisma.SortOrder
@@ -668,6 +689,7 @@ export type OrderIntentMaxOrderByAggregateInput = {
 
 export type OrderIntentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientRequestId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   rotationId?: Prisma.SortOrder
@@ -856,6 +878,7 @@ export type OrderIntentUncheckedUpdateManyWithoutUserNestedInput = {
 
 export type OrderIntentCreateWithoutMealInput = {
   id?: string
+  clientRequestId?: string | null
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -879,6 +902,7 @@ export type OrderIntentCreateWithoutMealInput = {
 
 export type OrderIntentUncheckedCreateWithoutMealInput = {
   id?: string
+  clientRequestId?: string | null
   userId: string
   rotationId: string
   quantity: number
@@ -931,6 +955,7 @@ export type OrderIntentScalarWhereInput = {
   OR?: Prisma.OrderIntentScalarWhereInput[]
   NOT?: Prisma.OrderIntentScalarWhereInput | Prisma.OrderIntentScalarWhereInput[]
   id?: Prisma.StringFilter<"OrderIntent"> | string
+  clientRequestId?: Prisma.StringNullableFilter<"OrderIntent"> | string | null
   userId?: Prisma.StringFilter<"OrderIntent"> | string
   mealId?: Prisma.StringFilter<"OrderIntent"> | string
   rotationId?: Prisma.StringFilter<"OrderIntent"> | string
@@ -953,6 +978,7 @@ export type OrderIntentScalarWhereInput = {
 
 export type OrderIntentCreateWithoutOrderInput = {
   id?: string
+  clientRequestId?: string | null
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -976,6 +1002,7 @@ export type OrderIntentCreateWithoutOrderInput = {
 
 export type OrderIntentUncheckedCreateWithoutOrderInput = {
   id?: string
+  clientRequestId?: string | null
   userId: string
   mealId: string
   rotationId: string
@@ -1015,6 +1042,7 @@ export type OrderIntentUpdateToOneWithWhereWithoutOrderInput = {
 
 export type OrderIntentUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1038,6 +1066,7 @@ export type OrderIntentUpdateWithoutOrderInput = {
 
 export type OrderIntentUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1061,6 +1090,7 @@ export type OrderIntentUncheckedUpdateWithoutOrderInput = {
 
 export type OrderIntentCreateWithoutRotationInput = {
   id?: string
+  clientRequestId?: string | null
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -1084,6 +1114,7 @@ export type OrderIntentCreateWithoutRotationInput = {
 
 export type OrderIntentUncheckedCreateWithoutRotationInput = {
   id?: string
+  clientRequestId?: string | null
   userId: string
   mealId: string
   quantity: number
@@ -1133,6 +1164,7 @@ export type OrderIntentUpdateManyWithWhereWithoutRotationInput = {
 
 export type OrderIntentCreateWithoutPaymentEventsInput = {
   id?: string
+  clientRequestId?: string | null
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -1156,6 +1188,7 @@ export type OrderIntentCreateWithoutPaymentEventsInput = {
 
 export type OrderIntentUncheckedCreateWithoutPaymentEventsInput = {
   id?: string
+  clientRequestId?: string | null
   userId: string
   mealId: string
   rotationId: string
@@ -1195,6 +1228,7 @@ export type OrderIntentUpdateToOneWithWhereWithoutPaymentEventsInput = {
 
 export type OrderIntentUpdateWithoutPaymentEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1218,6 +1252,7 @@ export type OrderIntentUpdateWithoutPaymentEventsInput = {
 
 export type OrderIntentUncheckedUpdateWithoutPaymentEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1241,6 +1276,7 @@ export type OrderIntentUncheckedUpdateWithoutPaymentEventsInput = {
 
 export type OrderIntentCreateWithoutUserInput = {
   id?: string
+  clientRequestId?: string | null
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -1264,6 +1300,7 @@ export type OrderIntentCreateWithoutUserInput = {
 
 export type OrderIntentUncheckedCreateWithoutUserInput = {
   id?: string
+  clientRequestId?: string | null
   mealId: string
   rotationId: string
   quantity: number
@@ -1313,6 +1350,7 @@ export type OrderIntentUpdateManyWithWhereWithoutUserInput = {
 
 export type OrderIntentCreateManyMealInput = {
   id?: string
+  clientRequestId?: string | null
   userId: string
   rotationId: string
   quantity: number
@@ -1334,6 +1372,7 @@ export type OrderIntentCreateManyMealInput = {
 
 export type OrderIntentUpdateWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1357,6 +1396,7 @@ export type OrderIntentUpdateWithoutMealInput = {
 
 export type OrderIntentUncheckedUpdateWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1380,6 +1420,7 @@ export type OrderIntentUncheckedUpdateWithoutMealInput = {
 
 export type OrderIntentUncheckedUpdateManyWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1401,6 +1442,7 @@ export type OrderIntentUncheckedUpdateManyWithoutMealInput = {
 
 export type OrderIntentCreateManyRotationInput = {
   id?: string
+  clientRequestId?: string | null
   userId: string
   mealId: string
   quantity: number
@@ -1422,6 +1464,7 @@ export type OrderIntentCreateManyRotationInput = {
 
 export type OrderIntentUpdateWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1445,6 +1488,7 @@ export type OrderIntentUpdateWithoutRotationInput = {
 
 export type OrderIntentUncheckedUpdateWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1468,6 +1512,7 @@ export type OrderIntentUncheckedUpdateWithoutRotationInput = {
 
 export type OrderIntentUncheckedUpdateManyWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1489,6 +1534,7 @@ export type OrderIntentUncheckedUpdateManyWithoutRotationInput = {
 
 export type OrderIntentCreateManyUserInput = {
   id?: string
+  clientRequestId?: string | null
   mealId: string
   rotationId: string
   quantity: number
@@ -1510,6 +1556,7 @@ export type OrderIntentCreateManyUserInput = {
 
 export type OrderIntentUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1533,6 +1580,7 @@ export type OrderIntentUpdateWithoutUserInput = {
 
 export type OrderIntentUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1556,6 +1604,7 @@ export type OrderIntentUncheckedUpdateWithoutUserInput = {
 
 export type OrderIntentUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1608,6 +1657,7 @@ export type OrderIntentCountOutputTypeCountPaymentEventsArgs<ExtArgs extends run
 
 export type OrderIntentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  clientRequestId?: boolean
   userId?: boolean
   mealId?: boolean
   rotationId?: boolean
@@ -1636,6 +1686,7 @@ export type OrderIntentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type OrderIntentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  clientRequestId?: boolean
   userId?: boolean
   mealId?: boolean
   rotationId?: boolean
@@ -1661,6 +1712,7 @@ export type OrderIntentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type OrderIntentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  clientRequestId?: boolean
   userId?: boolean
   mealId?: boolean
   rotationId?: boolean
@@ -1686,6 +1738,7 @@ export type OrderIntentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type OrderIntentSelectScalar = {
   id?: boolean
+  clientRequestId?: boolean
   userId?: boolean
   mealId?: boolean
   rotationId?: boolean
@@ -1706,7 +1759,7 @@ export type OrderIntentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrderIntentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "mealId" | "rotationId" | "quantity" | "unitPrice" | "totalAmount" | "currency" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "deliveryMethod" | "pickupLocation" | "status" | "stripeSessionId" | "stripePaymentIntentId" | "createdAt" | "updatedAt", ExtArgs["result"]["orderIntent"]>
+export type OrderIntentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientRequestId" | "userId" | "mealId" | "rotationId" | "quantity" | "unitPrice" | "totalAmount" | "currency" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "deliveryMethod" | "pickupLocation" | "status" | "stripeSessionId" | "stripePaymentIntentId" | "createdAt" | "updatedAt", ExtArgs["result"]["orderIntent"]>
 export type OrderIntentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
@@ -1737,6 +1790,7 @@ export type $OrderIntentPayload<ExtArgs extends runtime.Types.Extensions.Interna
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    clientRequestId: string | null
     userId: string
     mealId: string
     rotationId: string
@@ -2184,6 +2238,7 @@ export interface Prisma__OrderIntentClient<T, Null = never, ExtArgs extends runt
  */
 export interface OrderIntentFieldRefs {
   readonly id: Prisma.FieldRef<"OrderIntent", 'String'>
+  readonly clientRequestId: Prisma.FieldRef<"OrderIntent", 'String'>
   readonly userId: Prisma.FieldRef<"OrderIntent", 'String'>
   readonly mealId: Prisma.FieldRef<"OrderIntent", 'String'>
   readonly rotationId: Prisma.FieldRef<"OrderIntent", 'String'>

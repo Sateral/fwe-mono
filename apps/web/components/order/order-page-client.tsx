@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from "react";
+
 import Container from "@/components/container";
+import { Badge } from "@/components/ui/badge";
+import type { Meal } from "@/types";
 import NutritionBreakdown from "./nutrition-breakdown";
 import OrderBuilder from "./order-builder";
 import OrderSummary from "./order-summary";
-import { calculateMealUnitPrice } from "@/lib/price-utils";
-import type { Meal } from "@/types";
 
 interface OrderPageClientProps {
   meal: Meal;
@@ -19,8 +19,11 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
   const router = useRouter();
   const [quantity, setQuantity] = useState(4);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [checkoutRequestId, setCheckoutRequestId] = useState<string | null>(
+    null,
+  );
   const [deliveryMethod, setDeliveryMethod] = useState<"DELIVERY" | "PICKUP">(
-    "DELIVERY"
+    "DELIVERY",
   );
   const [selectedModifiers, setSelectedModifiers] = useState<
     Record<string, string[]>
@@ -61,21 +64,30 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
     }));
   };
 
-  // Calculate price per meal using shared utility
-  const calculatePricePerMeal = () => {
-    return calculateMealUnitPrice(
-      meal,
-      selectedModifiers,
-      selectedSubstitutions,
-      proteinBoost
-    );
-  };
+  useEffect(() => {
+    setCheckoutRequestId(null);
+  }, [
+    quantity,
+    selectedModifiers,
+    selectedSubstitutions,
+    proteinBoost,
+    deliveryMethod,
+    notes,
+  ]);
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
 
     try {
-      const unitPrice = calculatePricePerMeal();
+      const requestId =
+        checkoutRequestId ??
+        (globalThis.crypto?.randomUUID
+          ? globalThis.crypto.randomUUID()
+          : undefined);
+
+      if (requestId && !checkoutRequestId) {
+        setCheckoutRequestId(requestId);
+      }
 
       // Build substitutions with human-readable names
       const substitutions = Object.entries(selectedSubstitutions).map(
@@ -88,7 +100,7 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
             optionId,
             optionName: option?.name || "",
           };
-        }
+        },
       );
 
       const response = await fetch("/api/checkout", {
@@ -97,9 +109,9 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          requestId,
           mealId: meal.id,
           quantity,
-          unitPrice,
           substitutions,
           proteinBoost,
           deliveryMethod,
@@ -118,7 +130,7 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
                 optionIds,
                 optionNames,
               };
-            }
+            },
           ),
         }),
       });

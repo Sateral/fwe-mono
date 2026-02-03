@@ -5,8 +5,11 @@ import { requireInternalAuth } from "@/lib/api-auth";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = requireInternalAuth(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const meal = await mealService.getMealById(id);
@@ -17,14 +20,14 @@ export async function GET(
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch meal" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const authError = requireInternalAuth(request);
   if (authError) return authError;
@@ -39,14 +42,14 @@ export async function PUT(
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to update meal" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const authError = requireInternalAuth(request);
   if (authError) return authError;
@@ -59,7 +62,7 @@ export async function DELETE(
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to delete meal" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -3,10 +3,11 @@ import type {
   FulfillmentStatus,
   PaymentStatus,
 } from "@fwe/validators";
-import { addDays, startOfWeek, subDays } from "date-fns";
-
 import prisma from "@/lib/prisma";
-import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
+import {
+  getOrderingWindowForDeliveryWeek,
+  weeklyRotationService,
+} from "@/lib/services/weekly-rotation.service";
 
 // ============================================
 // Order Service
@@ -85,6 +86,7 @@ export const orderService = {
           totalAmount: input.totalAmount,
           substitutions: input.substitutions as unknown as object[] | undefined,
           modifiers: input.modifiers as unknown as object[] | undefined,
+          orderIntentId: input.orderIntentId,
           proteinBoost: input.proteinBoost ?? false,
           notes: input.notes,
           deliveryMethod: input.deliveryMethod ?? "DELIVERY",
@@ -289,28 +291,25 @@ export const orderService = {
 
   /**
    * Get orders for a specific delivery week.
-   * Logic: Orders placed in Week N (Sat-Fri) are for Delivery Week N+1.
+   * Logic: Orders placed in Week N (Wed-Tue) are for Delivery Week N+1.
    * So we filter for orders created in (DeliveryWeek - 7 days) to (DeliveryWeek).
-   * Range: [Saturday 00:00, Following Saturday 00:00)
+   * Range: [Wednesday 00:00, Following Wednesday 00:00)
    */
   async getOrdersForDeliveryWeek(deliveryWeekStart: Date) {
     console.log(
       `[OrderService] Fetching orders for delivery week starting ${deliveryWeekStart.toISOString()}`,
     );
 
-    // Delivery Week starts on Saturday.
+    // Delivery Week starts on Wednesday.
     // The ordering window for this week was the PREVIOUS week (7 days prior).
-    const orderWindowStart = subDays(deliveryWeekStart, 7);
-
-    // Window ends when the delivery week starts (Saturday 00:00)
-    // This effectively covers up to Friday 23:59:59.999
-    const orderWindowEnd = deliveryWeekStart;
+    const { windowStart, windowEnd } =
+      getOrderingWindowForDeliveryWeek(deliveryWeekStart);
 
     return await prisma.order.findMany({
       where: {
         createdAt: {
-          gte: orderWindowStart,
-          lt: orderWindowEnd,
+          gte: windowStart,
+          lt: windowEnd,
         },
         paymentStatus: "PAID",
         fulfillmentStatus: { not: "CANCELLED" },

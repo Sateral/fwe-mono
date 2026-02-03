@@ -28,6 +28,7 @@ export const createOrderSchema = z.object({
   unitPrice: z.number().positive("Unit price must be positive"),
   totalAmount: z.number().positive("Total amount must be positive"),
   currency: z.string().length(3).optional().default("cad"),
+  orderIntentId: z.string().optional(),
   substitutions: z.array(orderSubstitutionSchema).optional(),
   modifiers: z.array(orderModifierSchema).optional(),
   proteinBoost: z.boolean().default(false),

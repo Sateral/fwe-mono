@@ -20,13 +20,13 @@ meal-prep orders. Meals can be:
 
 **Ordering Window (n / n+1 model):**
 
-- Ordering is open **Tuesday 12:00am → Monday 11:59pm** (local business time).
+- Ordering is open **Wednesday 12:00am → Tuesday 11:59pm** (local business time).
 - Orders placed in the current window are **prepared and delivered next week**.
 - While users order for Week N, the chef prepares Week N-1.
 
 **Admin CMS:**
 
-- Secure admin-only dashboard.
+- Secure admin-only dashboard (no customer access).
 - Manage meals, tags, and weekly rotations.
 - Plan upcoming rotations ahead of time; system auto-flips after cutoff.
 - Orders pages provide prep summaries, customer breakdowns, and delivery needs.
@@ -153,7 +153,12 @@ Prisma (CMS):
 
 - `DATABASE_URL`
 - `BETTER_AUTH_URL`
+- `TRUSTED_ORIGINS`
 - `INTERNAL_API_SECRET`
+- `WEB_BASE_URL`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `CRON_SECRET`
 
 **Customer app**
 

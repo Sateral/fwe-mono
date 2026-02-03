@@ -11,6 +11,9 @@ import { requireInternalAuth } from "@/lib/api-auth";
  * - available: if "true", returns available meals for ordering
  */
 export async function GET(request: NextRequest) {
+  const authError = requireInternalAuth(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const weekParam = searchParams.get("week");
@@ -30,7 +33,7 @@ export async function GET(request: NextRequest) {
       if (!rotation) {
         return NextResponse.json(
           { error: "No rotation found for this week" },
-          { status: 404 }
+          { status: 404 },
         );
       }
 
@@ -57,7 +60,7 @@ export async function GET(request: NextRequest) {
     console.error("[API] Error fetching rotation:", error);
     return NextResponse.json(
       { error: "Failed to fetch rotation" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -79,12 +82,12 @@ export async function POST(request: NextRequest) {
     if (!weekStart) {
       return NextResponse.json(
         { error: "weekStart is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const rotation = await weeklyRotationService.createRotation(
-      new Date(weekStart)
+      new Date(weekStart),
     );
 
     return NextResponse.json(rotation, { status: 201 });
@@ -95,13 +98,13 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error && error.message.includes("Unique constraint")) {
       return NextResponse.json(
         { error: "A rotation already exists for this week" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
     return NextResponse.json(
       { error: "Failed to create rotation" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

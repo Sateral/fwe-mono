@@ -38,6 +38,15 @@ export async function getOrderByStripeSessionId(
 }
 
 /**
+ * Ensures an order exists for a Stripe checkout session.
+ */
+export async function ensureOrderByStripeSession(
+  stripeSessionId: string,
+): Promise<ApiOrder | null> {
+  return ordersApi.ensureByStripeSession(stripeSessionId);
+}
+
+/**
  * Retrieves an order by its ID.
  */
 export async function getOrderById(orderId: string): Promise<ApiOrder | null> {
