@@ -17,7 +17,6 @@ monorepo. The CMS is the source of truth for data and authentication.
 - `packages/types` — shared API response types
 - `packages/eslint-config` — shared lint rules
 - `packages/typescript-config` — shared TypeScript configs
-- `packages/ui` — template UI library (not used by FWE apps)
 
 ---
 
@@ -91,6 +90,13 @@ bun run db:seed
 - Files: kebab-case (or framework-required).
 - Validate inputs with Zod before service calls.
 - Keep server-only code out of client components.
+
+---
+
+## UI Strategy
+
+- UI components remain app-specific (`apps/web`, `apps/cms`).
+- Do not introduce a shared UI package unless styles converge.
 
 ---
 

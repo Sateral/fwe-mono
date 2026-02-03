@@ -228,7 +228,7 @@ packages/
   db/         (Prisma schema + client)
   validators/ (Zod schemas)
   types/      (shared types)
-  ui/         (shared components)
+  ui/         (optional; only if styles converge)
   config/     (eslint, tsconfig, prettier)
   utils/      (shared helpers)
 ```
@@ -238,7 +238,7 @@ packages/
 1. **Scaffold TurboRepo** with both apps under `apps/`.
 2. **Extract Prisma** to `packages/db`, update imports.
 3. **Extract shared Zod + types** to `packages/validators` and `packages/types`.
-4. **Move shared UI** to `packages/ui`.
+4. **Keep UI app-specific** unless styles converge.
 5. **Centralize config** (TS/ESLint/Prettier) in `packages/config`.
 
 ---
@@ -248,4 +248,4 @@ packages/
 - Finalize TurboRepo scaffold and move both apps into `apps/`.
 - Extract Prisma schema/client into `packages/db`.
 - Consolidate Zod schemas and shared types.
-- Add shared UI package and remove duplicate UI components.
+- Keep UI app-specific (revisit only if styles converge).
