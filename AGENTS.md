@@ -133,6 +133,47 @@ bun run dev --filter=cms
 
 ---
 
+## Revamp Roadmap (Transactions + CMS UX)
+
+### Phase A — Audit & Baseline
+
+- Inventory current Stripe flow: Checkout, webhooks, cron fallback, dedupe.
+- Map order creation path and idempotency points.
+- Review data model for payment + fulfillment state gaps.
+
+### Phase B — Stripe Workflow Spec
+
+- Choose flow (Stripe Checkout vs Payment Intents).
+- Define canonical event flow (session create → webhook → order create).
+- Idempotency and dedupe strategy.
+- Failure recovery + reconciliation steps.
+
+### Phase C — Data Model Safety
+
+- Split payment vs fulfillment status.
+- Add Stripe identifiers, currency, refunds, and audit fields.
+- Consider payment event log table.
+
+### Phase D — CMS Orders UX
+
+- Views: by customer, by meal, by delivery/pickup.
+- Prep totals, modifiers, and substitutions summaries.
+- Bulk actions and PDF/CSV exports.
+
+### Phase E — Implementation (Safe + Testable)
+
+- Backend first, then web checkout.
+- Migrations + data backfills.
+- Validation and audit logs.
+
+### Phase F — Validation & Rollout
+
+- Webhook signature verification tests.
+- Idempotency tests and duplicate event handling.
+- Reconciliation checks (Stripe vs DB).
+
+---
+
 ## Agent Rules
 
 - Always use Context7 when referencing external library docs.
