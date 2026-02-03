@@ -29,6 +29,7 @@ model Meal {
   modifierGroups     ModifierGroup[]
   tags               DietaryTag[]
   orders             Order[]
+  orderIntents       OrderIntent[]
   rotations          WeeklyRotation[]    @relation("RotationMeals")
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
@@ -122,9 +123,23 @@ model Order {
   pickupLocation String?
 
   // Order status & Stripe
-  status                OrderStatus @default(PENDING)
-  stripeSessionId       String?     @unique
-  stripePaymentIntentId String?     @unique
+  status                OrderStatus       @default(PENDING)
+  paymentStatus         PaymentStatus     @default(PENDING)
+  fulfillmentStatus     FulfillmentStatus @default(NEW)
+  currency              String            @default("cad")
+  paidAt                DateTime?
+  refundedAt            DateTime?
+  refundAmount          Float             @default(0)
+  stripeSessionId       String?           @unique
+  stripePaymentIntentId String?           @unique
+  stripeChargeId        String?
+  stripeRefundId        String?
+  stripeBalanceTransactionId String?
+
+  orderIntentId String? @unique
+  orderIntent   OrderIntent? @relation("OrderIntentToOrder", fields: [orderIntentId], references: [id])
+
+  paymentEvents PaymentEvent[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,6 +151,8 @@ model Order {
   // Performance indexes
   @@index([userId])          // Fast user order history lookup
   @@index([status])          // Fast status filtering for dashboard
+  @@index([paymentStatus])   // Fast payment status filtering
+  @@index([fulfillmentStatus]) // Fast fulfillment status filtering
   @@index([createdAt])       // Fast date-range queries
   @@index([rotationId])      // Fast rotation-based queries
   @@index([mealId])          // Fast meal-based aggregations
@@ -151,6 +168,30 @@ enum OrderStatus {
   PAID
   PREPARING
   DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum FulfillmentStatus {
+  NEW
+  PREPARING
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+enum OrderIntentStatus {
+  CREATED
+  SESSION_CREATED
+  PAID
+  FAILED
+  EXPIRED
   CANCELLED
 }
 
@@ -182,6 +223,7 @@ model WeeklyRotation {
   status      RotationStatus @default(DRAFT)
   meals       Meal[]         @relation("RotationMeals")
   orders      Order[]
+  orderIntents OrderIntent[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
@@ -228,6 +270,79 @@ model FailedOrder {
   @@index([createdAt])
 }
 
+// ============================================
+// Order Intent (Pre-Payment)
+// ============================================
+
+model OrderIntent {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  mealId String
+  meal   Meal   @relation(fields: [mealId], references: [id])
+
+  rotationId String
+  rotation   WeeklyRotation @relation(fields: [rotationId], references: [id])
+
+  quantity    Int
+  unitPrice   Float
+  totalAmount Float
+  currency    String @default("cad")
+
+  substitutions Json?
+  modifiers     Json?
+  proteinBoost  Boolean @default(false)
+  notes         String? @db.Text
+
+  deliveryMethod DeliveryMethod @default(DELIVERY)
+  pickupLocation String?
+
+  status OrderIntentStatus @default(CREATED)
+
+  stripeSessionId       String? @unique
+  stripePaymentIntentId String? @unique
+
+  order Order? @relation("OrderIntentToOrder")
+  paymentEvents PaymentEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([rotationId])
+}
+
+// ============================================
+// Payment Event Log
+// ============================================
+
+model PaymentEvent {
+  id String @id @default(cuid())
+
+  provider  String  @default("stripe")
+  eventId   String  @unique
+  eventType String
+  livemode  Boolean @default(false)
+  payload   Json
+
+  orderIntentId String?
+  orderIntent   OrderIntent? @relation(fields: [orderIntentId], references: [id])
+
+  orderId String?
+  order   Order? @relation(fields: [orderId], references: [id])
+
+  processedAt DateTime?
+  errorMessage String?
+  createdAt DateTime @default(now())
+
+  @@index([eventType])
+  @@index([createdAt])
+}
+
 enum FailedOrderStatus {
   PENDING // Awaiting retry or manual resolution
   RETRYING // Currently being retried
@@ -248,6 +363,7 @@ model User {
   accounts      Account[]
 
   orders           Order[]
+  orderIntents     OrderIntent[]
   stripeCustomerId String? @unique @map(name: "stripe_customer_id")
 
   // Profile completion for onboarding

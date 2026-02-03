@@ -28,6 +28,39 @@ export const OrderStatus = {
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const FulfillmentStatus = {
+  NEW: 'NEW',
+  PREPARING: 'PREPARING',
+  READY: 'READY',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type FulfillmentStatus = (typeof FulfillmentStatus)[keyof typeof FulfillmentStatus]
+
+
+export const OrderIntentStatus = {
+  CREATED: 'CREATED',
+  SESSION_CREATED: 'SESSION_CREATED',
+  PAID: 'PAID',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type OrderIntentStatus = (typeof OrderIntentStatus)[keyof typeof OrderIntentStatus]
+
+
 export const MealType = {
   SIGNATURE: 'SIGNATURE',
   ROTATING: 'ROTATING'

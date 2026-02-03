@@ -289,6 +289,7 @@ export type UserWhereInput = {
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  orderIntents?: Prisma.OrderIntentListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -313,6 +314,7 @@ export type UserOrderByWithRelationInput = {
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  orderIntents?: Prisma.OrderIntentOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -340,6 +342,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  orderIntents?: Prisma.OrderIntentListRelationFilter
 }, "id" | "email" | "stripeCustomerId">
 
 export type UserOrderByWithAggregationInput = {
@@ -412,6 +415,7 @@ export type UserCreateInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -436,6 +440,7 @@ export type UserUncheckedCreateInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -460,6 +465,7 @@ export type UserUpdateInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  orderIntents?: Prisma.OrderIntentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -484,6 +490,7 @@ export type UserUncheckedUpdateInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -631,6 +638,20 @@ export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrdersInput, Prisma.UserUpdateWithoutOrdersInput>, Prisma.UserUncheckedUpdateWithoutOrdersInput>
 }
 
+export type UserCreateNestedOneWithoutOrderIntentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOrderIntentsInput, Prisma.UserUncheckedCreateWithoutOrderIntentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOrderIntentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutOrderIntentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOrderIntentsInput, Prisma.UserUncheckedCreateWithoutOrderIntentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOrderIntentsInput
+  upsert?: Prisma.UserUpsertWithoutOrderIntentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrderIntentsInput, Prisma.UserUpdateWithoutOrderIntentsInput>, Prisma.UserUncheckedUpdateWithoutOrderIntentsInput>
+}
+
 export type NullableBoolFieldUpdateOperationsInput = {
   set?: boolean | null
 }
@@ -684,6 +705,7 @@ export type UserCreateWithoutOrdersInput = {
   banExpires?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrdersInput = {
@@ -707,6 +729,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   banExpires?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrdersInput = {
@@ -746,6 +769,7 @@ export type UserUpdateWithoutOrdersInput = {
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  orderIntents?: Prisma.OrderIntentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -769,6 +793,119 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutOrderIntentsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  emailVerified?: boolean
+  image?: string | null
+  stripeCustomerId?: string | null
+  profileComplete?: boolean
+  phone?: string | null
+  deliveryAddress?: string | null
+  deliveryCity?: string | null
+  deliveryPostal?: string | null
+  deliveryNotes?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutOrderIntentsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  emailVerified?: boolean
+  image?: string | null
+  stripeCustomerId?: string | null
+  profileComplete?: boolean
+  phone?: string | null
+  deliveryAddress?: string | null
+  deliveryCity?: string | null
+  deliveryPostal?: string | null
+  deliveryNotes?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutOrderIntentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutOrderIntentsInput, Prisma.UserUncheckedCreateWithoutOrderIntentsInput>
+}
+
+export type UserUpsertWithoutOrderIntentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutOrderIntentsInput, Prisma.UserUncheckedUpdateWithoutOrderIntentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOrderIntentsInput, Prisma.UserUncheckedCreateWithoutOrderIntentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutOrderIntentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutOrderIntentsInput, Prisma.UserUncheckedUpdateWithoutOrderIntentsInput>
+}
+
+export type UserUpdateWithoutOrderIntentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutOrderIntentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -792,6 +929,7 @@ export type UserCreateWithoutSessionsInput = {
   banExpires?: Date | string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -815,6 +953,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   banExpires?: Date | string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -854,6 +993,7 @@ export type UserUpdateWithoutSessionsInput = {
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  orderIntents?: Prisma.OrderIntentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -877,6 +1017,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -900,6 +1041,7 @@ export type UserCreateWithoutAccountsInput = {
   banExpires?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -923,6 +1065,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   banExpires?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -962,6 +1105,7 @@ export type UserUpdateWithoutAccountsInput = {
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  orderIntents?: Prisma.OrderIntentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -985,6 +1129,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -996,12 +1141,14 @@ export type UserCountOutputType = {
   sessions: number
   accounts: number
   orders: number
+  orderIntents: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   orders?: boolean | UserCountOutputTypeCountOrdersArgs
+  orderIntents?: boolean | UserCountOutputTypeCountOrderIntentsArgs
 }
 
 /**
@@ -1035,6 +1182,13 @@ export type UserCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.OrderWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountOrderIntentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderIntentWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1058,6 +1212,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
+  orderIntents?: boolean | Prisma.User$orderIntentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1129,6 +1284,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
+  orderIntents?: boolean | Prisma.User$orderIntentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1140,6 +1296,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     accounts: Prisma.$AccountPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
+    orderIntents: Prisma.$OrderIntentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1557,6 +1714,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.User$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orderIntents<T extends Prisma.User$orderIntentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$orderIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2061,6 +2219,30 @@ export type User$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * User.orderIntents
+ */
+export type User$orderIntentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderIntent
+   */
+  select?: Prisma.OrderIntentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderIntent
+   */
+  omit?: Prisma.OrderIntentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderIntentInclude<ExtArgs> | null
+  where?: Prisma.OrderIntentWhereInput
+  orderBy?: Prisma.OrderIntentOrderByWithRelationInput | Prisma.OrderIntentOrderByWithRelationInput[]
+  cursor?: Prisma.OrderIntentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderIntentScalarFieldEnum | Prisma.OrderIntentScalarFieldEnum[]
 }
 
 /**

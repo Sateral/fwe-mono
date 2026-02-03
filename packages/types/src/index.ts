@@ -8,6 +8,13 @@ export type OrderStatus =
   | "PREPARING"
   | "DELIVERED"
   | "CANCELLED";
+export type PaymentStatus = "PENDING" | "PAID" | "FAILED" | "REFUNDED";
+export type FulfillmentStatus =
+  | "NEW"
+  | "PREPARING"
+  | "READY"
+  | "DELIVERED"
+  | "CANCELLED";
 export type DeliveryMethod = "DELIVERY" | "PICKUP";
 export type FailedOrderStatus =
   | "PENDING"
@@ -95,8 +102,17 @@ export interface ApiOrder {
   deliveryMethod: DeliveryMethod;
   pickupLocation: string | null;
   status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  fulfillmentStatus: FulfillmentStatus;
+  currency: string;
+  paidAt: string | null;
+  refundedAt: string | null;
+  refundAmount: number;
   stripeSessionId: string | null;
   stripePaymentIntentId: string | null;
+  stripeChargeId?: string | null;
+  stripeRefundId?: string | null;
+  stripeBalanceTransactionId?: string | null;
   createdAt: string;
   updatedAt: string;
   meal: ApiMeal;

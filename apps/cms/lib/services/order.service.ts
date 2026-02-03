@@ -84,6 +84,7 @@ export const orderService = {
     }
 
     try {
+      const paidAt = new Date();
       const order = await prisma.order.create({
         data: {
           userId: input.userId,
@@ -99,6 +100,10 @@ export const orderService = {
           deliveryMethod: input.deliveryMethod ?? "DELIVERY",
           pickupLocation: input.pickupLocation,
           status: "PAID",
+          paymentStatus: "PAID",
+          fulfillmentStatus: "NEW",
+          currency: "cad",
+          paidAt,
           stripeSessionId: input.stripeSessionId,
           stripePaymentIntentId: input.stripePaymentIntentId,
         },

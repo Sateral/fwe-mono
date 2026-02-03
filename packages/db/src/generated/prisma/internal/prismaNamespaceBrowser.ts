@@ -60,6 +60,8 @@ export const ModelName = {
   Order: 'Order',
   WeeklyRotation: 'WeeklyRotation',
   FailedOrder: 'FailedOrder',
+  OrderIntent: 'OrderIntent',
+  PaymentEvent: 'PaymentEvent',
   User: 'User',
   Session: 'Session',
   Account: 'Account',
@@ -175,8 +177,18 @@ export const OrderScalarFieldEnum = {
   deliveryMethod: 'deliveryMethod',
   pickupLocation: 'pickupLocation',
   status: 'status',
+  paymentStatus: 'paymentStatus',
+  fulfillmentStatus: 'fulfillmentStatus',
+  currency: 'currency',
+  paidAt: 'paidAt',
+  refundedAt: 'refundedAt',
+  refundAmount: 'refundAmount',
   stripeSessionId: 'stripeSessionId',
   stripePaymentIntentId: 'stripePaymentIntentId',
+  stripeChargeId: 'stripeChargeId',
+  stripeRefundId: 'stripeRefundId',
+  stripeBalanceTransactionId: 'stripeBalanceTransactionId',
+  orderIntentId: 'orderIntentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   rotationId: 'rotationId'
@@ -216,6 +228,48 @@ export const FailedOrderScalarFieldEnum = {
 } as const
 
 export type FailedOrderScalarFieldEnum = (typeof FailedOrderScalarFieldEnum)[keyof typeof FailedOrderScalarFieldEnum]
+
+
+export const OrderIntentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  mealId: 'mealId',
+  rotationId: 'rotationId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  totalAmount: 'totalAmount',
+  currency: 'currency',
+  substitutions: 'substitutions',
+  modifiers: 'modifiers',
+  proteinBoost: 'proteinBoost',
+  notes: 'notes',
+  deliveryMethod: 'deliveryMethod',
+  pickupLocation: 'pickupLocation',
+  status: 'status',
+  stripeSessionId: 'stripeSessionId',
+  stripePaymentIntentId: 'stripePaymentIntentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrderIntentScalarFieldEnum = (typeof OrderIntentScalarFieldEnum)[keyof typeof OrderIntentScalarFieldEnum]
+
+
+export const PaymentEventScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  eventId: 'eventId',
+  eventType: 'eventType',
+  livemode: 'livemode',
+  payload: 'payload',
+  orderIntentId: 'orderIntentId',
+  orderId: 'orderId',
+  processedAt: 'processedAt',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type PaymentEventScalarFieldEnum = (typeof PaymentEventScalarFieldEnum)[keyof typeof PaymentEventScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {

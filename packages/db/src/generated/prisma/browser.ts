@@ -65,6 +65,16 @@ export type WeeklyRotation = Prisma.WeeklyRotationModel
  */
 export type FailedOrder = Prisma.FailedOrderModel
 /**
+ * Model OrderIntent
+ * 
+ */
+export type OrderIntent = Prisma.OrderIntentModel
+/**
+ * Model PaymentEvent
+ * 
+ */
+export type PaymentEvent = Prisma.PaymentEventModel
+/**
  * Model User
  * 
  */

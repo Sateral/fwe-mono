@@ -200,6 +200,7 @@ export type WeeklyRotationWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"WeeklyRotation"> | Date | string
   meals?: Prisma.MealListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  orderIntents?: Prisma.OrderIntentListRelationFilter
 }
 
 export type WeeklyRotationOrderByWithRelationInput = {
@@ -212,6 +213,7 @@ export type WeeklyRotationOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   meals?: Prisma.MealOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  orderIntents?: Prisma.OrderIntentOrderByRelationAggregateInput
 }
 
 export type WeeklyRotationWhereUniqueInput = Prisma.AtLeast<{
@@ -227,6 +229,7 @@ export type WeeklyRotationWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"WeeklyRotation"> | Date | string
   meals?: Prisma.MealListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  orderIntents?: Prisma.OrderIntentListRelationFilter
 }, "id" | "weekStart">
 
 export type WeeklyRotationOrderByWithAggregationInput = {
@@ -265,6 +268,7 @@ export type WeeklyRotationCreateInput = {
   updatedAt?: Date | string
   meals?: Prisma.MealCreateNestedManyWithoutRotationsInput
   orders?: Prisma.OrderCreateNestedManyWithoutRotationInput
+  orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationUncheckedCreateInput = {
@@ -277,6 +281,7 @@ export type WeeklyRotationUncheckedCreateInput = {
   updatedAt?: Date | string
   meals?: Prisma.MealUncheckedCreateNestedManyWithoutRotationsInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutRotationInput
+  orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationUpdateInput = {
@@ -289,6 +294,7 @@ export type WeeklyRotationUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   meals?: Prisma.MealUpdateManyWithoutRotationsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutRotationNestedInput
+  orderIntents?: Prisma.OrderIntentUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateInput = {
@@ -301,6 +307,7 @@ export type WeeklyRotationUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   meals?: Prisma.MealUncheckedUpdateManyWithoutRotationsNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutRotationNestedInput
+  orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationCreateManyInput = {
@@ -434,6 +441,20 @@ export type EnumRotationStatusFieldUpdateOperationsInput = {
   set?: $Enums.RotationStatus
 }
 
+export type WeeklyRotationCreateNestedOneWithoutOrderIntentsInput = {
+  create?: Prisma.XOR<Prisma.WeeklyRotationCreateWithoutOrderIntentsInput, Prisma.WeeklyRotationUncheckedCreateWithoutOrderIntentsInput>
+  connectOrCreate?: Prisma.WeeklyRotationCreateOrConnectWithoutOrderIntentsInput
+  connect?: Prisma.WeeklyRotationWhereUniqueInput
+}
+
+export type WeeklyRotationUpdateOneRequiredWithoutOrderIntentsNestedInput = {
+  create?: Prisma.XOR<Prisma.WeeklyRotationCreateWithoutOrderIntentsInput, Prisma.WeeklyRotationUncheckedCreateWithoutOrderIntentsInput>
+  connectOrCreate?: Prisma.WeeklyRotationCreateOrConnectWithoutOrderIntentsInput
+  upsert?: Prisma.WeeklyRotationUpsertWithoutOrderIntentsInput
+  connect?: Prisma.WeeklyRotationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WeeklyRotationUpdateToOneWithWhereWithoutOrderIntentsInput, Prisma.WeeklyRotationUpdateWithoutOrderIntentsInput>, Prisma.WeeklyRotationUncheckedUpdateWithoutOrderIntentsInput>
+}
+
 export type WeeklyRotationCreateWithoutMealsInput = {
   id?: string
   weekStart: Date | string
@@ -443,6 +464,7 @@ export type WeeklyRotationCreateWithoutMealsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   orders?: Prisma.OrderCreateNestedManyWithoutRotationInput
+  orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationUncheckedCreateWithoutMealsInput = {
@@ -454,6 +476,7 @@ export type WeeklyRotationUncheckedCreateWithoutMealsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutRotationInput
+  orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationCreateOrConnectWithoutMealsInput = {
@@ -499,6 +522,7 @@ export type WeeklyRotationCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   meals?: Prisma.MealCreateNestedManyWithoutRotationsInput
+  orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationUncheckedCreateWithoutOrdersInput = {
@@ -510,6 +534,7 @@ export type WeeklyRotationUncheckedCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   meals?: Prisma.MealUncheckedCreateNestedManyWithoutRotationsInput
+  orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationCreateOrConnectWithoutOrdersInput = {
@@ -537,6 +562,7 @@ export type WeeklyRotationUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   meals?: Prisma.MealUpdateManyWithoutRotationsNestedInput
+  orderIntents?: Prisma.OrderIntentUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateWithoutOrdersInput = {
@@ -548,6 +574,71 @@ export type WeeklyRotationUncheckedUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   meals?: Prisma.MealUncheckedUpdateManyWithoutRotationsNestedInput
+  orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutRotationNestedInput
+}
+
+export type WeeklyRotationCreateWithoutOrderIntentsInput = {
+  id?: string
+  weekStart: Date | string
+  weekEnd: Date | string
+  orderCutoff: Date | string
+  status?: $Enums.RotationStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  meals?: Prisma.MealCreateNestedManyWithoutRotationsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutRotationInput
+}
+
+export type WeeklyRotationUncheckedCreateWithoutOrderIntentsInput = {
+  id?: string
+  weekStart: Date | string
+  weekEnd: Date | string
+  orderCutoff: Date | string
+  status?: $Enums.RotationStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  meals?: Prisma.MealUncheckedCreateNestedManyWithoutRotationsInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutRotationInput
+}
+
+export type WeeklyRotationCreateOrConnectWithoutOrderIntentsInput = {
+  where: Prisma.WeeklyRotationWhereUniqueInput
+  create: Prisma.XOR<Prisma.WeeklyRotationCreateWithoutOrderIntentsInput, Prisma.WeeklyRotationUncheckedCreateWithoutOrderIntentsInput>
+}
+
+export type WeeklyRotationUpsertWithoutOrderIntentsInput = {
+  update: Prisma.XOR<Prisma.WeeklyRotationUpdateWithoutOrderIntentsInput, Prisma.WeeklyRotationUncheckedUpdateWithoutOrderIntentsInput>
+  create: Prisma.XOR<Prisma.WeeklyRotationCreateWithoutOrderIntentsInput, Prisma.WeeklyRotationUncheckedCreateWithoutOrderIntentsInput>
+  where?: Prisma.WeeklyRotationWhereInput
+}
+
+export type WeeklyRotationUpdateToOneWithWhereWithoutOrderIntentsInput = {
+  where?: Prisma.WeeklyRotationWhereInput
+  data: Prisma.XOR<Prisma.WeeklyRotationUpdateWithoutOrderIntentsInput, Prisma.WeeklyRotationUncheckedUpdateWithoutOrderIntentsInput>
+}
+
+export type WeeklyRotationUpdateWithoutOrderIntentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  weekStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weekEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orderCutoff?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  meals?: Prisma.MealUpdateManyWithoutRotationsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutRotationNestedInput
+}
+
+export type WeeklyRotationUncheckedUpdateWithoutOrderIntentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  weekStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weekEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orderCutoff?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  meals?: Prisma.MealUncheckedUpdateManyWithoutRotationsNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUpdateWithoutMealsInput = {
@@ -559,6 +650,7 @@ export type WeeklyRotationUpdateWithoutMealsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUpdateManyWithoutRotationNestedInput
+  orderIntents?: Prisma.OrderIntentUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateWithoutMealsInput = {
@@ -570,6 +662,7 @@ export type WeeklyRotationUncheckedUpdateWithoutMealsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUncheckedUpdateManyWithoutRotationNestedInput
+  orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateManyWithoutMealsInput = {
@@ -590,11 +683,13 @@ export type WeeklyRotationUncheckedUpdateManyWithoutMealsInput = {
 export type WeeklyRotationCountOutputType = {
   meals: number
   orders: number
+  orderIntents: number
 }
 
 export type WeeklyRotationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   meals?: boolean | WeeklyRotationCountOutputTypeCountMealsArgs
   orders?: boolean | WeeklyRotationCountOutputTypeCountOrdersArgs
+  orderIntents?: boolean | WeeklyRotationCountOutputTypeCountOrderIntentsArgs
 }
 
 /**
@@ -621,6 +716,13 @@ export type WeeklyRotationCountOutputTypeCountOrdersArgs<ExtArgs extends runtime
   where?: Prisma.OrderWhereInput
 }
 
+/**
+ * WeeklyRotationCountOutputType without action
+ */
+export type WeeklyRotationCountOutputTypeCountOrderIntentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderIntentWhereInput
+}
+
 
 export type WeeklyRotationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -632,6 +734,7 @@ export type WeeklyRotationSelect<ExtArgs extends runtime.Types.Extensions.Intern
   updatedAt?: boolean
   meals?: boolean | Prisma.WeeklyRotation$mealsArgs<ExtArgs>
   orders?: boolean | Prisma.WeeklyRotation$ordersArgs<ExtArgs>
+  orderIntents?: boolean | Prisma.WeeklyRotation$orderIntentsArgs<ExtArgs>
   _count?: boolean | Prisma.WeeklyRotationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["weeklyRotation"]>
 
@@ -669,6 +772,7 @@ export type WeeklyRotationOmit<ExtArgs extends runtime.Types.Extensions.Internal
 export type WeeklyRotationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   meals?: boolean | Prisma.WeeklyRotation$mealsArgs<ExtArgs>
   orders?: boolean | Prisma.WeeklyRotation$ordersArgs<ExtArgs>
+  orderIntents?: boolean | Prisma.WeeklyRotation$orderIntentsArgs<ExtArgs>
   _count?: boolean | Prisma.WeeklyRotationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WeeklyRotationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -679,6 +783,7 @@ export type $WeeklyRotationPayload<ExtArgs extends runtime.Types.Extensions.Inte
   objects: {
     meals: Prisma.$MealPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
+    orderIntents: Prisma.$OrderIntentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1084,6 +1189,7 @@ export interface Prisma__WeeklyRotationClient<T, Null = never, ExtArgs extends r
   readonly [Symbol.toStringTag]: "PrismaPromise"
   meals<T extends Prisma.WeeklyRotation$mealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WeeklyRotation$mealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.WeeklyRotation$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WeeklyRotation$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orderIntents<T extends Prisma.WeeklyRotation$orderIntentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WeeklyRotation$orderIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1553,6 +1659,30 @@ export type WeeklyRotation$ordersArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * WeeklyRotation.orderIntents
+ */
+export type WeeklyRotation$orderIntentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderIntent
+   */
+  select?: Prisma.OrderIntentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderIntent
+   */
+  omit?: Prisma.OrderIntentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderIntentInclude<ExtArgs> | null
+  where?: Prisma.OrderIntentWhereInput
+  orderBy?: Prisma.OrderIntentOrderByWithRelationInput | Prisma.OrderIntentOrderByWithRelationInput[]
+  cursor?: Prisma.OrderIntentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderIntentScalarFieldEnum | Prisma.OrderIntentScalarFieldEnum[]
 }
 
 /**
