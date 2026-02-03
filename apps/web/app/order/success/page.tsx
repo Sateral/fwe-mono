@@ -109,7 +109,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
                 Order Details
               </h2>
               <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-                {order.status}
+                {order.fulfillmentStatus}
               </span>
             </div>
 

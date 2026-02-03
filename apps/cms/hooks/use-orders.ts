@@ -11,7 +11,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   getOrdersByRotation,
-  updateOrderStatus,
+  updateFulfillmentStatus,
   getProductionSummary,
 } from "@/lib/actions/order.actions";
 import { getRotations } from "@/lib/actions/weekly-rotation.actions";
@@ -21,7 +21,7 @@ import {
 } from "@/lib/constants/order.constants";
 import type {
   OrderWithRelations,
-  OrderStatus,
+  FulfillmentStatus,
   BulkUpdateResult,
   ProductionSummaryItem,
 } from "@/lib/types/order-types";
@@ -74,23 +74,25 @@ export function useProductionSummary(rotationId: string | null | undefined) {
 // ============================================
 
 /**
- * Update a single order's status.
+ * Update a single order's fulfillment status.
  */
-export function useUpdateOrderStatus() {
+export function useUpdateFulfillmentStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
       orderId,
-      status,
+      fulfillmentStatus,
     }: {
       orderId: string;
-      status: OrderStatus;
+      fulfillmentStatus: FulfillmentStatus;
     }) => {
-      return updateOrderStatus(orderId, status);
+      return updateFulfillmentStatus(orderId, fulfillmentStatus);
     },
     onSuccess: (_, variables) => {
-      toast.success(`Order marked as ${variables.status.toLowerCase()}`);
+      toast.success(
+        `Order marked as ${variables.fulfillmentStatus.toLowerCase()}`,
+      );
       queryClient.invalidateQueries({ queryKey: orderQueryKeys.all });
     },
     onError: () => {
@@ -100,21 +102,21 @@ export function useUpdateOrderStatus() {
 }
 
 /**
- * Update multiple orders' status in bulk.
+ * Update multiple orders' fulfillment status in bulk.
  */
-export function useBulkUpdateOrderStatus() {
+export function useBulkUpdateFulfillmentStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
       orderIds,
-      status,
+      fulfillmentStatus,
     }: {
       orderIds: string[];
-      status: OrderStatus;
+      fulfillmentStatus: FulfillmentStatus;
     }): Promise<BulkUpdateResult> => {
       const results = await Promise.allSettled(
-        orderIds.map((id) => updateOrderStatus(id, status)),
+        orderIds.map((id) => updateFulfillmentStatus(id, fulfillmentStatus)),
       );
 
       const succeeded: OrderWithRelations[] = [];
@@ -139,7 +141,7 @@ export function useBulkUpdateOrderStatus() {
 
       if (failed.length === 0) {
         toast.success(
-          `Marked ${succeeded.length} order${succeeded.length === 1 ? "" : "s"} as ${variables.status.toLowerCase()}`,
+          `Marked ${succeeded.length} order${succeeded.length === 1 ? "" : "s"} as ${variables.fulfillmentStatus.toLowerCase()}`,
         );
       } else if (succeeded.length === 0) {
         toast.error(`Failed to update all ${failed.length} orders`);

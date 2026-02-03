@@ -2,12 +2,6 @@ import type { CreateOrderInput } from "@fwe/validators";
 
 export type ModifierType = "SINGLE_SELECT" | "MULTI_SELECT";
 export type MealType = "SIGNATURE" | "ROTATING";
-export type OrderStatus =
-  | "PENDING"
-  | "PAID"
-  | "PREPARING"
-  | "DELIVERED"
-  | "CANCELLED";
 export type PaymentStatus = "PENDING" | "PAID" | "FAILED" | "REFUNDED";
 export type FulfillmentStatus =
   | "NEW"
@@ -101,7 +95,6 @@ export interface ApiOrder {
   notes: string | null;
   deliveryMethod: DeliveryMethod;
   pickupLocation: string | null;
-  status: OrderStatus;
   paymentStatus: PaymentStatus;
   fulfillmentStatus: FulfillmentStatus;
   currency: string;

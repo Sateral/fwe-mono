@@ -14,7 +14,10 @@ import {
   IconPhone,
 } from "@tabler/icons-react";
 import { DEFAULT_PICKUP_LOCATION } from "@/lib/constants/order.constants";
-import type { OrderWithRelations } from "@/lib/types/order-types";
+import type {
+  FulfillmentStatus,
+  OrderWithRelations,
+} from "@/lib/types/order-types";
 
 // ============================================
 // Customer Summary Types
@@ -33,7 +36,7 @@ export interface CustomerSummary {
   pickupLocation: string | null;
   orderCount: number;
   totalSpend: number;
-  status: "PAID" | "PREPARING" | "DELIVERED" | "PARTIAL";
+  status: FulfillmentStatus | "PARTIAL";
   orders: OrderWithRelations[];
 }
 
@@ -157,8 +160,10 @@ export function getCustomerColumns(
         const status = row.original.status;
         let variant: "default" | "secondary" | "outline" | "destructive" =
           "outline";
+
         if (status === "DELIVERED") variant = "default";
-        if (status === "PREPARING") variant = "secondary";
+        if (status === "CANCELLED") variant = "destructive";
+        if (status === "PREPARING" || status === "READY") variant = "secondary";
         if (status === "PARTIAL") variant = "secondary";
 
         return <Badge variant={variant}>{status}</Badge>;

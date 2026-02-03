@@ -70,10 +70,12 @@ export interface OrderModifier {
 /**
  * Valid order status values.
  */
-export type OrderStatus =
-  | "PENDING"
-  | "PAID"
+export type PaymentStatus = "PENDING" | "PAID" | "FAILED" | "REFUNDED";
+
+export type FulfillmentStatus =
+  | "NEW"
   | "PREPARING"
+  | "READY"
   | "DELIVERED"
   | "CANCELLED";
 
@@ -110,7 +112,8 @@ export interface ProductionSummaryItem {
  * Filter parameters for order queries.
  */
 export interface OrderFilters {
-  status?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+  fulfillmentStatus?: FulfillmentStatus;
   search?: string;
   startDate?: string;
   endDate?: string;

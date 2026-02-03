@@ -2,8 +2,9 @@
 
 ## Summary
 
-This phase introduces payment-safe structures while keeping existing `Order.status`
-for backward compatibility. New fields are additive and defaulted.
+This phase introduces payment-safe structures and **removes** `Order.status` in favor
+of explicit `paymentStatus` and `fulfillmentStatus`. Backward compatibility is not
+maintained (DB reset is expected).
 
 ## Schema Additions
 
@@ -30,8 +31,8 @@ for backward compatibility. New fields are additive and defaulted.
 
 ## Compatibility
 
-- Existing `Order.status` remains in use by CMS UI.
-- New fields are defaulted to avoid breaking existing rows.
+- `Order.status` removed.
+- CMS and web now use `paymentStatus` and `fulfillmentStatus`.
 
 ## Migration
 

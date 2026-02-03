@@ -40,7 +40,9 @@ import { Badge } from "@/components/ui/badge";
 export type Order = {
   id: string;
   totalAmount: number;
-  status: "PENDING" | "PAID" | "PREPARING" | "DELIVERED" | "CANCELLED";
+  paymentStatus: "PENDING" | "PAID" | "FAILED" | "REFUNDED";
+  fulfillmentStatus: "NEW" | "PREPARING" | "READY" | "DELIVERED" | "CANCELLED";
+  currency: string;
   createdAt: Date;
   // Add other fields as needed for display
 };
@@ -74,11 +76,20 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => <div className="font-medium">{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "paymentStatus",
+    header: "Payment",
     cell: ({ row }) => (
       <Badge variant="outline" className="capitalize">
-        {row.getValue("status")}
+        {row.getValue("paymentStatus")}
+      </Badge>
+    ),
+  },
+  {
+    accessorKey: "fulfillmentStatus",
+    header: "Fulfillment",
+    cell: ({ row }) => (
+      <Badge variant="outline" className="capitalize">
+        {row.getValue("fulfillmentStatus")}
       </Badge>
     ),
   },
@@ -87,9 +98,10 @@ export const columns: ColumnDef<Order>[] = [
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("totalAmount"));
+      const currency = (row.original.currency || "cad").toUpperCase();
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: "USD",
+        currency,
       }).format(amount);
 
       return <div className="text-right font-medium">{formatted}</div>;

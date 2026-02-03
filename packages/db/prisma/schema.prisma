@@ -122,8 +122,7 @@ model Order {
   deliveryMethod DeliveryMethod @default(DELIVERY)
   pickupLocation String?
 
-  // Order status & Stripe
-  status                OrderStatus       @default(PENDING)
+  // Payment & fulfillment status
   paymentStatus         PaymentStatus     @default(PENDING)
   fulfillmentStatus     FulfillmentStatus @default(NEW)
   currency              String            @default("cad")
@@ -150,7 +149,6 @@ model Order {
 
   // Performance indexes
   @@index([userId])          // Fast user order history lookup
-  @@index([status])          // Fast status filtering for dashboard
   @@index([paymentStatus])   // Fast payment status filtering
   @@index([fulfillmentStatus]) // Fast fulfillment status filtering
   @@index([createdAt])       // Fast date-range queries
@@ -161,14 +159,6 @@ model Order {
 enum ModifierType {
   SINGLE_SELECT
   MULTI_SELECT
-}
-
-enum OrderStatus {
-  PENDING
-  PAID
-  PREPARING
-  DELIVERED
-  CANCELLED
 }
 
 enum PaymentStatus {

@@ -29,11 +29,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { StatusBadge } from "./status-badge";
-import { useUpdateOrderStatus } from "@/hooks/use-orders";
-import { DEFAULT_PICKUP_LOCATION } from "@/lib/constants/order.constants";
+import { useUpdateFulfillmentStatus } from "@/hooks/use-orders";
+import {
+  DEFAULT_PICKUP_LOCATION,
+  PAYMENT_STATUS_CONFIG,
+} from "@/lib/constants/order.constants";
 import type {
   OrderWithRelations,
-  OrderStatus,
+  FulfillmentStatus,
   OrderSubstitution,
 } from "@/lib/types/order-types";
 
@@ -51,15 +54,20 @@ export function OrderDetailDialog({
   const [cancelConfirmationOpen, setCancelConfirmationOpen] =
     React.useState(false);
 
-  const updateStatusMutation = useUpdateOrderStatus();
+  const updateStatusMutation = useUpdateFulfillmentStatus();
 
   if (!order) return null;
 
   const substitutions =
     (order.substitutions as OrderSubstitution[] | null) || [];
+  const paymentConfig = PAYMENT_STATUS_CONFIG[order.paymentStatus];
+  const canUpdateFulfillment = order.paymentStatus === "PAID";
 
-  const handleStatusUpdate = (newStatus: OrderStatus) => {
-    updateStatusMutation.mutate({ orderId: order.id, status: newStatus });
+  const handleStatusUpdate = (newStatus: FulfillmentStatus) => {
+    updateStatusMutation.mutate({
+      orderId: order.id,
+      fulfillmentStatus: newStatus,
+    });
   };
 
   const handleCancel = () => {
@@ -74,17 +82,23 @@ export function OrderDetailDialog({
 
   // Determine next status action
   const getNextStatusAction = () => {
-    switch (order.status) {
-      case "PAID":
+    switch (order.fulfillmentStatus) {
+      case "NEW":
         return {
           label: "Start Preparing",
-          status: "PREPARING" as OrderStatus,
+          status: "PREPARING" as FulfillmentStatus,
           icon: IconChefHat,
         };
       case "PREPARING":
         return {
+          label: "Mark Ready",
+          status: "READY" as FulfillmentStatus,
+          icon: IconCheck,
+        };
+      case "READY":
+        return {
           label: "Mark Delivered",
-          status: "DELIVERED" as OrderStatus,
+          status: "DELIVERED" as FulfillmentStatus,
           icon: IconTruckDelivery,
         };
       default:
@@ -103,7 +117,9 @@ export function OrderDetailDialog({
               <DialogTitle className="font-mono text-lg">
                 Order #{order.id.slice(0, 8)}
               </DialogTitle>
-              <StatusBadge status={order.status as OrderStatus} />
+              <StatusBadge
+                status={order.fulfillmentStatus as FulfillmentStatus}
+              />
             </div>
             <DialogDescription>
               {new Date(order.createdAt).toLocaleString()}
@@ -121,6 +137,49 @@ export function OrderDetailDialog({
                 <p className="text-sm text-muted-foreground">
                   {order.user?.email}
                 </p>
+              </div>
+            </section>
+
+            {/* Payment Info */}
+            <section>
+              <h3 className="text-sm font-semibold text-muted-foreground mb-2">
+                PAYMENT
+              </h3>
+              <div className="bg-muted/50 rounded-lg p-3 space-y-2 text-sm">
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Status</span>
+                  <Badge
+                    variant="outline"
+                    className={`${paymentConfig.bgColor} border-0`}
+                  >
+                    <span
+                      className={`w-2 h-2 rounded-full mr-1.5 ${paymentConfig.dotColor}`}
+                    />
+                    {paymentConfig.label}
+                  </Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Total</span>
+                  <span className="font-medium">
+                    ${order.totalAmount.toFixed(2)} {order.currency?.toUpperCase() ?? "CAD"}
+                  </span>
+                </div>
+                {order.paidAt && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Paid</span>
+                    <span className="font-medium">
+                      {new Date(order.paidAt).toLocaleString()}
+                    </span>
+                  </div>
+                )}
+                {order.refundedAt && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Refunded</span>
+                    <span className="font-medium">
+                      {new Date(order.refundedAt).toLocaleString()}
+                    </span>
+                  </div>
+                )}
               </div>
             </section>
 
@@ -269,26 +328,32 @@ export function OrderDetailDialog({
               {/* Status dropdown for flexible changes */}
               <div className="space-y-2">
                 <Select
-                  value={order.status}
+                  value={order.fulfillmentStatus}
                   onValueChange={(value) =>
-                    handleStatusUpdate(value as OrderStatus)
+                    handleStatusUpdate(value as FulfillmentStatus)
                   }
-                  disabled={updateStatusMutation.isPending}
+                  disabled={!canUpdateFulfillment || updateStatusMutation.isPending}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="PAID">
+                    <SelectItem value="NEW">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-blue-500" />
-                        Paid
+                        <div className="w-2 h-2 rounded-full bg-gray-500" />
+                        New
                       </div>
                     </SelectItem>
                     <SelectItem value="PREPARING">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-orange-500" />
                         Preparing
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="READY">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-500" />
+                        Ready
                       </div>
                     </SelectItem>
                     <SelectItem value="DELIVERED">
@@ -311,12 +376,12 @@ export function OrderDetailDialog({
               </div>
 
               {/* Quick action buttons */}
-              {nextAction &&
-                order.status !== "DELIVERED" &&
-                order.status !== "CANCELLED" && (
+                {nextAction &&
+                  order.fulfillmentStatus !== "DELIVERED" &&
+                  order.fulfillmentStatus !== "CANCELLED" && (
                   <Button
                     onClick={() => handleStatusUpdate(nextAction.status)}
-                    disabled={updateStatusMutation.isPending}
+                    disabled={!canUpdateFulfillment || updateStatusMutation.isPending}
                     className="w-full"
                     size="lg"
                   >
@@ -326,14 +391,14 @@ export function OrderDetailDialog({
                 )}
 
               {/* Completed/Cancelled state indicator */}
-              {order.status === "DELIVERED" && (
+              {order.fulfillmentStatus === "DELIVERED" && (
                 <div className="flex items-center justify-center gap-2 text-green-600 py-2 bg-green-50 dark:bg-green-950 rounded-lg">
                   <IconCheck className="h-5 w-5" />
                   <span className="font-medium">Order Completed</span>
                 </div>
               )}
 
-              {order.status === "CANCELLED" && (
+              {order.fulfillmentStatus === "CANCELLED" && (
                 <div className="flex items-center justify-center gap-2 text-red-600 py-2 bg-red-50 dark:bg-red-950 rounded-lg">
                   <IconX className="h-5 w-5" />
                   <span className="font-medium">Order Cancelled</span>

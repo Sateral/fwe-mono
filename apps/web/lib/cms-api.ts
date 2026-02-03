@@ -9,7 +9,7 @@ import type {
   ApiSubstitutionOption,
   ApiUser,
   FailedOrderStatus,
-  OrderStatus,
+  FulfillmentStatus,
 } from "@fwe/types";
 import type {
   CreateFailedOrderInput,
@@ -230,12 +230,15 @@ export const ordersApi = {
   },
 
   /**
-   * Update order status.
+   * Update fulfillment status.
    */
-  async updateStatus(id: string, status: OrderStatus): Promise<ApiOrder> {
+  async updateFulfillmentStatus(
+    id: string,
+    fulfillmentStatus: FulfillmentStatus,
+  ): Promise<ApiOrder> {
     return apiRequest<ApiOrder>(`/api/orders/${id}`, {
       method: "PATCH",
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ fulfillmentStatus }),
     });
   },
 };

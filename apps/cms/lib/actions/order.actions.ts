@@ -1,13 +1,16 @@
 "use server";
 
-import { orderService, type OrderStatus } from "@/lib/services/order.service";
+import type { FulfillmentStatus, PaymentStatus } from "@fwe/validators";
+
+import { orderService } from "@/lib/services/order.service";
 
 // ============================================
 // Types
 // ============================================
 
 export interface OrderFilters {
-  status?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+  fulfillmentStatus?: FulfillmentStatus;
   search?: string;
   startDate?: string;
   endDate?: string;
@@ -42,15 +45,18 @@ export async function getOrder(id: string) {
 /**
  * Update an order's status.
  */
-export async function updateOrderStatus(orderId: string, status: OrderStatus) {
-  return await orderService.updateOrderStatus(orderId, status);
+export async function updateFulfillmentStatus(
+  orderId: string,
+  fulfillmentStatus: FulfillmentStatus,
+) {
+  return await orderService.updateFulfillmentStatus(orderId, fulfillmentStatus);
 }
 
 /**
  * Get order counts by status for dashboard badges.
  */
-export async function getOrderStats() {
-  return await orderService.getOrderStatsByStatus();
+export async function getFulfillmentStats() {
+  return await orderService.getOrderStatsByFulfillmentStatus();
 }
 
 /**

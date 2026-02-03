@@ -13,14 +13,14 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { StatusBadge } from "./status-badge";
-import { useBulkUpdateOrderStatus } from "@/hooks/use-orders";
+import { useBulkUpdateFulfillmentStatus } from "@/hooks/use-orders";
 import {
   DEFAULT_PICKUP_LOCATION,
   STATUS_BORDER_COLORS,
 } from "@/lib/constants/order.constants";
 import type {
   OrderWithRelations,
-  OrderStatus,
+  FulfillmentStatus,
   OrderUser,
   OrderSubstitution,
   OrderModifier,
@@ -46,7 +46,7 @@ export function CustomerOrdersDialog({
   open,
   onOpenChange,
 }: CustomerOrdersDialogProps) {
-  const bulkUpdateMutation = useBulkUpdateOrderStatus();
+  const bulkUpdateMutation = useBulkUpdateFulfillmentStatus();
 
   // Memoized totals - must be before any early returns
   const { totalMeals, totalAmount } = React.useMemo(
@@ -75,23 +75,32 @@ export function CustomerOrdersDialog({
 
   const handleMarkAllDelivered = () => {
     const orderIds = orders
-      .filter((o) => o.status !== "DELIVERED" && o.status !== "CANCELLED")
+      .filter(
+        (o) =>
+          o.fulfillmentStatus !== "DELIVERED" &&
+          o.fulfillmentStatus !== "CANCELLED" &&
+          o.paymentStatus === "PAID",
+      )
       .map((o) => o.id);
 
     if (orderIds.length === 0) return;
 
     bulkUpdateMutation.mutate(
-      { orderIds, status: "DELIVERED" },
+      { orderIds, fulfillmentStatus: "DELIVERED" },
       { onSuccess: () => onOpenChange(false) },
     );
   };
 
   const handleMarkAllPreparing = () => {
-    const orderIds = orders.filter((o) => o.status === "PAID").map((o) => o.id);
+    const orderIds = orders
+      .filter(
+        (o) => o.fulfillmentStatus === "NEW" && o.paymentStatus === "PAID",
+      )
+      .map((o) => o.id);
 
     if (orderIds.length === 0) return;
 
-    bulkUpdateMutation.mutate({ orderIds, status: "PREPARING" });
+    bulkUpdateMutation.mutate({ orderIds, fulfillmentStatus: "PREPARING" });
   };
 
   return (
@@ -126,8 +135,9 @@ export function CustomerOrdersDialog({
                 const modifiers =
                   (order.modifiers as unknown as OrderModifier[]) || [];
                 const borderClass =
-                  STATUS_BORDER_COLORS[order.status as OrderStatus] ||
-                  "border-l-muted";
+                  STATUS_BORDER_COLORS[
+                    order.fulfillmentStatus as FulfillmentStatus
+                  ] || "border-l-muted";
 
                 return (
                   <OrderItemCard
@@ -198,7 +208,7 @@ function OrderItemCard({
           </div>
         </div>
         <div className="text-right shrink-0">
-          <StatusBadge status={order.status as OrderStatus} />
+          <StatusBadge status={order.fulfillmentStatus as FulfillmentStatus} />
           <div className="mt-1 font-semibold">
             ${order.totalAmount.toFixed(2)}
           </div>
@@ -414,7 +424,13 @@ function LogisticsSidebar({
           onClick={onMarkAllPreparing}
           size="sm"
           variant="outline"
-          disabled={isUpdating || orders.every((o) => o.status !== "PAID")}
+          disabled={
+            isUpdating ||
+            orders.every(
+              (o) =>
+                o.paymentStatus !== "PAID" || o.fulfillmentStatus !== "NEW",
+            )
+          }
         >
           Mark All Preparing
         </Button>
@@ -424,7 +440,10 @@ function LogisticsSidebar({
           disabled={
             isUpdating ||
             orders.every(
-              (o) => o.status === "DELIVERED" || o.status === "CANCELLED",
+              (o) =>
+                o.fulfillmentStatus === "DELIVERED" ||
+                o.fulfillmentStatus === "CANCELLED" ||
+                o.paymentStatus !== "PAID",
             )
           }
         >

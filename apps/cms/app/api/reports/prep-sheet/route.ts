@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import type { Prisma } from "@fwe/db";
+
 import prisma from "@/lib/prisma";
 
 export async function GET(request: Request) {
@@ -14,10 +16,11 @@ export async function GET(request: Request) {
     }
 
     // 1. Fetch Orders
-    const orders = await prisma.order.findMany({
+    const orders = (await prisma.order.findMany({
       where: {
         rotationId: rotationId,
-        status: "PAID",
+        paymentStatus: "PAID",
+        fulfillmentStatus: { not: "CANCELLED" },
       },
       include: {
         meal: true,
@@ -37,7 +40,21 @@ export async function GET(request: Request) {
           name: "asc",
         },
       },
-    });
+    })) as Prisma.OrderGetPayload<{
+      include: {
+        meal: true;
+        user: {
+          select: {
+            name: true;
+            email: true;
+            deliveryAddress: true;
+            deliveryCity: true;
+            deliveryPostal: true;
+            deliveryNotes: true;
+          };
+        };
+      };
+    }>[];
 
     // 2. Aggregation Logic
     const summary = new Map<

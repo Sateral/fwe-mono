@@ -99,6 +99,7 @@ export async function fulfillOrder(sessionId: string) {
     totalAmount: session.amount_total
       ? session.amount_total / 100
       : parseFloat(metadata.totalAmount || "0"),
+    currency: session.currency ?? "cad",
     substitutions,
     modifiers,
     proteinBoost: metadata.proteinBoost === "true",

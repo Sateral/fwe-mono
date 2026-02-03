@@ -16,5 +16,11 @@ export type {
 } from "@fwe/types";
 
 // Re-export for backwards compatibility
-export type { ApiMeal, ApiOrder, ModifierType, OrderStatus } from "@fwe/types";
+export type {
+  ApiMeal,
+  ApiOrder,
+  FulfillmentStatus,
+  ModifierType,
+  PaymentStatus,
+} from "@fwe/types";
 export type { CreateOrderInput } from "@fwe/validators";

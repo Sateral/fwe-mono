@@ -9,7 +9,7 @@ export const dashboardService = {
             totalAmount: true,
           },
           where: {
-            status: "PAID",
+            paymentStatus: "PAID",
           },
         }),
         prisma.meal.count({
@@ -29,7 +29,7 @@ export const dashboardService = {
         }),
       ]);
 
-    const totalRevenue = totalRevenueAgg._sum.totalAmount || 0;
+    const totalRevenue = totalRevenueAgg._sum?.totalAmount ?? 0;
 
     return {
       totalRevenue: Number(totalRevenue),
@@ -49,7 +49,7 @@ export const dashboardService = {
         DATE("createdAt") as date,
         SUM("totalAmount") as revenue
       FROM "Order"
-      WHERE "status" = 'PAID' AND "createdAt" >= ${thirtyDaysAgo}
+      WHERE "paymentStatus" = 'PAID' AND "createdAt" >= ${thirtyDaysAgo}
       GROUP BY DATE("createdAt")
       ORDER BY date ASC
     `;

@@ -44,6 +44,8 @@ export function CustomerSummaryTable({
     const map = new Map<string, CustomerSummary>();
 
     orders.forEach((order) => {
+      if (order.paymentStatus !== "PAID") return;
+      if (order.fulfillmentStatus === "CANCELLED") return;
       const key = order.userId || order.user?.email || "Guest";
       const user = order.user as OrderUser | null;
 
@@ -61,7 +63,7 @@ export function CustomerSummaryTable({
           pickupLocation: null,
           orderCount: 0,
           totalSpend: 0,
-          status: "PAID",
+          status: "NEW",
           orders: [],
         });
       }
@@ -94,11 +96,12 @@ export function CustomerSummaryTable({
 
     // Determine aggregate status per customer
     return Array.from(map.values()).map((c) => {
-      const statuses = c.orders.map((o) => o.status);
-      let aggStatus: CustomerSummary["status"] = "PAID";
+      const statuses = c.orders.map((o) => o.fulfillmentStatus);
+      let aggStatus: CustomerSummary["status"] = "NEW";
 
       if (statuses.every((s) => s === "DELIVERED")) aggStatus = "DELIVERED";
       else if (statuses.some((s) => s === "DELIVERED")) aggStatus = "PARTIAL";
+      else if (statuses.some((s) => s === "READY")) aggStatus = "READY";
       else if (statuses.some((s) => s === "PREPARING")) aggStatus = "PREPARING";
 
       return { ...c, status: aggStatus };

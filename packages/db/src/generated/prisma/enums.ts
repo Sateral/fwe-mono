@@ -17,17 +17,6 @@ export const ModifierType = {
 export type ModifierType = (typeof ModifierType)[keyof typeof ModifierType]
 
 
-export const OrderStatus = {
-  PENDING: 'PENDING',
-  PAID: 'PAID',
-  PREPARING: 'PREPARING',
-  DELIVERED: 'DELIVERED',
-  CANCELLED: 'CANCELLED'
-} as const
-
-export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
-
-
 export const PaymentStatus = {
   PENDING: 'PENDING',
   PAID: 'PAID',

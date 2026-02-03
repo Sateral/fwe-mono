@@ -51,7 +51,6 @@ export type OrderMinAggregateOutputType = {
   notes: string | null
   deliveryMethod: $Enums.DeliveryMethod | null
   pickupLocation: string | null
-  status: $Enums.OrderStatus | null
   paymentStatus: $Enums.PaymentStatus | null
   fulfillmentStatus: $Enums.FulfillmentStatus | null
   currency: string | null
@@ -80,7 +79,6 @@ export type OrderMaxAggregateOutputType = {
   notes: string | null
   deliveryMethod: $Enums.DeliveryMethod | null
   pickupLocation: string | null
-  status: $Enums.OrderStatus | null
   paymentStatus: $Enums.PaymentStatus | null
   fulfillmentStatus: $Enums.FulfillmentStatus | null
   currency: string | null
@@ -111,7 +109,6 @@ export type OrderCountAggregateOutputType = {
   notes: number
   deliveryMethod: number
   pickupLocation: number
-  status: number
   paymentStatus: number
   fulfillmentStatus: number
   currency: number
@@ -156,7 +153,6 @@ export type OrderMinAggregateInputType = {
   notes?: true
   deliveryMethod?: true
   pickupLocation?: true
-  status?: true
   paymentStatus?: true
   fulfillmentStatus?: true
   currency?: true
@@ -185,7 +181,6 @@ export type OrderMaxAggregateInputType = {
   notes?: true
   deliveryMethod?: true
   pickupLocation?: true
-  status?: true
   paymentStatus?: true
   fulfillmentStatus?: true
   currency?: true
@@ -216,7 +211,6 @@ export type OrderCountAggregateInputType = {
   notes?: true
   deliveryMethod?: true
   pickupLocation?: true
-  status?: true
   paymentStatus?: true
   fulfillmentStatus?: true
   currency?: true
@@ -334,7 +328,6 @@ export type OrderGroupByOutputType = {
   notes: string | null
   deliveryMethod: $Enums.DeliveryMethod
   pickupLocation: string | null
-  status: $Enums.OrderStatus
   paymentStatus: $Enums.PaymentStatus
   fulfillmentStatus: $Enums.FulfillmentStatus
   currency: string
@@ -388,7 +381,6 @@ export type OrderWhereInput = {
   notes?: Prisma.StringNullableFilter<"Order"> | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFilter<"Order"> | $Enums.DeliveryMethod
   pickupLocation?: Prisma.StringNullableFilter<"Order"> | string | null
-  status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFilter<"Order"> | $Enums.FulfillmentStatus
   currency?: Prisma.StringFilter<"Order"> | string
@@ -424,7 +416,6 @@ export type OrderOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
   pickupLocation?: Prisma.SortOrderInput | Prisma.SortOrder
-  status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   fulfillmentStatus?: Prisma.SortOrder
   currency?: Prisma.SortOrder
@@ -466,7 +457,6 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Order"> | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFilter<"Order"> | $Enums.DeliveryMethod
   pickupLocation?: Prisma.StringNullableFilter<"Order"> | string | null
-  status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFilter<"Order"> | $Enums.FulfillmentStatus
   currency?: Prisma.StringFilter<"Order"> | string
@@ -499,7 +489,6 @@ export type OrderOrderByWithAggregationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
   pickupLocation?: Prisma.SortOrderInput | Prisma.SortOrder
-  status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   fulfillmentStatus?: Prisma.SortOrder
   currency?: Prisma.SortOrder
@@ -538,7 +527,6 @@ export type OrderScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodWithAggregatesFilter<"Order"> | $Enums.DeliveryMethod
   pickupLocation?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
-  status?: Prisma.EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusWithAggregatesFilter<"Order"> | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusWithAggregatesFilter<"Order"> | $Enums.FulfillmentStatus
   currency?: Prisma.StringWithAggregatesFilter<"Order"> | string
@@ -567,7 +555,6 @@ export type OrderCreateInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -601,7 +588,6 @@ export type OrderUncheckedCreateInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -631,7 +617,6 @@ export type OrderUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -665,7 +650,6 @@ export type OrderUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -697,7 +681,6 @@ export type OrderCreateManyInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -726,7 +709,6 @@ export type OrderUpdateManyMutationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -755,7 +737,6 @@ export type OrderUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -796,7 +777,6 @@ export type OrderCountOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
   pickupLocation?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   fulfillmentStatus?: Prisma.SortOrder
   currency?: Prisma.SortOrder
@@ -832,7 +812,6 @@ export type OrderMaxOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
   pickupLocation?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   fulfillmentStatus?: Prisma.SortOrder
   currency?: Prisma.SortOrder
@@ -861,7 +840,6 @@ export type OrderMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
   pickupLocation?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   fulfillmentStatus?: Prisma.SortOrder
   currency?: Prisma.SortOrder
@@ -935,10 +913,6 @@ export type OrderUncheckedUpdateManyWithoutMealNestedInput = {
 
 export type EnumDeliveryMethodFieldUpdateOperationsInput = {
   set?: $Enums.DeliveryMethod
-}
-
-export type EnumOrderStatusFieldUpdateOperationsInput = {
-  set?: $Enums.OrderStatus
 }
 
 export type EnumPaymentStatusFieldUpdateOperationsInput = {
@@ -1096,7 +1070,6 @@ export type OrderCreateWithoutMealInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1128,7 +1101,6 @@ export type OrderUncheckedCreateWithoutMealInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1189,7 +1161,6 @@ export type OrderScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"Order"> | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFilter<"Order"> | $Enums.DeliveryMethod
   pickupLocation?: Prisma.StringNullableFilter<"Order"> | string | null
-  status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFilter<"Order"> | $Enums.FulfillmentStatus
   currency?: Prisma.StringFilter<"Order"> | string
@@ -1218,7 +1189,6 @@ export type OrderCreateWithoutRotationInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1251,7 +1221,6 @@ export type OrderUncheckedCreateWithoutRotationInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1306,7 +1275,6 @@ export type OrderCreateWithoutOrderIntentInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1339,7 +1307,6 @@ export type OrderUncheckedCreateWithoutOrderIntentInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1384,7 +1351,6 @@ export type OrderUpdateWithoutOrderIntentInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1417,7 +1383,6 @@ export type OrderUncheckedUpdateWithoutOrderIntentInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1446,7 +1411,6 @@ export type OrderCreateWithoutPaymentEventsInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1479,7 +1443,6 @@ export type OrderUncheckedCreateWithoutPaymentEventsInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1524,7 +1487,6 @@ export type OrderUpdateWithoutPaymentEventsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1557,7 +1519,6 @@ export type OrderUncheckedUpdateWithoutPaymentEventsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1586,7 +1547,6 @@ export type OrderCreateWithoutUserInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1618,7 +1578,6 @@ export type OrderUncheckedCreateWithoutUserInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1675,7 +1634,6 @@ export type OrderCreateManyMealInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1704,7 +1662,6 @@ export type OrderUpdateWithoutMealInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1736,7 +1693,6 @@ export type OrderUncheckedUpdateWithoutMealInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1767,7 +1723,6 @@ export type OrderUncheckedUpdateManyWithoutMealInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1798,7 +1753,6 @@ export type OrderCreateManyRotationInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1826,7 +1780,6 @@ export type OrderUpdateWithoutRotationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1859,7 +1812,6 @@ export type OrderUncheckedUpdateWithoutRotationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1890,7 +1842,6 @@ export type OrderUncheckedUpdateManyWithoutRotationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1919,7 +1870,6 @@ export type OrderCreateManyUserInput = {
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
-  status?: $Enums.OrderStatus
   paymentStatus?: $Enums.PaymentStatus
   fulfillmentStatus?: $Enums.FulfillmentStatus
   currency?: string
@@ -1948,7 +1898,6 @@ export type OrderUpdateWithoutUserInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1980,7 +1929,6 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2011,7 +1959,6 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2073,7 +2020,6 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notes?: boolean
   deliveryMethod?: boolean
   pickupLocation?: boolean
-  status?: boolean
   paymentStatus?: boolean
   fulfillmentStatus?: boolean
   currency?: boolean
@@ -2110,7 +2056,6 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   notes?: boolean
   deliveryMethod?: boolean
   pickupLocation?: boolean
-  status?: boolean
   paymentStatus?: boolean
   fulfillmentStatus?: boolean
   currency?: boolean
@@ -2145,7 +2090,6 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   notes?: boolean
   deliveryMethod?: boolean
   pickupLocation?: boolean
-  status?: boolean
   paymentStatus?: boolean
   fulfillmentStatus?: boolean
   currency?: boolean
@@ -2180,7 +2124,6 @@ export type OrderSelectScalar = {
   notes?: boolean
   deliveryMethod?: boolean
   pickupLocation?: boolean
-  status?: boolean
   paymentStatus?: boolean
   fulfillmentStatus?: boolean
   currency?: boolean
@@ -2198,7 +2141,7 @@ export type OrderSelectScalar = {
   rotationId?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "mealId" | "quantity" | "unitPrice" | "totalAmount" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "deliveryMethod" | "pickupLocation" | "status" | "paymentStatus" | "fulfillmentStatus" | "currency" | "paidAt" | "refundedAt" | "refundAmount" | "stripeSessionId" | "stripePaymentIntentId" | "stripeChargeId" | "stripeRefundId" | "stripeBalanceTransactionId" | "orderIntentId" | "createdAt" | "updatedAt" | "rotationId", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "mealId" | "quantity" | "unitPrice" | "totalAmount" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "deliveryMethod" | "pickupLocation" | "paymentStatus" | "fulfillmentStatus" | "currency" | "paidAt" | "refundedAt" | "refundAmount" | "stripeSessionId" | "stripePaymentIntentId" | "stripeChargeId" | "stripeRefundId" | "stripeBalanceTransactionId" | "orderIntentId" | "createdAt" | "updatedAt" | "rotationId", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
@@ -2242,7 +2185,6 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     notes: string | null
     deliveryMethod: $Enums.DeliveryMethod
     pickupLocation: string | null
-    status: $Enums.OrderStatus
     paymentStatus: $Enums.PaymentStatus
     fulfillmentStatus: $Enums.FulfillmentStatus
     currency: string
@@ -2698,7 +2640,6 @@ export interface OrderFieldRefs {
   readonly notes: Prisma.FieldRef<"Order", 'String'>
   readonly deliveryMethod: Prisma.FieldRef<"Order", 'DeliveryMethod'>
   readonly pickupLocation: Prisma.FieldRef<"Order", 'String'>
-  readonly status: Prisma.FieldRef<"Order", 'OrderStatus'>
   readonly paymentStatus: Prisma.FieldRef<"Order", 'PaymentStatus'>
   readonly fulfillmentStatus: Prisma.FieldRef<"Order", 'FulfillmentStatus'>
   readonly currency: Prisma.FieldRef<"Order", 'String'>

@@ -1,22 +1,12 @@
-import type { CreateOrderInput } from "@fwe/validators";
+import type {
+  CreateOrderInput,
+  FulfillmentStatus,
+  PaymentStatus,
+} from "@fwe/validators";
 import { addDays, startOfWeek, subDays } from "date-fns";
 
 import prisma from "@/lib/prisma";
 import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
-
-// ============================================
-// Types
-// ============================================
-
-/**
- * Valid order status values.
- */
-export type OrderStatus =
-  | "PENDING"
-  | "PAID"
-  | "PREPARING"
-  | "DELIVERED"
-  | "CANCELLED";
 
 // ============================================
 // Order Service
@@ -99,13 +89,14 @@ export const orderService = {
           notes: input.notes,
           deliveryMethod: input.deliveryMethod ?? "DELIVERY",
           pickupLocation: input.pickupLocation,
-          status: "PAID",
           paymentStatus: "PAID",
           fulfillmentStatus: "NEW",
-          currency: "cad",
+          currency: input.currency ?? "cad",
           paidAt,
           stripeSessionId: input.stripeSessionId,
           stripePaymentIntentId: input.stripePaymentIntentId,
+          stripeChargeId: input.stripeChargeId,
+          stripeBalanceTransactionId: input.stripeBalanceTransactionId,
         },
         include: this.orderInclude,
       });
@@ -179,12 +170,17 @@ export const orderService = {
    * Updates the status of an order.
    * Used by CMS dashboard for order management.
    */
-  async updateOrderStatus(orderId: string, status: OrderStatus) {
-    console.log(`[OrderService] Updating order ${orderId} to status ${status}`);
+  async updateFulfillmentStatus(
+    orderId: string,
+    fulfillmentStatus: FulfillmentStatus,
+  ) {
+    console.log(
+      `[OrderService] Updating order ${orderId} to fulfillment status ${fulfillmentStatus}`,
+    );
 
     return await prisma.order.update({
       where: { id: orderId },
-      data: { status },
+      data: { fulfillmentStatus },
       include: this.orderInclude,
     });
   },
@@ -207,7 +203,8 @@ export const orderService = {
    * Supports filtering by status, date range, and search term.
    */
   async getOrdersWithFilters(filters?: {
-    status?: OrderStatus;
+    paymentStatus?: PaymentStatus;
+    fulfillmentStatus?: FulfillmentStatus;
     search?: string;
     startDate?: string;
     endDate?: string;
@@ -218,9 +215,14 @@ export const orderService = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {};
 
-    // Status filter
-    if (filters?.status) {
-      where.status = filters.status;
+    // Payment status filter
+    if (filters?.paymentStatus) {
+      where.paymentStatus = filters.paymentStatus;
+    }
+
+    // Fulfillment status filter
+    if (filters?.fulfillmentStatus) {
+      where.fulfillmentStatus = filters.fulfillmentStatus;
     }
 
     // Date range filter
@@ -262,25 +264,24 @@ export const orderService = {
    * Get order counts grouped by status.
    * Used for dashboard badges and quick filters.
    */
-  async getOrderStatsByStatus() {
-    console.log(`[OrderService] Fetching order stats by status`);
+  async getOrderStatsByFulfillmentStatus() {
+    console.log(`[OrderService] Fetching order stats by fulfillment status`);
 
     const stats = await prisma.order.groupBy({
-      by: ["status"],
+      by: ["fulfillmentStatus"],
       _count: true,
     });
 
-    // Convert to a more usable format
-    const result: Record<OrderStatus, number> = {
-      PENDING: 0,
-      PAID: 0,
+    const result: Record<FulfillmentStatus, number> = {
+      NEW: 0,
       PREPARING: 0,
+      READY: 0,
       DELIVERED: 0,
       CANCELLED: 0,
     };
 
     for (const stat of stats) {
-      result[stat.status as OrderStatus] = stat._count;
+      result[stat.fulfillmentStatus as FulfillmentStatus] = stat._count;
     }
 
     return result;
@@ -311,7 +312,8 @@ export const orderService = {
           gte: orderWindowStart,
           lt: orderWindowEnd,
         },
-        status: { not: "PENDING" }, // Exclude incomplete orders
+        paymentStatus: "PAID",
+        fulfillmentStatus: { not: "CANCELLED" },
       },
       orderBy: { createdAt: "desc" },
       include: this.orderInclude,
@@ -369,6 +371,8 @@ export const orderService = {
     >();
 
     for (const order of orders) {
+      if (order.paymentStatus !== "PAID") continue;
+      if (order.fulfillmentStatus === "CANCELLED") continue;
       if (!order.meal) continue;
 
       const existing = summary.get(order.mealId);

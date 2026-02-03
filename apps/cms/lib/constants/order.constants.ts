@@ -5,7 +5,7 @@
  * Extract hardcoded values here for maintainability.
  */
 
-import type { OrderStatus } from "@/lib/types/order-types";
+import type { FulfillmentStatus, PaymentStatus } from "@/lib/types/order-types";
 
 // ============================================
 // Pickup Locations
@@ -22,7 +22,7 @@ export const DEFAULT_PICKUP_LOCATION = "Xtreme Couture";
  * Single source of truth for status-related styling.
  */
 export const STATUS_CONFIG: Record<
-  OrderStatus,
+  FulfillmentStatus,
   {
     label: string;
     variant: "default" | "secondary" | "destructive" | "outline";
@@ -32,22 +32,14 @@ export const STATUS_CONFIG: Record<
     badgeClass: string;
   }
 > = {
-  PENDING: {
-    label: "Pending",
+  NEW: {
+    label: "New",
     variant: "outline",
     bgColor: "bg-gray-100",
     dotColor: "bg-gray-500",
     borderColor: "border-l-gray-400",
     badgeClass:
-      "border-yellow-500 text-yellow-600 bg-yellow-50 dark:bg-yellow-950",
-  },
-  PAID: {
-    label: "Paid",
-    variant: "default",
-    bgColor: "bg-blue-100",
-    dotColor: "bg-blue-500",
-    borderColor: "border-l-blue-500",
-    badgeClass: "bg-blue-500 hover:bg-blue-500",
+      "border-gray-300 text-gray-700 bg-gray-50 dark:bg-gray-950",
   },
   PREPARING: {
     label: "Preparing",
@@ -56,6 +48,14 @@ export const STATUS_CONFIG: Record<
     dotColor: "bg-orange-500",
     borderColor: "border-l-amber-500",
     badgeClass: "bg-orange-500 hover:bg-orange-500",
+  },
+  READY: {
+    label: "Ready",
+    variant: "secondary",
+    bgColor: "bg-blue-100",
+    dotColor: "bg-blue-500",
+    borderColor: "border-l-blue-500",
+    badgeClass: "bg-blue-500 hover:bg-blue-500",
   },
   DELIVERED: {
     label: "Delivered",
@@ -75,20 +75,56 @@ export const STATUS_CONFIG: Record<
   },
 };
 
+export const PAYMENT_STATUS_CONFIG: Record<
+  PaymentStatus,
+  {
+    label: string;
+    variant: "default" | "secondary" | "destructive" | "outline";
+    bgColor: string;
+    dotColor: string;
+  }
+> = {
+  PENDING: {
+    label: "Pending",
+    variant: "outline",
+    bgColor: "bg-gray-100",
+    dotColor: "bg-gray-500",
+  },
+  PAID: {
+    label: "Paid",
+    variant: "secondary",
+    bgColor: "bg-emerald-100",
+    dotColor: "bg-emerald-500",
+  },
+  FAILED: {
+    label: "Failed",
+    variant: "destructive",
+    bgColor: "bg-red-100",
+    dotColor: "bg-red-500",
+  },
+  REFUNDED: {
+    label: "Refunded",
+    variant: "outline",
+    bgColor: "bg-amber-100",
+    dotColor: "bg-amber-500",
+  },
+};
+
 // Legacy exports for backwards compatibility (deprecated)
-export const STATUS_BORDER_COLORS: Record<OrderStatus, string> =
+export const STATUS_BORDER_COLORS: Record<FulfillmentStatus, string> =
   Object.fromEntries(
     Object.entries(STATUS_CONFIG).map(([k, v]) => [k, v.borderColor]),
-  ) as Record<OrderStatus, string>;
+  ) as Record<FulfillmentStatus, string>;
 
-export const STATUS_BG_COLORS: Record<OrderStatus, string> = Object.fromEntries(
+export const STATUS_BG_COLORS: Record<FulfillmentStatus, string> =
+  Object.fromEntries(
   Object.entries(STATUS_CONFIG).map(([k, v]) => [k, v.bgColor]),
-) as Record<OrderStatus, string>;
+  ) as Record<FulfillmentStatus, string>;
 
-export const STATUS_DOT_COLORS: Record<OrderStatus, string> =
+export const STATUS_DOT_COLORS: Record<FulfillmentStatus, string> =
   Object.fromEntries(
     Object.entries(STATUS_CONFIG).map(([k, v]) => [k, v.dotColor]),
-  ) as Record<OrderStatus, string>;
+  ) as Record<FulfillmentStatus, string>;
 
 // ============================================
 // Status Flow
@@ -98,13 +134,13 @@ export const STATUS_DOT_COLORS: Record<OrderStatus, string> =
  * Defines the next action for each status in the order workflow.
  * Returns null if no next action is available.
  */
-export const ORDER_STATUS_FLOW: Record<
-  OrderStatus,
-  { label: string; nextStatus: OrderStatus } | null
+export const FULFILLMENT_STATUS_FLOW: Record<
+  FulfillmentStatus,
+  { label: string; nextStatus: FulfillmentStatus } | null
 > = {
-  PENDING: null, // Orders should be paid first
-  PAID: { label: "Start", nextStatus: "PREPARING" },
-  PREPARING: { label: "Deliver", nextStatus: "DELIVERED" },
+  NEW: { label: "Start", nextStatus: "PREPARING" },
+  PREPARING: { label: "Ready", nextStatus: "READY" },
+  READY: { label: "Deliver", nextStatus: "DELIVERED" },
   DELIVERED: null, // Terminal state
   CANCELLED: null, // Terminal state
 };
@@ -112,10 +148,10 @@ export const ORDER_STATUS_FLOW: Record<
 /**
  * Get the next status action for a given current status.
  */
-export function getNextStatusAction(
-  status: OrderStatus,
-): { label: string; nextStatus: OrderStatus } | null {
-  return ORDER_STATUS_FLOW[status];
+export function getNextFulfillmentAction(
+  status: FulfillmentStatus,
+): { label: string; nextStatus: FulfillmentStatus } | null {
+  return FULFILLMENT_STATUS_FLOW[status];
 }
 
 // ============================================

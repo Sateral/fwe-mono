@@ -27,6 +27,7 @@ export const createOrderSchema = z.object({
   quantity: z.number().int().min(1, "Quantity must be at least 1"),
   unitPrice: z.number().positive("Unit price must be positive"),
   totalAmount: z.number().positive("Total amount must be positive"),
+  currency: z.string().length(3).optional().default("cad"),
   substitutions: z.array(orderSubstitutionSchema).optional(),
   modifiers: z.array(orderModifierSchema).optional(),
   proteinBoost: z.boolean().default(false),
@@ -37,13 +38,37 @@ export const createOrderSchema = z.object({
   stripePaymentIntentId: z
     .string()
     .min(1, "Stripe payment intent ID is required"),
+  stripeChargeId: z.string().optional(),
+  stripeBalanceTransactionId: z.string().optional(),
+});
+
+export const fulfillmentStatusSchema = z.enum([
+  "NEW",
+  "PREPARING",
+  "READY",
+  "DELIVERED",
+  "CANCELLED",
+]);
+
+export const paymentStatusSchema = z.enum([
+  "PENDING",
+  "PAID",
+  "FAILED",
+  "REFUNDED",
+]);
+
+/**
+ * Schema for updating fulfillment status.
+ */
+export const updateFulfillmentStatusSchema = z.object({
+  fulfillmentStatus: fulfillmentStatusSchema,
 });
 
 /**
- * Schema for updating order status.
+ * Schema for updating payment status.
  */
-export const updateOrderStatusSchema = z.object({
-  status: z.enum(["PENDING", "PAID", "PREPARING", "DELIVERED", "CANCELLED"]),
+export const updatePaymentStatusSchema = z.object({
+  paymentStatus: paymentStatusSchema,
 });
 
 // ============================================
@@ -51,7 +76,11 @@ export const updateOrderStatusSchema = z.object({
 // ============================================
 
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
-export type UpdateOrderStatusInput = z.infer<typeof updateOrderStatusSchema>;
-export type OrderStatus = UpdateOrderStatusInput["status"];
+export type UpdateFulfillmentStatusInput = z.infer<
+  typeof updateFulfillmentStatusSchema
+>;
+export type UpdatePaymentStatusInput = z.infer<typeof updatePaymentStatusSchema>;
+export type FulfillmentStatus = z.infer<typeof fulfillmentStatusSchema>;
+export type PaymentStatus = z.infer<typeof paymentStatusSchema>;
 export type OrderSubstitution = z.infer<typeof orderSubstitutionSchema>;
 export type OrderModifier = z.infer<typeof orderModifierSchema>;

@@ -1,4 +1,4 @@
-import { updateOrderStatusSchema } from "@fwe/validators";
+import { updateFulfillmentStatusSchema } from "@fwe/validators";
 import { NextResponse } from "next/server";
 
 import { requireInternalAuth } from "@/lib/api-auth";
@@ -40,11 +40,11 @@ export async function GET(
 }
 
 // ============================================
-// PATCH /api/orders/[id] - Update order status
+// PATCH /api/orders/[id] - Update fulfillment status
 // ============================================
 
 /**
- * Update an order's status.
+ * Update an order's fulfillment status.
  * Used by CMS dashboard for order management.
  */
 export async function PATCH(
@@ -62,7 +62,7 @@ export async function PATCH(
     const body = await request.json();
 
     // Validate request body
-    const parsed = updateOrderStatusSchema.safeParse(body);
+    const parsed = updateFulfillmentStatusSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid status", details: parsed.error.flatten() },
@@ -70,9 +70,14 @@ export async function PATCH(
       );
     }
 
-    const order = await orderService.updateOrderStatus(id, parsed.data.status);
+    const order = await orderService.updateFulfillmentStatus(
+      id,
+      parsed.data.fulfillmentStatus,
+    );
 
-    console.log(`[API] Order ${id} updated to status ${parsed.data.status}`);
+    console.log(
+      `[API] Order ${id} updated to fulfillment status ${parsed.data.fulfillmentStatus}`,
+    );
     return NextResponse.json(order);
   } catch (error) {
     console.error("[API] Failed to update order:", error);

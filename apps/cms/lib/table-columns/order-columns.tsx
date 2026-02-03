@@ -8,14 +8,19 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { IconCheck, IconClock } from "@tabler/icons-react";
+import { IconCheck, IconClock, IconTruckDelivery } from "@tabler/icons-react";
 import { format } from "date-fns";
 import {
   STATUS_CONFIG,
-  ORDER_STATUS_FLOW,
+  FULFILLMENT_STATUS_FLOW,
+  PAYMENT_STATUS_CONFIG,
   DEFAULT_PICKUP_LOCATION,
 } from "@/lib/constants/order.constants";
-import type { OrderWithRelations, OrderStatus } from "@/lib/types/order-types";
+import type {
+  FulfillmentStatus,
+  OrderWithRelations,
+  PaymentStatus,
+} from "@/lib/types/order-types";
 
 interface OrderColumnOptions {
   onQuickUpdate: (order: OrderWithRelations) => void;
@@ -71,17 +76,34 @@ export function getOrderColumns(
       },
     },
     {
-      accessorKey: "status",
-      header: "Status",
+      accessorKey: "fulfillmentStatus",
+      header: "Fulfillment",
       cell: ({ row }) => {
-        const status = row.original.status as OrderStatus;
+        const status =
+          row.original.fulfillmentStatus as FulfillmentStatus;
         const config = STATUS_CONFIG[status];
         return (
           <Badge className={`${config.bgColor} border-0`} variant="outline">
             <span
               className={`w-2 h-2 rounded-full mr-1.5 ${config.dotColor}`}
             />
-            {status}
+            {config.label}
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: "paymentStatus",
+      header: "Payment",
+      cell: ({ row }) => {
+        const status = row.original.paymentStatus as PaymentStatus;
+        const config = PAYMENT_STATUS_CONFIG[status];
+        return (
+          <Badge className={`${config.bgColor} border-0`} variant="outline">
+            <span
+              className={`w-2 h-2 rounded-full mr-1.5 ${config.dotColor}`}
+            />
+            {config.label}
           </Badge>
         );
       },
@@ -108,8 +130,12 @@ export function getOrderColumns(
       id: "actions",
       cell: ({ row }) => {
         const order = row.original;
-        const statusAction = ORDER_STATUS_FLOW[order.status as OrderStatus];
+        const statusAction =
+          FULFILLMENT_STATUS_FLOW[
+            order.fulfillmentStatus as FulfillmentStatus
+          ];
         const isUpdating = isPending && pendingOrderId === order.id;
+        const isPaymentReady = order.paymentStatus === "PAID";
 
         return (
           <div className="flex items-center gap-2">
@@ -118,7 +144,7 @@ export function getOrderColumns(
                 size="sm"
                 variant="ghost"
                 onClick={() => onQuickUpdate(order)}
-                disabled={isUpdating}
+                disabled={isUpdating || !isPaymentReady}
               >
                 {isUpdating ? (
                   "..."
@@ -126,9 +152,13 @@ export function getOrderColumns(
                   <>
                     <IconClock className="w-4 h-4 mr-1" /> Start
                   </>
+                ) : statusAction.nextStatus === "READY" ? (
+                  <>
+                    <IconCheck className="w-4 h-4 mr-1" /> Ready
+                  </>
                 ) : statusAction.nextStatus === "DELIVERED" ? (
                   <>
-                    <IconCheck className="w-4 h-4 mr-1" /> Done
+                    <IconTruckDelivery className="w-4 h-4 mr-1" /> Delivered
                   </>
                 ) : null}
               </Button>
