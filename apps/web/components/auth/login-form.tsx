@@ -1,0 +1,152 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { signIn } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useState } from "react";
+import { Spinner } from "@/components/ui/spinner";
+
+const formSchema = z.object({
+  email: z.email(),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters long",
+  }),
+});
+
+export function LoginForm({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  const [isPending, setIsPending] = useState(false);
+
+  const router = useRouter();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      setIsPending(true);
+      await signIn.email(
+        {
+          email: data.email,
+          password: data.password,
+          callbackURL: "/",
+        },
+        {
+          onError: (ctx) => {
+            toast.error(ctx.error.message || "Failed to login");
+          },
+          onSuccess: () => {
+            router.push("/");
+          },
+        }
+      );
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  return (
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <Card>
+        <CardHeader>
+          <CardTitle>Login to your account</CardTitle>
+          <CardDescription>
+            Enter your email below to login to your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
+            <FieldGroup>
+              <Controller
+                disabled={isPending}
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="email">Email</FieldLabel>
+                    <Input
+                      {...field}
+                      id="email"
+                      type="email"
+                      placeholder="m@example.com"
+                      required
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                disabled={isPending}
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="password">Password</FieldLabel>
+                    <Input
+                      {...field}
+                      id="password"
+                      type="password"
+                      placeholder="********"
+                      required
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Field orientation="vertical">
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? (
+                    <>
+                      <Spinner /> Logging in...
+                    </>
+                  ) : (
+                    "Login"
+                  )}
+                </Button>
+                <Button variant="outline" type="button" disabled={isPending}>
+                  Login with Google
+                </Button>
+                <FieldDescription className="text-center">
+                  Don&apos;t have an account?{" "}
+                  <Link href="/sign-up">Sign up</Link>
+                </FieldDescription>
+              </Field>
+            </FieldGroup>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

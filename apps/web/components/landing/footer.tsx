@@ -1,0 +1,89 @@
+import Container from "@/components/container";
+import { Button } from "@/components/ui/button";
+import {
+  Facebook,
+  Instagram,
+  Youtube,
+  ArrowUpRight,
+  Circle,
+} from "lucide-react";
+import Link from "next/link";
+
+const Footer = () => {
+  return (
+    <footer className="bg-[#111111] text-white py-10">
+      <Container>
+        {/* Top Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-12">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl md:text-3xl font-medium leading-tight text-gray-200">
+              Lorem ipsum dolor sit amet consectetur, <br />
+              <span className="text-gray-500">
+                adipiscing elit quisque faucibus
+              </span>
+            </h2>
+          </div>
+          <Button className="bg-[#8B3A3A] hover:bg-[#7A3333] hover:cursor-pointer text-white rounded-full px-8 py-6 text-lg font-medium group">
+            Get in touch
+            <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </Button>
+        </div>
+
+        {/* Middle Section */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8 md:mb-8 mb-2">
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+            <div className="relative w-8 h-8">
+              <div className="absolute inset-0 bg-[#8B3A3A] rounded-full opacity-20" />
+              <Circle className="w-8 h-8 text-[#8B3A3A] fill-[#8B3A3A]/20" />
+            </div>
+            <span className="text-2xl font-bold tracking-tight">Logoipsum</span>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex flex-wrap justify-center gap-8 md:gap-12">
+            {["Home", "Menu", "About Me", "Contact"].map((item) => (
+              <Link
+                key={item}
+                href="#"
+                className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+              >
+                {item}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Socials */}
+          <div className="flex gap-4">
+            {[Youtube, Facebook, Instagram].map((Icon, i) => (
+              <Link key={i} href="#" className="w-10 h-10 rounded-full">
+                <Icon className="w-5 h-5 text-gray-300" />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom Section */}
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
+          <p>Copyright © 2025 Free Will Eats - All Rights Reserved</p>
+          <div className="flex gap-8">
+            <Link
+              href="#"
+              className="hover:text-white transition-colors font-medium"
+            >
+              Terms of Service
+            </Link>
+            <Link
+              href="#"
+              className="hover:text-white transition-colors font-medium"
+            >
+              Privacy Policy
+            </Link>
+          </div>
+        </div>
+      </Container>
+    </footer>
+  );
+};
+
+export default Footer;
