@@ -1,10 +1,11 @@
 "use server";
 
-import { mealService } from "@/lib/services/meal.service";
-import { mealSchema, MealFormValues } from "@/lib/schemas/meal.schema";
+import { mealSchema, type MealFormValues } from "@fwe/validators";
 import { revalidatePath } from "next/cache";
-import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+
+import { auth } from "@/lib/auth";
+import { mealService } from "@/lib/services/meal.service";
 
 // Helper to check if user is admin
 async function requireAdmin() {

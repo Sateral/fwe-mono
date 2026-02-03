@@ -13,18 +13,8 @@ export type {
   ApiModifierOption as ModifierOption,
   ApiDietaryTag as DietaryTag,
   ApiOrder as Order,
-} from "@/lib/cms-api";
+} from "@fwe/types";
 
 // Re-export for backwards compatibility
-export type { ApiMeal, ApiOrder, CreateOrderInput } from "@/lib/cms-api";
-
-// Modifier type enum (matches CMS)
-export type ModifierType = "SINGLE_SELECT" | "MULTI_SELECT";
-
-// Order status enum (matches CMS)
-export type OrderStatus =
-  | "PENDING"
-  | "PAID"
-  | "PREPARING"
-  | "DELIVERED"
-  | "CANCELLED";
+export type { ApiMeal, ApiOrder, ModifierType, OrderStatus } from "@fwe/types";
+export type { CreateOrderInput } from "@fwe/validators";

@@ -1,5 +1,7 @@
+import type { CreateOrderInput } from "@fwe/validators";
+
 import prisma from "@/lib/prisma";
-import { orderService, type CreateOrderInput } from "./order.service";
+import { orderService } from "./order.service";
 
 // ============================================
 // Types
@@ -32,7 +34,7 @@ export const failedOrderService = {
    */
   async createFailedOrder(input: CreateFailedOrderInput) {
     console.log(
-      `[FailedOrderService] 🚨 Recording failed order for session ${input.stripeSessionId}`
+      `[FailedOrderService] 🚨 Recording failed order for session ${input.stripeSessionId}`,
     );
 
     // Check if already exists (idempotency)
@@ -42,7 +44,7 @@ export const failedOrderService = {
 
     if (existing) {
       console.log(
-        `[FailedOrderService] Failed order already exists, updating retry count`
+        `[FailedOrderService] Failed order already exists, updating retry count`,
       );
       return await prisma.failedOrder.update({
         where: { stripeSessionId: input.stripeSessionId },
@@ -85,7 +87,7 @@ export const failedOrderService = {
    */
   async getAllFailedOrders(status?: FailedOrderStatus) {
     console.log(
-      `[FailedOrderService] Fetching failed orders (status: ${status || "all"})`
+      `[FailedOrderService] Fetching failed orders (status: ${status || "all"})`,
     );
 
     return await prisma.failedOrder.findMany({
@@ -153,7 +155,7 @@ export const failedOrderService = {
       });
 
       console.log(
-        `[FailedOrderService] ✅ Successfully recovered order ${order.id}`
+        `[FailedOrderService] ✅ Successfully recovered order ${order.id}`,
       );
       return order;
     } catch (error) {

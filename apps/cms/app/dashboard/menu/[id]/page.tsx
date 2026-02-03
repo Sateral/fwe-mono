@@ -1,10 +1,11 @@
+import type { MealFormValues } from "@fwe/validators";
 import { notFound } from "next/navigation";
+
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { MealForm } from "../_components/meal-form";
 import { getMeal, getTags, updateMeal } from "@/lib/actions/meal.actions";
-import { MealFormValues } from "@/lib/schemas/meal.schema";
+import { MealForm } from "../_components/meal-form";
 
 interface EditMealPageProps {
   params: Promise<{

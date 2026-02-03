@@ -1,39 +1,8 @@
+import { updateProfileRequestSchema } from "@fwe/validators";
 import { NextRequest, NextResponse } from "next/server";
-import { userService, UpdateProfileInput } from "@/lib/services/user.service";
-import { z } from "zod";
+
 import { requireInternalAuth } from "@/lib/api-auth";
-
-const emptyToNull = (value: unknown) => {
-  if (typeof value !== "string") return value;
-  const trimmed = value.trim();
-  return trimmed.length === 0 ? null : trimmed;
-};
-
-// Validation schema for profile update
-const updateProfileSchema = z.object({
-  userId: z.string().min(1, "User ID is required"),
-  name: z.string().trim().min(1, "Name is required").optional(),
-  phone: z.preprocess(
-    emptyToNull,
-    z.string().min(10, "Valid phone number required").nullable().optional()
-  ),
-  deliveryAddress: z.preprocess(
-    emptyToNull,
-    z.string().min(5, "Address is required").nullable().optional()
-  ),
-  deliveryCity: z.preprocess(
-    emptyToNull,
-    z.string().min(2, "City is required").nullable().optional()
-  ),
-  deliveryPostal: z.preprocess(
-    emptyToNull,
-    z.string().min(3, "Postal code is required").nullable().optional()
-  ),
-  deliveryNotes: z.preprocess(
-    emptyToNull,
-    z.string().nullable().optional()
-  ),
-});
+import { userService } from "@/lib/services/user.service";
 
 /**
  * GET /api/users/[id]
@@ -41,7 +10,7 @@ const updateProfileSchema = z.object({
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   // Require authentication
   const authError = requireInternalAuth(request);
@@ -71,7 +40,7 @@ export async function GET(
     console.error("[API] Error fetching user:", error);
     return NextResponse.json(
       { error: "Failed to fetch user" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -82,7 +51,7 @@ export async function GET(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   // Require authentication
   const authError = requireInternalAuth(request);
@@ -93,16 +62,17 @@ export async function PATCH(
     const body = await request.json();
 
     // Validate input
-    const validation = updateProfileSchema.safeParse({ userId: id, ...body });
+    const validation = updateProfileRequestSchema.safeParse({
+      userId: id,
+      ...body,
+    });
     if (!validation.success) {
       const flattened = validation.error.flatten();
-      const firstError = Object.values(flattened.fieldErrors)[0]?.[0] 
-        || flattened.formErrors[0] 
-        || "Validation failed";
-      return NextResponse.json(
-        { error: firstError },
-        { status: 400 }
-      );
+      const firstError =
+        Object.values(flattened.fieldErrors)[0]?.[0] ||
+        flattened.formErrors[0] ||
+        "Validation failed";
+      return NextResponse.json({ error: firstError }, { status: 400 });
     }
 
     const {
@@ -138,7 +108,7 @@ export async function PATCH(
     console.error("[API] Error updating user profile:", error);
     return NextResponse.json(
       { error: "Failed to update profile" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

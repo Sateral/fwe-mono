@@ -1,9 +1,10 @@
+import type { MealFormValues } from "@fwe/validators";
+
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { createMeal, getTags } from "@/lib/actions/meal.actions";
 import { MealForm } from "../_components/meal-form";
-import { getTags, createMeal } from "@/lib/actions/meal.actions";
-import { MealFormValues } from "@/lib/schemas/meal.schema";
 
 export default async function NewMealPage() {
   const tags = await getTags();

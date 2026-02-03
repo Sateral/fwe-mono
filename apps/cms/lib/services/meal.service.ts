@@ -1,6 +1,7 @@
 import { DietaryTag, Meal } from "@fwe/db";
+import type { MealFormValues, TagFormValues } from "@fwe/validators";
+
 import prisma from "@/lib/prisma";
-import { CreateMealParams, CreateTagParams } from "@/lib/types";
 
 export const mealService = {
   // MEALS
@@ -119,7 +120,7 @@ export const mealService = {
     });
   },
 
-  async createMeal(data: CreateMealParams): Promise<Meal> {
+  async createMeal(data: MealFormValues): Promise<Meal> {
     const { tags, substitutionGroups, modifierGroups, ...mealData } = data;
 
     return await prisma.meal.create({
@@ -148,7 +149,7 @@ export const mealService = {
     });
   },
 
-  async updateMeal(id: string, data: CreateMealParams): Promise<Meal> {
+  async updateMeal(id: string, data: MealFormValues): Promise<Meal> {
     const { tags, substitutionGroups, modifierGroups, ...mealData } = data;
 
     return await prisma.$transaction(async (tx) => {
@@ -207,11 +208,11 @@ export const mealService = {
     return await prisma.dietaryTag.findUnique({ where: { id } });
   },
 
-  async createTag(data: CreateTagParams): Promise<DietaryTag> {
+  async createTag(data: TagFormValues): Promise<DietaryTag> {
     return await prisma.dietaryTag.create({ data });
   },
 
-  async updateTag(id: string, data: CreateTagParams): Promise<DietaryTag> {
+  async updateTag(id: string, data: TagFormValues): Promise<DietaryTag> {
     return await prisma.dietaryTag.update({ where: { id }, data });
   },
 

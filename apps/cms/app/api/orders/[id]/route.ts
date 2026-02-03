@@ -1,7 +1,8 @@
+import { updateOrderStatusSchema } from "@fwe/validators";
 import { NextResponse } from "next/server";
-import { orderService } from "@/lib/services/order.service";
-import { updateOrderStatusSchema } from "@/lib/schemas/order.schema";
+
 import { requireInternalAuth } from "@/lib/api-auth";
+import { orderService } from "@/lib/services/order.service";
 
 // ============================================
 // GET /api/orders/[id] - Get single order
@@ -12,7 +13,7 @@ import { requireInternalAuth } from "@/lib/api-auth";
  */
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   // Require authentication
   const authError = requireInternalAuth(request);
@@ -33,7 +34,7 @@ export async function GET(
     console.error("[API] Failed to fetch order:", error);
     return NextResponse.json(
       { error: "Failed to fetch order" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -48,7 +49,7 @@ export async function GET(
  */
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   // Require authentication
   const authError = requireInternalAuth(request);
@@ -65,7 +66,7 @@ export async function PATCH(
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid status", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -77,7 +78,7 @@ export async function PATCH(
     console.error("[API] Failed to update order:", error);
     return NextResponse.json(
       { error: "Failed to update order" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

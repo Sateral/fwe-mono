@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { mealSchema } from "@fwe/validators";
 import { revalidatePath } from "next/cache";
-import { mealService } from "@/lib/services/meal.service";
-import { mealSchema } from "@/lib/schemas/meal.schema";
+import { NextResponse } from "next/server";
+
 import { requireInternalAuth } from "@/lib/api-auth";
+import { mealService } from "@/lib/services/meal.service";
 
 // ============================================
 // GET /api/meals - List meals
@@ -39,7 +40,7 @@ export async function GET(request: Request) {
     console.error("[API] Failed to fetch meals:", error);
     return NextResponse.json(
       { error: "Failed to fetch meals" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -55,7 +56,7 @@ export async function POST(request: Request) {
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid meal data", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -65,7 +66,7 @@ export async function POST(request: Request) {
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to create meal" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

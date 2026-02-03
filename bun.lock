@@ -19,6 +19,7 @@
         "@dnd-kit/sortable": "^10.0.0",
         "@dnd-kit/utilities": "^3.2.2",
         "@fwe/db": "*",
+        "@fwe/validators": "*",
         "@hookform/resolvers": "^5.2.2",
         "@radix-ui/react-avatar": "^1.1.11",
         "@radix-ui/react-checkbox": "^1.3.3",
@@ -79,6 +80,8 @@
       "name": "fwe-clean",
       "version": "0.1.0",
       "dependencies": {
+        "@fwe/types": "*",
+        "@fwe/validators": "*",
         "@hookform/resolvers": "^5.2.2",
         "@prisma/adapter-pg": "^7.3.0",
         "@prisma/client": "^7.3.0",
@@ -154,6 +157,18 @@
         "typescript-eslint": "^8.50.0",
       },
     },
+    "packages/types": {
+      "name": "@fwe/types",
+      "version": "0.1.0",
+      "dependencies": {
+        "@fwe/validators": "*",
+      },
+      "devDependencies": {
+        "@repo/typescript-config": "*",
+        "@types/node": "^20",
+        "typescript": "^5",
+      },
+    },
     "packages/typescript-config": {
       "name": "@repo/typescript-config",
       "version": "0.0.0",
@@ -173,6 +188,18 @@
         "@types/react-dom": "19.2.2",
         "eslint": "^9.39.1",
         "typescript": "5.9.2",
+      },
+    },
+    "packages/validators": {
+      "name": "@fwe/validators",
+      "version": "0.1.0",
+      "dependencies": {
+        "zod": "^4.1.13",
+      },
+      "devDependencies": {
+        "@repo/typescript-config": "*",
+        "@types/node": "^20",
+        "typescript": "^5",
       },
     },
   },
@@ -330,6 +357,10 @@
     "@floating-ui/utils": ["@floating-ui/utils@0.2.10", "", {}, "sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ=="],
 
     "@fwe/db": ["@fwe/db@workspace:packages/db"],
+
+    "@fwe/types": ["@fwe/types@workspace:packages/types"],
+
+    "@fwe/validators": ["@fwe/validators@workspace:packages/validators"],
 
     "@hono/node-server": ["@hono/node-server@1.19.9", "", { "peerDependencies": { "hono": "^4" } }, "sha512-vHL6w3ecZsky+8P5MD+eFfaGTyCeOHUIFYMGpQGbrBTSmNNoxv0if69rEZ5giu36weC5saFuznL411gRX7bJDw=="],
 

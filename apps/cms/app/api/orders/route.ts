@@ -1,7 +1,8 @@
+import { createOrderSchema } from "@fwe/validators";
 import { NextResponse } from "next/server";
-import { orderService } from "@/lib/services/order.service";
-import { createOrderSchema } from "@/lib/schemas/order.schema";
+
 import { requireInternalAuth } from "@/lib/api-auth";
+import { orderService } from "@/lib/services/order.service";
 
 // ============================================
 // GET /api/orders - List orders
@@ -38,7 +39,7 @@ export async function GET(request: Request) {
     console.error("[API] Failed to fetch orders:", error);
     return NextResponse.json(
       { error: "Failed to fetch orders" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -67,7 +68,7 @@ export async function POST(request: Request) {
       console.error("[API] Order validation failed:", parsed.error.flatten());
       return NextResponse.json(
         { error: "Invalid order data", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
     console.error("[API] Failed to create order:", error);
     return NextResponse.json(
       { error: "Failed to create order" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

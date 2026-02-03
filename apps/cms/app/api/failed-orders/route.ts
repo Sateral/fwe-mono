@@ -1,48 +1,8 @@
+import { createFailedOrderSchema } from "@fwe/validators";
 import { NextResponse } from "next/server";
-import { failedOrderService } from "@/lib/services/failed-order.service";
-import { z } from "zod";
+
 import { requireInternalAuth } from "@/lib/api-auth";
-
-// ============================================
-// Validation Schemas
-// ============================================
-
-const createFailedOrderSchema = z.object({
-  stripeSessionId: z.string().min(1),
-  stripePaymentIntentId: z.string().optional(),
-  customerEmail: z.string().optional(),
-  customerName: z.string().optional(),
-  orderData: z.object({
-    userId: z.string(),
-    mealId: z.string(),
-    rotationId: z.string(),
-    quantity: z.number(),
-    unitPrice: z.number(),
-    totalAmount: z.number(),
-    substitutions: z
-      .array(
-        z.object({
-          groupName: z.string(),
-          optionName: z.string(),
-        })
-      )
-      .optional(),
-    modifiers: z
-      .array(
-        z.object({
-          groupName: z.string(),
-          optionNames: z.array(z.string()),
-        })
-      )
-      .optional(),
-    proteinBoost: z.boolean().optional(),
-    notes: z.string().optional(),
-    stripeSessionId: z.string(),
-    stripePaymentIntentId: z.string(),
-  }),
-  errorMessage: z.string(),
-  errorCode: z.string().optional(),
-});
+import { failedOrderService } from "@/lib/services/failed-order.service";
 
 // ============================================
 // GET /api/failed-orders - List failed orders
@@ -71,7 +31,7 @@ export async function GET(request: Request) {
     console.log(`[API] GET /api/failed-orders (status: ${status || "all"})`);
 
     const failedOrders = await failedOrderService.getAllFailedOrders(
-      status || undefined
+      status || undefined,
     );
 
     // Also include pending count for alerts
@@ -85,7 +45,7 @@ export async function GET(request: Request) {
     console.error("[API] Failed to fetch failed orders:", error);
     return NextResponse.json(
       { error: "Failed to fetch failed orders" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -112,11 +72,11 @@ export async function POST(request: Request) {
     if (!parsed.success) {
       console.error(
         "[API] Failed order validation failed:",
-        parsed.error.flatten()
+        parsed.error.flatten(),
       );
       return NextResponse.json(
         { error: "Invalid data", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -130,7 +90,7 @@ export async function POST(request: Request) {
     console.log(
       `Customer: ${parsed.data.customerName || "Unknown"} (${
         parsed.data.customerEmail || "No email"
-      })`
+      })`,
     );
     console.log(`Error: ${parsed.data.errorMessage}`);
     console.log(`Failed Order ID: ${failedOrder.id}`);
@@ -142,7 +102,7 @@ export async function POST(request: Request) {
     console.error("[API] Failed to create failed order:", error);
     return NextResponse.json(
       { error: "Failed to record failed order" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

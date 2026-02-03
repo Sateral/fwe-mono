@@ -6,6 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { IconPlus, IconTrash, IconX, IconCheck } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import {
+  mealSchema,
+  type MealFormInput,
+  type MealFormValues,
+} from "@fwe/validators";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,12 +36,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-
-import {
-  mealSchema,
-  MealFormValues,
-  MealFormInput,
-} from "@/lib/schemas/meal.schema";
 
 interface MealFormProps {
   initialData?: MealFormInput | null;
@@ -495,7 +494,7 @@ export function MealForm({ initialData, tags, onSubmit }: MealFormProps) {
                                 currentValue.map((t) => t.id).includes(tag.id)
                               ) {
                                 field.onChange(
-                                  currentValue.filter((t) => t.id !== tag.id)
+                                  currentValue.filter((t) => t.id !== tag.id),
                                 );
                               } else {
                                 field.onChange([...currentValue, tag]);

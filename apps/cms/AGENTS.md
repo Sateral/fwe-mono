@@ -57,7 +57,7 @@ meal-prep orders. Meals can be:
     `reports/prep-sheet`, `cron/rotation-flip`.
 - `lib/services/`: Business logic (service layer).
 - `lib/actions/`: Server actions (thin wrappers).
-- `lib/schemas/`: Zod schemas.
+- `packages/validators`: shared Zod schemas (input validation).
 - `lib/constants/`: Query keys, status flow, enums.
 - `hooks/`: React Query hooks.
 - `components/ui/`: Shared UI components.
@@ -176,7 +176,7 @@ Prisma (CMS):
 ### Types & Validation
 
 - Prefer Zod schemas for API input validation.
-- Keep schemas close to domain (`lib/schemas/` now; move to `packages/validators` in monorepo).
+- Use shared schemas from `packages/validators` for API input validation.
 - Validate whenever possible before service calls.
 
 ### Naming

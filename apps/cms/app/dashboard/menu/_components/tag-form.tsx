@@ -2,6 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DietaryTag } from "@fwe/db";
+import {
+  tagSchema,
+  type TagFormInput,
+  type TagFormValues,
+} from "@fwe/validators";
 import * as Icons from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -29,11 +34,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  tagSchema,
-  TagFormValues,
-  TagFormInput,
-} from "@/lib/schemas/meal.schema";
 import { darkenColor } from "@/lib/utils";
 
 interface TagFormProps {

@@ -13,6 +13,8 @@ monorepo. The CMS is the source of truth for data and authentication.
 ## Packages
 
 - `packages/db` — Prisma schema, migrations, and Prisma Client
+- `packages/validators` — shared Zod schemas and input types
+- `packages/types` — shared API response types
 - `packages/eslint-config` — shared lint rules
 - `packages/typescript-config` — shared TypeScript configs
 - `packages/ui` — template UI library (not used by FWE apps)

@@ -1,45 +1,12 @@
+import type { CreateOrderInput } from "@fwe/validators";
+import { addDays, startOfWeek, subDays } from "date-fns";
+
 import prisma from "@/lib/prisma";
 import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
-import { startOfWeek, subDays, addDays } from "date-fns";
 
 // ============================================
 // Types
 // ============================================
-
-/**
- * Substitution choice made by customer for an order.
- * This captures what the customer selected for each substitution group.
- */
-export interface OrderSubstitution {
-  groupName: string;
-  optionName: string;
-}
-
-export interface OrderModifier {
-  groupName: string;
-  optionNames: string[];
-}
-
-/**
- * Input for creating a new order.
- * All fields are validated before reaching this service.
- */
-export interface CreateOrderInput {
-  userId: string;
-  mealId: string;
-  rotationId: string;
-  quantity: number;
-  unitPrice: number;
-  totalAmount: number;
-  substitutions?: OrderSubstitution[];
-  modifiers?: OrderModifier[];
-  proteinBoost?: boolean;
-  notes?: string;
-  deliveryMethod?: "DELIVERY" | "PICKUP";
-  pickupLocation?: string;
-  stripeSessionId: string;
-  stripePaymentIntentId: string;
-}
 
 /**
  * Valid order status values.
@@ -95,7 +62,7 @@ export const orderService = {
 
     if (existingOrder) {
       console.log(
-        `[OrderService] Order already exists for session ${input.stripeSessionId}`
+        `[OrderService] Order already exists for session ${input.stripeSessionId}`,
       );
       return existingOrder;
     }
@@ -108,7 +75,7 @@ export const orderService = {
     let rotationId = input.rotationId;
     if (!rotationExists) {
       console.warn(
-        `[OrderService] Rotation ${input.rotationId} not found. Falling back to ordering week rotation.`
+        `[OrderService] Rotation ${input.rotationId} not found. Falling back to ordering week rotation.`,
       );
       const { rotation } =
         await weeklyRotationService.getOrCreateOrderingRotation();
@@ -152,7 +119,7 @@ export const orderService = {
 
       if (recoveredOrder) {
         console.warn(
-          `[OrderService] Order already created during race for session ${input.stripeSessionId}`
+          `[OrderService] Order already created during race for session ${input.stripeSessionId}`,
         );
         return recoveredOrder;
       }
@@ -179,7 +146,7 @@ export const orderService = {
    */
   async getOrderByStripeSessionId(stripeSessionId: string) {
     console.log(
-      `[OrderService] Fetching order by Stripe session ${stripeSessionId}`
+      `[OrderService] Fetching order by Stripe session ${stripeSessionId}`,
     );
 
     return await prisma.order.findUnique({
@@ -323,7 +290,7 @@ export const orderService = {
    */
   async getOrdersForDeliveryWeek(deliveryWeekStart: Date) {
     console.log(
-      `[OrderService] Fetching orders for delivery week starting ${deliveryWeekStart.toISOString()}`
+      `[OrderService] Fetching orders for delivery week starting ${deliveryWeekStart.toISOString()}`,
     );
 
     // Delivery Week starts on Saturday.

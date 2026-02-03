@@ -5,6 +5,8 @@
  * All data is fetched from and sent to the CMS API - no direct database access.
  */
 
+import type { OrderStatus } from "@fwe/types";
+
 import { ordersApi, type ApiOrder, type CreateOrderInput } from "@/lib/cms-api";
 
 // Re-export types for convenience
@@ -30,7 +32,7 @@ export async function createOrder(input: CreateOrderInput): Promise<ApiOrder> {
  * Used by the success page to show order confirmation.
  */
 export async function getOrderByStripeSessionId(
-  stripeSessionId: string
+  stripeSessionId: string,
 ): Promise<ApiOrder | null> {
   return ordersApi.getByStripeSession(stripeSessionId);
 }
@@ -54,7 +56,7 @@ export async function getUserOrders(userId: string): Promise<ApiOrder[]> {
  */
 export async function updateOrderStatus(
   orderId: string,
-  status: "PENDING" | "PAID" | "PREPARING" | "DELIVERED" | "CANCELLED"
+  status: OrderStatus,
 ): Promise<ApiOrder> {
   return ordersApi.updateStatus(orderId, status);
 }

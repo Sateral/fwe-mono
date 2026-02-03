@@ -1,3 +1,22 @@
+import type {
+  ApiDietaryTag,
+  ApiFailedOrder,
+  ApiMeal,
+  ApiModifierGroup,
+  ApiModifierOption,
+  ApiOrder,
+  ApiSubstitutionGroup,
+  ApiSubstitutionOption,
+  ApiUser,
+  FailedOrderStatus,
+  OrderStatus,
+} from "@fwe/types";
+import type {
+  CreateFailedOrderInput,
+  CreateOrderInput,
+  UpdateProfileInput,
+} from "@fwe/validators";
+
 import { fetchWithTimeout } from "@/lib/http-client";
 
 /**
@@ -23,7 +42,7 @@ const INTERNAL_API_SECRET = process.env.INTERNAL_API_SECRET;
  */
 async function apiRequest<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<T> {
   const url = `${CMS_URL}${endpoint}`;
   console.log(`[CMS API] ${options.method || "GET"} ${endpoint}`);
@@ -58,114 +77,22 @@ async function apiRequest<T>(
 // Type Definitions
 // ============================================
 
-export interface ApiMeal {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  imageUrl: string | null;
-  isFeatured: boolean;
-  isActive: boolean;
-  price: number;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  fiber: number;
-  createdAt: string;
-  updatedAt: string;
-  substitutionGroups: ApiSubstitutionGroup[];
-  modifierGroups: ApiModifierGroup[];
-  tags: ApiDietaryTag[];
-}
-
-export interface ApiSubstitutionGroup {
-  id: string;
-  name: string;
-  mealId: string;
-  options: ApiSubstitutionOption[];
-}
-
-export interface ApiSubstitutionOption {
-  id: string;
-  name: string;
-  isDefault: boolean;
-  priceAdjustment: number;
-  calorieAdjust: number;
-  proteinAdjust: number;
-  carbsAdjust: number;
-  fatAdjust: number;
-  fiberAdjust: number;
-  groupId: string;
-}
-
-export interface ApiModifierGroup {
-  id: string;
-  name: string;
-  type: "SINGLE_SELECT" | "MULTI_SELECT";
-  minSelection: number;
-  maxSelection: number | null;
-  mealId: string;
-  options: ApiModifierOption[];
-}
-
-export interface ApiModifierOption {
-  id: string;
-  name: string;
-  extraPrice: number;
-  modifierGroupId: string;
-}
-
-export interface ApiDietaryTag {
-  id: string;
-  name: string;
-  color: string;
-  icon: string;
-}
-
-export interface ApiOrder {
-  id: string;
-  userId: string;
-  mealId: string;
-  quantity: number;
-  unitPrice: number;
-  totalAmount: number;
-  substitutions: { groupName: string; optionName: string }[] | null;
-  modifiers: { groupName: string; optionNames: string[] }[] | null;
-  proteinBoost: boolean;
-  notes: string | null;
-  deliveryMethod: "DELIVERY" | "PICKUP";
-  pickupLocation: string | null;
-  status: "PENDING" | "PAID" | "PREPARING" | "DELIVERED" | "CANCELLED";
-  stripeSessionId: string | null;
-  stripePaymentIntentId: string | null;
-  createdAt: string;
-  updatedAt: string;
-  meal: ApiMeal;
-  rotationId: string;
-  user?: {
-    id: string;
-    name: string;
-    email: string;
-  };
-}
-
-export interface CreateOrderInput {
-  userId: string;
-  mealId: string;
-  rotationId: string;
-  quantity: number;
-  unitPrice: number;
-  totalAmount: number;
-  substitutions?: { groupName: string; optionName: string }[];
-  modifiers?: { groupName: string; optionNames: string[] }[];
-  proteinBoost?: boolean;
-  notes?: string;
-  deliveryMethod?: "DELIVERY" | "PICKUP";
-  pickupLocation?: string;
-  stripeSessionId: string;
-  stripePaymentIntentId: string;
-}
+export type {
+  ApiDietaryTag,
+  ApiFailedOrder,
+  ApiMeal,
+  ApiModifierGroup,
+  ApiModifierOption,
+  ApiOrder,
+  ApiSubstitutionGroup,
+  ApiSubstitutionOption,
+  ApiUser,
+} from "@fwe/types";
+export type {
+  CreateFailedOrderInput,
+  CreateOrderInput,
+  UpdateProfileInput,
+} from "@fwe/validators";
 
 // ============================================
 // Meals API
@@ -288,7 +215,7 @@ export const ordersApi = {
   async getByStripeSession(sessionId: string): Promise<ApiOrder | null> {
     try {
       return await apiRequest<ApiOrder>(
-        `/api/orders/stripe-session/${sessionId}`
+        `/api/orders/stripe-session/${sessionId}`,
       );
     } catch {
       return null;
@@ -305,10 +232,7 @@ export const ordersApi = {
   /**
    * Update order status.
    */
-  async updateStatus(
-    id: string,
-    status: "PENDING" | "PAID" | "PREPARING" | "DELIVERED" | "CANCELLED"
-  ): Promise<ApiOrder> {
+  async updateStatus(id: string, status: OrderStatus): Promise<ApiOrder> {
     return apiRequest<ApiOrder>(`/api/orders/${id}`, {
       method: "PATCH",
       body: JSON.stringify({ status }),
@@ -319,33 +243,6 @@ export const ordersApi = {
 // ============================================
 // Failed Orders API (Dead Letter Queue)
 // ============================================
-
-export interface CreateFailedOrderInput {
-  stripeSessionId: string;
-  stripePaymentIntentId?: string;
-  customerEmail?: string;
-  customerName?: string;
-  orderData: CreateOrderInput;
-  errorMessage: string;
-  errorCode?: string;
-}
-
-export interface ApiFailedOrder {
-  id: string;
-  stripeSessionId: string;
-  stripePaymentIntentId: string | null;
-  customerEmail: string | null;
-  customerName: string | null;
-  orderData: CreateOrderInput;
-  errorMessage: string;
-  errorCode: string | null;
-  status: "PENDING" | "RETRYING" | "RESOLVED" | "ABANDONED";
-  retryCount: number;
-  createdAt: string;
-  updatedAt: string;
-  resolvedAt: string | null;
-  resolvedBy: string | null;
-}
 
 export const failedOrdersApi = {
   /**
@@ -362,7 +259,7 @@ export const failedOrdersApi = {
    * Get all failed orders with optional status filter.
    */
   async getAll(
-    status?: "PENDING" | "RETRYING" | "RESOLVED" | "ABANDONED"
+    status?: FailedOrderStatus,
   ): Promise<{ failedOrders: ApiFailedOrder[]; pendingCount: number }> {
     const query = status ? `?status=${status}` : "";
     return apiRequest(`/api/failed-orders${query}`);
@@ -384,7 +281,7 @@ export const failedOrdersApi = {
    */
   async retry(
     id: string,
-    adminUserId?: string
+    adminUserId?: string,
   ): Promise<{ success: boolean; order?: ApiOrder }> {
     return apiRequest(`/api/failed-orders/${id}`, {
       method: "POST",
@@ -397,7 +294,7 @@ export const failedOrdersApi = {
    */
   async abandon(
     id: string,
-    adminUserId?: string
+    adminUserId?: string,
   ): Promise<{ success: boolean }> {
     return apiRequest(`/api/failed-orders/${id}`, {
       method: "POST",
@@ -409,28 +306,6 @@ export const failedOrdersApi = {
 // ============================================
 // Users API
 // ============================================
-
-export interface ApiUser {
-  id: string;
-  name: string;
-  email: string;
-  image?: string | null;
-  phone: string | null;
-  deliveryAddress: string | null;
-  deliveryCity: string | null;
-  deliveryPostal: string | null;
-  deliveryNotes: string | null;
-  profileComplete: boolean;
-}
-
-export interface UpdateProfileInput {
-  name?: string;
-  phone?: string | null;
-  deliveryAddress?: string | null;
-  deliveryCity?: string | null;
-  deliveryPostal?: string | null;
-  deliveryNotes?: string | null;
-}
 
 export const usersApi = {
   /**

@@ -1,17 +1,6 @@
+import type { UpdateProfileInput } from "@fwe/validators";
+
 import prisma from "@/lib/prisma";
-
-// ============================================
-// Types
-// ============================================
-
-export interface UpdateProfileInput {
-  name?: string;
-  phone?: string | null;
-  deliveryAddress?: string | null;
-  deliveryCity?: string | null;
-  deliveryPostal?: string | null;
-  deliveryNotes?: string | null;
-}
 
 // ============================================
 // User Service

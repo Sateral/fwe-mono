@@ -12,6 +12,11 @@ export const orderSubstitutionSchema = z.object({
   optionName: z.string().min(1, "Option name is required"),
 });
 
+export const orderModifierSchema = z.object({
+  groupName: z.string().min(1, "Group name is required"),
+  optionNames: z.array(z.string()).min(1, "At least one option is required"),
+});
+
 /**
  * Schema for creating an order via API.
  */
@@ -23,14 +28,7 @@ export const createOrderSchema = z.object({
   unitPrice: z.number().positive("Unit price must be positive"),
   totalAmount: z.number().positive("Total amount must be positive"),
   substitutions: z.array(orderSubstitutionSchema).optional(),
-  modifiers: z
-    .array(
-      z.object({
-        groupName: z.string(),
-        optionNames: z.array(z.string()),
-      })
-    )
-    .optional(),
+  modifiers: z.array(orderModifierSchema).optional(),
   proteinBoost: z.boolean().default(false),
   notes: z.string().optional(),
   deliveryMethod: z.enum(["DELIVERY", "PICKUP"]).optional(),
@@ -54,4 +52,6 @@ export const updateOrderStatusSchema = z.object({
 
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
 export type UpdateOrderStatusInput = z.infer<typeof updateOrderStatusSchema>;
+export type OrderStatus = UpdateOrderStatusInput["status"];
 export type OrderSubstitution = z.infer<typeof orderSubstitutionSchema>;
+export type OrderModifier = z.infer<typeof orderModifierSchema>;
