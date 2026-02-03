@@ -1,0 +1,58 @@
+import React from "react";
+import Link from "next/link";
+import { IconPlus } from "@tabler/icons-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { getMeals } from "@/lib/actions/meal.actions";
+import { MealRow } from "../_components/meal-row";
+const MenuTable = async () => {
+  const meals = await getMeals();
+
+  return (
+    <div className="flex flex-col gap-4 p-4 pt-0">
+      <div className="flex items-center justify-between py-4">
+        <h1 className="text-2xl font-bold tracking-tight">Menu Management</h1>
+        <Button asChild>
+          <Link href="/dashboard/menu/new">
+            <IconPlus className="mr-2 h-4 w-4" />
+            Create Meal
+          </Link>
+        </Button>
+      </div>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Slug</TableHead>
+              <TableHead>Price</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {meals.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="h-24 text-center">
+                  No meals found. Create one to get started.
+                </TableCell>
+              </TableRow>
+            ) : (
+              meals.map((meal) => <MealRow meal={meal} key={meal.id} />)
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  );
+};
+
+export default MenuTable;

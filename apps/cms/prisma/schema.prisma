@@ -1,0 +1,313 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Meal {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?  @db.Text
+  imageUrl    String?
+  isFeatured  Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  mealType    MealType @default(SIGNATURE)
+
+  // Default pricing & macros
+  price    Float @default(0)
+  calories Int   @default(0)
+  protein  Int   @default(0)
+  carbs    Int   @default(0)
+  fat      Int   @default(0)
+  fiber    Int   @default(0)
+
+  substitutionGroups SubstitutionGroup[]
+  modifierGroups     ModifierGroup[]
+  tags               DietaryTag[]
+  orders             Order[]
+  rotations          WeeklyRotation[]    @relation("RotationMeals")
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  // Performance indexes
+  @@index([isActive])                   // Fast active meal filtering
+  @@index([isFeatured])                 // Fast featured meal queries
+  @@index([mealType])                   // Fast meal type filtering
+  @@index([isActive, isFeatured])       // Compound index for common query
+}
+
+model SubstitutionGroup {
+  id      String               @id @default(cuid())
+  name    String // e.g., "Carb Source", "Protein Source"
+  mealId  String
+  meal    Meal                 @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  options SubstitutionOption[]
+}
+
+model SubstitutionOption {
+  id              String            @id @default(cuid())
+  name            String // e.g., "White Rice", "Brown Rice", "Quinoa"
+  isDefault       Boolean           @default(false)
+  priceAdjustment Float             @default(0) // e.g., +1.50 for quinoa
+  calorieAdjust   Int               @default(0)
+  proteinAdjust   Int               @default(0)
+  carbsAdjust     Int               @default(0)
+  fatAdjust       Int               @default(0)
+  fiberAdjust     Int               @default(0)
+  groupId         String
+  group           SubstitutionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+}
+
+model ModifierGroup {
+  id           String           @id @default(cuid())
+  name         String // "Select Base", "Add-Ons"
+  type         ModifierType // SINGLE_SELECT, MULTI_SELECT
+  minSelection Int              @default(0)
+  maxSelection Int?
+  mealId       String
+  meal         Meal             @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  options      ModifierOption[]
+}
+
+model ModifierOption {
+  id              String        @id @default(cuid())
+  name            String
+  extraPrice      Float         @default(0.00)
+  modifierGroupId String
+  modifierGroup   ModifierGroup @relation(fields: [modifierGroupId], references: [id], onDelete: Cascade)
+}
+
+model DietaryTag {
+  id    String @id @default(cuid())
+  name  String @unique // "Vegan", "Gluten-Free", "High Protein"
+  color String @default("#000000")
+  icon  String @default("circle")
+  meals Meal[]
+}
+
+model Order {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  // Meal reference
+  mealId String
+  meal   Meal   @relation(fields: [mealId], references: [id])
+
+  // Pricing
+  quantity    Int
+  unitPrice   Float // Price per meal at time of order
+  totalAmount Float // Final amount charged
+
+  // Customizations (for chef preparation)
+  substitutions Json? // [{ groupName, optionName }]
+  modifiers     Json? // [{ groupName, optionNames: string[] }]
+  proteinBoost  Boolean @default(false)
+  notes         String? @db.Text
+
+  // Fulfillment
+  deliveryMethod DeliveryMethod @default(DELIVERY)
+  pickupLocation String?
+
+  // Order status & Stripe
+  status                OrderStatus @default(PENDING)
+  stripeSessionId       String?     @unique
+  stripePaymentIntentId String?     @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Meal Rotation Linking
+  rotationId String
+  rotation   WeeklyRotation @relation(fields: [rotationId], references: [id])
+
+  // Performance indexes
+  @@index([userId])          // Fast user order history lookup
+  @@index([status])          // Fast status filtering for dashboard
+  @@index([createdAt])       // Fast date-range queries
+  @@index([rotationId])      // Fast rotation-based queries
+  @@index([mealId])          // Fast meal-based aggregations
+}
+
+enum ModifierType {
+  SINGLE_SELECT
+  MULTI_SELECT
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PREPARING
+  DELIVERED
+  CANCELLED
+}
+
+enum MealType {
+  SIGNATURE  // Always available
+  ROTATING   // Weekly specials only
+}
+
+enum RotationStatus {
+  DRAFT      // Being prepared, not visible to customers
+  PUBLISHED  // Live and orderable
+  ARCHIVED   // Past rotation, for records
+}
+
+enum DeliveryMethod {
+  DELIVERY
+  PICKUP
+}
+
+// ============================================
+// Weekly Rotation System
+// ============================================
+
+model WeeklyRotation {
+  id          String         @id @default(cuid())
+  weekStart   DateTime       // Monday 00:00 Toronto time
+  weekEnd     DateTime       // Sunday 23:59 Toronto time
+  orderCutoff DateTime       // Friday 23:59 Toronto time
+  status      RotationStatus @default(DRAFT)
+  meals       Meal[]         @relation("RotationMeals")
+  orders      Order[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@unique([weekStart])
+  @@index([status])
+}
+
+// ============================================
+// Dead Letter Queue for Failed Orders
+// ============================================
+
+/// Stores failed order creation attempts for admin recovery.
+/// When a Stripe payment succeeds but order creation fails,
+/// the order data is stored here for manual or automated retry.
+model FailedOrder {
+  id String @id @default(cuid())
+
+  // Stripe identifiers for lookup
+  stripeSessionId       String  @unique
+  stripePaymentIntentId String?
+
+  // Customer info
+  customerEmail String?
+  customerName  String?
+
+  // Order data (JSON blob of the full order request)
+  orderData Json
+
+  // Error tracking
+  errorMessage String  @db.Text
+  errorCode    String?
+
+  // Recovery status
+  status     FailedOrderStatus @default(PENDING)
+  retryCount Int               @default(0)
+
+  // Timestamps
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  resolvedAt DateTime?
+  resolvedBy String? // Admin user ID who resolved it
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum FailedOrderStatus {
+  PENDING // Awaiting retry or manual resolution
+  RETRYING // Currently being retried
+  RESOLVED // Successfully recovered
+  ABANDONED // Marked as unrecoverable (e.g., refunded)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  role          String    @default("user")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  emailVerified Boolean   @default(false)
+  image         String?
+  sessions      Session[]
+  accounts      Account[]
+
+  orders           Order[]
+  stripeCustomerId String? @unique @map(name: "stripe_customer_id")
+
+  // Profile completion for onboarding
+  profileComplete  Boolean  @default(false)
+  phone            String?
+  deliveryAddress  String?
+  deliveryCity     String?
+  deliveryPostal   String?
+  deliveryNotes    String?  @db.Text
+
+  banned     Boolean?  @default(false)
+  banReason  String?
+  banExpires DateTime?
+
+  @@map("user")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}

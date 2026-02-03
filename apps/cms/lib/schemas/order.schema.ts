@@ -1,0 +1,57 @@
+import { z } from "zod";
+
+// ============================================
+// Order Schemas
+// ============================================
+
+/**
+ * Schema for order substitution data.
+ */
+export const orderSubstitutionSchema = z.object({
+  groupName: z.string().min(1, "Group name is required"),
+  optionName: z.string().min(1, "Option name is required"),
+});
+
+/**
+ * Schema for creating an order via API.
+ */
+export const createOrderSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+  mealId: z.string().min(1, "Meal ID is required"),
+  rotationId: z.string().min(1, "Rotation ID is required"),
+  quantity: z.number().int().min(1, "Quantity must be at least 1"),
+  unitPrice: z.number().positive("Unit price must be positive"),
+  totalAmount: z.number().positive("Total amount must be positive"),
+  substitutions: z.array(orderSubstitutionSchema).optional(),
+  modifiers: z
+    .array(
+      z.object({
+        groupName: z.string(),
+        optionNames: z.array(z.string()),
+      })
+    )
+    .optional(),
+  proteinBoost: z.boolean().default(false),
+  notes: z.string().optional(),
+  deliveryMethod: z.enum(["DELIVERY", "PICKUP"]).optional(),
+  pickupLocation: z.string().optional(),
+  stripeSessionId: z.string().min(1, "Stripe session ID is required"),
+  stripePaymentIntentId: z
+    .string()
+    .min(1, "Stripe payment intent ID is required"),
+});
+
+/**
+ * Schema for updating order status.
+ */
+export const updateOrderStatusSchema = z.object({
+  status: z.enum(["PENDING", "PAID", "PREPARING", "DELIVERED", "CANCELLED"]),
+});
+
+// ============================================
+// Type Exports
+// ============================================
+
+export type CreateOrderInput = z.infer<typeof createOrderSchema>;
+export type UpdateOrderStatusInput = z.infer<typeof updateOrderStatusSchema>;
+export type OrderSubstitution = z.infer<typeof orderSubstitutionSchema>;
