@@ -16,19 +16,24 @@
     "generate": {
       "dependsOn": ["^generate"],
       "inputs": ["$TURBO_DEFAULT$", "prisma/**"],
-      "outputs": ["src/generated/prisma/**"]
+      "outputs": ["src/generated/prisma/**"],
+      "env": ["DATABASE_URL"]
     },
     "migrate": {
-      "cache": false
+      "cache": false,
+      "env": ["DATABASE_URL"]
     },
     "migrate:deploy": {
-      "cache": false
+      "cache": false,
+      "env": ["DATABASE_URL"]
     },
     "seed": {
-      "cache": false
+      "cache": false,
+      "env": ["DATABASE_URL"]
     },
     "studio": {
       "cache": false,
+      "env": ["DATABASE_URL"],
       "persistent": true
     },
     "dev": {
