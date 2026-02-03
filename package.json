@@ -3,6 +3,11 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "db:generate": "turbo run generate --filter=@fwe/db",
+    "db:migrate": "turbo run migrate --filter=@fwe/db",
+    "db:migrate:deploy": "turbo run migrate:deploy --filter=@fwe/db",
+    "db:seed": "turbo run seed --filter=@fwe/db",
+    "db:studio": "turbo run studio --filter=@fwe/db",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

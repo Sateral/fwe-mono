@@ -1,7 +1,6 @@
 "use server";
 
 import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
-import { RotationStatus } from "@/lib/generated/prisma/client";
 
 // ============================================
 // Server Actions for Weekly Rotations
@@ -40,7 +39,7 @@ export async function createRotation(weekStartDate: Date) {
  */
 export async function updateRotationMeals(
   rotationId: string,
-  mealIds: string[]
+  mealIds: string[],
 ) {
   return await weeklyRotationService.updateRotationMeals(rotationId, mealIds);
 }

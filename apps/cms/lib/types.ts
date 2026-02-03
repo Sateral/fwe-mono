@@ -1,4 +1,4 @@
-import { ModifierType, MealType } from "./generated/prisma/enums";
+import { ModifierType, MealType } from "@fwe/db";
 
 export interface CreateMealParams {
   name: string;

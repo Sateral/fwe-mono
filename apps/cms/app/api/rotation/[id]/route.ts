@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
-import { RotationStatus } from "@/lib/generated/prisma/client";
 import { requireInternalAuth } from "@/lib/api-auth";
+import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
 
 /**
  * GET /api/rotation/[id]
@@ -9,7 +8,7 @@ import { requireInternalAuth } from "@/lib/api-auth";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const authError = requireInternalAuth(request);
   if (authError) return authError;
@@ -25,7 +24,7 @@ export async function GET(
     if (!rotation) {
       return NextResponse.json(
         { error: "Rotation not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -34,7 +33,7 @@ export async function GET(
     console.error("[API] Error fetching rotation:", error);
     return NextResponse.json(
       { error: "Failed to fetch rotation" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -47,7 +46,7 @@ export async function GET(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const authError = requireInternalAuth(request);
   if (authError) return authError;
@@ -76,7 +75,7 @@ export async function PATCH(
     if (!rotation) {
       return NextResponse.json(
         { error: "No updates provided" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -85,7 +84,7 @@ export async function PATCH(
     console.error("[API] Error updating rotation:", error);
     return NextResponse.json(
       { error: "Failed to update rotation" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

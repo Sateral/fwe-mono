@@ -27,4 +27,4 @@ bun run dev --filter=cms
 ## Notes
 
 - Auth and all APIs remain centralized in `apps/cms`.
-- Prisma stays in the CMS for now; shared packages will be extracted in later phases.
+- Prisma lives in `packages/db` and is imported by the CMS.

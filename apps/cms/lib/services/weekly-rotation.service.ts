@@ -1,6 +1,7 @@
+import { RotationStatus } from "@fwe/db";
+import { addWeeks, format } from "date-fns";
+
 import prisma from "@/lib/prisma";
-import { RotationStatus, MealType } from "@/lib/generated/prisma/client";
-import { format, addWeeks } from "date-fns";
 
 // ============================================
 // Weekly Ordering System Logic
@@ -54,7 +55,7 @@ const TORONTO_TIMEZONE = "America/Toronto";
  */
 function getTorontoNow(): Date {
   return new Date(
-    new Date().toLocaleString("en-US", { timeZone: TORONTO_TIMEZONE })
+    new Date().toLocaleString("en-US", { timeZone: TORONTO_TIMEZONE }),
   );
 }
 
@@ -137,7 +138,7 @@ export const weeklyRotationService = {
     const now = getTorontoNow();
 
     console.log(
-      `[RotationService] Getting current rotation for ${now.toISOString()}`
+      `[RotationService] Getting current rotation for ${now.toISOString()}`,
     );
 
     // Find any published rotation where now is between weekStart and weekEnd
@@ -161,7 +162,7 @@ export const weeklyRotationService = {
     console.log(
       `[RotationService] Found current rotation: ${
         rotation ? rotation.id : "none"
-      }, meals: ${rotation?.meals?.length ?? 0}`
+      }, meals: ${rotation?.meals?.length ?? 0}`,
     );
 
     return rotation;
@@ -169,10 +170,10 @@ export const weeklyRotationService = {
 
   /**
    * Get the rotation that customers can currently ORDER from.
-   * 
+   *
    * Logic: Find the earliest published rotation where orderCutoff >= now.
    * This rotation represents the NEXT delivery week.
-   * 
+   *
    * Example: Today is Wed Jan 7
    * - We find rotation with weekStart=Jan 14, orderCutoff=Jan 13
    * - Customers ordering now will get delivery week Jan 14-20
@@ -184,7 +185,7 @@ export const weeklyRotationService = {
     const orderingWeekCutoff = getOrderCutoff(orderingWeekStart);
 
     console.log(
-      `[RotationService] Getting orderable rotation at ${format(now, "EEE MMM d h:mm a")}`
+      `[RotationService] Getting orderable rotation at ${format(now, "EEE MMM d h:mm a")}`,
     );
 
     // Only return the rotation for the current ordering week (week+1 or week+2 after cutoff)
@@ -203,7 +204,7 @@ export const weeklyRotationService = {
 
     if (!rotation || rotation.status !== "PUBLISHED") {
       console.log(
-        `[RotationService] No published rotation found for ordering week ${orderingWeekStart.toISOString()}`
+        `[RotationService] No published rotation found for ordering week ${orderingWeekStart.toISOString()}`,
       );
       return {
         rotation: null,
@@ -219,8 +220,8 @@ export const weeklyRotationService = {
 
     console.log(
       `[RotationService] Found orderable rotation: ${rotation.id}, ` +
-      `delivery week: ${format(deliveryWeekStart, "MMM d")} - ${format(getWeekEnd(deliveryWeekStart), "MMM d")}, ` +
-      `cutoff: ${format(orderCutoff, "EEE MMM d h:mm a")}`
+        `delivery week: ${format(deliveryWeekStart, "MMM d")} - ${format(getWeekEnd(deliveryWeekStart), "MMM d")}, ` +
+        `cutoff: ${format(orderCutoff, "EEE MMM d h:mm a")}`,
     );
 
     return {
@@ -229,7 +230,7 @@ export const weeklyRotationService = {
       deliveryWeekStart,
       deliveryWeekDisplay: `${format(deliveryWeekStart, "MMM d")} - ${format(
         getWeekEnd(deliveryWeekStart),
-        "MMM d"
+        "MMM d",
       )}`,
       orderCutoff,
     };
@@ -240,7 +241,7 @@ export const weeklyRotationService = {
    */
   async getRotationByWeek(weekStart: Date) {
     console.log(
-      `[RotationService] Getting rotation for week starting ${weekStart.toISOString()}`
+      `[RotationService] Getting rotation for week starting ${weekStart.toISOString()}`,
     );
 
     return await prisma.weeklyRotation.findUnique({
@@ -274,7 +275,7 @@ export const weeklyRotationService = {
 
   /**
    * Create a new rotation for a delivery week.
-   * 
+   *
    * - weekStart: Wednesday of the delivery week
    * - weekEnd: Tuesday of the delivery week
    * - orderCutoff: Tuesday BEFORE weekStart (last day to order)
@@ -285,7 +286,7 @@ export const weeklyRotationService = {
     const orderCutoff = getOrderCutoff(weekStart);
 
     console.log(
-      `[RotationService] Creating rotation for delivery week ${weekStart.toISOString()}, cutoff: ${orderCutoff.toISOString()}`
+      `[RotationService] Creating rotation for delivery week ${weekStart.toISOString()}, cutoff: ${orderCutoff.toISOString()}`,
     );
 
     return await prisma.weeklyRotation.create({
@@ -304,7 +305,7 @@ export const weeklyRotationService = {
    */
   async updateRotationMeals(rotationId: string, mealIds: string[]) {
     console.log(
-      `[RotationService] Updating rotation ${rotationId} with ${mealIds.length} meals`
+      `[RotationService] Updating rotation ${rotationId} with ${mealIds.length} meals`,
     );
 
     return await prisma.weeklyRotation.update({
@@ -396,7 +397,7 @@ export const weeklyRotationService = {
     const fallbackDeliveryWeekStart = getOrderingWeekStart(now);
     const fallbackDeliveryWeekDisplay = `${format(
       fallbackDeliveryWeekStart,
-      "MMM d"
+      "MMM d",
     )} - ${format(getWeekEnd(fallbackDeliveryWeekStart), "MMM d")}`;
     const fallbackOrderCutoff = getOrderCutoff(fallbackDeliveryWeekStart);
 
@@ -416,7 +417,9 @@ export const weeklyRotationService = {
 
     console.log(
       `[RotationService] Returning ${signatureMeals.length} signature + ${rotationMeals.length} rotation meals` +
-      (deliveryWeekDisplay ? ` for ${deliveryWeekDisplay}` : " (no rotation available)")
+        (deliveryWeekDisplay
+          ? ` for ${deliveryWeekDisplay}`
+          : " (no rotation available)"),
     );
 
     return {
@@ -427,7 +430,7 @@ export const weeklyRotationService = {
       // Info about which week this is for
       currentWeekDisplay: `${format(currentWeekStart, "MMM d")} - ${format(
         getWeekEnd(currentWeekStart),
-        "MMM d"
+        "MMM d",
       )}`,
       deliveryWeekDisplay: resolvedDeliveryWeekDisplay,
       deliveryWeekStart: format(resolvedDeliveryWeekStart, "MMM d, yyyy"),
@@ -488,7 +491,7 @@ export const weeklyRotationService = {
     // Check if we're within 3 days of the week ending
     const currentWeekEnd = getWeekEnd(currentWeekStart);
     const daysUntilWeekEnd = Math.ceil(
-      (currentWeekEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+      (currentWeekEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
     );
 
     if (daysUntilWeekEnd > 3) {

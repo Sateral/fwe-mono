@@ -13,6 +13,24 @@
     "check-types": {
       "dependsOn": ["^check-types"]
     },
+    "generate": {
+      "dependsOn": ["^generate"],
+      "inputs": ["$TURBO_DEFAULT$", "prisma/**"],
+      "outputs": ["src/generated/prisma/**"]
+    },
+    "migrate": {
+      "cache": false
+    },
+    "migrate:deploy": {
+      "cache": false
+    },
+    "seed": {
+      "cache": false
+    },
+    "studio": {
+      "cache": false,
+      "persistent": true
+    },
     "dev": {
       "cache": false,
       "persistent": true

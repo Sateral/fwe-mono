@@ -1,4 +1,4 @@
-import { DietaryTag, Meal } from "@/lib/generated/prisma/client";
+import { DietaryTag, Meal } from "@fwe/db";
 import prisma from "@/lib/prisma";
 import { CreateMealParams, CreateTagParams } from "@/lib/types";
 

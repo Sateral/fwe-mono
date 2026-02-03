@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -46,6 +46,8 @@ model SubstitutionGroup {
   mealId  String
   meal    Meal                 @relation(fields: [mealId], references: [id], onDelete: Cascade)
   options SubstitutionOption[]
+
+  @@index([mealId])
 }
 
 model SubstitutionOption {
@@ -60,6 +62,8 @@ model SubstitutionOption {
   fiberAdjust     Int               @default(0)
   groupId         String
   group           SubstitutionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@index([groupId])
 }
 
 model ModifierGroup {
@@ -71,6 +75,8 @@ model ModifierGroup {
   mealId       String
   meal         Meal             @relation(fields: [mealId], references: [id], onDelete: Cascade)
   options      ModifierOption[]
+
+  @@index([mealId])
 }
 
 model ModifierOption {
@@ -79,6 +85,8 @@ model ModifierOption {
   extraPrice      Float         @default(0.00)
   modifierGroupId String
   modifierGroup   ModifierGroup @relation(fields: [modifierGroupId], references: [id], onDelete: Cascade)
+
+  @@index([modifierGroupId])
 }
 
 model DietaryTag {

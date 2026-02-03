@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { IconPencil, IconTrash, IconDotsVertical } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
+import { Meal } from "@fwe/db";
+import { toast } from "sonner";
+
+import { AlertModal } from "@/components/modals/alert-modal";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,14 +16,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { deleteMeal } from "@/lib/actions/meal.actions";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { AlertModal } from "@/components/modals/alert-modal";
-import { useState } from "react";
-import { Meal } from "@/lib/generated/prisma/client";
 
 interface MealRowProps {
   meal: Meal;
