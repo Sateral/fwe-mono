@@ -7,6 +7,8 @@ import { CustomerSummaryTable } from "./customer-summary-table";
 import { CustomerOrdersDialog } from "./customer-orders-dialog";
 import { RotationSelector } from "./rotation-selector";
 import { ProductionSummary } from "./production-summary";
+import { OrdersOverview } from "./orders-overview";
+import { DeliverySummary } from "./delivery-summary";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -171,6 +173,10 @@ export function OrdersDashboard() {
         </Card>
       )}
 
+      {!ordersLoading && orders.length > 0 && (
+        <OrdersOverview orders={orders} />
+      )}
+
       <div className="grid gap-6 md:grid-cols-3">
         <div className="md:col-span-1">
           <ProductionSummary />
@@ -179,6 +185,21 @@ export function OrdersDashboard() {
         <div className="md:col-span-2 space-y-4">
           <OrdersTable />
         </div>
+      </div>
+
+      <div className="mt-8 space-y-4">
+        <div>
+          <h2 className="text-xl font-semibold tracking-tight">
+            Delivery & Pickup Manifest
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Grouped stops with quick access to packing lists
+          </p>
+        </div>
+        <DeliverySummary
+          orders={orders}
+          onSelectOrders={handleCustomerSelect}
+        />
       </div>
 
       <div className="mt-8 space-y-4">
