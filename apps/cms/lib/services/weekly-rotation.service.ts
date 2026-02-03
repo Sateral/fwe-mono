@@ -1,6 +1,5 @@
 import { RotationStatus } from "@fwe/db";
-import { addWeeks, format, subDays } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import { formatInTimeZone, fromZonedTime, toZonedTime } from "date-fns-tz";
 
 import prisma from "@/lib/prisma";
 
@@ -52,10 +51,31 @@ const TORONTO_TIMEZONE = "America/Toronto";
 // ============================================
 
 /**
- * Get current time in Toronto timezone
+ * Get the current instant (UTC)
  */
-function getTorontoNow(): Date {
-  return toZonedTime(new Date(), TORONTO_TIMEZONE);
+function getNow(): Date {
+  return new Date();
+}
+
+/**
+ * Convert a date to Toronto local time (for calculations)
+ */
+function toToronto(date: Date): Date {
+  return toZonedTime(date, TORONTO_TIMEZONE);
+}
+
+/**
+ * Convert a Toronto local time back to UTC
+ */
+function fromToronto(date: Date): Date {
+  return fromZonedTime(date, TORONTO_TIMEZONE);
+}
+
+/**
+ * Format a date in Toronto timezone
+ */
+function formatToronto(date: Date, formatStr: string): string {
+  return formatInTimeZone(date, TORONTO_TIMEZONE, formatStr);
 }
 
 /**
@@ -63,14 +83,14 @@ function getTorontoNow(): Date {
  * Week runs Wednesday-Tuesday.
  */
 function getWeekStart(date: Date): Date {
-  const d = new Date(date);
+  const d = toToronto(date);
   const day = d.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
   // Calculate days to subtract to get to Wednesday
   // If it's Wednesday (3), stay. Otherwise go back to previous Wednesday.
   const daysToSubtract = (day - 3 + 7) % 7;
   d.setDate(d.getDate() - daysToSubtract);
   d.setHours(0, 0, 0, 0);
-  return d;
+  return fromToronto(d);
 }
 
 /**
@@ -78,10 +98,10 @@ function getWeekStart(date: Date): Date {
  * Week runs Wednesday-Tuesday, so Tuesday is 6 days after Wednesday.
  */
 function getWeekEnd(weekStart: Date): Date {
-  const d = new Date(weekStart);
+  const d = toToronto(weekStart);
   d.setDate(d.getDate() + 6); // Tuesday is 6 days after Wednesday
   d.setHours(23, 59, 59, 999);
-  return d;
+  return fromToronto(d);
 }
 
 /**
@@ -92,10 +112,10 @@ function getWeekEnd(weekStart: Date): Date {
  * the cutoff is Jan 13 (Tuesday) at 11:59 PM.
  */
 function getOrderCutoff(deliveryWeekStart: Date): Date {
-  const cutoff = new Date(deliveryWeekStart);
+  const cutoff = toToronto(deliveryWeekStart);
   cutoff.setDate(cutoff.getDate() - 1); // Go back to Tuesday before Wednesday
   cutoff.setHours(23, 59, 59, 999);
-  return cutoff;
+  return fromToronto(cutoff);
 }
 
 /**
@@ -105,7 +125,10 @@ function getOrderCutoff(deliveryWeekStart: Date): Date {
  */
 export function getOrderingWindowForDeliveryWeek(deliveryWeekStart: Date) {
   const weekStart = getWeekStart(deliveryWeekStart);
-  const windowStart = subDays(weekStart, 7);
+  const windowStartToronto = toToronto(weekStart);
+  windowStartToronto.setDate(windowStartToronto.getDate() - 7);
+  windowStartToronto.setHours(0, 0, 0, 0);
+  const windowStart = fromToronto(windowStartToronto);
   const windowEnd = weekStart;
 
   return { windowStart, windowEnd };
@@ -116,9 +139,10 @@ export function getOrderingWindowForDeliveryWeek(deliveryWeekStart: Date) {
  */
 function getNextWeekStart(date: Date): Date {
   const weekStart = getWeekStart(date);
-  const nextWeek = new Date(weekStart);
+  const nextWeek = toToronto(weekStart);
   nextWeek.setDate(nextWeek.getDate() + 7);
-  return nextWeek;
+  nextWeek.setHours(0, 0, 0, 0);
+  return fromToronto(nextWeek);
 }
 
 /**
@@ -126,12 +150,11 @@ function getNextWeekStart(date: Date): Date {
  * If the cutoff for next week has passed, move to the following week.
  */
 function getOrderingWeekStart(date: Date): Date {
-  const currentWeekStart = getWeekStart(date);
-  const nextWeekStart = addWeeks(currentWeekStart, 1);
+  const nextWeekStart = getNextWeekStart(date);
   const nextWeekCutoff = getOrderCutoff(nextWeekStart);
 
   if (date > nextWeekCutoff) {
-    return addWeeks(nextWeekStart, 1);
+    return getNextWeekStart(nextWeekStart);
   }
 
   return nextWeekStart;
@@ -147,7 +170,7 @@ export const weeklyRotationService = {
    * Used by chef to see what to prepare this weekend.
    */
   async getCurrentRotation() {
-    const now = getTorontoNow();
+    const now = getNow();
 
     console.log(
       `[RotationService] Getting current rotation for ${now.toISOString()}`,
@@ -191,13 +214,13 @@ export const weeklyRotationService = {
    * - Customers ordering now will get delivery week Jan 14-20
    */
   async getOrderableRotation() {
-    const now = getTorontoNow();
+    const now = getNow();
     const currentWeekStart = getWeekStart(now);
     const orderingWeekStart = getOrderingWeekStart(now);
     const orderingWeekCutoff = getOrderCutoff(orderingWeekStart);
 
     console.log(
-      `[RotationService] Getting orderable rotation at ${format(now, "EEE MMM d h:mm a")}`,
+      `[RotationService] Getting orderable rotation at ${formatToronto(now, "EEE MMM d h:mm a")}`,
     );
 
     // Only return the rotation for the current ordering week (week+1 or week+2 after cutoff)
@@ -232,15 +255,15 @@ export const weeklyRotationService = {
 
     console.log(
       `[RotationService] Found orderable rotation: ${rotation.id}, ` +
-        `delivery week: ${format(deliveryWeekStart, "MMM d")} - ${format(getWeekEnd(deliveryWeekStart), "MMM d")}, ` +
-        `cutoff: ${format(orderCutoff, "EEE MMM d h:mm a")}`,
+        `delivery week: ${formatToronto(deliveryWeekStart, "MMM d")} - ${formatToronto(getWeekEnd(deliveryWeekStart), "MMM d")}, ` +
+        `cutoff: ${formatToronto(orderCutoff, "EEE MMM d h:mm a")}`,
     );
 
     return {
       rotation,
       currentWeekStart,
       deliveryWeekStart,
-      deliveryWeekDisplay: `${format(deliveryWeekStart, "MMM d")} - ${format(
+      deliveryWeekDisplay: `${formatToronto(deliveryWeekStart, "MMM d")} - ${formatToronto(
         getWeekEnd(deliveryWeekStart),
         "MMM d",
       )}`,
@@ -377,7 +400,7 @@ export const weeklyRotationService = {
     const rotation = await this.getCurrentRotation();
     if (!rotation) return false;
 
-    const now = getTorontoNow();
+    const now = getNow();
     return now < rotation.orderCutoff;
   },
 
@@ -404,13 +427,13 @@ export const weeklyRotationService = {
       },
     });
 
-    const now = getTorontoNow();
+    const now = getNow();
     const currentWeekStart = getWeekStart(now);
     const fallbackDeliveryWeekStart = getOrderingWeekStart(now);
-    const fallbackDeliveryWeekDisplay = `${format(
+    const fallbackDeliveryWeekDisplay = `${formatToronto(
       fallbackDeliveryWeekStart,
       "MMM d",
-    )} - ${format(getWeekEnd(fallbackDeliveryWeekStart), "MMM d")}`;
+    )} - ${formatToronto(getWeekEnd(fallbackDeliveryWeekStart), "MMM d")}`;
     const fallbackOrderCutoff = getOrderCutoff(fallbackDeliveryWeekStart);
 
     // Get the orderable rotation (published rotation meals, if any)
@@ -440,12 +463,15 @@ export const weeklyRotationService = {
       rotationMeals,
       isOrderingOpen,
       // Info about which week this is for
-      currentWeekDisplay: `${format(currentWeekStart, "MMM d")} - ${format(
+      currentWeekDisplay: `${formatToronto(currentWeekStart, "MMM d")} - ${formatToronto(
         getWeekEnd(currentWeekStart),
         "MMM d",
       )}`,
       deliveryWeekDisplay: resolvedDeliveryWeekDisplay,
-      deliveryWeekStart: format(resolvedDeliveryWeekStart, "MMM d, yyyy"),
+      deliveryWeekStart: formatToronto(
+        resolvedDeliveryWeekStart,
+        "MMM d, yyyy",
+      ),
       cutoffTime: resolvedOrderCutoff,
     };
   },
@@ -455,7 +481,7 @@ export const weeklyRotationService = {
    * This does NOT require the rotation to be published.
    */
   async getOrCreateOrderingRotation() {
-    const now = getTorontoNow();
+    const now = getNow();
     const deliveryWeekStart = getOrderingWeekStart(now);
 
     let rotation = await prisma.weeklyRotation.findUnique({
@@ -495,10 +521,9 @@ export const weeklyRotationService = {
     needsAttention: boolean;
     message?: string;
   }> {
-    const now = getTorontoNow();
+    const now = getNow();
     const currentWeekStart = getWeekStart(now);
-    const nextWeekStart = new Date(currentWeekStart);
-    nextWeekStart.setDate(nextWeekStart.getDate() + 7);
+    const nextWeekStart = getNextWeekStart(currentWeekStart);
 
     // Check if we're within 3 days of the week ending
     const currentWeekEnd = getWeekEnd(currentWeekStart);
@@ -518,7 +543,7 @@ export const weeklyRotationService = {
     if (!nextRotation) {
       return {
         needsAttention: true,
-        message: `No rotation created for next week (starting ${nextWeekStart.toLocaleDateString()})`,
+        message: `No rotation created for next week (starting ${formatToronto(nextWeekStart, "MMM d, yyyy")})`,
       };
     }
 

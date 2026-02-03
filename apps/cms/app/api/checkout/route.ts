@@ -1,6 +1,10 @@
 import { checkoutSessionRequestSchema } from "@fwe/validators";
 import { NextResponse } from "next/server";
-import { formatLineItemDescription, formatModifiersSummary, formatSubstitutionsSummary } from "@fwe/utils/format-utils";
+import {
+  formatLineItemDescription,
+  formatModifiersSummary,
+  formatSubstitutionsSummary,
+} from "@fwe/utils/format-utils";
 import { calculateMealUnitPrice } from "@fwe/utils/price-utils";
 
 import { requireInternalAuth } from "@/lib/api-auth";
@@ -40,7 +44,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Meal not found" }, { status: 404 });
     }
 
-    const { rotation } = await weeklyRotationService.getOrCreateOrderingRotation();
+    const { rotation } =
+      await weeklyRotationService.getOrCreateOrderingRotation();
 
     const selectedModifiers: Record<string, string[]> = {};
     if (data.modifiers) {
@@ -94,7 +99,10 @@ export async function POST(request: Request) {
     const substitutionsSummary = formatSubstitutionsSummary(
       data.substitutions,
     ).slice(0, 200);
-    const modifiersSummary = formatModifiersSummary(data.modifiers).slice(0, 200);
+    const modifiersSummary = formatModifiersSummary(data.modifiers).slice(
+      0,
+      200,
+    );
 
     let orderIntent = null;
     if (data.requestId) {
@@ -125,14 +133,38 @@ export async function POST(request: Request) {
       });
     }
 
+    if (orderIntent.status === "PAID") {
+      return NextResponse.json(
+        { error: "Checkout already completed" },
+        { status: 409 },
+      );
+    }
+
     if (orderIntent.stripeSessionId) {
       const existingSession = await stripe.checkout.sessions.retrieve(
         orderIntent.stripeSessionId,
       );
-      return NextResponse.json({
-        id: existingSession.id,
-        url: existingSession.url,
-      });
+      const isExpired =
+        typeof existingSession.expires_at === "number" &&
+        existingSession.expires_at * 1000 <= Date.now();
+
+      if (existingSession.status === "complete") {
+        return NextResponse.json(
+          { error: "Checkout already completed" },
+          { status: 409 },
+        );
+      }
+
+      if (
+        existingSession.status === "open" &&
+        !isExpired &&
+        existingSession.url
+      ) {
+        return NextResponse.json({
+          id: existingSession.id,
+          url: existingSession.url,
+        });
+      }
     }
 
     const checkoutSession = await stripe.checkout.sessions.create(
@@ -195,7 +227,9 @@ export async function POST(request: Request) {
         cancel_url: `${WEB_BASE_URL}/order/${meal.slug}`,
       },
       {
-        idempotencyKey: orderIntent.id,
+        idempotencyKey: orderIntent.stripeSessionId
+          ? `${orderIntent.id}:${orderIntent.stripeSessionId}`
+          : orderIntent.id,
       },
     );
 
