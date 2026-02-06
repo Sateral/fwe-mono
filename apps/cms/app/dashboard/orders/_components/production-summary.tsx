@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
+import { IconChevronRight } from "@tabler/icons-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -9,7 +11,15 @@ import { useSelectedRotation } from "@/lib/context/rotation-context";
 import { useOrdersByRotation } from "@/hooks/use-orders";
 import type { OrderModifier, OrderSubstitution } from "@/lib/types/order-types";
 
-export function ProductionSummary() {
+interface ProductionSummaryProps {
+  variant?: "full" | "compact";
+  fullManifestHref?: string;
+}
+
+export function ProductionSummary({
+  variant = "full",
+  fullManifestHref = "/dashboard/orders/prep-manifest",
+}: ProductionSummaryProps) {
   const { selectedRotationId } = useSelectedRotation();
   const { data: orders = [], isLoading } = useOrdersByRotation(selectedRotationId);
 
@@ -240,6 +250,74 @@ export function ProductionSummary() {
             {[1, 2, 3, 4].map((i) => (
               <Skeleton key={i} className="h-8 w-full" />
             ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (variant === "compact") {
+    return (
+      <Card className="h-full">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between gap-3">
+            <CardTitle className="text-lg">Prep Manifest</CardTitle>
+            <Badge variant="secondary" className="text-sm">
+              {manifest.totalPortions} portions
+            </Badge>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Quick prep snapshot. Open full details for substitutions and notes.
+          </p>
+        </CardHeader>
+        <CardContent className="flex h-full flex-col gap-4">
+          <div className="flex flex-wrap gap-2 text-xs">
+            <Badge variant="outline">{manifest.activeOrderCount} paid orders</Badge>
+            <Badge variant="outline">{manifest.customizedPortions} customized</Badge>
+            <Badge variant={manifest.noteCount > 0 ? "destructive" : "outline"}>
+              {manifest.noteCount} notes
+            </Badge>
+          </div>
+
+          <div className="overflow-hidden rounded-lg border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/30 text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                <tr>
+                  <th className="px-3 py-2 text-left">Meal</th>
+                  <th className="px-3 py-2 text-center">Total</th>
+                  <th className="px-3 py-2 text-center">Custom</th>
+                </tr>
+              </thead>
+              <tbody>
+                {manifest.meals.slice(0, 4).map((meal) => {
+                  const customCount = meal.totalQty - meal.standardQty;
+                  return (
+                    <tr key={meal.mealId} className="border-t">
+                      <td className="px-3 py-2 font-medium">{meal.mealName}</td>
+                      <td className="px-3 py-2 text-center">{meal.totalQty}</td>
+                      <td className="px-3 py-2 text-center">{customCount}</td>
+                    </tr>
+                  );
+                })}
+                {manifest.meals.length === 0 && (
+                  <tr>
+                    <td className="px-3 py-4 text-muted-foreground" colSpan={3}>
+                      No paid orders for this rotation.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-auto border-t pt-3">
+            <Link
+              href={fullManifestHref}
+              className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Full prep manifest
+              <IconChevronRight className="h-4 w-4" />
+            </Link>
           </div>
         </CardContent>
       </Card>

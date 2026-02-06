@@ -176,15 +176,6 @@ export function OrdersDashboard() {
         )}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-12 items-stretch">
-        <div className="lg:col-span-6">
-          <ProductionSummary />
-        </div>
-        <div className="lg:col-span-6">
-          {!ordersLoading && <OrdersOverview orders={orders} />}
-        </div>
-      </div>
-
       <OrdersTable />
 
       <div className="space-y-3">
@@ -196,6 +187,22 @@ export function OrdersDashboard() {
           Delivery method, address, and meal breakdown per customer.
         </p>
         <CustomerSummaryTable onSelectCustomer={handleCustomerSelect} />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-12 items-stretch">
+        <div className="lg:col-span-7">
+          {!ordersLoading && <OrdersOverview orders={orders} />}
+        </div>
+        <div className="lg:col-span-5">
+          <ProductionSummary
+            variant="compact"
+            fullManifestHref={
+              selectedRotationId
+                ? `/dashboard/orders/prep-manifest?rotationId=${selectedRotationId}`
+                : "/dashboard/orders/prep-manifest"
+            }
+          />
+        </div>
       </div>
 
       <CustomerOrdersDialog
