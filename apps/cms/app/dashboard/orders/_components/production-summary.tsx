@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { IconChevronRight } from "@tabler/icons-react";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -315,8 +315,8 @@ export function ProductionSummary({
               href={fullManifestHref}
               className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
+              <IconArrowLeft className="h-4 w-4" />
               Full prep manifest
-              <IconChevronRight className="h-4 w-4" />
             </Link>
           </div>
         </CardContent>
