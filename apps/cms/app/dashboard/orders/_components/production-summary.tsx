@@ -1,59 +1,237 @@
 "use client";
 
+import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSelectedRotation } from "@/lib/context/rotation-context";
-import { useOrdersByRotation, useProductionSummary } from "@/hooks/use-orders";
+import { useOrdersByRotation } from "@/hooks/use-orders";
 import type { OrderModifier, OrderSubstitution } from "@/lib/types/order-types";
 
 export function ProductionSummary() {
   const { selectedRotationId } = useSelectedRotation();
-  const { data: summary = [], isLoading } =
-    useProductionSummary(selectedRotationId);
-  const { data: orders = [] } = useOrdersByRotation(selectedRotationId);
+  const { data: orders = [], isLoading } = useOrdersByRotation(selectedRotationId);
 
-  const totalMeals = summary.reduce((acc, item) => acc + item.count, 0);
+  const manifest = React.useMemo(() => {
+    const activeOrders = orders.filter(
+      (order) =>
+        order.paymentStatus === "PAID" && order.fulfillmentStatus !== "CANCELLED",
+    );
 
-  // Group by type
-  const specials = summary.filter((i) => i.isRotating);
-  const signatures = summary.filter((i) => !i.isRotating);
+    const mealMap = new Map<
+      string,
+      {
+        mealId: string;
+        mealName: string;
+        isRotating: boolean;
+        totalQty: number;
+        standardQty: number;
+        boostQty: number;
+        substitutions: Map<string, number>;
+        modifiers: Map<string, number>;
+        notes: Array<{
+          orderId: string;
+          customerName: string;
+          quantity: number;
+          note: string;
+        }>;
+      }
+    >();
 
-  const prepMeta = new Map<
-    string,
-    { boosts: number; subs: number; mods: number; notes: number }
-  >();
+    const substitutionDemand = new Map<string, number>();
+    const modifierDemand = new Map<string, number>();
 
-  for (const order of orders) {
-    if (order.paymentStatus !== "PAID") continue;
-    if (order.fulfillmentStatus === "CANCELLED") continue;
-    if (!order.mealId) continue;
+    const parseSubstitutions = (value: unknown): OrderSubstitution[] => {
+      if (!Array.isArray(value)) return [];
+      return value
+        .filter(
+          (item): item is { groupName: string; optionName: string } =>
+            typeof item === "object" &&
+            item !== null &&
+            "groupName" in item &&
+            "optionName" in item &&
+            typeof item.groupName === "string" &&
+            typeof item.optionName === "string",
+        )
+        .map((item) => ({
+          groupName: item.groupName,
+          optionName: item.optionName,
+        }));
+    };
 
-    const substitutions = Array.isArray(order.substitutions)
-      ? (order.substitutions as OrderSubstitution[])
-      : [];
-    const modifiers = Array.isArray(order.modifiers)
-      ? (order.modifiers as OrderModifier[])
-      : [];
+    const parseModifiers = (value: unknown): OrderModifier[] => {
+      if (!Array.isArray(value)) return [];
+      return value
+        .filter(
+          (item): item is { groupName: string; optionNames: string[] } =>
+            typeof item === "object" &&
+            item !== null &&
+            "groupName" in item &&
+            "optionNames" in item &&
+            typeof item.groupName === "string" &&
+            Array.isArray(item.optionNames) &&
+            item.optionNames.every((name: string) => typeof name === "string"),
+        )
+        .map((item) => ({
+          groupName: item.groupName,
+          optionNames: item.optionNames,
+        }));
+    };
 
-    if (!prepMeta.has(order.mealId)) {
-      prepMeta.set(order.mealId, { boosts: 0, subs: 0, mods: 0, notes: 0 });
+    for (const order of activeOrders) {
+      const substitutions = parseSubstitutions(order.substitutions);
+      const modifiers = parseModifiers(order.modifiers);
+
+      if (!mealMap.has(order.mealId)) {
+        mealMap.set(order.mealId, {
+          mealId: order.mealId,
+          mealName: order.meal?.name || "Unknown meal",
+          isRotating: order.meal?.mealType === "ROTATING",
+          totalQty: 0,
+          standardQty: 0,
+          boostQty: 0,
+          substitutions: new Map(),
+          modifiers: new Map(),
+          notes: [],
+        });
+      }
+
+      const entry = mealMap.get(order.mealId);
+      if (!entry) continue;
+
+      const quantity = order.quantity;
+      entry.totalQty += quantity;
+
+      const hasCustomizations =
+        order.proteinBoost ||
+        substitutions.length > 0 ||
+        modifiers.length > 0 ||
+        Boolean(order.notes);
+
+      if (!hasCustomizations) {
+        entry.standardQty += quantity;
+      }
+
+      if (order.proteinBoost) {
+        entry.boostQty += quantity;
+      }
+
+      for (const sub of substitutions) {
+        const key = `${sub.groupName}: ${sub.optionName}`;
+        entry.substitutions.set(key, (entry.substitutions.get(key) || 0) + quantity);
+        substitutionDemand.set(key, (substitutionDemand.get(key) || 0) + quantity);
+      }
+
+      for (const mod of modifiers) {
+        for (const optionName of mod.optionNames) {
+          const key = `${mod.groupName}: ${optionName}`;
+          entry.modifiers.set(key, (entry.modifiers.get(key) || 0) + quantity);
+          modifierDemand.set(key, (modifierDemand.get(key) || 0) + quantity);
+        }
+      }
+
+      if (order.notes) {
+        entry.notes.push({
+          orderId: order.id,
+          customerName: order.user?.name || order.user?.email || "Guest",
+          quantity,
+          note: order.notes,
+        });
+      }
     }
 
-    const entry = prepMeta.get(order.mealId)!;
-    if (order.proteinBoost) entry.boosts += order.quantity;
-    if (substitutions.length > 0) entry.subs += order.quantity;
-    if (modifiers.length > 0) entry.mods += order.quantity;
-    if (order.notes) entry.notes += order.quantity;
-  }
+    const meals = Array.from(mealMap.values()).sort((a, b) =>
+      b.totalQty === a.totalQty
+        ? a.mealName.localeCompare(b.mealName)
+        : b.totalQty - a.totalQty,
+    );
+
+    const totalPortions = meals.reduce((acc, meal) => acc + meal.totalQty, 0);
+    const standardPortions = meals.reduce((acc, meal) => acc + meal.standardQty, 0);
+    const customizedPortions = totalPortions - standardPortions;
+    const boostPortions = meals.reduce((acc, meal) => acc + meal.boostQty, 0);
+    const noteCount = meals.reduce((acc, meal) => acc + meal.notes.length, 0);
+
+    const exceptionRows = meals.flatMap((meal) => {
+      const rows: Array<{
+        mealName: string;
+        label: string;
+        count: number;
+        tone: "default" | "warn";
+      }> = [];
+
+      if (meal.boostQty > 0) {
+        rows.push({
+          mealName: meal.mealName,
+          label: "Protein boost",
+          count: meal.boostQty,
+          tone: "default",
+        });
+      }
+
+      for (const [label, count] of meal.substitutions.entries()) {
+        rows.push({
+          mealName: meal.mealName,
+          label: `Sub: ${label}`,
+          count,
+          tone: "default",
+        });
+      }
+
+      for (const [label, count] of meal.modifiers.entries()) {
+        rows.push({
+          mealName: meal.mealName,
+          label: `Mod: ${label}`,
+          count,
+          tone: "default",
+        });
+      }
+
+      for (const note of meal.notes) {
+        rows.push({
+          mealName: meal.mealName,
+          label: `Note (${note.customerName}): ${note.note}`,
+          count: note.quantity,
+          tone: "warn",
+        });
+      }
+
+      return rows;
+    });
+
+    const grocerySignals = [
+      ...Array.from(substitutionDemand.entries()).map(([label, count]) => ({
+        type: "Substitution",
+        label,
+        count,
+      })),
+      ...Array.from(modifierDemand.entries()).map(([label, count]) => ({
+        type: "Modifier",
+        label,
+        count,
+      })),
+    ].sort((a, b) => b.count - a.count);
+
+    return {
+      meals,
+      totalPortions,
+      standardPortions,
+      customizedPortions,
+      boostPortions,
+      noteCount,
+      exceptionRows,
+      grocerySignals,
+      activeOrderCount: activeOrders.length,
+    };
+  }, [orders]);
 
   if (isLoading) {
     return (
       <Card className="h-full">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-5 w-28" />
             <Skeleton className="h-6 w-24" />
           </div>
         </CardHeader>
@@ -69,126 +247,136 @@ export function ProductionSummary() {
   }
 
   return (
-      <Card className="h-full">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">Prep Manifest</CardTitle>
-            <Badge variant="secondary" className="text-sm">
-              {totalMeals} meals
-            </Badge>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Counts show meals that need boosts, substitutions, modifiers, or notes.
-          </p>
-        </CardHeader>
-        <CardContent>
-        <div className="h-[360px] pr-2 overflow-y-auto">
-          {/* Rotating Specials */}
-          {specials.length > 0 && (
-            <div className="mb-6">
-              <h4 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-[0.2em]">
-                Weekly Specials
+    <Card className="h-full">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between gap-3">
+          <CardTitle className="text-lg">Prep Manifest</CardTitle>
+          <Badge variant="secondary" className="text-sm">
+            {manifest.totalPortions} portions
+          </Badge>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Chef view of meal totals, customizations, and exceptions for this rotation.
+        </p>
+      </CardHeader>
+      <CardContent>
+        <div className="mb-4 flex flex-wrap gap-2 text-xs">
+          <Badge variant="outline">{manifest.activeOrderCount} paid orders</Badge>
+          <Badge variant="outline">{manifest.standardPortions} standard portions</Badge>
+          <Badge variant="outline">
+            {manifest.customizedPortions} customized portions
+          </Badge>
+          <Badge variant="outline">{manifest.boostPortions} protein boosts</Badge>
+          <Badge variant={manifest.noteCount > 0 ? "destructive" : "outline"}>
+            {manifest.noteCount} special notes
+          </Badge>
+        </div>
+
+        <div className="max-h-[560px] space-y-4 overflow-y-auto pr-2">
+          {manifest.meals.length === 0 && (
+            <div className="py-8 text-center text-muted-foreground">
+              No paid orders for this rotation yet.
+            </div>
+          )}
+
+          {manifest.meals.length > 0 && (
+            <section>
+              <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Meal Production Totals
               </h4>
-              <div className="space-y-3">
-                {specials.map((item) => {
-                  const meta = prepMeta.get(item.mealId);
-                  return (
+              <div className="overflow-hidden rounded-lg border">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/30 text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                    <tr>
+                      <th className="px-3 py-2 text-left">Meal</th>
+                      <th className="px-3 py-2 text-center">Total</th>
+                      <th className="px-3 py-2 text-center">Standard</th>
+                      <th className="px-3 py-2 text-center">Custom</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {manifest.meals.map((meal) => {
+                      const customCount = meal.totalQty - meal.standardQty;
+                      return (
+                        <tr key={meal.mealId} className="border-t">
+                          <td className="px-3 py-2">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">{meal.mealName}</span>
+                              <Badge variant={meal.isRotating ? "secondary" : "outline"}>
+                                {meal.isRotating ? "Special" : "Signature"}
+                              </Badge>
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 text-center font-semibold">
+                            {meal.totalQty}
+                          </td>
+                          <td className="px-3 py-2 text-center">{meal.standardQty}</td>
+                          <td className="px-3 py-2 text-center">{customCount}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          {manifest.grocerySignals.length > 0 && (
+            <section>
+              <Separator className="mb-4" />
+              <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Grocery Signals From Choices
+              </h4>
+              <p className="mb-2 text-xs text-muted-foreground">
+                These counts show option demand to guide purchasing and prep.
+              </p>
+              <div className="space-y-2">
+                {manifest.grocerySignals.slice(0, 16).map((signal) => (
                   <div
-                    key={item.mealId}
-                    className="rounded-lg border bg-muted/20 px-4 py-3"
+                    key={`${signal.type}-${signal.label}`}
+                    className="flex items-center justify-between rounded-lg border bg-muted/20 px-3 py-2"
                   >
-                    <div className="flex items-center justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{signal.label}</p>
+                      <p className="text-xs text-muted-foreground">{signal.type}</p>
+                    </div>
+                    <Badge variant="outline">x{signal.count}</Badge>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {manifest.exceptionRows.length > 0 && (
+            <section>
+              <Separator className="mb-4" />
+              <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Prep Exceptions
+              </h4>
+              <p className="mb-2 text-xs text-muted-foreground">
+                Items requiring non-standard prep.
+              </p>
+              <div className="space-y-2">
+                {manifest.exceptionRows.map((row, index) => (
+                  <div
+                    key={`${row.mealName}-${row.label}-${index}`}
+                    className="rounded-lg border bg-muted/20 px-3 py-2"
+                  >
+                    <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="font-semibold text-foreground truncate">
-                          {item.mealName}
+                        <p className="text-sm font-medium">{row.mealName}</p>
+                        <p className="break-words text-xs text-muted-foreground">
+                          {row.label}
                         </p>
-                        <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                          {meta?.boosts ? (
-                            <Badge variant="secondary">Boost x{meta.boosts}</Badge>
-                          ) : null}
-                          {meta?.subs ? (
-                            <Badge variant="outline">Subs x{meta.subs}</Badge>
-                          ) : null}
-                          {meta?.mods ? (
-                            <Badge variant="outline">Mods x{meta.mods}</Badge>
-                          ) : null}
-                          {meta?.notes ? (
-                            <Badge variant="destructive">Notes x{meta.notes}</Badge>
-                          ) : null}
-                          {!meta?.boosts && !meta?.subs && !meta?.mods && !meta?.notes ? (
-                            <span className="text-xs text-muted-foreground">
-                              Standard prep
-                            </span>
-                          ) : null}
-                        </div>
                       </div>
-                      <span className="flex h-10 w-10 items-center justify-center rounded-lg border bg-background text-lg font-semibold text-foreground">
-                        {item.count}
-                      </span>
+                      <Badge variant={row.tone === "warn" ? "destructive" : "outline"}>
+                        x{row.count}
+                      </Badge>
                     </div>
                   </div>
-                )})}
+                ))}
               </div>
-            </div>
-          )}
-
-          {specials.length > 0 && signatures.length > 0 && (
-            <Separator className="my-4" />
-          )}
-
-          {/* Signatures */}
-          {signatures.length > 0 && (
-            <div>
-              <h4 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-[0.2em]">
-                Signatures
-              </h4>
-              <div className="space-y-3">
-                {signatures.map((item) => {
-                  const meta = prepMeta.get(item.mealId);
-                  return (
-                  <div
-                    key={item.mealId}
-                    className="rounded-lg border bg-muted/20 px-4 py-3"
-                  >
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="min-w-0">
-                        <p className="font-medium text-foreground truncate">
-                          {item.mealName}
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                          {meta?.boosts ? (
-                            <Badge variant="secondary">Boost x{meta.boosts}</Badge>
-                          ) : null}
-                          {meta?.subs ? (
-                            <Badge variant="outline">Subs x{meta.subs}</Badge>
-                          ) : null}
-                          {meta?.mods ? (
-                            <Badge variant="outline">Mods x{meta.mods}</Badge>
-                          ) : null}
-                          {meta?.notes ? (
-                            <Badge variant="destructive">Notes x{meta.notes}</Badge>
-                          ) : null}
-                          {!meta?.boosts && !meta?.subs && !meta?.mods && !meta?.notes ? (
-                            <span className="text-xs text-muted-foreground">
-                              Standard prep
-                            </span>
-                          ) : null}
-                        </div>
-                      </div>
-                      <span className="flex h-10 w-10 items-center justify-center rounded-lg border bg-background text-lg font-semibold text-foreground">
-                        {item.count}
-                      </span>
-                    </div>
-                  </div>
-                )})}
-              </div>
-            </div>
-          )}
-
-          {summary.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              No orders for this week yet.
-            </div>
+            </section>
           )}
         </div>
       </CardContent>
