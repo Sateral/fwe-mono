@@ -38,24 +38,24 @@ export function RotationSelector() {
   if (isLoading) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-          Delivery Week:
+        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">
+          Rotation
         </span>
-        <Skeleton className="h-10 w-[320px]" />
+        <Skeleton className="h-9 w-[280px]" />
       </div>
     );
   }
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-        Delivery Week:
+      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">
+        Rotation
       </span>
       <Select
         value={selectedRotationId || undefined}
         onValueChange={setSelectedRotationId}
       >
-        <SelectTrigger className="w-[320px]">
+        <SelectTrigger className="h-9 w-[280px] text-sm">
           <SelectValue placeholder="Select a delivery week" />
         </SelectTrigger>
         <SelectContent>

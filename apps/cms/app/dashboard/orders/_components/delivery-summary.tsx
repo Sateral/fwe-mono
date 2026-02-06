@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   IconMapPin,
   IconPhone,
@@ -100,10 +100,7 @@ export function DeliverySummary({ orders, onSelectOrders }: DeliverySummaryProps
   if (paidOrders.length === 0) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Delivery Manifest</CardTitle>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="py-8">
           <div className="text-sm text-muted-foreground text-center py-8">
             No paid orders to deliver yet.
           </div>
@@ -114,19 +111,15 @@ export function DeliverySummary({ orders, onSelectOrders }: DeliverySummaryProps
 
   return (
     <Card>
-      <CardHeader className="pb-3">
+      <CardContent className="space-y-3 py-6">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Delivery Manifest</CardTitle>
-          <Badge variant="secondary">
-            {deliveryGroups.length} stops
-          </Badge>
+          <div className="text-sm font-semibold text-foreground">Stops</div>
+          <Badge variant="secondary">{deliveryGroups.length}</Badge>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
         {deliveryGroups.map((group) => (
           <div
             key={group.key}
-            className="rounded-lg border p-3 flex flex-col gap-2"
+            className="rounded-lg border bg-muted/20 px-4 py-3 flex flex-col gap-2"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -135,7 +128,9 @@ export function DeliverySummary({ orders, onSelectOrders }: DeliverySummaryProps
                 ) : (
                   <IconPackage className="h-4 w-4 text-muted-foreground" />
                 )}
-                <span className="font-semibold">{group.contactName}</span>
+                <span className="font-semibold text-foreground">
+                  {group.contactName}
+                </span>
               </div>
               <Badge variant="outline" className="text-xs">
                 {group.totalMeals} meals

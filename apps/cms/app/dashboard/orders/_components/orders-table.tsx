@@ -139,12 +139,17 @@ export function OrdersTable() {
   return (
     <>
       <Card>
-        <CardHeader className="pb-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <CardTitle className="text-lg">Orders</CardTitle>
-            <div className="flex items-center gap-4">
+        <CardHeader className="pb-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <CardTitle className="text-lg">Orders</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Tap an order to update, or open the full detail view.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
               {/* Status counts */}
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex flex-wrap items-center gap-2 text-xs">
                 <Badge variant="outline" className="gap-1">
                   <IconPackage className="w-3 h-3" />
                   {statusCounts.NEW || 0} New
@@ -164,23 +169,23 @@ export function OrdersTable() {
               </div>
               {/* Search */}
               <div className="relative">
-                <IconSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <IconSearch className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search orders..."
                   value={globalFilter}
                   onChange={(e) => setGlobalFilter(e.target.value)}
-                  className="pl-8 w-[200px]"
+                  className="h-9 w-[220px] rounded-md pl-9 text-sm"
                 />
               </div>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
+          <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
+                  <TableRow key={headerGroup.id} className="bg-muted/30">
                     {headerGroup.headers.map((header) => (
                       <TableHead key={header.id}>
                         {header.isPlaceholder
@@ -206,7 +211,10 @@ export function OrdersTable() {
                   </TableRow>
                 ) : (
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id}>
+                    <TableRow
+                      key={row.id}
+                      className="hover:bg-muted/40"
+                    >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {flexRender(

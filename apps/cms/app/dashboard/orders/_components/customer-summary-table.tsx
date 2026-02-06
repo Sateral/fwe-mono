@@ -61,6 +61,7 @@ export function CustomerSummaryTable({
           deliveryNotes: user?.deliveryNotes || null,
           deliveryMethodSummary: "DELIVERY",
           pickupLocation: null,
+          mealBreakdown: [],
           orderCount: 0,
           totalSpend: 0,
           status: "NEW",
@@ -104,7 +105,17 @@ export function CustomerSummaryTable({
       else if (statuses.some((s) => s === "READY")) aggStatus = "READY";
       else if (statuses.some((s) => s === "PREPARING")) aggStatus = "PREPARING";
 
-      return { ...c, status: aggStatus };
+      const mealMap = new Map<string, number>();
+      c.orders.forEach((order) => {
+        const name = order.meal?.name || "Unknown meal";
+        const current = mealMap.get(name) || 0;
+        mealMap.set(name, current + order.quantity);
+      });
+      const mealBreakdown = Array.from(mealMap.entries())
+        .map(([name, quantity]) => ({ name, quantity }))
+        .sort((a, b) => b.quantity - a.quantity);
+
+      return { ...c, status: aggStatus, mealBreakdown };
     });
   }, [orders]);
 
@@ -125,7 +136,7 @@ export function CustomerSummaryTable({
 
   if (isLoading) {
     return (
-      <div className="rounded-md border bg-card p-4">
+      <div className="rounded-lg border p-4">
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-16 w-full" />
@@ -144,11 +155,11 @@ export function CustomerSummaryTable({
   }
 
   return (
-    <div className="rounded-md border bg-card">
+    <div className="rounded-lg border">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="bg-muted/30">
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
                   {header.isPlaceholder
@@ -164,7 +175,7 @@ export function CustomerSummaryTable({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow key={row.id} className="hover:bg-muted/40">
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

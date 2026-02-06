@@ -40,7 +40,7 @@ export function getOrderColumns(
       header: "Customer",
       cell: ({ row }) => (
         <div>
-          <div className="font-medium">
+          <div className="font-medium text-foreground">
             {row.original.user?.name || "Guest"}
           </div>
           <div className="text-xs text-muted-foreground">
@@ -52,18 +52,78 @@ export function getOrderColumns(
     {
       accessorKey: "meal.name",
       header: "Meal",
-      cell: ({ row }) => (
-        <div className="max-w-[200px]">
-          <div className="font-medium truncate">{row.original.meal?.name}</div>
-          <div className="text-xs text-muted-foreground">
-            Qty: {row.original.quantity}
+      cell: ({ row }) => {
+        const substitutions = Array.isArray(row.original.substitutions)
+          ? row.original.substitutions
+          : [];
+        const modifiers = Array.isArray(row.original.modifiers)
+          ? row.original.modifiers
+          : [];
+        const hasNotes = Boolean(row.original.notes);
+        const subsLabel = substitutions.length
+          ? substitutions
+              .map((sub) =>
+                typeof sub === "object" && sub !== null && "optionName" in sub
+                  ? String(sub.optionName)
+                  : "",
+              )
+              .filter(Boolean)
+              .slice(0, 2)
+              .join(", ")
+          : "";
+        const modsLabel = modifiers.length
+          ? modifiers
+              .map((mod) =>
+                typeof mod === "object" && mod !== null && "groupName" in mod
+                  ? String(mod.groupName)
+                  : "",
+              )
+              .filter(Boolean)
+              .slice(0, 2)
+              .join(", ")
+          : "";
+        const subsDisplay = substitutions.length
+          ? subsLabel || `Subs x${substitutions.length}`
+          : "";
+        const modsDisplay = modifiers.length
+          ? modsLabel || `Mods x${modifiers.length}`
+          : "";
+
+        return (
+          <div className="max-w-[240px] space-y-1">
+            <div className="font-medium truncate">{row.original.meal?.name}</div>
+            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+              <span className="rounded-full border bg-muted/40 px-2 py-0.5">
+                Qty {row.original.quantity}
+              </span>
+              {row.original.proteinBoost && (
+                <span className="rounded-full border bg-amber-500/10 px-2 py-0.5 text-amber-700 dark:text-amber-300">
+                  Boost
+                </span>
+              )}
+              {subsDisplay && (
+                <span className="rounded-full border bg-muted/40 px-2 py-0.5">
+                  {subsDisplay}
+                </span>
+              )}
+              {modsDisplay && (
+                <span className="rounded-full border bg-muted/40 px-2 py-0.5">
+                  {modsDisplay}
+                </span>
+              )}
+              {hasNotes && (
+                <span className="rounded-full border bg-muted/40 px-2 py-0.5">
+                  Notes
+                </span>
+              )}
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       accessorKey: "deliveryMethod",
-      header: "Fulfillment",
+      header: "Method",
       cell: ({ row }) => {
         const method = row.original.deliveryMethod;
         return (
@@ -77,7 +137,7 @@ export function getOrderColumns(
     },
     {
       accessorKey: "fulfillmentStatus",
-      header: "Fulfillment",
+      header: "Status",
       cell: ({ row }) => {
         const status =
           row.original.fulfillmentStatus as FulfillmentStatus;
@@ -112,7 +172,7 @@ export function getOrderColumns(
       accessorKey: "totalAmount",
       header: "Total",
       cell: ({ row }) => (
-        <span className="font-medium">
+        <span className="font-medium text-foreground">
           ${row.original.totalAmount.toFixed(2)}
         </span>
       ),
@@ -140,12 +200,12 @@ export function getOrderColumns(
         return (
           <div className="flex items-center gap-2">
             {statusAction && (
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => onQuickUpdate(order)}
-                disabled={isUpdating || !isPaymentReady}
-              >
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => onQuickUpdate(order)}
+              disabled={isUpdating || !isPaymentReady}
+            >
                 {isUpdating ? (
                   "..."
                 ) : statusAction.nextStatus === "PREPARING" ? (

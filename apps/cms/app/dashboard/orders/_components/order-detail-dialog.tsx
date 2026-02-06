@@ -4,7 +4,6 @@ import * as React from "react";
 import {
   IconCheck,
   IconChefHat,
-  IconFileDownload,
   IconFlame,
   IconNote,
   IconTruckDelivery,
@@ -53,8 +52,15 @@ export function OrderDetailDialog({
 }: OrderDetailDialogProps) {
   const [cancelConfirmationOpen, setCancelConfirmationOpen] =
     React.useState(false);
+  const [localFulfillmentStatus, setLocalFulfillmentStatus] =
+    React.useState<FulfillmentStatus>("NEW");
 
   const updateStatusMutation = useUpdateFulfillmentStatus();
+
+  React.useEffect(() => {
+    if (!order) return;
+    setLocalFulfillmentStatus(order.fulfillmentStatus as FulfillmentStatus);
+  }, [order?.id, order?.fulfillmentStatus]);
 
   if (!order) return null;
 
@@ -63,11 +69,22 @@ export function OrderDetailDialog({
   const paymentConfig = PAYMENT_STATUS_CONFIG[order.paymentStatus];
   const canUpdateFulfillment = order.paymentStatus === "PAID";
 
+  const effectiveFulfillmentStatus = localFulfillmentStatus;
+
   const handleStatusUpdate = (newStatus: FulfillmentStatus) => {
-    updateStatusMutation.mutate({
-      orderId: order.id,
-      fulfillmentStatus: newStatus,
-    });
+    const previousStatus = effectiveFulfillmentStatus;
+    setLocalFulfillmentStatus(newStatus);
+    updateStatusMutation.mutate(
+      {
+        orderId: order.id,
+        fulfillmentStatus: newStatus,
+      },
+      {
+        onError: () => {
+          setLocalFulfillmentStatus(previousStatus);
+        },
+      },
+    );
   };
 
   const handleCancel = () => {
@@ -75,14 +92,9 @@ export function OrderDetailDialog({
     setCancelConfirmationOpen(false);
   };
 
-  const handleDownloadPDF = async () => {
-    const { generateOrderPDF } = await import("./order-pdf");
-    await generateOrderPDF(order);
-  };
-
   // Determine next status action
   const getNextStatusAction = () => {
-    switch (order.fulfillmentStatus) {
+    switch (effectiveFulfillmentStatus) {
       case "NEW":
         return {
           label: "Start Preparing",
@@ -111,314 +123,310 @@ export function OrderDetailDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <div className="flex items-center justify-between mr-8">
-              <DialogTitle className="font-mono text-lg">
-                Order #{order.id.slice(0, 8)}
-              </DialogTitle>
+        <DialogContent className="w-[96vw] sm:max-w-4xl lg:max-w-6xl max-h-[92vh] gap-0 overflow-hidden p-0">
+          <DialogHeader className="border-b bg-muted/20 px-6 py-5">
+            <div className="mr-8 flex flex-wrap items-start justify-between gap-3">
+              <div className="space-y-1">
+                <DialogTitle className="text-xl font-semibold tracking-tight">
+                  Order #{order.id.slice(0, 8)}
+                </DialogTitle>
+                <DialogDescription>
+                  {new Date(order.createdAt).toLocaleString()}
+                </DialogDescription>
+              </div>
               <StatusBadge
-                status={order.fulfillmentStatus as FulfillmentStatus}
+                status={effectiveFulfillmentStatus}
               />
             </div>
-            <DialogDescription>
-              {new Date(order.createdAt).toLocaleString()}
-            </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6">
-            {/* Customer Info */}
-            <section>
-              <h3 className="text-sm font-semibold text-muted-foreground mb-2">
-                CUSTOMER
-              </h3>
-              <div className="bg-muted/50 rounded-lg p-3">
-                <p className="font-medium">{order.user?.name || "Guest"}</p>
-                <p className="text-sm text-muted-foreground">
-                  {order.user?.email}
+          <div className="overflow-y-auto px-6 pb-6 pt-4">
+            <section className="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-xl border bg-card p-3">
+                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                  Total
+                </p>
+                <p className="mt-1 text-lg font-semibold">
+                  ${order.totalAmount.toFixed(2)}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {order.currency?.toUpperCase() ?? "CAD"}
+                </p>
+              </div>
+              <div className="rounded-xl border bg-card p-3">
+                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                  Quantity
+                </p>
+                <p className="mt-1 text-lg font-semibold">{order.quantity}</p>
+                <p className="text-xs text-muted-foreground">
+                  ${order.unitPrice.toFixed(2)} each
+                </p>
+              </div>
+              <div className="rounded-xl border bg-card p-3">
+                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                  Payment
+                </p>
+                <Badge
+                  variant="outline"
+                  className={`${paymentConfig.bgColor} mt-1 border-0`}
+                >
+                  <span
+                    className={`mr-1.5 h-2 w-2 rounded-full ${paymentConfig.dotColor}`}
+                  />
+                  {paymentConfig.label}
+                </Badge>
+              </div>
+              <div className="rounded-xl border bg-card p-3">
+                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                  Fulfillment
+                </p>
+                <p className="mt-1 text-lg font-semibold">
+                  {order.deliveryMethod === "PICKUP" ? "Pickup" : "Delivery"}
+                </p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {order.deliveryMethod === "PICKUP"
+                    ? order.pickupLocation || DEFAULT_PICKUP_LOCATION
+                    : order.user?.deliveryAddress || "No address on file"}
                 </p>
               </div>
             </section>
 
-            {/* Payment Info */}
-            <section>
-              <h3 className="text-sm font-semibold text-muted-foreground mb-2">
-                PAYMENT
-              </h3>
-              <div className="bg-muted/50 rounded-lg p-3 space-y-2 text-sm">
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Status</span>
-                  <Badge
-                    variant="outline"
-                    className={`${paymentConfig.bgColor} border-0`}
-                  >
-                    <span
-                      className={`w-2 h-2 rounded-full mr-1.5 ${paymentConfig.dotColor}`}
-                    />
-                    {paymentConfig.label}
-                  </Badge>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total</span>
-                  <span className="font-medium">
-                    ${order.totalAmount.toFixed(2)} {order.currency?.toUpperCase() ?? "CAD"}
-                  </span>
-                </div>
-                {order.paidAt && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Paid</span>
-                    <span className="font-medium">
-                      {new Date(order.paidAt).toLocaleString()}
-                    </span>
-                  </div>
-                )}
-                {order.refundedAt && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Refunded</span>
-                    <span className="font-medium">
-                      {new Date(order.refundedAt).toLocaleString()}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </section>
-
-            {/* Fulfillment Info */}
-            <section>
-              <h3 className="text-sm font-semibold text-muted-foreground mb-2">
-                FULFILLMENT
-              </h3>
-              <div className="bg-muted/50 rounded-lg p-3 space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Method</span>
-                  <span className="font-medium">
-                    {order.deliveryMethod === "PICKUP" ? "Pickup" : "Delivery"}
-                  </span>
-                </div>
-                {order.deliveryMethod === "PICKUP" ? (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Location</span>
-                    <span className="font-medium">
-                      {order.pickupLocation || DEFAULT_PICKUP_LOCATION}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground">Address</p>
-                    <p className="font-medium">
-                      {order.user?.deliveryAddress
-                        ? `${order.user.deliveryAddress}, ${[
-                            order.user.deliveryCity,
-                            order.user.deliveryPostal,
-                          ]
-                            .filter(Boolean)
-                            .join(", ")}`
-                        : "No address on file"}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </section>
-
-            <Separator />
-
-            {/* Meal Details */}
-            <section>
-              <h3 className="text-sm font-semibold text-muted-foreground mb-2">
-                ORDER DETAILS
-              </h3>
-              <div className="bg-muted/50 rounded-lg p-3 space-y-2">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-semibold text-lg">{order.meal?.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      Qty: {order.quantity} × ${order.unitPrice.toFixed(2)}
-                    </p>
-                  </div>
-                  <p className="font-bold text-lg">
-                    ${order.totalAmount.toFixed(2)}
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <Separator />
-
-            {/* Customizations - Chef Section */}
-            <section className="space-y-4">
-              <h3 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
-                <IconChefHat className="h-4 w-4" />
-                CUSTOMIZATIONS FOR CHEF
-              </h3>
-
-              {/* Protein Boost */}
-              {order.proteinBoost && (
-                <div className="bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800 rounded-lg p-3 flex items-center gap-3">
-                  <div className="bg-orange-500 text-white p-2 rounded-full">
-                    <IconFlame className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-orange-700 dark:text-orange-300">
-                      PROTEIN BOOST
-                    </p>
-                    <p className="text-sm text-orange-600 dark:text-orange-400">
-                      Add extra protein to this order
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Substitutions */}
-              {substitutions.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Substitutions:</p>
-                  <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2">
-                    {substitutions.map((sub, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between text-sm"
-                      >
-                        <span className="text-muted-foreground">
-                          {sub.groupName}:
-                        </span>
-                        <Badge variant="secondary" className="font-medium">
-                          {sub.optionName}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Special Notes */}
-              {order.notes && (
-                <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-300 dark:border-yellow-700 rounded-lg p-3">
-                  <div className="flex items-start gap-2">
-                    <IconNote className="h-5 w-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
+            <div className="grid gap-4 lg:grid-cols-12">
+              <div className="space-y-4 lg:col-span-7 xl:col-span-8">
+                <section className="rounded-xl border bg-card p-4">
+                  <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    Order Details
+                  </h3>
+                  <div className="mt-3 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-start">
                     <div>
-                      <p className="font-bold text-yellow-700 dark:text-yellow-300 mb-1">
-                        SPECIAL NOTES
+                      <p className="text-xl font-semibold tracking-tight">
+                        {order.meal?.name}
                       </p>
-                      <p className="text-sm text-yellow-800 dark:text-yellow-200 whitespace-pre-wrap">
-                        {order.notes}
+                      <p className="text-sm text-muted-foreground">
+                        Qty: {order.quantity} x ${order.unitPrice.toFixed(2)}
                       </p>
                     </div>
+                    <p className="text-xl font-bold">${order.totalAmount.toFixed(2)}</p>
                   </div>
-                </div>
-              )}
+                </section>
 
-              {/* No customizations message */}
-              {!order.proteinBoost &&
-                substitutions.length === 0 &&
-                !order.notes && (
-                  <p className="text-sm text-muted-foreground italic">
-                    No special customizations for this order
+                <section className="rounded-xl border bg-card p-4">
+                  <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    <IconChefHat className="h-4 w-4" />
+                    Customizations For Chef
+                  </h3>
+                  <div className="mt-3 space-y-3">
+                    {order.proteinBoost && (
+                      <div className="flex items-center gap-3 rounded-xl border border-orange-200 bg-orange-50 p-3 dark:border-orange-800 dark:bg-orange-950">
+                        <div className="rounded-full bg-orange-500 p-2 text-white">
+                          <IconFlame className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-orange-700 dark:text-orange-300">
+                            PROTEIN BOOST
+                          </p>
+                          <p className="text-sm text-orange-600 dark:text-orange-400">
+                            Add extra protein to this order
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {substitutions.length > 0 && (
+                      <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950">
+                        <p className="mb-2 text-sm font-medium">Substitutions</p>
+                        <div className="grid gap-2 sm:grid-cols-2">
+                          {substitutions.map((sub, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between rounded-lg bg-background/70 px-2 py-1.5 text-sm"
+                            >
+                              <span className="text-muted-foreground">
+                                {sub.groupName}
+                              </span>
+                              <Badge variant="secondary" className="font-medium">
+                                {sub.optionName}
+                              </Badge>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {order.notes && (
+                      <div className="rounded-xl border border-yellow-300 bg-yellow-50 p-3 dark:border-yellow-700 dark:bg-yellow-950">
+                        <div className="flex items-start gap-2">
+                          <IconNote className="mt-0.5 h-5 w-5 shrink-0 text-yellow-600 dark:text-yellow-400" />
+                          <div>
+                            <p className="mb-1 font-bold text-yellow-700 dark:text-yellow-300">
+                              SPECIAL NOTES
+                            </p>
+                            <p className="whitespace-pre-wrap text-sm text-yellow-800 dark:text-yellow-200">
+                              {order.notes}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {!order.proteinBoost &&
+                      substitutions.length === 0 &&
+                      !order.notes && (
+                        <p className="text-sm italic text-muted-foreground">
+                          No special customizations for this order
+                        </p>
+                      )}
+                  </div>
+                </section>
+              </div>
+
+              <div className="space-y-4 lg:col-span-5 xl:col-span-4">
+                <section className="rounded-xl border bg-card p-4">
+                  <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    Customer
+                  </h3>
+                  <p className="mt-3 font-medium">{order.user?.name || "Guest"}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {order.user?.email || "No email on file"}
                   </p>
-                )}
-            </section>
+                </section>
 
-            <Separator />
+                <section className="rounded-xl border bg-card p-4 text-sm">
+                  <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    Payment & Fulfillment
+                  </h3>
+                  <div className="mt-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Method</span>
+                      <span className="font-medium">
+                        {order.deliveryMethod === "PICKUP" ? "Pickup" : "Delivery"}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-muted-foreground">
+                        {order.deliveryMethod === "PICKUP" ? "Location" : "Address"}
+                      </p>
+                      <p className="font-medium">
+                        {order.deliveryMethod === "PICKUP"
+                          ? order.pickupLocation || DEFAULT_PICKUP_LOCATION
+                          : order.user?.deliveryAddress
+                            ? `${order.user.deliveryAddress}, ${[
+                                order.user.deliveryCity,
+                                order.user.deliveryPostal,
+                              ]
+                                .filter(Boolean)
+                                .join(", ")}`
+                            : "No address on file"}
+                      </p>
+                    </div>
+                    {order.paidAt && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-muted-foreground">Paid</span>
+                        <span className="font-medium">
+                          {new Date(order.paidAt).toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                    {order.refundedAt && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-muted-foreground">Refunded</span>
+                        <span className="font-medium">
+                          {new Date(order.refundedAt).toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </section>
 
-            {/* Actions */}
-            <section className="space-y-4">
-              <h3 className="text-sm font-semibold text-muted-foreground">
-                UPDATE STATUS
-              </h3>
+                <section className="rounded-xl border bg-card p-4">
+                  <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    Update Status
+                  </h3>
+                  <div className="mt-3 space-y-3">
+                    <div className="space-y-2">
+                      <Select
+                        value={effectiveFulfillmentStatus}
+                        onValueChange={(value) =>
+                          handleStatusUpdate(value as FulfillmentStatus)
+                        }
+                        disabled={
+                          !canUpdateFulfillment || updateStatusMutation.isPending
+                        }
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="NEW">
+                            <div className="flex items-center gap-2">
+                              <div className="h-2 w-2 rounded-full bg-gray-500" />
+                              New
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="PREPARING">
+                            <div className="flex items-center gap-2">
+                              <div className="h-2 w-2 rounded-full bg-orange-500" />
+                              Preparing
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="READY">
+                            <div className="flex items-center gap-2">
+                              <div className="h-2 w-2 rounded-full bg-blue-500" />
+                              Ready
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="DELIVERED">
+                            <div className="flex items-center gap-2">
+                              <div className="h-2 w-2 rounded-full bg-green-500" />
+                              Delivered
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="CANCELLED">
+                            <div className="flex items-center gap-2">
+                              <div className="h-2 w-2 rounded-full bg-red-500" />
+                              Cancelled
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        Change status freely if you need to correct a mistake
+                      </p>
+                    </div>
 
-              {/* Status dropdown for flexible changes */}
-              <div className="space-y-2">
-                <Select
-                  value={order.fulfillmentStatus}
-                  onValueChange={(value) =>
-                    handleStatusUpdate(value as FulfillmentStatus)
-                  }
-                  disabled={!canUpdateFulfillment || updateStatusMutation.isPending}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="NEW">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-gray-500" />
-                        New
+                    {nextAction &&
+                      effectiveFulfillmentStatus !== "DELIVERED" &&
+                      effectiveFulfillmentStatus !== "CANCELLED" && (
+                        <Button
+                          onClick={() => handleStatusUpdate(nextAction.status)}
+                          disabled={
+                            !canUpdateFulfillment || updateStatusMutation.isPending
+                          }
+                          className="w-full"
+                          size="lg"
+                        >
+                          <nextAction.icon className="mr-2 h-5 w-5" />
+                          {nextAction.label}
+                        </Button>
+                      )}
+
+                    {effectiveFulfillmentStatus === "DELIVERED" && (
+                      <div className="flex items-center justify-center gap-2 rounded-lg bg-green-50 py-2 text-green-600 dark:bg-green-950">
+                        <IconCheck className="h-5 w-5" />
+                        <span className="font-medium">Order Completed</span>
                       </div>
-                    </SelectItem>
-                    <SelectItem value="PREPARING">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-orange-500" />
-                        Preparing
+                    )}
+
+                    {effectiveFulfillmentStatus === "CANCELLED" && (
+                      <div className="flex items-center justify-center gap-2 rounded-lg bg-red-50 py-2 text-red-600 dark:bg-red-950">
+                        <IconX className="h-5 w-5" />
+                        <span className="font-medium">Order Cancelled</span>
                       </div>
-                    </SelectItem>
-                    <SelectItem value="READY">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-blue-500" />
-                        Ready
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="DELIVERED">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-green-500" />
-                        Delivered
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="CANCELLED">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-red-500" />
-                        Cancelled
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-muted-foreground">
-                  Change status freely if you need to correct a mistake
-                </p>
+                    )}
+                  </div>
+                </section>
               </div>
-
-              {/* Quick action buttons */}
-                {nextAction &&
-                  order.fulfillmentStatus !== "DELIVERED" &&
-                  order.fulfillmentStatus !== "CANCELLED" && (
-                  <Button
-                    onClick={() => handleStatusUpdate(nextAction.status)}
-                    disabled={!canUpdateFulfillment || updateStatusMutation.isPending}
-                    className="w-full"
-                    size="lg"
-                  >
-                    <nextAction.icon className="mr-2 h-5 w-5" />
-                    {nextAction.label}
-                  </Button>
-                )}
-
-              {/* Completed/Cancelled state indicator */}
-              {order.fulfillmentStatus === "DELIVERED" && (
-                <div className="flex items-center justify-center gap-2 text-green-600 py-2 bg-green-50 dark:bg-green-950 rounded-lg">
-                  <IconCheck className="h-5 w-5" />
-                  <span className="font-medium">Order Completed</span>
-                </div>
-              )}
-
-              {order.fulfillmentStatus === "CANCELLED" && (
-                <div className="flex items-center justify-center gap-2 text-red-600 py-2 bg-red-50 dark:bg-red-950 rounded-lg">
-                  <IconX className="h-5 w-5" />
-                  <span className="font-medium">Order Cancelled</span>
-                </div>
-              )}
-
-              <Separator />
-
-              {/* Other actions */}
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={handleDownloadPDF}
-                  className="flex-1"
-                >
-                  <IconFileDownload className="mr-2 h-4 w-4" />
-                  Download PDF
-                </Button>
-              </div>
-            </section>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

@@ -1,28 +1,20 @@
 "use client";
 
 import * as React from "react";
-import { format, isWithinInterval, isFuture } from "date-fns";
+import { format, isWithinInterval, isFuture, subDays } from "date-fns";
 import { OrdersTable } from "./orders-table";
 import { CustomerSummaryTable } from "./customer-summary-table";
 import { CustomerOrdersDialog } from "./customer-orders-dialog";
 import { RotationSelector } from "./rotation-selector";
 import { ProductionSummary } from "./production-summary";
 import { OrdersOverview } from "./orders-overview";
-import { DeliverySummary } from "./delivery-summary";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  IconTruck,
-  IconClock,
-  IconChefHat,
-  IconLoader2,
-} from "@tabler/icons-react";
+import { IconTruck, IconClock, IconChefHat, IconLoader2 } from "@tabler/icons-react";
 import { useSelectedRotation } from "@/lib/context/rotation-context";
 import {
   useRotations,
   useOrdersByRotation,
-  useProductionSummary,
 } from "@/hooks/use-orders";
 import type { OrderWithRelations } from "@/lib/types/order-types";
 
@@ -47,10 +39,6 @@ export function OrdersDashboard() {
   const { data: orders = [], isLoading: ordersLoading } =
     useOrdersByRotation(selectedRotationId);
 
-  // Fetch production summary
-  const { data: productionSummary = [] } =
-    useProductionSummary(selectedRotationId);
-
   // Dialog state for customer orders
   const [selectedCustomerOrders, setSelectedCustomerOrders] = React.useState<
     OrderWithRelations[]
@@ -63,6 +51,13 @@ export function OrdersDashboard() {
   };
 
   const currentRotation = rotations.find((r) => r.id === selectedRotationId);
+  const paidOrders = orders.filter(
+    (order) =>
+      order.paymentStatus === "PAID" && order.fulfillmentStatus !== "CANCELLED",
+  );
+  const uniqueCustomers = new Set(
+    paidOrders.map((order) => order.userId || order.user?.email || "guest"),
+  ).size;
 
   // Determine the context of the selected rotation
   const rotationContext = React.useMemo(() => {
@@ -104,6 +99,17 @@ export function OrdersDashboard() {
     };
   }, [currentRotation]);
 
+  const rotationWindow = React.useMemo(() => {
+    if (!currentRotation) return null;
+    const weekStart = new Date(currentRotation.weekStart);
+    const weekEnd = new Date(currentRotation.weekEnd);
+    const orderCutoff = currentRotation.orderCutoff
+      ? new Date(currentRotation.orderCutoff)
+      : subDays(weekStart, 1);
+    const orderWindowStart = subDays(weekStart, 7);
+    return { weekStart, weekEnd, orderCutoff, orderWindowStart };
+  }, [currentRotation]);
+
   // Loading state
   if (rotationsLoading) {
     return (
@@ -114,103 +120,81 @@ export function OrdersDashboard() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6 pt-0">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
+    <div className="flex flex-col gap-6 p-6 pt-4">
+      <div className="flex flex-col gap-4 border-b pb-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
+            Orders
+            {rotationContext && (
+              <Badge variant={rotationContext.variant}>
+                {rotationContext.label}
+              </Badge>
+            )}
+          </div>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
             Order Management
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {currentRotation
               ? `Delivery week: ${format(new Date(currentRotation.weekStart), "MMM d")} - ${format(new Date(currentRotation.weekEnd), "MMM d, yyyy")}`
               : "Select a delivery week to view orders"}
           </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3">
           <RotationSelector />
+          <Badge variant="outline">
+            {ordersLoading ? (
+              <Skeleton className="h-4 w-20" />
+            ) : (
+              `${paidOrders.length} paid orders / ${uniqueCustomers} customers`
+            )}
+          </Badge>
         </div>
       </div>
 
-      {/* Context Banner */}
-      {rotationContext && (
-        <Card
-          className={`border-l-4 ${
-            rotationContext.variant === "default"
-              ? "border-l-green-500 bg-green-50/50"
-              : rotationContext.variant === "secondary"
-                ? "border-l-blue-500 bg-blue-50/50"
-                : "border-l-gray-300"
-          }`}
-        >
-          <CardContent className="py-3 px-4">
-            <div className="flex items-center gap-3">
-              <rotationContext.icon
-                className={`w-5 h-5 ${
-                  rotationContext.variant === "default"
-                    ? "text-green-600"
-                    : rotationContext.variant === "secondary"
-                      ? "text-blue-600"
-                      : "text-gray-500"
-                }`}
-              />
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">{rotationContext.label}</span>
-                  <Badge variant={rotationContext.variant}>
-                    {ordersLoading ? (
-                      <Skeleton className="h-4 w-8" />
-                    ) : (
-                      `${orders.length} orders`
-                    )}
-                  </Badge>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {rotationContext.description}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <div className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/20 p-3 text-xs">
+        <Badge variant="outline">
+          {ordersLoading ? <Skeleton className="h-4 w-10" /> : `${orders.length} orders`}
+        </Badge>
+        <Badge variant="outline">
+          {rotationWindow
+            ? `Ordering ${format(rotationWindow.orderWindowStart, "MMM d")} - ${format(rotationWindow.orderCutoff, "MMM d")}`
+            : "Ordering --"}
+        </Badge>
+        <Badge variant="outline">
+          {rotationWindow
+            ? `Cutoff ${format(rotationWindow.orderCutoff, "EEE, MMM d")}`
+            : "Cutoff --"}
+        </Badge>
+        {rotationContext && (
+          <Badge variant={rotationContext.variant}>{rotationContext.label}</Badge>
+        )}
+        {rotationContext && (
+          <span className="text-muted-foreground">
+            {rotationContext.description}
+          </span>
+        )}
+      </div>
 
-      {!ordersLoading && orders.length > 0 && (
-        <OrdersOverview orders={orders} />
-      )}
-
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="md:col-span-1">
+      <div className="grid gap-6 lg:grid-cols-12 items-stretch">
+        <div className="lg:col-span-6">
           <ProductionSummary />
         </div>
-
-        <div className="md:col-span-2 space-y-4">
-          <OrdersTable />
+        <div className="lg:col-span-6">
+          {!ordersLoading && <OrdersOverview orders={orders} />}
         </div>
       </div>
 
-      <div className="mt-8 space-y-4">
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight">
-            Delivery & Pickup Manifest
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            Grouped stops with quick access to packing lists
-          </p>
-        </div>
-        <DeliverySummary
-          orders={orders}
-          onSelectOrders={handleCustomerSelect}
-        />
-      </div>
+      <OrdersTable />
 
-      <div className="mt-8 space-y-4">
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight">
-            Customer Fulfillment
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            Overview of order status by customer
-          </p>
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+          <IconTruck className="h-3.5 w-3.5" />
+          Customer Fulfillment
         </div>
+        <p className="text-sm text-muted-foreground">
+          Delivery method, address, and meal breakdown per customer.
+        </p>
         <CustomerSummaryTable onSelectCustomer={handleCustomerSelect} />
       </div>
 
