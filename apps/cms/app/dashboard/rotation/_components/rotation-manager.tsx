@@ -228,7 +228,7 @@ export function RotationManager({
       {/* Quick Week Cards */}
       <div className="grid gap-4 md:grid-cols-3">
         {/* This Week's Delivery - Orders were placed LAST week */}
-        <Card className="border-l-4 border-l-green-500 bg-emerald-950/20">
+        <Card className="h-full border bg-card">
           <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <CardTitle className="text-lg">This Week&apos;s Delivery</CardTitle>
@@ -296,7 +296,7 @@ export function RotationManager({
         </Card>
 
         {/* Ordering Window - Live menu for customers */}
-        <Card className="border-l-4 border-l-blue-500 bg-blue-950/20">
+        <Card className="h-full border bg-card">
           <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <CardTitle className="text-lg">Next Week&apos;s Delivery</CardTitle>
@@ -367,7 +367,7 @@ export function RotationManager({
         </Card>
 
         {/* Following Week - Planning ahead */}
-        <Card className="border-l-4 border-l-purple-500 bg-purple-950/20">
+        <Card className="h-full border bg-card">
           <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <CardTitle className="text-lg">Following Week</CardTitle>

@@ -3,6 +3,7 @@ import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
+import { Badge } from "@/components/ui/badge";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import {
   getDashboardMetrics,
@@ -27,22 +28,33 @@ export default async function Page() {
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          <div className="flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-              <SectionCards
-                totalRevenue={metrics.totalRevenue}
-                activeMealsCount={metrics.activeMealsCount}
-                totalOrdersCount={metrics.totalOrdersCount}
-              />
-              <div className="px-4 lg:px-6">
-                <ChartAreaInteractive data={revenueChartData} />
+        <div className="flex flex-col gap-6 p-6 pt-4">
+          <div className="flex flex-col gap-4 border-b pb-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
+                Dashboard
+                <Badge variant="secondary">Overview</Badge>
               </div>
-              <div className="px-4 lg:px-6">
-                <h2 className="text-lg font-semibold mb-4">Recent Orders</h2>
-                <DataTable data={recentOrdersData} />
-              </div>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+                Business Overview
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Revenue trends, current menu health, and recent order activity.
+              </p>
             </div>
+          </div>
+
+          <SectionCards
+            totalRevenue={metrics.totalRevenue}
+            activeMealsCount={metrics.activeMealsCount}
+            totalOrdersCount={metrics.totalOrdersCount}
+          />
+          <ChartAreaInteractive data={revenueChartData} />
+          <div>
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              Recent Orders
+            </h2>
+            <DataTable data={recentOrdersData} />
           </div>
         </div>
       </SidebarInset>

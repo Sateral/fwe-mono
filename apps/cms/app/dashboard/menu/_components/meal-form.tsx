@@ -101,22 +101,23 @@ export function MealForm({ initialData, tags, onSubmit }: MealFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">
-            {initialData ? "Edit Meal" : "Create Meal"}
-          </h1>
+        <div className="flex flex-col gap-4 border-b pb-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="space-y-2">
+            <div className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
+              Menu Form
+            </div>
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+              {initialData ? "Edit Meal" : "Create Meal"}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Configure meal details, pricing, and customer customization options.
+            </p>
+          </div>
           <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="hover:cursor-pointer"
-              onClick={() => router.back()}
-            >
+            <Button type="button" variant="outline" onClick={() => router.back()}>
               Cancel
             </Button>
-            <Button type="submit" className="hover:cursor-pointer">
-              Save Meal
-            </Button>
+            <Button type="submit">Save Meal</Button>
           </div>
         </div>
 

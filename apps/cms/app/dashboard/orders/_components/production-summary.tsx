@@ -21,12 +21,14 @@ export function ProductionSummary({
   fullManifestHref = "/dashboard/orders/prep-manifest",
 }: ProductionSummaryProps) {
   const { selectedRotationId } = useSelectedRotation();
-  const { data: orders = [], isLoading } = useOrdersByRotation(selectedRotationId);
+  const { data: orders = [], isLoading } =
+    useOrdersByRotation(selectedRotationId);
 
   const manifest = React.useMemo(() => {
     const activeOrders = orders.filter(
       (order) =>
-        order.paymentStatus === "PAID" && order.fulfillmentStatus !== "CANCELLED",
+        order.paymentStatus === "PAID" &&
+        order.fulfillmentStatus !== "CANCELLED",
     );
 
     const mealMap = new Map<
@@ -129,8 +131,14 @@ export function ProductionSummary({
 
       for (const sub of substitutions) {
         const key = `${sub.groupName}: ${sub.optionName}`;
-        entry.substitutions.set(key, (entry.substitutions.get(key) || 0) + quantity);
-        substitutionDemand.set(key, (substitutionDemand.get(key) || 0) + quantity);
+        entry.substitutions.set(
+          key,
+          (entry.substitutions.get(key) || 0) + quantity,
+        );
+        substitutionDemand.set(
+          key,
+          (substitutionDemand.get(key) || 0) + quantity,
+        );
       }
 
       for (const mod of modifiers) {
@@ -158,7 +166,10 @@ export function ProductionSummary({
     );
 
     const totalPortions = meals.reduce((acc, meal) => acc + meal.totalQty, 0);
-    const standardPortions = meals.reduce((acc, meal) => acc + meal.standardQty, 0);
+    const standardPortions = meals.reduce(
+      (acc, meal) => acc + meal.standardQty,
+      0,
+    );
     const customizedPortions = totalPortions - standardPortions;
     const boostPortions = meals.reduce((acc, meal) => acc + meal.boostQty, 0);
     const noteCount = meals.reduce((acc, meal) => acc + meal.notes.length, 0);
@@ -272,8 +283,12 @@ export function ProductionSummary({
         </CardHeader>
         <CardContent className="flex h-full flex-col gap-4">
           <div className="flex flex-wrap gap-2 text-xs">
-            <Badge variant="outline">{manifest.activeOrderCount} paid orders</Badge>
-            <Badge variant="outline">{manifest.customizedPortions} customized</Badge>
+            <Badge variant="outline">
+              {manifest.activeOrderCount} paid orders
+            </Badge>
+            <Badge variant="outline">
+              {manifest.customizedPortions} customized
+            </Badge>
             <Badge variant={manifest.noteCount > 0 ? "destructive" : "outline"}>
               {manifest.noteCount} notes
             </Badge>
@@ -334,17 +349,24 @@ export function ProductionSummary({
           </Badge>
         </div>
         <p className="text-xs text-muted-foreground">
-          Chef view of meal totals, customizations, and exceptions for this rotation.
+          Chef view of meal totals, customizations, and exceptions for this
+          rotation.
         </p>
       </CardHeader>
       <CardContent>
         <div className="mb-4 flex flex-wrap gap-2 text-xs">
-          <Badge variant="outline">{manifest.activeOrderCount} paid orders</Badge>
-          <Badge variant="outline">{manifest.standardPortions} standard portions</Badge>
+          <Badge variant="outline">
+            {manifest.activeOrderCount} paid orders
+          </Badge>
+          <Badge variant="outline">
+            {manifest.standardPortions} standard portions
+          </Badge>
           <Badge variant="outline">
             {manifest.customizedPortions} customized portions
           </Badge>
-          <Badge variant="outline">{manifest.boostPortions} protein boosts</Badge>
+          <Badge variant="outline">
+            {manifest.boostPortions} protein boosts
+          </Badge>
           <Badge variant={manifest.noteCount > 0 ? "destructive" : "outline"}>
             {manifest.noteCount} special notes
           </Badge>
@@ -379,8 +401,14 @@ export function ProductionSummary({
                         <tr key={meal.mealId} className="border-t">
                           <td className="px-3 py-2">
                             <div className="flex items-center gap-2">
-                              <span className="font-medium">{meal.mealName}</span>
-                              <Badge variant={meal.isRotating ? "secondary" : "outline"}>
+                              <span className="font-medium">
+                                {meal.mealName}
+                              </span>
+                              <Badge
+                                variant={
+                                  meal.isRotating ? "secondary" : "outline"
+                                }
+                              >
                                 {meal.isRotating ? "Special" : "Signature"}
                               </Badge>
                             </div>
@@ -388,8 +416,12 @@ export function ProductionSummary({
                           <td className="px-3 py-2 text-center font-semibold">
                             {meal.totalQty}
                           </td>
-                          <td className="px-3 py-2 text-center">{meal.standardQty}</td>
-                          <td className="px-3 py-2 text-center">{customCount}</td>
+                          <td className="px-3 py-2 text-center">
+                            {meal.standardQty}
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            {customCount}
+                          </td>
                         </tr>
                       );
                     })}
@@ -415,8 +447,12 @@ export function ProductionSummary({
                     className="flex items-center justify-between rounded-lg border bg-muted/20 px-3 py-2"
                   >
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium">{signal.label}</p>
-                      <p className="text-xs text-muted-foreground">{signal.type}</p>
+                      <p className="truncate text-sm font-medium">
+                        {signal.label}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {signal.type}
+                      </p>
                     </div>
                     <Badge variant="outline">x{signal.count}</Badge>
                   </div>
@@ -447,7 +483,11 @@ export function ProductionSummary({
                           {row.label}
                         </p>
                       </div>
-                      <Badge variant={row.tone === "warn" ? "destructive" : "outline"}>
+                      <Badge
+                        variant={
+                          row.tone === "warn" ? "destructive" : "outline"
+                        }
+                      >
                         x{row.count}
                       </Badge>
                     </div>

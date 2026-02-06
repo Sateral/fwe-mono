@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
+import { Badge } from "@/components/ui/badge";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import {
   getRotations,
@@ -27,14 +28,18 @@ export default async function RotationPage() {
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <div className="flex flex-col gap-4 p-4 pt-0">
-          <div className="flex items-center justify-between py-4">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">
+        <div className="flex flex-col gap-6 p-6 pt-4">
+          <div className="flex flex-col gap-4 border-b pb-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
+                Rotation
+                <Badge variant="secondary">Planning</Badge>
+              </div>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground">
                 Weekly Rotation
               </h1>
-              <p className="text-muted-foreground">
-                Manage weekly meal rotations for customers
+              <p className="text-sm text-muted-foreground">
+                Manage weekly meal rotations and publish customer-facing menus.
               </p>
             </div>
           </div>
