@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Container from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import type { Meal } from "@/types";
+import { toast } from "sonner";
 import NutritionBreakdown from "./nutrition-breakdown";
 import OrderBuilder from "./order-builder";
 import OrderSummary from "./order-summary";
@@ -148,7 +149,11 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
     } catch (error) {
       console.error("Checkout error:", error);
       setIsCheckingOut(false);
-      // TODO: Show error toast
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Checkout failed. Please try again.",
+      );
     }
   };
 

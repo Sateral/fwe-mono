@@ -11,8 +11,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 const routes = [
   { href: "/", label: "Home" },
   { href: "/menu", label: "Menu" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
 ];
 
 const Navbar = () => {
@@ -48,7 +46,7 @@ const Navbar = () => {
                 className={cn(
                   "transition-colors",
                   pathname === route.href ? "text-white" : "text-white/80",
-                  "hover:text-white"
+                  "hover:text-white",
                 )}
               >
                 {route.label}

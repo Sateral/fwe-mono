@@ -16,14 +16,15 @@ const Footer = () => {
         {/* Top Section */}
         <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-12">
           <div className="max-w-2xl">
+            {/* TODO: Replace with real brand tagline */}
             <h2 className="text-2xl md:text-3xl font-medium leading-tight text-gray-200">
-              Lorem ipsum dolor sit amet consectetur, <br />
+              Chef-crafted meals, prepared fresh <br />
               <span className="text-gray-500">
-                adipiscing elit quisque faucibus
+                and delivered to your door weekly
               </span>
             </h2>
           </div>
-          <Button className="bg-[#8B3A3A] hover:bg-[#7A3333] hover:cursor-pointer text-white rounded-full px-8 py-6 text-lg font-medium group">
+          <Button className="bg-primary hover:bg-primary/90 hover:cursor-pointer text-white rounded-full px-8 py-6 text-lg font-medium group">
             Get in touch
             <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </Button>
@@ -34,21 +35,26 @@ const Footer = () => {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="relative w-8 h-8">
-              <div className="absolute inset-0 bg-[#8B3A3A] rounded-full opacity-20" />
-              <Circle className="w-8 h-8 text-[#8B3A3A] fill-[#8B3A3A]/20" />
+              <div className="absolute inset-0 bg-primary rounded-full opacity-20" />
+              <Circle className="w-8 h-8 text-primary fill-primary/20" />
             </div>
-            <span className="text-2xl font-bold tracking-tight">Logoipsum</span>
+            <span className="text-2xl font-bold tracking-tight">
+              Free Will Eats
+            </span>
           </div>
 
           {/* Navigation */}
           <nav className="flex flex-wrap justify-center gap-8 md:gap-12">
-            {["Home", "Menu", "About Me", "Contact"].map((item) => (
+            {[
+              { label: "Home", href: "/" },
+              { label: "Menu", href: "/menu" },
+            ].map((item) => (
               <Link
-                key={item}
-                href="#"
+                key={item.label}
+                href={item.href}
                 className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </nav>

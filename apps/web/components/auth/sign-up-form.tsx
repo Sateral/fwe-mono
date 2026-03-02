@@ -71,7 +71,7 @@ export function SignUpForm({
           onSuccess: () => {
             router.push("/onboarding");
           },
-        }
+        },
       );
     } finally {
       setIsPending(false);
@@ -164,7 +164,7 @@ export function SignUpForm({
                   Sign Up with Google
                 </Button>
                 <FieldDescription className="text-center">
-                  Already have an account? <Link href="/auth/login">Login</Link>
+                  Already have an account? <Link href="/sign-in">Login</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

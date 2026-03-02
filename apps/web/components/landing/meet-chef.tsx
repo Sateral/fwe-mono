@@ -23,10 +23,11 @@ const MeetChef = () => {
             <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900">
               Meet The Chef Behind It All
             </h2>
+            {/* TODO: Replace with real chef bio */}
             <p className="text-lg sm:text-xl text-gray-500 leading-relaxed max-w-xl">
-              Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet
-              consectetur adipiscing elit quisque faucibus ex. Adipiscing elit
-              quisque faucibus ex sapien vitae pellentesque.
+              Passionate about clean eating and bold flavors, our chef brings
+              years of experience crafting nutritious meals that fuel your week
+              without sacrificing taste.
             </p>
           </div>
 
