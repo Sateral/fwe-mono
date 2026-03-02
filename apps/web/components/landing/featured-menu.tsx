@@ -27,6 +27,7 @@ interface MenuItem {
   }[];
 }
 
+// TODO: Replace MOCK_MENU_ITEMS with real data from CMS API (GET /api/meals/featured)
 const MOCK_MENU_ITEMS: MenuItem[] = [
   {
     id: "1",

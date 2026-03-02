@@ -92,9 +92,8 @@ meal-prep orders. Meals can be:
 **Notable files**
 
 - `lib/cms-api.ts`: Typed client for CMS endpoints.
-- `lib/stripe-service.ts`: Order fulfillment (triple-check pattern).
-- `app/api/webhooks/stripe/route.ts`: Stripe webhook handler.
-- `lib/price-utils.ts`: Server-side pricing.
+- `lib/order-service.ts`: Order orchestration (checkout + fulfillment).
+- `lib/rate-limit.ts`: Rate limiting for public API routes.
 
 ---
 
@@ -134,16 +133,20 @@ meal-prep orders. Meals can be:
 
 ## Local Development
 
-From each repo root:
+From the monorepo root:
 
-- `npm run dev`
-- `npm run lint`
-- `npm run build`
+- `bun run dev` (all apps)
+- `bun run dev --filter=web` (web only)
+- `bun run dev --filter=cms` (CMS only)
+- `bun run build`
+- `bun run lint`
+- `bun run check-types`
 
-Prisma (CMS):
+Prisma (from monorepo root):
 
-- `npx prisma migrate dev`
-- `npx prisma db seed`
+- `bun run db:generate`
+- `bun run db:migrate`
+- `bun run db:seed`
 
 ---
 
@@ -216,34 +219,40 @@ Prisma (CMS):
 
 ## Migration Plan: TurboRepo Monorepo
 
-**Target structure (proposed)**
+**Current structure (implemented)**
 
 ```
 apps/
-  cms/        (current cms)
-  web/        (current web)
+  cms/        (admin dashboard + API)
+  web/        (customer storefront)
 packages/
   db/         (Prisma schema + client)
   validators/ (Zod schemas)
-  types/      (shared types)
-  ui/         (optional; only if styles converge)
-  config/     (eslint, tsconfig, prettier)
-  utils/      (shared helpers)
+  types/      (shared API response types)
+  utils/      (shared helpers: formatting, cn())
+  ui/         (placeholder; unused)
+  eslint-config/  (shared ESLint rules)
+  typescript-config/ (shared TS configs)
 ```
 
-**Phased approach**
+**Completed phases**
 
-1. **Scaffold TurboRepo** with both apps under `apps/`.
-2. **Extract Prisma** to `packages/db`, update imports.
-3. **Extract shared Zod + types** to `packages/validators` and `packages/types`.
+1. ~~Scaffold TurboRepo with both apps under `apps/`.~~ Done.
+2. ~~Extract Prisma to `packages/db`, update imports.~~ Done.
+3. ~~Extract shared Zod + types to `packages/validators` and `packages/types`.~~ Done.
+
+**Remaining**
+
 4. **Keep UI app-specific** unless styles converge.
-5. **Centralize config** (TS/ESLint/Prettier) in `packages/config`.
+5. **Centralize config** further as needed.
 
 ---
 
 ## Suggested Next Tasks (Update After Each Task)
 
-- Finalize TurboRepo scaffold and move both apps into `apps/`.
-- Extract Prisma schema/client into `packages/db`.
-- Consolidate Zod schemas and shared types.
-- Keep UI app-specific (revisit only if styles converge).
+- Build `/about` and `/contact` pages.
+- Replace mock landing page data with CMS API calls.
+- Add `error.tsx`, `loading.tsx`, `not-found.tsx` files.
+- Migrate `Float` to `Decimal` for monetary fields (requires Prisma migration).
+- Add test infrastructure.
+- Evaluate shared UI package (only if styles converge).

@@ -26,6 +26,7 @@ interface Reel {
   comments: string;
 }
 
+// TODO: Replace MOCK_REELS with real Instagram data (API integration or CMS-managed)
 const MOCK_REELS: Reel[] = [
   {
     id: "1",

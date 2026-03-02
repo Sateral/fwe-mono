@@ -13,6 +13,7 @@ interface Testimonial {
   avatar: string;
 }
 
+// TODO: Replace MOCK_TESTIMONIALS with real data from CMS API or a testimonials table
 const MOCK_TESTIMONIALS: Testimonial[] = [
   {
     id: "1",
