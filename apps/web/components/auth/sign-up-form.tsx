@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
 
+import { signUpSchema, type SignUpInput } from "@fwe/validators";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,16 +28,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { Spinner } from "../ui/spinner";
 
-const formSchema = z.object({
-  name: z.string().min(3, {
-    message: "Name must be at least 3 characters long",
-  }),
-  email: z.email(),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters long",
-  }),
-});
-
 export function SignUpForm({
   className,
   ...props
@@ -45,8 +35,8 @@ export function SignUpForm({
   const [isPending, setIsPending] = useState(false);
 
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SignUpInput>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -54,7 +44,7 @@ export function SignUpForm({
     },
   });
 
-  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+  const handleSubmit = async (data: SignUpInput) => {
     try {
       setIsPending(true);
       await signUp.email(

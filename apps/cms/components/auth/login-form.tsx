@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
 
+import { loginSchema, type LoginInput } from "@fwe/validators";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,13 +28,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 
-const formSchema = z.object({
-  email: z.email(),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters long",
-  }),
-});
-
 export function LoginForm({
   className,
   ...props
@@ -42,15 +35,15 @@ export function LoginForm({
   const [isPending, setIsPending] = useState(false);
 
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+  const handleSubmit = async (data: LoginInput) => {
     try {
       setIsPending(true);
       await signIn.email(
@@ -66,7 +59,7 @@ export function LoginForm({
           onSuccess: () => {
             router.push("/");
           },
-        }
+        },
       );
     } finally {
       setIsPending(false);
