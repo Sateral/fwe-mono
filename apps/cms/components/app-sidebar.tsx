@@ -3,19 +3,11 @@
 import * as React from "react";
 import {
   IconCalendar,
-  IconCamera,
-  IconChartBar,
   IconDashboard,
-  IconDatabase,
-  IconFileAi,
   IconFileDescription,
-  IconFileWord,
-  IconFolder,
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
-  IconReport,
-  IconSearch,
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react";
@@ -33,54 +25,56 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const data = {
-  user: {
-    name: "Admin",
-    email: "admin@freewilleats.com",
-    avatar: "/avatars/shadcn.jpg",
+const navMain = [
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: IconDashboard,
   },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: IconDashboard,
-    },
-    {
-      title: "Menu Management",
-      url: "/dashboard/menu",
-      icon: IconListDetails,
-    },
-    {
-      title: "Weekly Rotation",
-      url: "/dashboard/rotation",
-      icon: IconCalendar,
-    },
-    {
-      title: "Orders",
-      url: "/dashboard/orders",
-      icon: IconFileDescription,
-    },
-    {
-      title: "Customers",
-      url: "/dashboard/customers",
-      icon: IconUsers,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "/dashboard/settings",
-      icon: IconSettings,
-    },
-    {
-      title: "Help",
-      url: "#",
-      icon: IconHelp,
-    },
-  ],
-};
+  {
+    title: "Menu Management",
+    url: "/dashboard/menu",
+    icon: IconListDetails,
+  },
+  {
+    title: "Weekly Rotation",
+    url: "/dashboard/rotation",
+    icon: IconCalendar,
+  },
+  {
+    title: "Orders",
+    url: "/dashboard/orders",
+    icon: IconFileDescription,
+  },
+  {
+    title: "Customers",
+    url: "/dashboard/customers",
+    icon: IconUsers,
+  },
+];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+const navSecondary = [
+  {
+    title: "Settings",
+    url: "/dashboard/settings",
+    icon: IconSettings,
+  },
+  {
+    title: "Help",
+    url: "#",
+    icon: IconHelp,
+  },
+];
+
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user: {
+    name: string;
+    email: string;
+    avatar: string;
+  };
+}
+
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -99,11 +93,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navMain} />
+        <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );
