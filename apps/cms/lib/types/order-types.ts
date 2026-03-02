@@ -7,6 +7,7 @@
 
 import type { orderService } from "@/lib/services/order.service";
 import type { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
+import type { FulfillmentStatus, PaymentStatus } from "@fwe/validators";
 
 // ============================================
 // Order Types (derived from Prisma return types)
@@ -64,20 +65,10 @@ export interface OrderModifier {
 }
 
 // ============================================
-// Status Types
+// Status Types (re-exported from @fwe/validators)
 // ============================================
 
-/**
- * Valid order status values.
- */
-export type PaymentStatus = "PENDING" | "PAID" | "FAILED" | "REFUNDED";
-
-export type FulfillmentStatus =
-  | "NEW"
-  | "PREPARING"
-  | "READY"
-  | "DELIVERED"
-  | "CANCELLED";
+export type { FulfillmentStatus, PaymentStatus };
 
 // ============================================
 // Rotation Types

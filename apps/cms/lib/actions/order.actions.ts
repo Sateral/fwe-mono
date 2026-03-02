@@ -1,28 +1,9 @@
 "use server";
 
-import type { FulfillmentStatus, PaymentStatus } from "@fwe/validators";
+import type { FulfillmentStatus } from "@fwe/validators";
 
+import type { OrderFilters } from "@/lib/types/order-types";
 import { orderService } from "@/lib/services/order.service";
-
-// ============================================
-// Types
-// ============================================
-
-export interface OrderFilters {
-  paymentStatus?: PaymentStatus;
-  fulfillmentStatus?: FulfillmentStatus;
-  search?: string;
-  startDate?: string;
-  endDate?: string;
-  rotationId?: string;
-}
-
-/**
- * Order with relations - derived from the service return type.
- */
-export type OrderWithRelations = Awaited<
-  ReturnType<typeof orderService.getOrdersWithFilters>
->[0];
 
 // ============================================
 // Server Actions

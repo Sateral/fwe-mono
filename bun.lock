@@ -88,6 +88,7 @@
       "version": "0.1.0",
       "dependencies": {
         "@fwe/types": "*",
+        "@fwe/utils": "*",
         "@fwe/validators": "*",
         "@hookform/resolvers": "^5.2.2",
         "@radix-ui/react-label": "^2.1.8",
@@ -177,6 +178,10 @@
     "packages/utils": {
       "name": "@fwe/utils",
       "version": "0.1.0",
+      "dependencies": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0",
+      },
       "devDependencies": {
         "@repo/typescript-config": "*",
         "@types/node": "^20",

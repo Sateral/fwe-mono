@@ -5,11 +5,16 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./cn": "./src/cn.ts",
     "./price-utils": "./src/price-utils.ts",
     "./format-utils": "./src/format-utils.ts"
   },
   "scripts": {
     "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@repo/typescript-config": "*",
