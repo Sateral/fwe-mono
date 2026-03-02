@@ -124,7 +124,7 @@ export function createRateLimiter(config: Partial<RateLimitConfig> = {}) {
                 "X-RateLimit-Remaining": "0",
                 "X-RateLimit-Reset": String(entry.resetTime),
               },
-            }
+            },
           ),
         };
       }
@@ -191,31 +191,3 @@ export const checkoutRateLimiter = createRateLimiter({
   interval: 60_000,
   limit: 5,
 });
-
-/**
- * Standard rate limiter for API endpoints.
- * 30 requests per minute per IP.
- */
-export const apiRateLimiter = createRateLimiter({
-  interval: 60_000,
-  limit: 30,
-});
-
-/**
- * Auth rate limiter for login/signup.
- * 10 attempts per minute per IP.
- */
-export const authRateLimiter = createRateLimiter({
-  interval: 60_000,
-  limit: 10,
-});
-
-/**
- * Webhook rate limiter (more permissive, webhooks can be bursty).
- * 100 requests per minute per IP.
- */
-export const webhookRateLimiter = createRateLimiter({
-  interval: 60_000,
-  limit: 100,
-});
-

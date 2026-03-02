@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Helper to darken color
+// Helper to darken a hex color by a given amount
 export const darkenColor = (color: string, amount: number) => {
   return (
     "#" +
@@ -15,7 +15,7 @@ export const darkenColor = (color: string, amount: number) => {
         (
           "0" +
           Math.min(255, Math.max(0, parseInt(color, 16) - amount)).toString(16)
-        ).substr(-2)
+        ).substr(-2),
       )
   );
 };
