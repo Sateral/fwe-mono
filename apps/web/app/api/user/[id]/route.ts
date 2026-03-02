@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { updateProfileSchema } from "@fwe/validators";
 
 import { getServerSession } from "@/lib/auth-server";
 import { cmsApi } from "@/lib/cms-api";
@@ -60,8 +61,16 @@ export async function PATCH(
     }
 
     const body = await request.json();
+    const parsed = updateProfileSchema.safeParse(body);
 
-    const updatedUser = await cmsApi.users.updateProfile(id, body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: parsed.error.flatten().fieldErrors },
+        { status: 400 },
+      );
+    }
+
+    const updatedUser = await cmsApi.users.updateProfile(id, parsed.data);
 
     return NextResponse.json(updatedUser);
   } catch (error) {

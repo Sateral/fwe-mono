@@ -2,8 +2,12 @@ import { NextResponse } from "next/server";
 import type { Prisma } from "@fwe/db";
 
 import prisma from "@/lib/prisma";
+import { requireInternalAuth } from "@/lib/api-auth";
 
 export async function GET(request: Request) {
+  const authError = requireInternalAuth(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const rotationId = searchParams.get("rotationId");
@@ -11,7 +15,7 @@ export async function GET(request: Request) {
     if (!rotationId) {
       return NextResponse.json(
         { error: "rotationId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -139,7 +143,7 @@ export async function GET(request: Request) {
     console.error("Prep Sheet Error:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
