@@ -75,6 +75,34 @@ export const DeliveryMethod = {
 export type DeliveryMethod = (typeof DeliveryMethod)[keyof typeof DeliveryMethod]
 
 
+export const SettlementMethod = {
+  STRIPE: 'STRIPE',
+  MEAL_PLAN_CREDITS: 'MEAL_PLAN_CREDITS'
+} as const
+
+export type SettlementMethod = (typeof SettlementMethod)[keyof typeof SettlementMethod]
+
+
+export const CartStatus = {
+  ACTIVE: 'ACTIVE',
+  CHECKED_OUT: 'CHECKED_OUT',
+  ABANDONED: 'ABANDONED',
+  MERGED: 'MERGED'
+} as const
+
+export type CartStatus = (typeof CartStatus)[keyof typeof CartStatus]
+
+
+export const GuestSource = {
+  CHECKOUT: 'CHECKOUT',
+  MANUAL: 'MANUAL',
+  IMPORT: 'IMPORT',
+  OTHER: 'OTHER'
+} as const
+
+export type GuestSource = (typeof GuestSource)[keyof typeof GuestSource]
+
+
 export const FailedOrderStatus = {
   PENDING: 'PENDING',
   RETRYING: 'RETRYING',

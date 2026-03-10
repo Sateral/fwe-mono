@@ -10,7 +10,8 @@
     "./format-utils": "./src/format-utils.ts"
   },
   "scripts": {
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test": "bunx vitest run --root ../.. packages/utils/src"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -1,5 +1,17 @@
 import { z } from "zod";
 
+export const settlementMethodSchema = z.enum([
+  "STRIPE",
+  "MEAL_PLAN_CREDITS",
+]);
+
+export const cartStatusSchema = z.enum([
+  "ACTIVE",
+  "CHECKED_OUT",
+  "ABANDONED",
+  "MERGED",
+]);
+
 export const substitutionItemSchema = z.object({
   groupId: z.string(),
   groupName: z.string(),
@@ -36,3 +48,5 @@ export type CheckoutRequest = z.infer<typeof checkoutRequestSchema>;
 export type CheckoutSessionRequest = z.infer<
   typeof checkoutSessionRequestSchema
 >;
+export type SettlementMethod = z.infer<typeof settlementMethodSchema>;
+export type CartStatus = z.infer<typeof cartStatusSchema>;

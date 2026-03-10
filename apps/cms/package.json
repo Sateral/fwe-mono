@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test": "bunx vitest run --root ../.. --passWithNoTests apps/cms",
+    "test:payment-safety": "bunx vitest run --root ../.. apps/cms/lib/services/__tests__/weekly-rotation.service.test.ts apps/cms/lib/services/__tests__/order.service.test.ts apps/cms/lib/__tests__/stripe-service.test.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

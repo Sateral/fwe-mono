@@ -48,6 +48,7 @@ export type OrderIntentMinAggregateOutputType = {
   unitPrice: number | null
   totalAmount: number | null
   currency: string | null
+  settlementMethod: $Enums.SettlementMethod | null
   proteinBoost: boolean | null
   notes: string | null
   deliveryMethod: $Enums.DeliveryMethod | null
@@ -69,6 +70,7 @@ export type OrderIntentMaxAggregateOutputType = {
   unitPrice: number | null
   totalAmount: number | null
   currency: string | null
+  settlementMethod: $Enums.SettlementMethod | null
   proteinBoost: boolean | null
   notes: string | null
   deliveryMethod: $Enums.DeliveryMethod | null
@@ -90,6 +92,7 @@ export type OrderIntentCountAggregateOutputType = {
   unitPrice: number
   totalAmount: number
   currency: number
+  settlementMethod: number
   substitutions: number
   modifiers: number
   proteinBoost: number
@@ -127,6 +130,7 @@ export type OrderIntentMinAggregateInputType = {
   unitPrice?: true
   totalAmount?: true
   currency?: true
+  settlementMethod?: true
   proteinBoost?: true
   notes?: true
   deliveryMethod?: true
@@ -148,6 +152,7 @@ export type OrderIntentMaxAggregateInputType = {
   unitPrice?: true
   totalAmount?: true
   currency?: true
+  settlementMethod?: true
   proteinBoost?: true
   notes?: true
   deliveryMethod?: true
@@ -169,6 +174,7 @@ export type OrderIntentCountAggregateInputType = {
   unitPrice?: true
   totalAmount?: true
   currency?: true
+  settlementMethod?: true
   substitutions?: true
   modifiers?: true
   proteinBoost?: true
@@ -279,6 +285,7 @@ export type OrderIntentGroupByOutputType = {
   unitPrice: number
   totalAmount: number
   currency: string
+  settlementMethod: $Enums.SettlementMethod
   substitutions: runtime.JsonValue | null
   modifiers: runtime.JsonValue | null
   proteinBoost: boolean
@@ -325,6 +332,7 @@ export type OrderIntentWhereInput = {
   unitPrice?: Prisma.FloatFilter<"OrderIntent"> | number
   totalAmount?: Prisma.FloatFilter<"OrderIntent"> | number
   currency?: Prisma.StringFilter<"OrderIntent"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodFilter<"OrderIntent"> | $Enums.SettlementMethod
   substitutions?: Prisma.JsonNullableFilter<"OrderIntent">
   modifiers?: Prisma.JsonNullableFilter<"OrderIntent">
   proteinBoost?: Prisma.BoolFilter<"OrderIntent"> | boolean
@@ -353,6 +361,7 @@ export type OrderIntentOrderByWithRelationInput = {
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
   substitutions?: Prisma.SortOrderInput | Prisma.SortOrder
   modifiers?: Prisma.SortOrderInput | Prisma.SortOrder
   proteinBoost?: Prisma.SortOrder
@@ -386,6 +395,7 @@ export type OrderIntentWhereUniqueInput = Prisma.AtLeast<{
   unitPrice?: Prisma.FloatFilter<"OrderIntent"> | number
   totalAmount?: Prisma.FloatFilter<"OrderIntent"> | number
   currency?: Prisma.StringFilter<"OrderIntent"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodFilter<"OrderIntent"> | $Enums.SettlementMethod
   substitutions?: Prisma.JsonNullableFilter<"OrderIntent">
   modifiers?: Prisma.JsonNullableFilter<"OrderIntent">
   proteinBoost?: Prisma.BoolFilter<"OrderIntent"> | boolean
@@ -412,6 +422,7 @@ export type OrderIntentOrderByWithAggregationInput = {
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
   substitutions?: Prisma.SortOrderInput | Prisma.SortOrder
   modifiers?: Prisma.SortOrderInput | Prisma.SortOrder
   proteinBoost?: Prisma.SortOrder
@@ -443,6 +454,7 @@ export type OrderIntentScalarWhereWithAggregatesInput = {
   unitPrice?: Prisma.FloatWithAggregatesFilter<"OrderIntent"> | number
   totalAmount?: Prisma.FloatWithAggregatesFilter<"OrderIntent"> | number
   currency?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodWithAggregatesFilter<"OrderIntent"> | $Enums.SettlementMethod
   substitutions?: Prisma.JsonNullableWithAggregatesFilter<"OrderIntent">
   modifiers?: Prisma.JsonNullableWithAggregatesFilter<"OrderIntent">
   proteinBoost?: Prisma.BoolWithAggregatesFilter<"OrderIntent"> | boolean
@@ -463,6 +475,7 @@ export type OrderIntentCreateInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -491,6 +504,7 @@ export type OrderIntentUncheckedCreateInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -513,6 +527,7 @@ export type OrderIntentUpdateInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -541,6 +556,7 @@ export type OrderIntentUncheckedUpdateInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -566,6 +582,7 @@ export type OrderIntentCreateManyInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -586,6 +603,7 @@ export type OrderIntentUpdateManyMutationInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -609,6 +627,7 @@ export type OrderIntentUncheckedUpdateManyInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -647,6 +666,7 @@ export type OrderIntentCountOrderByAggregateInput = {
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
   substitutions?: Prisma.SortOrder
   modifiers?: Prisma.SortOrder
   proteinBoost?: Prisma.SortOrder
@@ -676,6 +696,7 @@ export type OrderIntentMaxOrderByAggregateInput = {
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
   proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
@@ -697,6 +718,7 @@ export type OrderIntentMinOrderByAggregateInput = {
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
   proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
@@ -883,6 +905,7 @@ export type OrderIntentCreateWithoutMealInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -909,6 +932,7 @@ export type OrderIntentUncheckedCreateWithoutMealInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -963,6 +987,7 @@ export type OrderIntentScalarWhereInput = {
   unitPrice?: Prisma.FloatFilter<"OrderIntent"> | number
   totalAmount?: Prisma.FloatFilter<"OrderIntent"> | number
   currency?: Prisma.StringFilter<"OrderIntent"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodFilter<"OrderIntent"> | $Enums.SettlementMethod
   substitutions?: Prisma.JsonNullableFilter<"OrderIntent">
   modifiers?: Prisma.JsonNullableFilter<"OrderIntent">
   proteinBoost?: Prisma.BoolFilter<"OrderIntent"> | boolean
@@ -983,6 +1008,7 @@ export type OrderIntentCreateWithoutOrderInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1010,6 +1036,7 @@ export type OrderIntentUncheckedCreateWithoutOrderInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1047,6 +1074,7 @@ export type OrderIntentUpdateWithoutOrderInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1074,6 +1102,7 @@ export type OrderIntentUncheckedUpdateWithoutOrderInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1095,6 +1124,7 @@ export type OrderIntentCreateWithoutRotationInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1121,6 +1151,7 @@ export type OrderIntentUncheckedCreateWithoutRotationInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1169,6 +1200,7 @@ export type OrderIntentCreateWithoutPaymentEventsInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1196,6 +1228,7 @@ export type OrderIntentUncheckedCreateWithoutPaymentEventsInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1233,6 +1266,7 @@ export type OrderIntentUpdateWithoutPaymentEventsInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1260,6 +1294,7 @@ export type OrderIntentUncheckedUpdateWithoutPaymentEventsInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1281,6 +1316,7 @@ export type OrderIntentCreateWithoutUserInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1307,6 +1343,7 @@ export type OrderIntentUncheckedCreateWithoutUserInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1357,6 +1394,7 @@ export type OrderIntentCreateManyMealInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1377,6 +1415,7 @@ export type OrderIntentUpdateWithoutMealInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1403,6 +1442,7 @@ export type OrderIntentUncheckedUpdateWithoutMealInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1427,6 +1467,7 @@ export type OrderIntentUncheckedUpdateManyWithoutMealInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1449,6 +1490,7 @@ export type OrderIntentCreateManyRotationInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1469,6 +1511,7 @@ export type OrderIntentUpdateWithoutRotationInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1495,6 +1538,7 @@ export type OrderIntentUncheckedUpdateWithoutRotationInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1519,6 +1563,7 @@ export type OrderIntentUncheckedUpdateManyWithoutRotationInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1541,6 +1586,7 @@ export type OrderIntentCreateManyUserInput = {
   unitPrice: number
   totalAmount: number
   currency?: string
+  settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1561,6 +1607,7 @@ export type OrderIntentUpdateWithoutUserInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1587,6 +1634,7 @@ export type OrderIntentUncheckedUpdateWithoutUserInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1611,6 +1659,7 @@ export type OrderIntentUncheckedUpdateManyWithoutUserInput = {
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1665,6 +1714,7 @@ export type OrderIntentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   unitPrice?: boolean
   totalAmount?: boolean
   currency?: boolean
+  settlementMethod?: boolean
   substitutions?: boolean
   modifiers?: boolean
   proteinBoost?: boolean
@@ -1694,6 +1744,7 @@ export type OrderIntentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   unitPrice?: boolean
   totalAmount?: boolean
   currency?: boolean
+  settlementMethod?: boolean
   substitutions?: boolean
   modifiers?: boolean
   proteinBoost?: boolean
@@ -1720,6 +1771,7 @@ export type OrderIntentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   unitPrice?: boolean
   totalAmount?: boolean
   currency?: boolean
+  settlementMethod?: boolean
   substitutions?: boolean
   modifiers?: boolean
   proteinBoost?: boolean
@@ -1746,6 +1798,7 @@ export type OrderIntentSelectScalar = {
   unitPrice?: boolean
   totalAmount?: boolean
   currency?: boolean
+  settlementMethod?: boolean
   substitutions?: boolean
   modifiers?: boolean
   proteinBoost?: boolean
@@ -1759,7 +1812,7 @@ export type OrderIntentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrderIntentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientRequestId" | "userId" | "mealId" | "rotationId" | "quantity" | "unitPrice" | "totalAmount" | "currency" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "deliveryMethod" | "pickupLocation" | "status" | "stripeSessionId" | "stripePaymentIntentId" | "createdAt" | "updatedAt", ExtArgs["result"]["orderIntent"]>
+export type OrderIntentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientRequestId" | "userId" | "mealId" | "rotationId" | "quantity" | "unitPrice" | "totalAmount" | "currency" | "settlementMethod" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "deliveryMethod" | "pickupLocation" | "status" | "stripeSessionId" | "stripePaymentIntentId" | "createdAt" | "updatedAt", ExtArgs["result"]["orderIntent"]>
 export type OrderIntentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
@@ -1798,6 +1851,7 @@ export type $OrderIntentPayload<ExtArgs extends runtime.Types.Extensions.Interna
     unitPrice: number
     totalAmount: number
     currency: string
+    settlementMethod: $Enums.SettlementMethod
     substitutions: runtime.JsonValue | null
     modifiers: runtime.JsonValue | null
     proteinBoost: boolean
@@ -2246,6 +2300,7 @@ export interface OrderIntentFieldRefs {
   readonly unitPrice: Prisma.FieldRef<"OrderIntent", 'Float'>
   readonly totalAmount: Prisma.FieldRef<"OrderIntent", 'Float'>
   readonly currency: Prisma.FieldRef<"OrderIntent", 'String'>
+  readonly settlementMethod: Prisma.FieldRef<"OrderIntent", 'SettlementMethod'>
   readonly substitutions: Prisma.FieldRef<"OrderIntent", 'Json'>
   readonly modifiers: Prisma.FieldRef<"OrderIntent", 'Json'>
   readonly proteinBoost: Prisma.FieldRef<"OrderIntent", 'Boolean'>

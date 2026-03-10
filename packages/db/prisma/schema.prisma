@@ -31,6 +31,8 @@ model Meal {
   orders             Order[]
   orderIntents       OrderIntent[]
   rotations          WeeklyRotation[]    @relation("RotationMeals")
+  rotationPeriods    RotationPeriod[]    @relation("RotationPeriodMeals")
+  cartItems          CartItem[]
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
 
@@ -103,6 +105,18 @@ model Order {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
+  settlementMethod SettlementMethod @default(STRIPE)
+
+  // Order-time customer snapshot
+  customerName            String?
+  customerEmail           String?
+  customerPhone           String?
+  customerDeliveryAddress String?
+  customerDeliveryCity    String?
+  customerDeliveryPostal  String?
+  customerDeliveryNotes   String? @db.Text
+  customerIsGuest         Boolean @default(false)
+
   // Meal reference
   mealId String
   meal   Meal   @relation(fields: [mealId], references: [id])
@@ -154,6 +168,7 @@ model Order {
   @@index([createdAt])       // Fast date-range queries
   @@index([rotationId])      // Fast rotation-based queries
   @@index([mealId])          // Fast meal-based aggregations
+  @@index([customerEmail])
 }
 
 enum ModifierType {
@@ -201,6 +216,35 @@ enum DeliveryMethod {
   PICKUP
 }
 
+enum SettlementMethod {
+  STRIPE
+  MEAL_PLAN_CREDITS
+}
+
+enum CartStatus {
+  ACTIVE
+  CHECKED_OUT
+  ABANDONED
+  MERGED
+}
+
+enum GuestSource {
+  CHECKOUT
+  MANUAL
+  IMPORT
+  OTHER
+}
+
+model RotationPeriod {
+  id        String         @id @default(cuid())
+  name      String
+  status    RotationStatus @default(DRAFT)
+  rotations WeeklyRotation[]
+  meals     Meal[]         @relation("RotationPeriodMeals")
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
 // ============================================
 // Weekly Rotation System
 // ============================================
@@ -211,14 +255,55 @@ model WeeklyRotation {
   weekEnd     DateTime       // Sunday 23:59 Toronto time
   orderCutoff DateTime       // Friday 23:59 Toronto time
   status      RotationStatus @default(DRAFT)
+  rotationPeriodId String?
+  rotationPeriod   RotationPeriod? @relation(fields: [rotationPeriodId], references: [id], onDelete: SetNull)
   meals       Meal[]         @relation("RotationMeals")
   orders      Order[]
+  cartItems   CartItem[]
   orderIntents OrderIntent[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
   @@unique([weekStart])
   @@index([status])
+  @@index([rotationPeriodId])
+}
+
+model Cart {
+  id               String           @id @default(cuid())
+  userId           String
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  settlementMethod SettlementMethod @default(STRIPE)
+  status           CartStatus       @default(ACTIVE)
+  items            CartItem[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([userId, status])
+}
+
+model CartItem {
+  id           String          @id @default(cuid())
+  cartId       String
+  cart         Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  mealId       String
+  meal         Meal            @relation(fields: [mealId], references: [id])
+  rotationId   String?
+  rotation     WeeklyRotation? @relation(fields: [rotationId], references: [id], onDelete: SetNull)
+  quantity     Int
+  unitPrice    Float
+  substitutions Json?
+  modifiers     Json?
+  proteinBoost  Boolean @default(false)
+  notes         String? @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([cartId])
+  @@index([mealId])
+  @@index([rotationId])
 }
 
 // ============================================
@@ -282,6 +367,7 @@ model OrderIntent {
   unitPrice   Float
   totalAmount Float
   currency    String @default("cad")
+  settlementMethod SettlementMethod @default(STRIPE)
 
   substitutions Json?
   modifiers     Json?
@@ -356,7 +442,17 @@ model User {
 
   orders           Order[]
   orderIntents     OrderIntent[]
+  carts            Cart[]
   stripeCustomerId String? @unique @map(name: "stripe_customer_id")
+
+  isGuest           Boolean     @default(false)
+  guestSource       GuestSource?
+  guestSourceId     String?
+  guestMetadata     Json?
+  mergedIntoUserId  String?
+  mergedIntoUser    User?       @relation("GuestAccountMerge", fields: [mergedIntoUserId], references: [id], onDelete: SetNull)
+  mergedGuestUsers  User[]      @relation("GuestAccountMerge")
+  mergedAt          DateTime?
 
   // Profile completion for onboarding
   profileComplete  Boolean  @default(false)
@@ -370,6 +466,8 @@ model User {
   banReason  String?
   banExpires DateTime?
 
+  @@index([isGuest])
+  @@index([mergedIntoUserId])
   @@map("user")
 }
 

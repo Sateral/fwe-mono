@@ -391,7 +391,10 @@ export const ModelName = {
   ModifierOption: 'ModifierOption',
   DietaryTag: 'DietaryTag',
   Order: 'Order',
+  RotationPeriod: 'RotationPeriod',
   WeeklyRotation: 'WeeklyRotation',
+  Cart: 'Cart',
+  CartItem: 'CartItem',
   FailedOrder: 'FailedOrder',
   OrderIntent: 'OrderIntent',
   PaymentEvent: 'PaymentEvent',
@@ -414,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "meal" | "substitutionGroup" | "substitutionOption" | "modifierGroup" | "modifierOption" | "dietaryTag" | "order" | "weeklyRotation" | "failedOrder" | "orderIntent" | "paymentEvent" | "user" | "session" | "account" | "verification"
+    modelProps: "meal" | "substitutionGroup" | "substitutionOption" | "modifierGroup" | "modifierOption" | "dietaryTag" | "order" | "rotationPeriod" | "weeklyRotation" | "cart" | "cartItem" | "failedOrder" | "orderIntent" | "paymentEvent" | "user" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -936,6 +939,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RotationPeriod: {
+      payload: Prisma.$RotationPeriodPayload<ExtArgs>
+      fields: Prisma.RotationPeriodFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RotationPeriodFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RotationPeriodPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RotationPeriodFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RotationPeriodPayload>
+        }
+        findFirst: {
+          args: Prisma.RotationPeriodFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RotationPeriodPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RotationPeriodFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RotationPeriodPayload>
+        }
+        findMany: {
+          args: Prisma.RotationPeriodFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RotationPeriodPayload>[]
+        }
+        create: {
+          args: Prisma.RotationPeriodCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RotationPeriodPayload>
+        }
+        createMany: {
+          args: Prisma.RotationPeriodCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RotationPeriodCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RotationPeriodPayload>[]
+        }
+        delete: {
+          args: Prisma.RotationPeriodDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RotationPeriodPayload>
+        }
+        update: {
+          args: Prisma.RotationPeriodUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RotationPeriodPayload>
+        }
+        deleteMany: {
+          args: Prisma.RotationPeriodDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RotationPeriodUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RotationPeriodUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RotationPeriodPayload>[]
+        }
+        upsert: {
+          args: Prisma.RotationPeriodUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RotationPeriodPayload>
+        }
+        aggregate: {
+          args: Prisma.RotationPeriodAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRotationPeriod>
+        }
+        groupBy: {
+          args: Prisma.RotationPeriodGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RotationPeriodGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RotationPeriodCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RotationPeriodCountAggregateOutputType> | number
+        }
+      }
+    }
     WeeklyRotation: {
       payload: Prisma.$WeeklyRotationPayload<ExtArgs>
       fields: Prisma.WeeklyRotationFieldRefs
@@ -1007,6 +1084,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.WeeklyRotationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.WeeklyRotationCountAggregateOutputType> | number
+        }
+      }
+    }
+    Cart: {
+      payload: Prisma.$CartPayload<ExtArgs>
+      fields: Prisma.CartFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CartFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CartFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartPayload>
+        }
+        findFirst: {
+          args: Prisma.CartFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CartFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartPayload>
+        }
+        findMany: {
+          args: Prisma.CartFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartPayload>[]
+        }
+        create: {
+          args: Prisma.CartCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartPayload>
+        }
+        createMany: {
+          args: Prisma.CartCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CartCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartPayload>[]
+        }
+        delete: {
+          args: Prisma.CartDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartPayload>
+        }
+        update: {
+          args: Prisma.CartUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartPayload>
+        }
+        deleteMany: {
+          args: Prisma.CartDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CartUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CartUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartPayload>[]
+        }
+        upsert: {
+          args: Prisma.CartUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartPayload>
+        }
+        aggregate: {
+          args: Prisma.CartAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCart>
+        }
+        groupBy: {
+          args: Prisma.CartGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CartGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CartCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CartCountAggregateOutputType> | number
+        }
+      }
+    }
+    CartItem: {
+      payload: Prisma.$CartItemPayload<ExtArgs>
+      fields: Prisma.CartItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CartItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CartItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartItemPayload>
+        }
+        findFirst: {
+          args: Prisma.CartItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CartItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartItemPayload>
+        }
+        findMany: {
+          args: Prisma.CartItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartItemPayload>[]
+        }
+        create: {
+          args: Prisma.CartItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartItemPayload>
+        }
+        createMany: {
+          args: Prisma.CartItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CartItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartItemPayload>[]
+        }
+        delete: {
+          args: Prisma.CartItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartItemPayload>
+        }
+        update: {
+          args: Prisma.CartItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.CartItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CartItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CartItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.CartItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CartItemPayload>
+        }
+        aggregate: {
+          args: Prisma.CartItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCartItem>
+        }
+        groupBy: {
+          args: Prisma.CartItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CartItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CartItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CartItemCountAggregateOutputType> | number
         }
       }
     }
@@ -1649,6 +1874,15 @@ export type DietaryTagScalarFieldEnum = (typeof DietaryTagScalarFieldEnum)[keyof
 export const OrderScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  settlementMethod: 'settlementMethod',
+  customerName: 'customerName',
+  customerEmail: 'customerEmail',
+  customerPhone: 'customerPhone',
+  customerDeliveryAddress: 'customerDeliveryAddress',
+  customerDeliveryCity: 'customerDeliveryCity',
+  customerDeliveryPostal: 'customerDeliveryPostal',
+  customerDeliveryNotes: 'customerDeliveryNotes',
+  customerIsGuest: 'customerIsGuest',
   mealId: 'mealId',
   quantity: 'quantity',
   unitPrice: 'unitPrice',
@@ -1679,17 +1913,59 @@ export const OrderScalarFieldEnum = {
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
 
 
+export const RotationPeriodScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RotationPeriodScalarFieldEnum = (typeof RotationPeriodScalarFieldEnum)[keyof typeof RotationPeriodScalarFieldEnum]
+
+
 export const WeeklyRotationScalarFieldEnum = {
   id: 'id',
   weekStart: 'weekStart',
   weekEnd: 'weekEnd',
   orderCutoff: 'orderCutoff',
   status: 'status',
+  rotationPeriodId: 'rotationPeriodId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type WeeklyRotationScalarFieldEnum = (typeof WeeklyRotationScalarFieldEnum)[keyof typeof WeeklyRotationScalarFieldEnum]
+
+
+export const CartScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  settlementMethod: 'settlementMethod',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CartScalarFieldEnum = (typeof CartScalarFieldEnum)[keyof typeof CartScalarFieldEnum]
+
+
+export const CartItemScalarFieldEnum = {
+  id: 'id',
+  cartId: 'cartId',
+  mealId: 'mealId',
+  rotationId: 'rotationId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  substitutions: 'substitutions',
+  modifiers: 'modifiers',
+  proteinBoost: 'proteinBoost',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CartItemScalarFieldEnum = (typeof CartItemScalarFieldEnum)[keyof typeof CartItemScalarFieldEnum]
 
 
 export const FailedOrderScalarFieldEnum = {
@@ -1722,6 +1998,7 @@ export const OrderIntentScalarFieldEnum = {
   unitPrice: 'unitPrice',
   totalAmount: 'totalAmount',
   currency: 'currency',
+  settlementMethod: 'settlementMethod',
   substitutions: 'substitutions',
   modifiers: 'modifiers',
   proteinBoost: 'proteinBoost',
@@ -1765,6 +2042,12 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   stripeCustomerId: 'stripeCustomerId',
+  isGuest: 'isGuest',
+  guestSource: 'guestSource',
+  guestSourceId: 'guestSourceId',
+  guestMetadata: 'guestMetadata',
+  mergedIntoUserId: 'mergedIntoUserId',
+  mergedAt: 'mergedAt',
   profileComplete: 'profileComplete',
   phone: 'phone',
   deliveryAddress: 'deliveryAddress',
@@ -1971,6 +2254,20 @@ export type ListEnumModifierTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
+ * Reference to a field of type 'SettlementMethod'
+ */
+export type EnumSettlementMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SettlementMethod'>
+    
+
+
+/**
+ * Reference to a field of type 'SettlementMethod[]'
+ */
+export type ListEnumSettlementMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SettlementMethod[]'>
+    
+
+
+/**
  * Reference to a field of type 'Json'
  */
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -2041,6 +2338,20 @@ export type ListEnumRotationStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
 
 
 /**
+ * Reference to a field of type 'CartStatus'
+ */
+export type EnumCartStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CartStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'CartStatus[]'
+ */
+export type ListEnumCartStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CartStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'FailedOrderStatus'
  */
 export type EnumFailedOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FailedOrderStatus'>
@@ -2079,6 +2390,20 @@ export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'Role[]'
  */
 export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
+    
+
+
+/**
+ * Reference to a field of type 'GuestSource'
+ */
+export type EnumGuestSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GuestSource'>
+    
+
+
+/**
+ * Reference to a field of type 'GuestSource[]'
+ */
+export type ListEnumGuestSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GuestSource[]'>
     
 
 /**
@@ -2183,7 +2508,10 @@ export type GlobalOmitConfig = {
   modifierOption?: Prisma.ModifierOptionOmit
   dietaryTag?: Prisma.DietaryTagOmit
   order?: Prisma.OrderOmit
+  rotationPeriod?: Prisma.RotationPeriodOmit
   weeklyRotation?: Prisma.WeeklyRotationOmit
+  cart?: Prisma.CartOmit
+  cartItem?: Prisma.CartItemOmit
   failedOrder?: Prisma.FailedOrderOmit
   orderIntent?: Prisma.OrderIntentOmit
   paymentEvent?: Prisma.PaymentEventOmit

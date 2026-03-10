@@ -3,11 +3,11 @@ import type {
   FulfillmentStatus,
   PaymentStatus,
 } from "@fwe/validators";
-import prisma from "@/lib/prisma";
+import prisma from "../prisma";
 import {
   getOrderingWindowForDeliveryWeek,
   weeklyRotationService,
-} from "@/lib/services/weekly-rotation.service";
+} from "./weekly-rotation.service";
 
 // ============================================
 // Order Service
@@ -81,6 +81,14 @@ export const orderService = {
           userId: input.userId,
           mealId: input.mealId,
           rotationId,
+          customerName: input.customerName,
+          customerEmail: input.customerEmail,
+          customerPhone: input.customerPhone,
+          customerDeliveryAddress: input.customerDeliveryAddress,
+          customerDeliveryCity: input.customerDeliveryCity,
+          customerDeliveryPostal: input.customerDeliveryPostal,
+          customerDeliveryNotes: input.customerDeliveryNotes,
+          customerIsGuest: input.customerIsGuest ?? false,
           quantity: input.quantity,
           unitPrice: input.unitPrice,
           totalAmount: input.totalAmount,

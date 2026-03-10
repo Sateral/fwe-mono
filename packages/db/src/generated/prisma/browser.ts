@@ -53,10 +53,25 @@ export type DietaryTag = Prisma.DietaryTagModel
  */
 export type Order = Prisma.OrderModel
 /**
+ * Model RotationPeriod
+ * 
+ */
+export type RotationPeriod = Prisma.RotationPeriodModel
+/**
  * Model WeeklyRotation
  * 
  */
 export type WeeklyRotation = Prisma.WeeklyRotationModel
+/**
+ * Model Cart
+ * 
+ */
+export type Cart = Prisma.CartModel
+/**
+ * Model CartItem
+ * 
+ */
+export type CartItem = Prisma.CartItemModel
 /**
  * Model FailedOrder
  * Stores failed order creation attempts for admin recovery.

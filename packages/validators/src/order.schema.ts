@@ -35,6 +35,14 @@ export const createOrderSchema = z.object({
   notes: z.string().optional(),
   deliveryMethod: z.enum(["DELIVERY", "PICKUP"]).optional(),
   pickupLocation: z.string().optional(),
+  customerName: z.string().min(1).optional(),
+  customerEmail: z.string().email().optional(),
+  customerPhone: z.string().min(1).optional(),
+  customerDeliveryAddress: z.string().min(1).optional(),
+  customerDeliveryCity: z.string().min(1).optional(),
+  customerDeliveryPostal: z.string().min(1).optional(),
+  customerDeliveryNotes: z.string().optional(),
+  customerIsGuest: z.boolean().optional(),
   stripeSessionId: z.string().min(1, "Stripe session ID is required"),
   stripePaymentIntentId: z
     .string()

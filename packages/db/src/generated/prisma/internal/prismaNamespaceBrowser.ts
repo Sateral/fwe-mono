@@ -58,7 +58,10 @@ export const ModelName = {
   ModifierOption: 'ModifierOption',
   DietaryTag: 'DietaryTag',
   Order: 'Order',
+  RotationPeriod: 'RotationPeriod',
   WeeklyRotation: 'WeeklyRotation',
+  Cart: 'Cart',
+  CartItem: 'CartItem',
   FailedOrder: 'FailedOrder',
   OrderIntent: 'OrderIntent',
   PaymentEvent: 'PaymentEvent',
@@ -166,6 +169,15 @@ export type DietaryTagScalarFieldEnum = (typeof DietaryTagScalarFieldEnum)[keyof
 export const OrderScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  settlementMethod: 'settlementMethod',
+  customerName: 'customerName',
+  customerEmail: 'customerEmail',
+  customerPhone: 'customerPhone',
+  customerDeliveryAddress: 'customerDeliveryAddress',
+  customerDeliveryCity: 'customerDeliveryCity',
+  customerDeliveryPostal: 'customerDeliveryPostal',
+  customerDeliveryNotes: 'customerDeliveryNotes',
+  customerIsGuest: 'customerIsGuest',
   mealId: 'mealId',
   quantity: 'quantity',
   unitPrice: 'unitPrice',
@@ -196,17 +208,59 @@ export const OrderScalarFieldEnum = {
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
 
 
+export const RotationPeriodScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RotationPeriodScalarFieldEnum = (typeof RotationPeriodScalarFieldEnum)[keyof typeof RotationPeriodScalarFieldEnum]
+
+
 export const WeeklyRotationScalarFieldEnum = {
   id: 'id',
   weekStart: 'weekStart',
   weekEnd: 'weekEnd',
   orderCutoff: 'orderCutoff',
   status: 'status',
+  rotationPeriodId: 'rotationPeriodId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type WeeklyRotationScalarFieldEnum = (typeof WeeklyRotationScalarFieldEnum)[keyof typeof WeeklyRotationScalarFieldEnum]
+
+
+export const CartScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  settlementMethod: 'settlementMethod',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CartScalarFieldEnum = (typeof CartScalarFieldEnum)[keyof typeof CartScalarFieldEnum]
+
+
+export const CartItemScalarFieldEnum = {
+  id: 'id',
+  cartId: 'cartId',
+  mealId: 'mealId',
+  rotationId: 'rotationId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  substitutions: 'substitutions',
+  modifiers: 'modifiers',
+  proteinBoost: 'proteinBoost',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CartItemScalarFieldEnum = (typeof CartItemScalarFieldEnum)[keyof typeof CartItemScalarFieldEnum]
 
 
 export const FailedOrderScalarFieldEnum = {
@@ -239,6 +293,7 @@ export const OrderIntentScalarFieldEnum = {
   unitPrice: 'unitPrice',
   totalAmount: 'totalAmount',
   currency: 'currency',
+  settlementMethod: 'settlementMethod',
   substitutions: 'substitutions',
   modifiers: 'modifiers',
   proteinBoost: 'proteinBoost',
@@ -282,6 +337,12 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   stripeCustomerId: 'stripeCustomerId',
+  isGuest: 'isGuest',
+  guestSource: 'guestSource',
+  guestSourceId: 'guestSourceId',
+  guestMetadata: 'guestMetadata',
+  mergedIntoUserId: 'mergedIntoUserId',
+  mergedAt: 'mergedAt',
   profileComplete: 'profileComplete',
   phone: 'phone',
   deliveryAddress: 'deliveryAddress',

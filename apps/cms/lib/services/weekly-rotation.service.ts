@@ -1,7 +1,7 @@
 import { RotationStatus } from "@fwe/db";
 import { formatInTimeZone, fromZonedTime, toZonedTime } from "date-fns-tz";
 
-import prisma from "@/lib/prisma";
+import prisma from "../prisma";
 
 // ============================================
 // Weekly Ordering System Logic
@@ -111,7 +111,7 @@ function getWeekEnd(weekStart: Date): Date {
  * Example: For delivery week starting Jan 14 (Wednesday),
  * the cutoff is Jan 13 (Tuesday) at 11:59 PM.
  */
-function getOrderCutoff(deliveryWeekStart: Date): Date {
+export function getOrderCutoff(deliveryWeekStart: Date): Date {
   const cutoff = toToronto(deliveryWeekStart);
   cutoff.setDate(cutoff.getDate() - 1); // Go back to Tuesday before Wednesday
   cutoff.setHours(23, 59, 59, 999);

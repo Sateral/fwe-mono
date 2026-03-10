@@ -1,9 +1,9 @@
 import type Stripe from "stripe";
 import type { CreateOrderInput } from "@fwe/validators";
 
-import prisma from "@/lib/prisma";
-import { stripe } from "@/lib/stripe";
-import { orderService } from "@/lib/services/order.service";
+import prisma from "./prisma";
+import { stripe } from "./stripe";
+import { orderService } from "./services/order.service";
 
 export function getOrderIntentIdFromSession(
   session: Stripe.Checkout.Session,
@@ -11,7 +11,7 @@ export function getOrderIntentIdFromSession(
   return session.metadata?.orderIntentId || session.client_reference_id || null;
 }
 
-function extractPaymentIntentIds(
+export function extractPaymentIntentIds(
   paymentIntent: Stripe.PaymentIntent | string | null | undefined,
 ) {
   if (!paymentIntent)

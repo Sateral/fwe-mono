@@ -1,4 +1,8 @@
-import type { CreateOrderInput } from "@fwe/validators";
+import type {
+  CartStatus,
+  CreateOrderInput,
+  SettlementMethod,
+} from "@fwe/validators";
 
 export type ModifierType = "SINGLE_SELECT" | "MULTI_SELECT";
 export type MealType = "SIGNATURE" | "ROTATING";
@@ -15,6 +19,8 @@ export type FailedOrderStatus =
   | "RETRYING"
   | "RESOLVED"
   | "ABANDONED";
+
+export type { CartStatus, SettlementMethod };
 
 export interface ApiMeal {
   id: string;
@@ -106,6 +112,14 @@ export interface ApiOrder {
   stripeChargeId?: string | null;
   stripeRefundId?: string | null;
   stripeBalanceTransactionId?: string | null;
+  customerName: string | null;
+  customerEmail: string | null;
+  customerPhone: string | null;
+  customerDeliveryAddress: string | null;
+  customerDeliveryCity: string | null;
+  customerDeliveryPostal: string | null;
+  customerDeliveryNotes: string | null;
+  customerIsGuest: boolean;
   createdAt: string;
   updatedAt: string;
   meal: ApiMeal;
@@ -115,6 +129,11 @@ export interface ApiOrder {
     name: string;
     email: string;
   };
+}
+
+export interface ApiCart {
+  id: string;
+  settlementMethod: SettlementMethod;
 }
 
 export interface ApiFailedOrder {

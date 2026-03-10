@@ -1,3 +1,5 @@
+import { addMoney, fromMinorUnits, toMinorUnits } from "./money";
+
 export interface MealPricingOptions {
   price: number;
   modifierGroups: Array<{
@@ -48,7 +50,12 @@ export function calculateMealUnitPrice(
     0,
   );
 
-  return basePrice + proteinBoostPrice + substitutionAdjustment + addOnsTotal;
+  return addMoney(
+    basePrice,
+    proteinBoostPrice,
+    substitutionAdjustment,
+    addOnsTotal,
+  );
 }
 
 /**
@@ -58,5 +65,5 @@ export function calculateLineItemTotal(
   unitPrice: number,
   quantity: number,
 ): number {
-  return unitPrice * quantity;
+  return fromMinorUnits(toMinorUnits(unitPrice) * quantity);
 }

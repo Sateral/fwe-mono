@@ -43,6 +43,15 @@ export type OrderSumAggregateOutputType = {
 export type OrderMinAggregateOutputType = {
   id: string | null
   userId: string | null
+  settlementMethod: $Enums.SettlementMethod | null
+  customerName: string | null
+  customerEmail: string | null
+  customerPhone: string | null
+  customerDeliveryAddress: string | null
+  customerDeliveryCity: string | null
+  customerDeliveryPostal: string | null
+  customerDeliveryNotes: string | null
+  customerIsGuest: boolean | null
   mealId: string | null
   quantity: number | null
   unitPrice: number | null
@@ -71,6 +80,15 @@ export type OrderMinAggregateOutputType = {
 export type OrderMaxAggregateOutputType = {
   id: string | null
   userId: string | null
+  settlementMethod: $Enums.SettlementMethod | null
+  customerName: string | null
+  customerEmail: string | null
+  customerPhone: string | null
+  customerDeliveryAddress: string | null
+  customerDeliveryCity: string | null
+  customerDeliveryPostal: string | null
+  customerDeliveryNotes: string | null
+  customerIsGuest: boolean | null
   mealId: string | null
   quantity: number | null
   unitPrice: number | null
@@ -99,6 +117,15 @@ export type OrderMaxAggregateOutputType = {
 export type OrderCountAggregateOutputType = {
   id: number
   userId: number
+  settlementMethod: number
+  customerName: number
+  customerEmail: number
+  customerPhone: number
+  customerDeliveryAddress: number
+  customerDeliveryCity: number
+  customerDeliveryPostal: number
+  customerDeliveryNotes: number
+  customerIsGuest: number
   mealId: number
   quantity: number
   unitPrice: number
@@ -145,6 +172,15 @@ export type OrderSumAggregateInputType = {
 export type OrderMinAggregateInputType = {
   id?: true
   userId?: true
+  settlementMethod?: true
+  customerName?: true
+  customerEmail?: true
+  customerPhone?: true
+  customerDeliveryAddress?: true
+  customerDeliveryCity?: true
+  customerDeliveryPostal?: true
+  customerDeliveryNotes?: true
+  customerIsGuest?: true
   mealId?: true
   quantity?: true
   unitPrice?: true
@@ -173,6 +209,15 @@ export type OrderMinAggregateInputType = {
 export type OrderMaxAggregateInputType = {
   id?: true
   userId?: true
+  settlementMethod?: true
+  customerName?: true
+  customerEmail?: true
+  customerPhone?: true
+  customerDeliveryAddress?: true
+  customerDeliveryCity?: true
+  customerDeliveryPostal?: true
+  customerDeliveryNotes?: true
+  customerIsGuest?: true
   mealId?: true
   quantity?: true
   unitPrice?: true
@@ -201,6 +246,15 @@ export type OrderMaxAggregateInputType = {
 export type OrderCountAggregateInputType = {
   id?: true
   userId?: true
+  settlementMethod?: true
+  customerName?: true
+  customerEmail?: true
+  customerPhone?: true
+  customerDeliveryAddress?: true
+  customerDeliveryCity?: true
+  customerDeliveryPostal?: true
+  customerDeliveryNotes?: true
+  customerIsGuest?: true
   mealId?: true
   quantity?: true
   unitPrice?: true
@@ -318,6 +372,15 @@ export type OrderGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type OrderGroupByOutputType = {
   id: string
   userId: string
+  settlementMethod: $Enums.SettlementMethod
+  customerName: string | null
+  customerEmail: string | null
+  customerPhone: string | null
+  customerDeliveryAddress: string | null
+  customerDeliveryCity: string | null
+  customerDeliveryPostal: string | null
+  customerDeliveryNotes: string | null
+  customerIsGuest: boolean
   mealId: string
   quantity: number
   unitPrice: number
@@ -371,6 +434,15 @@ export type OrderWhereInput = {
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   id?: Prisma.StringFilter<"Order"> | string
   userId?: Prisma.StringFilter<"Order"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodFilter<"Order"> | $Enums.SettlementMethod
+  customerName?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerEmail?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerPhone?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryAddress?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryCity?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryPostal?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryNotes?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerIsGuest?: Prisma.BoolFilter<"Order"> | boolean
   mealId?: Prisma.StringFilter<"Order"> | string
   quantity?: Prisma.IntFilter<"Order"> | number
   unitPrice?: Prisma.FloatFilter<"Order"> | number
@@ -406,6 +478,15 @@ export type OrderWhereInput = {
 export type OrderOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
+  customerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryCity?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryPostal?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerIsGuest?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -447,6 +528,15 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.OrderWhereInput[]
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   userId?: Prisma.StringFilter<"Order"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodFilter<"Order"> | $Enums.SettlementMethod
+  customerName?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerEmail?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerPhone?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryAddress?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryCity?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryPostal?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryNotes?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerIsGuest?: Prisma.BoolFilter<"Order"> | boolean
   mealId?: Prisma.StringFilter<"Order"> | string
   quantity?: Prisma.IntFilter<"Order"> | number
   unitPrice?: Prisma.FloatFilter<"Order"> | number
@@ -479,6 +569,15 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
 export type OrderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
+  customerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryCity?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryPostal?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerIsGuest?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -517,6 +616,15 @@ export type OrderScalarWhereWithAggregatesInput = {
   NOT?: Prisma.OrderScalarWhereWithAggregatesInput | Prisma.OrderScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Order"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Order"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodWithAggregatesFilter<"Order"> | $Enums.SettlementMethod
+  customerName?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerEmail?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerPhone?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerDeliveryAddress?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerDeliveryCity?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerDeliveryPostal?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerDeliveryNotes?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerIsGuest?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
   mealId?: Prisma.StringWithAggregatesFilter<"Order"> | string
   quantity?: Prisma.IntWithAggregatesFilter<"Order"> | number
   unitPrice?: Prisma.FloatWithAggregatesFilter<"Order"> | number
@@ -546,6 +654,15 @@ export type OrderScalarWhereWithAggregatesInput = {
 
 export type OrderCreateInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -578,6 +695,15 @@ export type OrderCreateInput = {
 export type OrderUncheckedCreateInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
   unitPrice: number
@@ -608,6 +734,15 @@ export type OrderUncheckedCreateInput = {
 
 export type OrderUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -640,6 +775,15 @@ export type OrderUpdateInput = {
 export type OrderUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -671,6 +815,15 @@ export type OrderUncheckedUpdateInput = {
 export type OrderCreateManyInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
   unitPrice: number
@@ -700,6 +853,15 @@ export type OrderCreateManyInput = {
 
 export type OrderUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -727,6 +889,15 @@ export type OrderUpdateManyMutationInput = {
 export type OrderUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -767,6 +938,15 @@ export type OrderOrderByRelationAggregateInput = {
 export type OrderCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
+  customerName?: Prisma.SortOrder
+  customerEmail?: Prisma.SortOrder
+  customerPhone?: Prisma.SortOrder
+  customerDeliveryAddress?: Prisma.SortOrder
+  customerDeliveryCity?: Prisma.SortOrder
+  customerDeliveryPostal?: Prisma.SortOrder
+  customerDeliveryNotes?: Prisma.SortOrder
+  customerIsGuest?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -804,6 +984,15 @@ export type OrderAvgOrderByAggregateInput = {
 export type OrderMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
+  customerName?: Prisma.SortOrder
+  customerEmail?: Prisma.SortOrder
+  customerPhone?: Prisma.SortOrder
+  customerDeliveryAddress?: Prisma.SortOrder
+  customerDeliveryCity?: Prisma.SortOrder
+  customerDeliveryPostal?: Prisma.SortOrder
+  customerDeliveryNotes?: Prisma.SortOrder
+  customerIsGuest?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -832,6 +1021,15 @@ export type OrderMaxOrderByAggregateInput = {
 export type OrderMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
+  customerName?: Prisma.SortOrder
+  customerEmail?: Prisma.SortOrder
+  customerPhone?: Prisma.SortOrder
+  customerDeliveryAddress?: Prisma.SortOrder
+  customerDeliveryCity?: Prisma.SortOrder
+  customerDeliveryPostal?: Prisma.SortOrder
+  customerDeliveryNotes?: Prisma.SortOrder
+  customerIsGuest?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -909,6 +1107,10 @@ export type OrderUncheckedUpdateManyWithoutMealNestedInput = {
   update?: Prisma.OrderUpdateWithWhereUniqueWithoutMealInput | Prisma.OrderUpdateWithWhereUniqueWithoutMealInput[]
   updateMany?: Prisma.OrderUpdateManyWithWhereWithoutMealInput | Prisma.OrderUpdateManyWithWhereWithoutMealInput[]
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type EnumSettlementMethodFieldUpdateOperationsInput = {
+  set?: $Enums.SettlementMethod
 }
 
 export type EnumDeliveryMethodFieldUpdateOperationsInput = {
@@ -1061,6 +1263,15 @@ export type OrderUncheckedUpdateManyWithoutUserNestedInput = {
 
 export type OrderCreateWithoutMealInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -1092,6 +1303,15 @@ export type OrderCreateWithoutMealInput = {
 export type OrderUncheckedCreateWithoutMealInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -1151,6 +1371,15 @@ export type OrderScalarWhereInput = {
   NOT?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
   id?: Prisma.StringFilter<"Order"> | string
   userId?: Prisma.StringFilter<"Order"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodFilter<"Order"> | $Enums.SettlementMethod
+  customerName?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerEmail?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerPhone?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryAddress?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryCity?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryPostal?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryNotes?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerIsGuest?: Prisma.BoolFilter<"Order"> | boolean
   mealId?: Prisma.StringFilter<"Order"> | string
   quantity?: Prisma.IntFilter<"Order"> | number
   unitPrice?: Prisma.FloatFilter<"Order"> | number
@@ -1180,6 +1409,15 @@ export type OrderScalarWhereInput = {
 
 export type OrderCreateWithoutRotationInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -1211,6 +1449,15 @@ export type OrderCreateWithoutRotationInput = {
 export type OrderUncheckedCreateWithoutRotationInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
   unitPrice: number
@@ -1266,6 +1513,15 @@ export type OrderUpdateManyWithWhereWithoutRotationInput = {
 
 export type OrderCreateWithoutOrderIntentInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -1297,6 +1553,15 @@ export type OrderCreateWithoutOrderIntentInput = {
 export type OrderUncheckedCreateWithoutOrderIntentInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
   unitPrice: number
@@ -1342,6 +1607,15 @@ export type OrderUpdateToOneWithWhereWithoutOrderIntentInput = {
 
 export type OrderUpdateWithoutOrderIntentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1373,6 +1647,15 @@ export type OrderUpdateWithoutOrderIntentInput = {
 export type OrderUncheckedUpdateWithoutOrderIntentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1402,6 +1685,15 @@ export type OrderUncheckedUpdateWithoutOrderIntentInput = {
 
 export type OrderCreateWithoutPaymentEventsInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -1433,6 +1725,15 @@ export type OrderCreateWithoutPaymentEventsInput = {
 export type OrderUncheckedCreateWithoutPaymentEventsInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
   unitPrice: number
@@ -1478,6 +1779,15 @@ export type OrderUpdateToOneWithWhereWithoutPaymentEventsInput = {
 
 export type OrderUpdateWithoutPaymentEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1509,6 +1819,15 @@ export type OrderUpdateWithoutPaymentEventsInput = {
 export type OrderUncheckedUpdateWithoutPaymentEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1538,6 +1857,15 @@ export type OrderUncheckedUpdateWithoutPaymentEventsInput = {
 
 export type OrderCreateWithoutUserInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -1568,6 +1896,15 @@ export type OrderCreateWithoutUserInput = {
 
 export type OrderUncheckedCreateWithoutUserInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
   unitPrice: number
@@ -1625,6 +1962,15 @@ export type OrderUpdateManyWithWhereWithoutUserInput = {
 export type OrderCreateManyMealInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
   unitPrice: number
   totalAmount: number
@@ -1653,6 +1999,15 @@ export type OrderCreateManyMealInput = {
 
 export type OrderUpdateWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1684,6 +2039,15 @@ export type OrderUpdateWithoutMealInput = {
 export type OrderUncheckedUpdateWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1714,6 +2078,15 @@ export type OrderUncheckedUpdateWithoutMealInput = {
 export type OrderUncheckedUpdateManyWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1743,6 +2116,15 @@ export type OrderUncheckedUpdateManyWithoutMealInput = {
 export type OrderCreateManyRotationInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
   unitPrice: number
@@ -1771,6 +2153,15 @@ export type OrderCreateManyRotationInput = {
 
 export type OrderUpdateWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1802,6 +2193,15 @@ export type OrderUpdateWithoutRotationInput = {
 export type OrderUncheckedUpdateWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1832,6 +2232,15 @@ export type OrderUncheckedUpdateWithoutRotationInput = {
 export type OrderUncheckedUpdateManyWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1860,6 +2269,15 @@ export type OrderUncheckedUpdateManyWithoutRotationInput = {
 
 export type OrderCreateManyUserInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
   unitPrice: number
@@ -1889,6 +2307,15 @@ export type OrderCreateManyUserInput = {
 
 export type OrderUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1919,6 +2346,15 @@ export type OrderUpdateWithoutUserInput = {
 
 export type OrderUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1949,6 +2385,15 @@ export type OrderUncheckedUpdateWithoutUserInput = {
 
 export type OrderUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2010,6 +2455,15 @@ export type OrderCountOutputTypeCountPaymentEventsArgs<ExtArgs extends runtime.T
 export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  settlementMethod?: boolean
+  customerName?: boolean
+  customerEmail?: boolean
+  customerPhone?: boolean
+  customerDeliveryAddress?: boolean
+  customerDeliveryCity?: boolean
+  customerDeliveryPostal?: boolean
+  customerDeliveryNotes?: boolean
+  customerIsGuest?: boolean
   mealId?: boolean
   quantity?: boolean
   unitPrice?: boolean
@@ -2046,6 +2500,15 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  settlementMethod?: boolean
+  customerName?: boolean
+  customerEmail?: boolean
+  customerPhone?: boolean
+  customerDeliveryAddress?: boolean
+  customerDeliveryCity?: boolean
+  customerDeliveryPostal?: boolean
+  customerDeliveryNotes?: boolean
+  customerIsGuest?: boolean
   mealId?: boolean
   quantity?: boolean
   unitPrice?: boolean
@@ -2080,6 +2543,15 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  settlementMethod?: boolean
+  customerName?: boolean
+  customerEmail?: boolean
+  customerPhone?: boolean
+  customerDeliveryAddress?: boolean
+  customerDeliveryCity?: boolean
+  customerDeliveryPostal?: boolean
+  customerDeliveryNotes?: boolean
+  customerIsGuest?: boolean
   mealId?: boolean
   quantity?: boolean
   unitPrice?: boolean
@@ -2114,6 +2586,15 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type OrderSelectScalar = {
   id?: boolean
   userId?: boolean
+  settlementMethod?: boolean
+  customerName?: boolean
+  customerEmail?: boolean
+  customerPhone?: boolean
+  customerDeliveryAddress?: boolean
+  customerDeliveryCity?: boolean
+  customerDeliveryPostal?: boolean
+  customerDeliveryNotes?: boolean
+  customerIsGuest?: boolean
   mealId?: boolean
   quantity?: boolean
   unitPrice?: boolean
@@ -2141,7 +2622,7 @@ export type OrderSelectScalar = {
   rotationId?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "mealId" | "quantity" | "unitPrice" | "totalAmount" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "deliveryMethod" | "pickupLocation" | "paymentStatus" | "fulfillmentStatus" | "currency" | "paidAt" | "refundedAt" | "refundAmount" | "stripeSessionId" | "stripePaymentIntentId" | "stripeChargeId" | "stripeRefundId" | "stripeBalanceTransactionId" | "orderIntentId" | "createdAt" | "updatedAt" | "rotationId", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "settlementMethod" | "customerName" | "customerEmail" | "customerPhone" | "customerDeliveryAddress" | "customerDeliveryCity" | "customerDeliveryPostal" | "customerDeliveryNotes" | "customerIsGuest" | "mealId" | "quantity" | "unitPrice" | "totalAmount" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "deliveryMethod" | "pickupLocation" | "paymentStatus" | "fulfillmentStatus" | "currency" | "paidAt" | "refundedAt" | "refundAmount" | "stripeSessionId" | "stripePaymentIntentId" | "stripeChargeId" | "stripeRefundId" | "stripeBalanceTransactionId" | "orderIntentId" | "createdAt" | "updatedAt" | "rotationId", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
@@ -2175,6 +2656,15 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
+    settlementMethod: $Enums.SettlementMethod
+    customerName: string | null
+    customerEmail: string | null
+    customerPhone: string | null
+    customerDeliveryAddress: string | null
+    customerDeliveryCity: string | null
+    customerDeliveryPostal: string | null
+    customerDeliveryNotes: string | null
+    customerIsGuest: boolean
     mealId: string
     quantity: number
     unitPrice: number
@@ -2630,6 +3120,15 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface OrderFieldRefs {
   readonly id: Prisma.FieldRef<"Order", 'String'>
   readonly userId: Prisma.FieldRef<"Order", 'String'>
+  readonly settlementMethod: Prisma.FieldRef<"Order", 'SettlementMethod'>
+  readonly customerName: Prisma.FieldRef<"Order", 'String'>
+  readonly customerEmail: Prisma.FieldRef<"Order", 'String'>
+  readonly customerPhone: Prisma.FieldRef<"Order", 'String'>
+  readonly customerDeliveryAddress: Prisma.FieldRef<"Order", 'String'>
+  readonly customerDeliveryCity: Prisma.FieldRef<"Order", 'String'>
+  readonly customerDeliveryPostal: Prisma.FieldRef<"Order", 'String'>
+  readonly customerDeliveryNotes: Prisma.FieldRef<"Order", 'String'>
+  readonly customerIsGuest: Prisma.FieldRef<"Order", 'Boolean'>
   readonly mealId: Prisma.FieldRef<"Order", 'String'>
   readonly quantity: Prisma.FieldRef<"Order", 'Int'>
   readonly unitPrice: Prisma.FieldRef<"Order", 'Float'>
