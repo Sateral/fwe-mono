@@ -1,6 +1,9 @@
 import type {
   CartStatus,
   CreateOrderInput,
+  FlavorProfile,
+  FlavorProfileInvolvement,
+  MealPlan,
   SettlementMethod,
 } from "@fwe/validators";
 
@@ -19,6 +22,7 @@ export type FailedOrderStatus =
   | "RETRYING"
   | "RESOLVED"
   | "ABANDONED";
+export type ApiFlavorProfileInvolvement = FlavorProfileInvolvement;
 
 export type { CartStatus, SettlementMethod };
 
@@ -153,6 +157,10 @@ export interface ApiFailedOrder {
   resolvedBy: string | null;
 }
 
+export type ApiMealPlan = MealPlan;
+
+export type ApiFlavorProfile = FlavorProfile;
+
 export interface ApiUser {
   id: string;
   name: string;
@@ -164,4 +172,7 @@ export interface ApiUser {
   deliveryPostal: string | null;
   deliveryNotes: string | null;
   profileComplete: boolean;
+  mealPlan?: ApiMealPlan | null;
+  flavorProfile?: ApiFlavorProfile | null;
+  referralCode?: string | null;
 }

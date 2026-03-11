@@ -18,7 +18,7 @@ model Meal {
   mealType    MealType @default(SIGNATURE)
 
   // Default pricing & macros
-  price    Float @default(0)
+  price    Decimal @default(0) @db.Decimal(10, 2)
   calories Int   @default(0)
   protein  Int   @default(0)
   carbs    Int   @default(0)
@@ -57,7 +57,7 @@ model SubstitutionOption {
   id              String            @id @default(cuid())
   name            String // e.g., "White Rice", "Brown Rice", "Quinoa"
   isDefault       Boolean           @default(false)
-  priceAdjustment Float             @default(0) // e.g., +1.50 for quinoa
+  priceAdjustment Decimal           @default(0) @db.Decimal(10, 2) // e.g., +1.50 for quinoa
   calorieAdjust   Int               @default(0)
   proteinAdjust   Int               @default(0)
   carbsAdjust     Int               @default(0)
@@ -85,7 +85,7 @@ model ModifierGroup {
 model ModifierOption {
   id              String        @id @default(cuid())
   name            String
-  extraPrice      Float         @default(0.00)
+  extraPrice      Decimal       @default(0) @db.Decimal(10, 2)
   modifierGroupId String
   modifierGroup   ModifierGroup @relation(fields: [modifierGroupId], references: [id], onDelete: Cascade)
 
@@ -123,8 +123,8 @@ model Order {
 
   // Pricing
   quantity    Int
-  unitPrice   Float // Price per meal at time of order
-  totalAmount Float // Final amount charged
+  unitPrice   Decimal @db.Decimal(10, 2) // Price per meal at time of order
+  totalAmount Decimal @db.Decimal(10, 2) // Final amount charged
 
   // Customizations (for chef preparation)
   substitutions Json? // [{ groupName, optionName }]
@@ -142,7 +142,7 @@ model Order {
   currency              String            @default("cad")
   paidAt                DateTime?
   refundedAt            DateTime?
-  refundAmount          Float             @default(0)
+  refundAmount          Decimal           @default(0) @db.Decimal(10, 2)
   stripeSessionId       String?           @unique
   stripePaymentIntentId String?           @unique
   stripeChargeId        String?
@@ -151,6 +151,7 @@ model Order {
 
   orderIntentId String? @unique
   orderIntent   OrderIntent? @relation("OrderIntentToOrder", fields: [orderIntentId], references: [id])
+  referralUse   ReferralUse?
 
   paymentEvents PaymentEvent[]
 
@@ -235,8 +236,35 @@ enum GuestSource {
   OTHER
 }
 
+enum MealPlanStatus {
+  ACTIVE
+  PAUSED
+  CANCELLED
+}
+
+enum MealPlanLedgerEvent {
+  PLAN_STARTED
+  PLAN_RENEWED
+  ORDER_REDEEMED
+  ORDER_REVERSED
+  MANUAL_ADJUSTMENT
+  REFERRAL_BONUS
+  EXPIRATION
+}
+
+enum FlavorProfileInvolvement {
+  HANDS_ON
+  HANDS_OFF
+}
+
+enum ReferralCodeStatus {
+  ACTIVE
+  DISABLED
+}
+
 model RotationPeriod {
   id        String         @id @default(cuid())
+  key       String         @unique
   name      String
   status    RotationStatus @default(DRAFT)
   rotations WeeklyRotation[]
@@ -293,7 +321,7 @@ model CartItem {
   rotationId   String?
   rotation     WeeklyRotation? @relation(fields: [rotationId], references: [id], onDelete: SetNull)
   quantity     Int
-  unitPrice    Float
+  unitPrice    Decimal @db.Decimal(10, 2)
   substitutions Json?
   modifiers     Json?
   proteinBoost  Boolean @default(false)
@@ -364,8 +392,8 @@ model OrderIntent {
   rotation   WeeklyRotation @relation(fields: [rotationId], references: [id])
 
   quantity    Int
-  unitPrice   Float
-  totalAmount Float
+  unitPrice   Decimal @db.Decimal(10, 2)
+  totalAmount Decimal @db.Decimal(10, 2)
   currency    String @default("cad")
   settlementMethod SettlementMethod @default(STRIPE)
 
@@ -443,6 +471,10 @@ model User {
   orders           Order[]
   orderIntents     OrderIntent[]
   carts            Cart[]
+  mealPlan         MealPlan?
+  flavorProfile    FlavorProfile?
+  ownedReferralCode ReferralCode? @relation("ReferralCodeOwner")
+  referralUse      ReferralUse?   @relation("ReferralUseReferredUser")
   stripeCustomerId String? @unique @map(name: "stripe_customer_id")
 
   isGuest           Boolean     @default(false)
@@ -469,6 +501,90 @@ model User {
   @@index([isGuest])
   @@index([mergedIntoUserId])
   @@map("user")
+}
+
+model MealPlan {
+  id              String                  @id @default(cuid())
+  userId          String                  @unique
+  user            User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status          MealPlanStatus          @default(ACTIVE)
+  weeklyCreditCap Int
+  startsAt        DateTime                @default(now())
+  endsAt          DateTime?
+  autoRenew       Boolean                 @default(true)
+  windowUsages    MealPlanWindowUsage[]
+  creditLedger    MealPlanCreditLedger[]
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  @@index([status])
+}
+
+model MealPlanWindowUsage {
+  id          String   @id @default(cuid())
+  mealPlanId  String
+  mealPlan    MealPlan @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  windowStart DateTime
+  windowEnd   DateTime
+  creditsUsed Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([mealPlanId, windowStart])
+  @@index([windowStart])
+  @@index([windowEnd])
+}
+
+model MealPlanCreditLedger {
+  id           String              @id @default(cuid())
+  mealPlanId   String
+  mealPlan     MealPlan            @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  eventType    MealPlanLedgerEvent
+  creditDelta  Int
+  referenceType String?
+  referenceId  String?
+  note         String?             @db.Text
+  createdAt    DateTime            @default(now())
+
+  @@index([mealPlanId, createdAt])
+  @@index([eventType])
+}
+
+model FlavorProfile {
+  id          String                     @id @default(cuid())
+  userId      String                     @unique
+  user        User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goals       String[]
+  involvement FlavorProfileInvolvement
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @updatedAt
+}
+
+model ReferralCode {
+  id          String             @id @default(cuid())
+  ownerUserId String             @unique
+  ownerUser   User               @relation("ReferralCodeOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  code        String             @unique
+  status      ReferralCodeStatus @default(ACTIVE)
+  maxUses     Int?
+  uses        ReferralUse[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([status])
+}
+
+model ReferralUse {
+  id             String       @id @default(cuid())
+  referralCodeId String
+  referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id], onDelete: Restrict)
+  referredUserId String       @unique
+  referredUser   User         @relation("ReferralUseReferredUser", fields: [referredUserId], references: [id], onDelete: Cascade)
+  orderId        String?      @unique
+  order          Order?       @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  createdAt      DateTime     @default(now())
+
+  @@index([referralCodeId])
 }
 
 enum Role {

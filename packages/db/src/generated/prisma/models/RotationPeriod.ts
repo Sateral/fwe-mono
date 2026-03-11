@@ -26,6 +26,7 @@ export type AggregateRotationPeriod = {
 
 export type RotationPeriodMinAggregateOutputType = {
   id: string | null
+  key: string | null
   name: string | null
   status: $Enums.RotationStatus | null
   createdAt: Date | null
@@ -34,6 +35,7 @@ export type RotationPeriodMinAggregateOutputType = {
 
 export type RotationPeriodMaxAggregateOutputType = {
   id: string | null
+  key: string | null
   name: string | null
   status: $Enums.RotationStatus | null
   createdAt: Date | null
@@ -42,6 +44,7 @@ export type RotationPeriodMaxAggregateOutputType = {
 
 export type RotationPeriodCountAggregateOutputType = {
   id: number
+  key: number
   name: number
   status: number
   createdAt: number
@@ -52,6 +55,7 @@ export type RotationPeriodCountAggregateOutputType = {
 
 export type RotationPeriodMinAggregateInputType = {
   id?: true
+  key?: true
   name?: true
   status?: true
   createdAt?: true
@@ -60,6 +64,7 @@ export type RotationPeriodMinAggregateInputType = {
 
 export type RotationPeriodMaxAggregateInputType = {
   id?: true
+  key?: true
   name?: true
   status?: true
   createdAt?: true
@@ -68,6 +73,7 @@ export type RotationPeriodMaxAggregateInputType = {
 
 export type RotationPeriodCountAggregateInputType = {
   id?: true
+  key?: true
   name?: true
   status?: true
   createdAt?: true
@@ -149,6 +155,7 @@ export type RotationPeriodGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 
 export type RotationPeriodGroupByOutputType = {
   id: string
+  key: string
   name: string
   status: $Enums.RotationStatus
   createdAt: Date
@@ -178,6 +185,7 @@ export type RotationPeriodWhereInput = {
   OR?: Prisma.RotationPeriodWhereInput[]
   NOT?: Prisma.RotationPeriodWhereInput | Prisma.RotationPeriodWhereInput[]
   id?: Prisma.StringFilter<"RotationPeriod"> | string
+  key?: Prisma.StringFilter<"RotationPeriod"> | string
   name?: Prisma.StringFilter<"RotationPeriod"> | string
   status?: Prisma.EnumRotationStatusFilter<"RotationPeriod"> | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeFilter<"RotationPeriod"> | Date | string
@@ -188,6 +196,7 @@ export type RotationPeriodWhereInput = {
 
 export type RotationPeriodOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  key?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -198,6 +207,7 @@ export type RotationPeriodOrderByWithRelationInput = {
 
 export type RotationPeriodWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  key?: string
   AND?: Prisma.RotationPeriodWhereInput | Prisma.RotationPeriodWhereInput[]
   OR?: Prisma.RotationPeriodWhereInput[]
   NOT?: Prisma.RotationPeriodWhereInput | Prisma.RotationPeriodWhereInput[]
@@ -207,10 +217,11 @@ export type RotationPeriodWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"RotationPeriod"> | Date | string
   rotations?: Prisma.WeeklyRotationListRelationFilter
   meals?: Prisma.MealListRelationFilter
-}, "id">
+}, "id" | "key">
 
 export type RotationPeriodOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  key?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -225,6 +236,7 @@ export type RotationPeriodScalarWhereWithAggregatesInput = {
   OR?: Prisma.RotationPeriodScalarWhereWithAggregatesInput[]
   NOT?: Prisma.RotationPeriodScalarWhereWithAggregatesInput | Prisma.RotationPeriodScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"RotationPeriod"> | string
+  key?: Prisma.StringWithAggregatesFilter<"RotationPeriod"> | string
   name?: Prisma.StringWithAggregatesFilter<"RotationPeriod"> | string
   status?: Prisma.EnumRotationStatusWithAggregatesFilter<"RotationPeriod"> | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RotationPeriod"> | Date | string
@@ -233,6 +245,7 @@ export type RotationPeriodScalarWhereWithAggregatesInput = {
 
 export type RotationPeriodCreateInput = {
   id?: string
+  key: string
   name: string
   status?: $Enums.RotationStatus
   createdAt?: Date | string
@@ -243,6 +256,7 @@ export type RotationPeriodCreateInput = {
 
 export type RotationPeriodUncheckedCreateInput = {
   id?: string
+  key: string
   name: string
   status?: $Enums.RotationStatus
   createdAt?: Date | string
@@ -253,6 +267,7 @@ export type RotationPeriodUncheckedCreateInput = {
 
 export type RotationPeriodUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -263,6 +278,7 @@ export type RotationPeriodUpdateInput = {
 
 export type RotationPeriodUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -273,6 +289,7 @@ export type RotationPeriodUncheckedUpdateInput = {
 
 export type RotationPeriodCreateManyInput = {
   id?: string
+  key: string
   name: string
   status?: $Enums.RotationStatus
   createdAt?: Date | string
@@ -281,6 +298,7 @@ export type RotationPeriodCreateManyInput = {
 
 export type RotationPeriodUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -289,6 +307,7 @@ export type RotationPeriodUpdateManyMutationInput = {
 
 export type RotationPeriodUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -307,6 +326,7 @@ export type RotationPeriodOrderByRelationAggregateInput = {
 
 export type RotationPeriodCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  key?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -315,6 +335,7 @@ export type RotationPeriodCountOrderByAggregateInput = {
 
 export type RotationPeriodMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  key?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -323,6 +344,7 @@ export type RotationPeriodMaxOrderByAggregateInput = {
 
 export type RotationPeriodMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  key?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -394,6 +416,7 @@ export type RotationPeriodUpdateOneWithoutRotationsNestedInput = {
 
 export type RotationPeriodCreateWithoutMealsInput = {
   id?: string
+  key: string
   name: string
   status?: $Enums.RotationStatus
   createdAt?: Date | string
@@ -403,6 +426,7 @@ export type RotationPeriodCreateWithoutMealsInput = {
 
 export type RotationPeriodUncheckedCreateWithoutMealsInput = {
   id?: string
+  key: string
   name: string
   status?: $Enums.RotationStatus
   createdAt?: Date | string
@@ -436,6 +460,7 @@ export type RotationPeriodScalarWhereInput = {
   OR?: Prisma.RotationPeriodScalarWhereInput[]
   NOT?: Prisma.RotationPeriodScalarWhereInput | Prisma.RotationPeriodScalarWhereInput[]
   id?: Prisma.StringFilter<"RotationPeriod"> | string
+  key?: Prisma.StringFilter<"RotationPeriod"> | string
   name?: Prisma.StringFilter<"RotationPeriod"> | string
   status?: Prisma.EnumRotationStatusFilter<"RotationPeriod"> | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeFilter<"RotationPeriod"> | Date | string
@@ -444,6 +469,7 @@ export type RotationPeriodScalarWhereInput = {
 
 export type RotationPeriodCreateWithoutRotationsInput = {
   id?: string
+  key: string
   name: string
   status?: $Enums.RotationStatus
   createdAt?: Date | string
@@ -453,6 +479,7 @@ export type RotationPeriodCreateWithoutRotationsInput = {
 
 export type RotationPeriodUncheckedCreateWithoutRotationsInput = {
   id?: string
+  key: string
   name: string
   status?: $Enums.RotationStatus
   createdAt?: Date | string
@@ -478,6 +505,7 @@ export type RotationPeriodUpdateToOneWithWhereWithoutRotationsInput = {
 
 export type RotationPeriodUpdateWithoutRotationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -487,6 +515,7 @@ export type RotationPeriodUpdateWithoutRotationsInput = {
 
 export type RotationPeriodUncheckedUpdateWithoutRotationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -496,6 +525,7 @@ export type RotationPeriodUncheckedUpdateWithoutRotationsInput = {
 
 export type RotationPeriodUpdateWithoutMealsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -505,6 +535,7 @@ export type RotationPeriodUpdateWithoutMealsInput = {
 
 export type RotationPeriodUncheckedUpdateWithoutMealsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -514,6 +545,7 @@ export type RotationPeriodUncheckedUpdateWithoutMealsInput = {
 
 export type RotationPeriodUncheckedUpdateManyWithoutMealsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -562,6 +594,7 @@ export type RotationPeriodCountOutputTypeCountMealsArgs<ExtArgs extends runtime.
 
 export type RotationPeriodSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  key?: boolean
   name?: boolean
   status?: boolean
   createdAt?: boolean
@@ -573,6 +606,7 @@ export type RotationPeriodSelect<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type RotationPeriodSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  key?: boolean
   name?: boolean
   status?: boolean
   createdAt?: boolean
@@ -581,6 +615,7 @@ export type RotationPeriodSelectCreateManyAndReturn<ExtArgs extends runtime.Type
 
 export type RotationPeriodSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  key?: boolean
   name?: boolean
   status?: boolean
   createdAt?: boolean
@@ -589,13 +624,14 @@ export type RotationPeriodSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
 
 export type RotationPeriodSelectScalar = {
   id?: boolean
+  key?: boolean
   name?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RotationPeriodOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["rotationPeriod"]>
+export type RotationPeriodOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "key" | "name" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["rotationPeriod"]>
 export type RotationPeriodInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rotations?: boolean | Prisma.RotationPeriod$rotationsArgs<ExtArgs>
   meals?: boolean | Prisma.RotationPeriod$mealsArgs<ExtArgs>
@@ -612,6 +648,7 @@ export type $RotationPeriodPayload<ExtArgs extends runtime.Types.Extensions.Inte
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    key: string
     name: string
     status: $Enums.RotationStatus
     createdAt: Date
@@ -1042,6 +1079,7 @@ export interface Prisma__RotationPeriodClient<T, Null = never, ExtArgs extends r
  */
 export interface RotationPeriodFieldRefs {
   readonly id: Prisma.FieldRef<"RotationPeriod", 'String'>
+  readonly key: Prisma.FieldRef<"RotationPeriod", 'String'>
   readonly name: Prisma.FieldRef<"RotationPeriod", 'String'>
   readonly status: Prisma.FieldRef<"RotationPeriod", 'RotationStatus'>
   readonly createdAt: Prisma.FieldRef<"RotationPeriod", 'DateTime'>

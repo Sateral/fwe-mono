@@ -6,6 +6,25 @@ const emptyToNull = (value: unknown) => {
   return trimmed.length === 0 ? null : trimmed;
 };
 
+export const flavorProfileInvolvementSchema = z.enum([
+  "HANDS_ON",
+  "HANDS_OFF",
+]);
+
+export const mealPlanSchema = z.object({
+  remainingCredits: z.number().int().min(0),
+  weeklyCreditCap: z.number().int().min(0),
+});
+
+export const flavorProfileSchema = z.object({
+  goals: z.array(z.string()),
+  involvement: flavorProfileInvolvementSchema,
+});
+
+export const referralCodeSchema = z.object({
+  code: z.string().trim().min(1, "Referral code is required"),
+});
+
 export const updateProfileSchema = z.object({
   name: z.string().trim().min(1, "Name is required").optional(),
   phone: z.preprocess(
@@ -31,5 +50,11 @@ export const updateProfileRequestSchema = updateProfileSchema.extend({
   userId: z.string().min(1, "User ID is required"),
 });
 
+export type MealPlan = z.infer<typeof mealPlanSchema>;
+export type FlavorProfile = z.infer<typeof flavorProfileSchema>;
+export type FlavorProfileInvolvement = z.infer<
+  typeof flavorProfileInvolvementSchema
+>;
+export type ReferralCode = z.infer<typeof referralCodeSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 export type UpdateProfileRequest = z.infer<typeof updateProfileRequestSchema>;

@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
-import { format } from "date-fns";
 
 import { requireInternalAuth } from "@/lib/api-auth";
+import { formatBusinessTime } from "@/lib/services/rotation-schedule";
 import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
 
 /**
  * GET /api/rotation/active
  *
- * Returns the rotation that orders should be grouped into (next delivery week).
+ * Returns the rotation that orders should be grouped into under the
+ * Thursday 3pm Toronto schedule.
  *
  * WORKFLOW:
- * - Week runs Wednesday to Tuesday
- * - Orders placed in Week N are for delivery in Week N+1
+ * - Delivery weeks run Monday to Sunday
+ * - Ordering windows open Thursday at 3:00pm Toronto
  * - If the rotation record doesn't exist yet, it is created as DRAFT
  *
  * This is used by:
@@ -25,7 +26,6 @@ export async function GET(request: Request) {
     const { rotation, deliveryWeekStart, deliveryWeekEnd, orderCutoff } =
       await weeklyRotationService.getOrCreateOrderingRotation();
 
-    // Format for display
     const weekStartDate = new Date(deliveryWeekStart);
     const weekEndDate = new Date(deliveryWeekEnd);
 
@@ -34,9 +34,8 @@ export async function GET(request: Request) {
       weekStart: weekStartDate.toISOString(),
       weekEnd: weekEndDate.toISOString(),
       orderCutoff: orderCutoff.toISOString(),
-      // Formatted display strings
-      deliveryWeekDisplay: `${format(weekStartDate, "MMM d")} - ${format(weekEndDate, "MMM d")}`,
-      cutoffDisplay: format(orderCutoff, "EEE, MMM d 'at' h:mm a"),
+      deliveryWeekDisplay: `${formatBusinessTime(weekStartDate, "MMM d")} - ${formatBusinessTime(weekEndDate, "MMM d")}`,
+      cutoffDisplay: formatBusinessTime(orderCutoff, "EEE, MMM d 'at' h:mm a"),
     };
 
     console.log(

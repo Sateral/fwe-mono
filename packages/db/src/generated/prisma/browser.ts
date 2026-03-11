@@ -95,6 +95,36 @@ export type PaymentEvent = Prisma.PaymentEventModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model MealPlan
+ * 
+ */
+export type MealPlan = Prisma.MealPlanModel
+/**
+ * Model MealPlanWindowUsage
+ * 
+ */
+export type MealPlanWindowUsage = Prisma.MealPlanWindowUsageModel
+/**
+ * Model MealPlanCreditLedger
+ * 
+ */
+export type MealPlanCreditLedger = Prisma.MealPlanCreditLedgerModel
+/**
+ * Model FlavorProfile
+ * 
+ */
+export type FlavorProfile = Prisma.FlavorProfileModel
+/**
+ * Model ReferralCode
+ * 
+ */
+export type ReferralCode = Prisma.ReferralCodeModel
+/**
+ * Model ReferralUse
+ * 
+ */
+export type ReferralUse = Prisma.ReferralUseModel
+/**
  * Model Session
  * 
  */

@@ -2,6 +2,7 @@ import { updateFulfillmentStatusSchema } from "@fwe/validators";
 import { NextResponse } from "next/server";
 
 import { requireInternalAuth } from "@/lib/api-auth";
+import { serializeOrder } from "@/lib/api-serializers";
 import { orderService } from "@/lib/services/order.service";
 
 // ============================================
@@ -29,7 +30,7 @@ export async function GET(
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    return NextResponse.json(order);
+    return NextResponse.json(serializeOrder(order));
   } catch (error) {
     console.error("[API] Failed to fetch order:", error);
     return NextResponse.json(
@@ -78,7 +79,7 @@ export async function PATCH(
     console.log(
       `[API] Order ${id} updated to fulfillment status ${parsed.data.fulfillmentStatus}`,
     );
-    return NextResponse.json(order);
+    return NextResponse.json(serializeOrder(order));
   } catch (error) {
     console.error("[API] Failed to update order:", error);
     return NextResponse.json(

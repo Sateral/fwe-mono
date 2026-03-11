@@ -1,4 +1,5 @@
 import { checkoutSessionRequestSchema } from "@fwe/validators";
+import { Prisma } from "@fwe/db";
 import { NextResponse } from "next/server";
 import {
   formatLineItemDescription,
@@ -63,19 +64,19 @@ export async function POST(request: Request) {
 
     const verifiedUnitPrice = calculateMealUnitPrice(
       {
-        price: meal.price,
+        price: new Prisma.Decimal(meal.price).toNumber(),
         modifierGroups: meal.modifierGroups.map((group) => ({
           id: group.id,
           options: group.options.map((option) => ({
             id: option.id,
-            extraPrice: option.extraPrice,
+            extraPrice: new Prisma.Decimal(option.extraPrice).toNumber(),
           })),
         })),
         substitutionGroups: meal.substitutionGroups.map((group) => ({
           id: group.id,
           options: group.options.map((option) => ({
             id: option.id,
-            priceAdjustment: option.priceAdjustment,
+            priceAdjustment: new Prisma.Decimal(option.priceAdjustment).toNumber(),
           })),
         })),
       },

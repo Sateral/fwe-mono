@@ -14,7 +14,7 @@ export function OrdersOverview({ orders }: OrdersOverviewProps) {
     (o) => o.paymentStatus === "PAID" && o.fulfillmentStatus !== "CANCELLED",
   );
   const totalMeals = paidOrders.reduce((sum, o) => sum + o.quantity, 0);
-  const revenue = paidOrders.reduce((sum, o) => sum + o.totalAmount, 0);
+  const revenue = paidOrders.reduce((sum, o) => sum + Number(o.totalAmount), 0);
   const deliveries = paidOrders.filter((o) => o.deliveryMethod === "DELIVERY");
   const pickups = paidOrders.filter((o) => o.deliveryMethod === "PICKUP");
   const boosts = paidOrders.reduce(

@@ -103,6 +103,44 @@ export const GuestSource = {
 export type GuestSource = (typeof GuestSource)[keyof typeof GuestSource]
 
 
+export const MealPlanStatus = {
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type MealPlanStatus = (typeof MealPlanStatus)[keyof typeof MealPlanStatus]
+
+
+export const MealPlanLedgerEvent = {
+  PLAN_STARTED: 'PLAN_STARTED',
+  PLAN_RENEWED: 'PLAN_RENEWED',
+  ORDER_REDEEMED: 'ORDER_REDEEMED',
+  ORDER_REVERSED: 'ORDER_REVERSED',
+  MANUAL_ADJUSTMENT: 'MANUAL_ADJUSTMENT',
+  REFERRAL_BONUS: 'REFERRAL_BONUS',
+  EXPIRATION: 'EXPIRATION'
+} as const
+
+export type MealPlanLedgerEvent = (typeof MealPlanLedgerEvent)[keyof typeof MealPlanLedgerEvent]
+
+
+export const FlavorProfileInvolvement = {
+  HANDS_ON: 'HANDS_ON',
+  HANDS_OFF: 'HANDS_OFF'
+} as const
+
+export type FlavorProfileInvolvement = (typeof FlavorProfileInvolvement)[keyof typeof FlavorProfileInvolvement]
+
+
+export const ReferralCodeStatus = {
+  ACTIVE: 'ACTIVE',
+  DISABLED: 'DISABLED'
+} as const
+
+export type ReferralCodeStatus = (typeof ReferralCodeStatus)[keyof typeof ReferralCodeStatus]
+
+
 export const FailedOrderStatus = {
   PENDING: 'PENDING',
   RETRYING: 'RETRYING',

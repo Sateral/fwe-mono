@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { toZonedTime } from "date-fns-tz";
+import { resolveOrderableWeekStart } from "@/lib/services/rotation-schedule";
+import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
 
 export async function GET(request: Request) {
   // 1. Security Check
@@ -10,13 +11,15 @@ export async function GET(request: Request) {
   }
 
   try {
-    const TIMEZONE = "America/Toronto";
-    const now = toZonedTime(new Date(), TIMEZONE);
+    const now = new Date();
+    const targetWeekStart = resolveOrderableWeekStart(now);
 
-    // 2. Archive Current Rotation
-    // We find the currently PUBLISHED rotation
     const currentRotation = await prisma.weeklyRotation.findFirst({
-      where: { status: "PUBLISHED" },
+      where: {
+        status: "PUBLISHED",
+        weekStart: { not: targetWeekStart },
+      },
+      orderBy: { weekStart: "asc" },
     });
 
     if (currentRotation) {
@@ -31,49 +34,20 @@ export async function GET(request: Request) {
       console.log(`[Cron:RotationFlip] No currently PUBLISHED rotation found.`);
     }
 
-    // 3. Publish Next Rotation
-    // Find the next rotation that is DRAFT and has local weekStart > current weekStart (or just the earliest DRAFT one?)
-    // Ideally, we look for the next chronological rotation.
+    const { rotation } = await weeklyRotationService.getOrCreateOrderingRotation();
 
-    // Let's assume we want the rotation for "Next Week".
-    // If today is Tuesday night, next week starts in ~1 day (Wednesday).
-
-    const nextRotation = await prisma.weeklyRotation.findFirst({
-      where: {
-        status: "DRAFT",
-        // Find rotations starting in the future
-        weekStart: {
-          gt: now,
-        },
-      },
-      orderBy: {
-        weekStart: "asc",
-      },
-    });
-
-    if (nextRotation) {
-      await prisma.weeklyRotation.update({
-        where: { id: nextRotation.id },
-        data: { status: "PUBLISHED" },
-      });
+    if (rotation.status !== "PUBLISHED") {
+      await weeklyRotationService.publishRotation(rotation.id);
       console.log(
-        `[Cron:RotationFlip] Published rotation ${nextRotation.id} (Week of ${nextRotation.weekStart})`,
+        `[Cron:RotationFlip] Published rotation ${rotation.id} (Week of ${rotation.weekStart})`,
       );
-
-      return NextResponse.json({
-        success: true,
-        archived: currentRotation?.id || null,
-        published: nextRotation.id,
-      });
-    } else {
-      console.warn(
-        `[Cron:RotationFlip] WARNING: No DRAFT rotation found to publish!`,
-      );
-      return NextResponse.json({
-        success: false,
-        warning: "No next rotation found",
-      });
     }
+
+    return NextResponse.json({
+      success: true,
+      archived: currentRotation?.id || null,
+      published: rotation.id,
+    });
   } catch (error) {
     console.error("Rotation Flip Error:", error);
     return NextResponse.json(

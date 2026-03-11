@@ -27,24 +27,24 @@ export type AggregateModifierOption = {
 }
 
 export type ModifierOptionAvgAggregateOutputType = {
-  extraPrice: number | null
+  extraPrice: runtime.Decimal | null
 }
 
 export type ModifierOptionSumAggregateOutputType = {
-  extraPrice: number | null
+  extraPrice: runtime.Decimal | null
 }
 
 export type ModifierOptionMinAggregateOutputType = {
   id: string | null
   name: string | null
-  extraPrice: number | null
+  extraPrice: runtime.Decimal | null
   modifierGroupId: string | null
 }
 
 export type ModifierOptionMaxAggregateOutputType = {
   id: string | null
   name: string | null
-  extraPrice: number | null
+  extraPrice: runtime.Decimal | null
   modifierGroupId: string | null
 }
 
@@ -176,7 +176,7 @@ export type ModifierOptionGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 export type ModifierOptionGroupByOutputType = {
   id: string
   name: string
-  extraPrice: number
+  extraPrice: runtime.Decimal
   modifierGroupId: string
   _count: ModifierOptionCountAggregateOutputType | null
   _avg: ModifierOptionAvgAggregateOutputType | null
@@ -206,7 +206,7 @@ export type ModifierOptionWhereInput = {
   NOT?: Prisma.ModifierOptionWhereInput | Prisma.ModifierOptionWhereInput[]
   id?: Prisma.StringFilter<"ModifierOption"> | string
   name?: Prisma.StringFilter<"ModifierOption"> | string
-  extraPrice?: Prisma.FloatFilter<"ModifierOption"> | number
+  extraPrice?: Prisma.DecimalFilter<"ModifierOption"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   modifierGroupId?: Prisma.StringFilter<"ModifierOption"> | string
   modifierGroup?: Prisma.XOR<Prisma.ModifierGroupScalarRelationFilter, Prisma.ModifierGroupWhereInput>
 }
@@ -225,7 +225,7 @@ export type ModifierOptionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ModifierOptionWhereInput[]
   NOT?: Prisma.ModifierOptionWhereInput | Prisma.ModifierOptionWhereInput[]
   name?: Prisma.StringFilter<"ModifierOption"> | string
-  extraPrice?: Prisma.FloatFilter<"ModifierOption"> | number
+  extraPrice?: Prisma.DecimalFilter<"ModifierOption"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   modifierGroupId?: Prisma.StringFilter<"ModifierOption"> | string
   modifierGroup?: Prisma.XOR<Prisma.ModifierGroupScalarRelationFilter, Prisma.ModifierGroupWhereInput>
 }, "id">
@@ -248,55 +248,55 @@ export type ModifierOptionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ModifierOptionScalarWhereWithAggregatesInput | Prisma.ModifierOptionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ModifierOption"> | string
   name?: Prisma.StringWithAggregatesFilter<"ModifierOption"> | string
-  extraPrice?: Prisma.FloatWithAggregatesFilter<"ModifierOption"> | number
+  extraPrice?: Prisma.DecimalWithAggregatesFilter<"ModifierOption"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   modifierGroupId?: Prisma.StringWithAggregatesFilter<"ModifierOption"> | string
 }
 
 export type ModifierOptionCreateInput = {
   id?: string
   name: string
-  extraPrice?: number
+  extraPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
   modifierGroup: Prisma.ModifierGroupCreateNestedOneWithoutOptionsInput
 }
 
 export type ModifierOptionUncheckedCreateInput = {
   id?: string
   name: string
-  extraPrice?: number
+  extraPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
   modifierGroupId: string
 }
 
 export type ModifierOptionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  extraPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  extraPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   modifierGroup?: Prisma.ModifierGroupUpdateOneRequiredWithoutOptionsNestedInput
 }
 
 export type ModifierOptionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  extraPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  extraPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   modifierGroupId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ModifierOptionCreateManyInput = {
   id?: string
   name: string
-  extraPrice?: number
+  extraPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
   modifierGroupId: string
 }
 
 export type ModifierOptionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  extraPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  extraPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ModifierOptionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  extraPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  extraPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   modifierGroupId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -384,13 +384,13 @@ export type ModifierOptionUncheckedUpdateManyWithoutModifierGroupNestedInput = {
 export type ModifierOptionCreateWithoutModifierGroupInput = {
   id?: string
   name: string
-  extraPrice?: number
+  extraPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ModifierOptionUncheckedCreateWithoutModifierGroupInput = {
   id?: string
   name: string
-  extraPrice?: number
+  extraPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ModifierOptionCreateOrConnectWithoutModifierGroupInput = {
@@ -425,32 +425,32 @@ export type ModifierOptionScalarWhereInput = {
   NOT?: Prisma.ModifierOptionScalarWhereInput | Prisma.ModifierOptionScalarWhereInput[]
   id?: Prisma.StringFilter<"ModifierOption"> | string
   name?: Prisma.StringFilter<"ModifierOption"> | string
-  extraPrice?: Prisma.FloatFilter<"ModifierOption"> | number
+  extraPrice?: Prisma.DecimalFilter<"ModifierOption"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   modifierGroupId?: Prisma.StringFilter<"ModifierOption"> | string
 }
 
 export type ModifierOptionCreateManyModifierGroupInput = {
   id?: string
   name: string
-  extraPrice?: number
+  extraPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ModifierOptionUpdateWithoutModifierGroupInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  extraPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  extraPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ModifierOptionUncheckedUpdateWithoutModifierGroupInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  extraPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  extraPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ModifierOptionUncheckedUpdateManyWithoutModifierGroupInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  extraPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  extraPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 
@@ -505,7 +505,7 @@ export type $ModifierOptionPayload<ExtArgs extends runtime.Types.Extensions.Inte
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
-    extraPrice: number
+    extraPrice: runtime.Decimal
     modifierGroupId: string
   }, ExtArgs["result"]["modifierOption"]>
   composites: {}
@@ -933,7 +933,7 @@ export interface Prisma__ModifierOptionClient<T, Null = never, ExtArgs extends r
 export interface ModifierOptionFieldRefs {
   readonly id: Prisma.FieldRef<"ModifierOption", 'String'>
   readonly name: Prisma.FieldRef<"ModifierOption", 'String'>
-  readonly extraPrice: Prisma.FieldRef<"ModifierOption", 'Float'>
+  readonly extraPrice: Prisma.FieldRef<"ModifierOption", 'Decimal'>
   readonly modifierGroupId: Prisma.FieldRef<"ModifierOption", 'String'>
 }
     

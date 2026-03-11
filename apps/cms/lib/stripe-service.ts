@@ -1,5 +1,6 @@
 import type Stripe from "stripe";
 import type { CreateOrderInput } from "@fwe/validators";
+import { Prisma } from "@fwe/db";
 
 import prisma from "./prisma";
 import { stripe } from "./stripe";
@@ -85,8 +86,8 @@ export async function ensureOrderFromSession(sessionId: string) {
     mealId: orderIntent.mealId,
     rotationId: orderIntent.rotationId,
     quantity: orderIntent.quantity,
-    unitPrice: orderIntent.unitPrice,
-    totalAmount: orderIntent.totalAmount,
+    unitPrice: new Prisma.Decimal(orderIntent.unitPrice).toNumber(),
+    totalAmount: new Prisma.Decimal(orderIntent.totalAmount).toNumber(),
     currency: orderIntent.currency,
     orderIntentId: orderIntent.id,
     substitutions: (orderIntent.substitutions ??

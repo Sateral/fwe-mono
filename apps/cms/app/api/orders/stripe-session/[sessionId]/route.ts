@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { requireInternalAuth } from "@/lib/api-auth";
+import { serializeOrder } from "@/lib/api-serializers";
 import { ensureOrderFromSession } from "@/lib/stripe-service";
 import { orderService } from "@/lib/services/order.service";
 
@@ -30,7 +31,7 @@ export async function GET(
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    return NextResponse.json(order);
+    return NextResponse.json(serializeOrder(order));
   } catch (error) {
     console.error("[API] Failed to fetch order by Stripe session:", error);
     return NextResponse.json(
@@ -65,7 +66,7 @@ export async function POST(
       return NextResponse.json(null, { status: 202 });
     }
 
-    return NextResponse.json(order);
+    return NextResponse.json(serializeOrder(order));
   } catch (error) {
     console.error("[API] Failed to ensure order:", error);
     return NextResponse.json(

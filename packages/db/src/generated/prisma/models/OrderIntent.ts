@@ -28,14 +28,14 @@ export type AggregateOrderIntent = {
 
 export type OrderIntentAvgAggregateOutputType = {
   quantity: number | null
-  unitPrice: number | null
-  totalAmount: number | null
+  unitPrice: runtime.Decimal | null
+  totalAmount: runtime.Decimal | null
 }
 
 export type OrderIntentSumAggregateOutputType = {
   quantity: number | null
-  unitPrice: number | null
-  totalAmount: number | null
+  unitPrice: runtime.Decimal | null
+  totalAmount: runtime.Decimal | null
 }
 
 export type OrderIntentMinAggregateOutputType = {
@@ -45,8 +45,8 @@ export type OrderIntentMinAggregateOutputType = {
   mealId: string | null
   rotationId: string | null
   quantity: number | null
-  unitPrice: number | null
-  totalAmount: number | null
+  unitPrice: runtime.Decimal | null
+  totalAmount: runtime.Decimal | null
   currency: string | null
   settlementMethod: $Enums.SettlementMethod | null
   proteinBoost: boolean | null
@@ -67,8 +67,8 @@ export type OrderIntentMaxAggregateOutputType = {
   mealId: string | null
   rotationId: string | null
   quantity: number | null
-  unitPrice: number | null
-  totalAmount: number | null
+  unitPrice: runtime.Decimal | null
+  totalAmount: runtime.Decimal | null
   currency: string | null
   settlementMethod: $Enums.SettlementMethod | null
   proteinBoost: boolean | null
@@ -282,8 +282,8 @@ export type OrderIntentGroupByOutputType = {
   mealId: string
   rotationId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal
+  totalAmount: runtime.Decimal
   currency: string
   settlementMethod: $Enums.SettlementMethod
   substitutions: runtime.JsonValue | null
@@ -329,8 +329,8 @@ export type OrderIntentWhereInput = {
   mealId?: Prisma.StringFilter<"OrderIntent"> | string
   rotationId?: Prisma.StringFilter<"OrderIntent"> | string
   quantity?: Prisma.IntFilter<"OrderIntent"> | number
-  unitPrice?: Prisma.FloatFilter<"OrderIntent"> | number
-  totalAmount?: Prisma.FloatFilter<"OrderIntent"> | number
+  unitPrice?: Prisma.DecimalFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"OrderIntent"> | string
   settlementMethod?: Prisma.EnumSettlementMethodFilter<"OrderIntent"> | $Enums.SettlementMethod
   substitutions?: Prisma.JsonNullableFilter<"OrderIntent">
@@ -392,8 +392,8 @@ export type OrderIntentWhereUniqueInput = Prisma.AtLeast<{
   mealId?: Prisma.StringFilter<"OrderIntent"> | string
   rotationId?: Prisma.StringFilter<"OrderIntent"> | string
   quantity?: Prisma.IntFilter<"OrderIntent"> | number
-  unitPrice?: Prisma.FloatFilter<"OrderIntent"> | number
-  totalAmount?: Prisma.FloatFilter<"OrderIntent"> | number
+  unitPrice?: Prisma.DecimalFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"OrderIntent"> | string
   settlementMethod?: Prisma.EnumSettlementMethodFilter<"OrderIntent"> | $Enums.SettlementMethod
   substitutions?: Prisma.JsonNullableFilter<"OrderIntent">
@@ -451,8 +451,8 @@ export type OrderIntentScalarWhereWithAggregatesInput = {
   mealId?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
   rotationId?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
   quantity?: Prisma.IntWithAggregatesFilter<"OrderIntent"> | number
-  unitPrice?: Prisma.FloatWithAggregatesFilter<"OrderIntent"> | number
-  totalAmount?: Prisma.FloatWithAggregatesFilter<"OrderIntent"> | number
+  unitPrice?: Prisma.DecimalWithAggregatesFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalWithAggregatesFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
   settlementMethod?: Prisma.EnumSettlementMethodWithAggregatesFilter<"OrderIntent"> | $Enums.SettlementMethod
   substitutions?: Prisma.JsonNullableWithAggregatesFilter<"OrderIntent">
@@ -472,8 +472,8 @@ export type OrderIntentCreateInput = {
   id?: string
   clientRequestId?: string | null
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -501,8 +501,8 @@ export type OrderIntentUncheckedCreateInput = {
   mealId: string
   rotationId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -524,8 +524,8 @@ export type OrderIntentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -553,8 +553,8 @@ export type OrderIntentUncheckedUpdateInput = {
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -579,8 +579,8 @@ export type OrderIntentCreateManyInput = {
   mealId: string
   rotationId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -600,8 +600,8 @@ export type OrderIntentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -624,8 +624,8 @@ export type OrderIntentUncheckedUpdateManyInput = {
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -902,8 +902,8 @@ export type OrderIntentCreateWithoutMealInput = {
   id?: string
   clientRequestId?: string | null
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -929,8 +929,8 @@ export type OrderIntentUncheckedCreateWithoutMealInput = {
   userId: string
   rotationId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -984,8 +984,8 @@ export type OrderIntentScalarWhereInput = {
   mealId?: Prisma.StringFilter<"OrderIntent"> | string
   rotationId?: Prisma.StringFilter<"OrderIntent"> | string
   quantity?: Prisma.IntFilter<"OrderIntent"> | number
-  unitPrice?: Prisma.FloatFilter<"OrderIntent"> | number
-  totalAmount?: Prisma.FloatFilter<"OrderIntent"> | number
+  unitPrice?: Prisma.DecimalFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"OrderIntent"> | string
   settlementMethod?: Prisma.EnumSettlementMethodFilter<"OrderIntent"> | $Enums.SettlementMethod
   substitutions?: Prisma.JsonNullableFilter<"OrderIntent">
@@ -1005,8 +1005,8 @@ export type OrderIntentCreateWithoutOrderInput = {
   id?: string
   clientRequestId?: string | null
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1033,8 +1033,8 @@ export type OrderIntentUncheckedCreateWithoutOrderInput = {
   mealId: string
   rotationId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1071,8 +1071,8 @@ export type OrderIntentUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1099,8 +1099,8 @@ export type OrderIntentUncheckedUpdateWithoutOrderInput = {
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1121,8 +1121,8 @@ export type OrderIntentCreateWithoutRotationInput = {
   id?: string
   clientRequestId?: string | null
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1148,8 +1148,8 @@ export type OrderIntentUncheckedCreateWithoutRotationInput = {
   userId: string
   mealId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1197,8 +1197,8 @@ export type OrderIntentCreateWithoutPaymentEventsInput = {
   id?: string
   clientRequestId?: string | null
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1225,8 +1225,8 @@ export type OrderIntentUncheckedCreateWithoutPaymentEventsInput = {
   mealId: string
   rotationId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1263,8 +1263,8 @@ export type OrderIntentUpdateWithoutPaymentEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1291,8 +1291,8 @@ export type OrderIntentUncheckedUpdateWithoutPaymentEventsInput = {
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1313,8 +1313,8 @@ export type OrderIntentCreateWithoutUserInput = {
   id?: string
   clientRequestId?: string | null
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1340,8 +1340,8 @@ export type OrderIntentUncheckedCreateWithoutUserInput = {
   mealId: string
   rotationId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1391,8 +1391,8 @@ export type OrderIntentCreateManyMealInput = {
   userId: string
   rotationId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1412,8 +1412,8 @@ export type OrderIntentUpdateWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1439,8 +1439,8 @@ export type OrderIntentUncheckedUpdateWithoutMealInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1464,8 +1464,8 @@ export type OrderIntentUncheckedUpdateManyWithoutMealInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1487,8 +1487,8 @@ export type OrderIntentCreateManyRotationInput = {
   userId: string
   mealId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1508,8 +1508,8 @@ export type OrderIntentUpdateWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1535,8 +1535,8 @@ export type OrderIntentUncheckedUpdateWithoutRotationInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1560,8 +1560,8 @@ export type OrderIntentUncheckedUpdateManyWithoutRotationInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1583,8 +1583,8 @@ export type OrderIntentCreateManyUserInput = {
   mealId: string
   rotationId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   settlementMethod?: $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1604,8 +1604,8 @@ export type OrderIntentUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1631,8 +1631,8 @@ export type OrderIntentUncheckedUpdateWithoutUserInput = {
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1656,8 +1656,8 @@ export type OrderIntentUncheckedUpdateManyWithoutUserInput = {
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1848,8 +1848,8 @@ export type $OrderIntentPayload<ExtArgs extends runtime.Types.Extensions.Interna
     mealId: string
     rotationId: string
     quantity: number
-    unitPrice: number
-    totalAmount: number
+    unitPrice: runtime.Decimal
+    totalAmount: runtime.Decimal
     currency: string
     settlementMethod: $Enums.SettlementMethod
     substitutions: runtime.JsonValue | null
@@ -2297,8 +2297,8 @@ export interface OrderIntentFieldRefs {
   readonly mealId: Prisma.FieldRef<"OrderIntent", 'String'>
   readonly rotationId: Prisma.FieldRef<"OrderIntent", 'String'>
   readonly quantity: Prisma.FieldRef<"OrderIntent", 'Int'>
-  readonly unitPrice: Prisma.FieldRef<"OrderIntent", 'Float'>
-  readonly totalAmount: Prisma.FieldRef<"OrderIntent", 'Float'>
+  readonly unitPrice: Prisma.FieldRef<"OrderIntent", 'Decimal'>
+  readonly totalAmount: Prisma.FieldRef<"OrderIntent", 'Decimal'>
   readonly currency: Prisma.FieldRef<"OrderIntent", 'String'>
   readonly settlementMethod: Prisma.FieldRef<"OrderIntent", 'SettlementMethod'>
   readonly substitutions: Prisma.FieldRef<"OrderIntent", 'Json'>

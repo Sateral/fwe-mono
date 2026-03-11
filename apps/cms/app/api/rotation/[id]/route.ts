@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireInternalAuth } from "@/lib/api-auth";
+import { serializeRotationSummary } from "@/lib/api-serializers";
 import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
 
 /**
@@ -28,7 +29,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(rotation);
+    return NextResponse.json(serializeRotationSummary(rotation));
   } catch (error) {
     console.error("[API] Error fetching rotation:", error);
     return NextResponse.json(
@@ -79,7 +80,7 @@ export async function PATCH(
       );
     }
 
-    return NextResponse.json(rotation);
+    return NextResponse.json(serializeRotationSummary(rotation));
   } catch (error) {
     console.error("[API] Error updating rotation:", error);
     return NextResponse.json(

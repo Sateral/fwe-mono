@@ -72,7 +72,7 @@ export function CustomerSummaryTable({
       const entry = map.get(key)!;
       entry.orders.push(order);
       entry.orderCount += order.quantity;
-      entry.totalSpend += order.totalAmount;
+      entry.totalSpend += Number(order.totalAmount);
 
       // Determine delivery method summary
       const pickupOrders = entry.orders.filter(

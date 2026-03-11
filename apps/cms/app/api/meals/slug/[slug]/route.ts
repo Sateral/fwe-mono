@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { requireInternalAuth } from "@/lib/api-auth";
+import { serializeMeal } from "@/lib/api-serializers";
 import { mealService } from "@/lib/services/meal.service";
 
 // ============================================
@@ -28,7 +29,7 @@ export async function GET(
       return NextResponse.json({ error: "Meal not found" }, { status: 404 });
     }
 
-    return NextResponse.json(meal);
+    return NextResponse.json(serializeMeal(meal));
   } catch (error) {
     console.error("[API] Failed to fetch meal by slug:", error);
     return NextResponse.json(

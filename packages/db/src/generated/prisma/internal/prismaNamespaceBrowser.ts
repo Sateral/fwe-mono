@@ -66,6 +66,12 @@ export const ModelName = {
   OrderIntent: 'OrderIntent',
   PaymentEvent: 'PaymentEvent',
   User: 'User',
+  MealPlan: 'MealPlan',
+  MealPlanWindowUsage: 'MealPlanWindowUsage',
+  MealPlanCreditLedger: 'MealPlanCreditLedger',
+  FlavorProfile: 'FlavorProfile',
+  ReferralCode: 'ReferralCode',
+  ReferralUse: 'ReferralUse',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification'
@@ -210,6 +216,7 @@ export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof Or
 
 export const RotationPeriodScalarFieldEnum = {
   id: 'id',
+  key: 'key',
   name: 'name',
   status: 'status',
   createdAt: 'createdAt',
@@ -355,6 +362,84 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const MealPlanScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  status: 'status',
+  weeklyCreditCap: 'weeklyCreditCap',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  autoRenew: 'autoRenew',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MealPlanScalarFieldEnum = (typeof MealPlanScalarFieldEnum)[keyof typeof MealPlanScalarFieldEnum]
+
+
+export const MealPlanWindowUsageScalarFieldEnum = {
+  id: 'id',
+  mealPlanId: 'mealPlanId',
+  windowStart: 'windowStart',
+  windowEnd: 'windowEnd',
+  creditsUsed: 'creditsUsed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MealPlanWindowUsageScalarFieldEnum = (typeof MealPlanWindowUsageScalarFieldEnum)[keyof typeof MealPlanWindowUsageScalarFieldEnum]
+
+
+export const MealPlanCreditLedgerScalarFieldEnum = {
+  id: 'id',
+  mealPlanId: 'mealPlanId',
+  eventType: 'eventType',
+  creditDelta: 'creditDelta',
+  referenceType: 'referenceType',
+  referenceId: 'referenceId',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type MealPlanCreditLedgerScalarFieldEnum = (typeof MealPlanCreditLedgerScalarFieldEnum)[keyof typeof MealPlanCreditLedgerScalarFieldEnum]
+
+
+export const FlavorProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  goals: 'goals',
+  involvement: 'involvement',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FlavorProfileScalarFieldEnum = (typeof FlavorProfileScalarFieldEnum)[keyof typeof FlavorProfileScalarFieldEnum]
+
+
+export const ReferralCodeScalarFieldEnum = {
+  id: 'id',
+  ownerUserId: 'ownerUserId',
+  code: 'code',
+  status: 'status',
+  maxUses: 'maxUses',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReferralCodeScalarFieldEnum = (typeof ReferralCodeScalarFieldEnum)[keyof typeof ReferralCodeScalarFieldEnum]
+
+
+export const ReferralUseScalarFieldEnum = {
+  id: 'id',
+  referralCodeId: 'referralCodeId',
+  referredUserId: 'referredUserId',
+  orderId: 'orderId',
+  createdAt: 'createdAt'
+} as const
+
+export type ReferralUseScalarFieldEnum = (typeof ReferralUseScalarFieldEnum)[keyof typeof ReferralUseScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {

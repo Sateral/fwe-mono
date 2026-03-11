@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { serializeMeal } from "@/lib/api-serializers";
 import { mealService } from "@/lib/services/meal.service";
 import { requireInternalAuth } from "@/lib/api-auth";
 
@@ -16,7 +17,7 @@ export async function GET(
     if (!meal) {
       return NextResponse.json({ error: "Meal not found" }, { status: 404 });
     }
-    return NextResponse.json(meal);
+    return NextResponse.json(serializeMeal(meal));
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch meal" },
@@ -35,10 +36,19 @@ export async function PUT(
   try {
     const { id } = await params;
     const data = await request.json();
-    const meal = await mealService.updateMeal(id, data);
+    await mealService.updateMeal(id, data);
+    const meal = await mealService.getMealById(id);
+
+    if (!meal) {
+      return NextResponse.json(
+        { error: "Failed to load updated meal" },
+        { status: 500 },
+      );
+    }
+
     revalidatePath("/dashboard/menu");
     revalidatePath(`/dashboard/menu/${id}`);
-    return NextResponse.json(meal);
+    return NextResponse.json(serializeMeal(meal));
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to update meal" },
