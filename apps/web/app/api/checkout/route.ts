@@ -17,14 +17,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Authenticate user
     const session = await getServerSession();
 
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Parse and validate request body
     const body = await request.json();
     const validationResult = checkoutRequestSchema.safeParse(body);
 
@@ -36,6 +30,24 @@ export async function POST(request: NextRequest) {
     }
 
     const data = validationResult.data;
+    const userId = session?.user?.id;
+    const userEmail = session?.user?.email ?? data.guest?.email;
+    const userName = session?.user?.name ?? data.guest?.name;
+
+    if (!userEmail) {
+      return NextResponse.json(
+        { error: "Customer email is required for checkout" },
+        { status: 400 },
+      );
+    }
+
+    if (!session?.user && !data.guest?.name) {
+      return NextResponse.json(
+        { error: "Guest details are required for anonymous checkout" },
+        { status: 400 },
+      );
+    }
+
     const rotation = await mealsApi.getActiveRotation();
     if (!rotation) {
       return NextResponse.json(
@@ -44,10 +56,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const cart = await cartsApi.create(session.user.id, {
+    const cart = await cartsApi.create(userId, {
       requestId: data.requestId,
       rotationId: rotation.id,
       settlementMethod: "STRIPE",
+      guest: data.guest,
       items: [
         {
           mealId: data.mealId,
@@ -61,8 +74,8 @@ export async function POST(request: NextRequest) {
     });
 
     const checkoutSession = await cartsApi.checkout(cart.id, {
-      userEmail: session.user.email,
-      userName: session.user.name ?? undefined,
+      userEmail,
+      userName: userName ?? undefined,
       deliveryMethod: data.deliveryMethod,
       pickupLocation: data.pickupLocation,
       requestId: data.requestId,

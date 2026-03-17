@@ -85,4 +85,64 @@ describe("web checkout route", () => {
       ],
     });
   });
+
+  it("allows anonymous checkout when a guest payload is provided", async () => {
+    rateLimitMock.checkoutRateLimiter.check.mockResolvedValue({ success: true });
+    authMock.getServerSession.mockResolvedValue(null);
+    cmsApiMock.mealsApi.getActiveRotation.mockResolvedValue({
+      id: "rotation_123",
+    });
+    cmsApiMock.cartsApi.create.mockResolvedValue({ id: "cart_guest_123" });
+    cmsApiMock.cartsApi.checkout.mockResolvedValue({
+      id: "cs_guest_123",
+      url: "https://checkout.stripe.test/cs_guest_123",
+    });
+
+    const response = await POST(
+      new Request("http://localhost/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          requestId: "4db6c5c0-bb24-4d18-b6f6-e165cdb4e0b3",
+          mealId: "meal_1",
+          quantity: 2,
+          deliveryMethod: "DELIVERY",
+          guest: {
+            name: "Guest Customer",
+            email: "guest@example.com",
+          },
+        }),
+      }) as never,
+    );
+
+    expect(response?.status).toBe(200);
+    expect(cmsApiMock.cartsApi.create).toHaveBeenCalledWith(undefined, {
+      requestId: "4db6c5c0-bb24-4d18-b6f6-e165cdb4e0b3",
+      rotationId: "rotation_123",
+      settlementMethod: "STRIPE",
+      guest: {
+        name: "Guest Customer",
+        email: "guest@example.com",
+      },
+      items: [
+        {
+          mealId: "meal_1",
+          quantity: 2,
+          substitutions: undefined,
+          modifiers: undefined,
+          proteinBoost: false,
+          notes: undefined,
+        },
+      ],
+    });
+    expect(cmsApiMock.cartsApi.checkout).toHaveBeenCalledWith("cart_guest_123", {
+      userEmail: "guest@example.com",
+      userName: "Guest Customer",
+      deliveryMethod: "DELIVERY",
+      pickupLocation: undefined,
+      requestId: "4db6c5c0-bb24-4d18-b6f6-e165cdb4e0b3",
+    });
+  });
 });

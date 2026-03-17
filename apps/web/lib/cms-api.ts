@@ -278,14 +278,18 @@ export const checkoutApi = {
 
 export const cartsApi = {
   async create(
-    userId: string,
+    userId: string | undefined,
     input: CreateCartInput,
   ): Promise<ApiCart> {
+    const headers = userId
+      ? {
+          "x-user-id": userId,
+        }
+      : undefined;
+
     return apiRequest<ApiCart>(`/api/carts`, {
       method: "POST",
-      headers: {
-        "x-user-id": userId,
-      },
+      headers,
       body: JSON.stringify(input),
     });
   },

@@ -559,7 +559,7 @@ model User {
 
   isGuest           Boolean     @default(false)
   guestSource       GuestSource?
-  guestSourceId     String?
+  guestSourceId     String?     @unique
   guestMetadata     Json?
   mergedIntoUserId  String?
   mergedIntoUser    User?       @relation("GuestAccountMerge", fields: [mergedIntoUserId], references: [id], onDelete: SetNull)

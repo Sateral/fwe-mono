@@ -20,3 +20,14 @@ export const signUpSchema = z.object({
 });
 
 export type SignUpInput = z.infer<typeof signUpSchema>;
+
+export const guestCheckoutIdentitySchema = z.object({
+  name: z.string().trim().min(1, {
+    message: "Name is required",
+  }),
+  email: z.string().trim().email({
+    message: "Valid email required",
+  }),
+});
+
+export type GuestCheckoutIdentity = z.infer<typeof guestCheckoutIdentitySchema>;

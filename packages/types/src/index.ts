@@ -196,6 +196,7 @@ export interface ApiUser {
   deliveryPostal: string | null;
   deliveryNotes: string | null;
   profileComplete: boolean;
+  guestMergeRequiresReview?: boolean;
   mealPlan?: ApiMealPlan | null;
   flavorProfile?: ApiFlavorProfile | null;
   referralCode?: string | null;

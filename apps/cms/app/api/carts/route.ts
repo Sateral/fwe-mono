@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { requireInternalAuth } from "@/lib/api-auth";
 import { serializeCart } from "@/lib/api-serializers";
 import { cartService } from "@/lib/services/cart.service";
+import { guestUserService } from "@/lib/services/guest-user.service";
 
 export async function POST(request: Request) {
   const authError = requireInternalAuth(request);
@@ -20,7 +21,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const userId = request.headers.get("x-user-id");
+    let userId = request.headers.get("x-user-id");
+    if (!userId && parsed.data.guest) {
+      const guestUser = await guestUserService.findOrCreateCheckoutGuestUser(
+        parsed.data.guest,
+      );
+      userId = guestUser.id;
+    }
+
     if (!userId) {
       return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
     }

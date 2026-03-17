@@ -18,7 +18,8 @@ export async function GET(
 
   try {
     const { id } = await params;
-    const user = await userService.findById(id);
+    const { user, guestMergeRequiresReview } =
+      await userService.findByIdWithGuestMerge(id);
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -36,6 +37,7 @@ export async function GET(
       deliveryPostal: user.deliveryPostal,
       deliveryNotes: user.deliveryNotes,
       profileComplete: user.profileComplete,
+      guestMergeRequiresReview,
     });
   } catch (error) {
     console.error("[API] Error fetching user:", error);

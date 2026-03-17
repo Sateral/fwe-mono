@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { guestCheckoutIdentitySchema } from "./auth.schema";
+
 export const settlementMethodSchema = z.enum([
   "STRIPE",
   "MEAL_PLAN_CREDITS",
@@ -39,6 +41,7 @@ export const createCartSchema = z.object({
   requestId: z.string().uuid().optional(),
   rotationId: z.string().min(1, "Rotation ID is required"),
   settlementMethod: settlementMethodSchema,
+  guest: guestCheckoutIdentitySchema.optional(),
   items: z.array(createCartItemSchema).min(1, "At least one item is required"),
 });
 
@@ -64,6 +67,7 @@ export const checkoutRequestSchema = z.object({
   pickupLocation: z.string().optional(),
   notes: z.string().optional(),
   requestId: z.string().uuid().optional(),
+  guest: guestCheckoutIdentitySchema.optional(),
 });
 
 export const checkoutSessionRequestSchema = checkoutRequestSchema.extend({

@@ -387,6 +387,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
   stripeCustomerId?: string
+  guestSourceId?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -398,7 +399,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   image?: Prisma.StringNullableFilter<"User"> | string | null
   isGuest?: Prisma.BoolFilter<"User"> | boolean
   guestSource?: Prisma.EnumGuestSourceNullableFilter<"User"> | $Enums.GuestSource | null
-  guestSourceId?: Prisma.StringNullableFilter<"User"> | string | null
   guestMetadata?: Prisma.JsonNullableFilter<"User">
   mergedIntoUserId?: Prisma.StringNullableFilter<"User"> | string | null
   mergedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -423,7 +423,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   referralUse?: Prisma.XOR<Prisma.ReferralUseNullableScalarRelationFilter, Prisma.ReferralUseWhereInput> | null
   mergedIntoUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   mergedGuestUsers?: Prisma.UserListRelationFilter
-}, "id" | "email" | "stripeCustomerId">
+}, "id" | "email" | "stripeCustomerId" | "guestSourceId">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

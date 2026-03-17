@@ -1,6 +1,7 @@
 import type { UpdateProfileInput } from "@fwe/validators";
 
 import prisma from "@/lib/prisma";
+import { guestUserService } from "@/lib/services/guest-user.service";
 
 // ============================================
 // User Service
@@ -11,6 +12,20 @@ export const userService = {
     return await prisma.user.findUnique({
       where: { id },
     });
+  },
+
+  async findByIdWithGuestMerge(id: string) {
+    const mergeResult =
+      await guestUserService.reconcileGuestUserForAuthenticatedUser(id);
+
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    return {
+      user,
+      guestMergeRequiresReview: mergeResult.requiresReview,
+    };
   },
 
   async findByEmail(email: string) {
