@@ -145,13 +145,11 @@ export const mealsApi = {
 
   /**
    * Get available meals for ordering.
-   * Returns signature meals + orderable rotation meals.
+   * Returns the current orderable rotation meals.
    * Week runs Wed-Tue. Orders placed now are delivered next week.
    */
   async getAvailable(): Promise<{
     meals: ApiMeal[];
-    signatureMeals?: ApiMeal[];
-    rotationMeals?: ApiMeal[];
     isOrderingOpen: boolean;
     currentWeekDisplay?: string;
     deliveryWeekDisplay?: string;

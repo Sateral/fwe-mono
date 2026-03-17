@@ -15,7 +15,7 @@ model Meal {
   imageUrl    String?
   isFeatured  Boolean  @default(false)
   isActive    Boolean  @default(true)
-  mealType    MealType @default(SIGNATURE)
+  mealType    MealType @default(SIGNATURE) // Legacy categorization; storefront availability comes from rotations
 
   // Default pricing & macros
   price    Decimal @default(0) @db.Decimal(10, 2)
@@ -202,8 +202,8 @@ enum OrderIntentStatus {
 }
 
 enum MealType {
-  SIGNATURE  // Always available
-  ROTATING   // Weekly specials only
+  SIGNATURE  // Legacy category retained for compatibility
+  ROTATING   // Legacy category retained for compatibility
 }
 
 enum RotationStatus {

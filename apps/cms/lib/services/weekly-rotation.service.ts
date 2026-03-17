@@ -388,14 +388,6 @@ export const weeklyRotationService = {
   async getAvailableMeals() {
     console.log(`[RotationService] Getting available meals`);
 
-    const signatureMeals = await prisma.meal.findMany({
-      where: {
-        mealType: "SIGNATURE",
-        isActive: true,
-      },
-      include: detailedMealInclude,
-    });
-
     const now = getNow();
     const currentWeekStart = resolveDeliveryWeekStart(now);
     const fallbackDeliveryWeekStart = resolveOrderableWeekStart(now);
@@ -404,7 +396,7 @@ export const weeklyRotationService = {
     const orderableData = await this.getOrderableRotation();
     const { rotation, deliveryWeekStart, deliveryWeekDisplay, orderCutoff } =
       orderableData;
-    const rotationMeals = rotation?.meals || [];
+    const meals = (rotation?.meals || []).filter((meal) => meal.isActive);
     const resolvedDeliveryWeekStart =
       deliveryWeekStart || fallbackDeliveryWeekStart;
     const resolvedDeliveryWeekDisplay =
@@ -413,16 +405,14 @@ export const weeklyRotationService = {
     const resolvedOrderCutoff = orderCutoff || fallbackOrderCutoff;
 
     console.log(
-      `[RotationService] Returning ${signatureMeals.length} signature + ${rotationMeals.length} rotation meals` +
+      `[RotationService] Returning ${meals.length} rotating meals` +
         (deliveryWeekDisplay
           ? ` for ${deliveryWeekDisplay}`
           : " (no rotation available)"),
     );
 
     return {
-      meals: [...signatureMeals, ...rotationMeals],
-      signatureMeals,
-      rotationMeals,
+      meals,
       isOrderingOpen: await this.isOrderingOpen(),
       currentWeekDisplay: buildDeliveryWeekDisplay(currentWeekStart),
       deliveryWeekDisplay: resolvedDeliveryWeekDisplay,

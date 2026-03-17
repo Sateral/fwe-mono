@@ -179,8 +179,6 @@ export function serializeAvailableMeals(result: AvailableMealsRecord) {
   return {
     ...result,
     meals: serializeMeals(result.meals),
-    signatureMeals: serializeMeals(result.signatureMeals),
-    rotationMeals: serializeMeals(result.rotationMeals),
     cutoffTime: result.cutoffTime.toISOString(),
   };
 }
