@@ -5,13 +5,14 @@
  * All data is fetched from and sent to the CMS API - no direct database access.
  */
 
-import type { FulfillmentStatus } from "@fwe/types";
+import type { ApiOrderSession, FulfillmentStatus } from "@fwe/types";
 
 import { ordersApi, type ApiOrder, type CreateOrderInput } from "@/lib/cms-api";
 
 // Re-export types for convenience
 export type { ApiOrder, CreateOrderInput };
 export type Order = ApiOrder;
+export type OrderSession = ApiOrderSession;
 
 // Re-export OrderSubstitution type matching the API
 export interface OrderSubstitution {
@@ -33,7 +34,7 @@ export async function createOrder(input: CreateOrderInput): Promise<ApiOrder> {
  */
 export async function getOrderByStripeSessionId(
   stripeSessionId: string,
-): Promise<ApiOrder | null> {
+): Promise<ApiOrderSession | null> {
   return ordersApi.getByStripeSession(stripeSessionId);
 }
 
@@ -42,7 +43,7 @@ export async function getOrderByStripeSessionId(
  */
 export async function ensureOrderByStripeSession(
   stripeSessionId: string,
-): Promise<ApiOrder | null> {
+): Promise<ApiOrderSession | null> {
   return ordersApi.ensureByStripeSession(stripeSessionId);
 }
 

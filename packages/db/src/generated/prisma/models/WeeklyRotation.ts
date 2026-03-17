@@ -211,6 +211,7 @@ export type WeeklyRotationWhereInput = {
   orders?: Prisma.OrderListRelationFilter
   cartItems?: Prisma.CartItemListRelationFilter
   orderIntents?: Prisma.OrderIntentListRelationFilter
+  checkoutSessionItems?: Prisma.CheckoutSessionItemListRelationFilter
 }
 
 export type WeeklyRotationOrderByWithRelationInput = {
@@ -227,6 +228,7 @@ export type WeeklyRotationOrderByWithRelationInput = {
   orders?: Prisma.OrderOrderByRelationAggregateInput
   cartItems?: Prisma.CartItemOrderByRelationAggregateInput
   orderIntents?: Prisma.OrderIntentOrderByRelationAggregateInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemOrderByRelationAggregateInput
 }
 
 export type WeeklyRotationWhereUniqueInput = Prisma.AtLeast<{
@@ -246,6 +248,7 @@ export type WeeklyRotationWhereUniqueInput = Prisma.AtLeast<{
   orders?: Prisma.OrderListRelationFilter
   cartItems?: Prisma.CartItemListRelationFilter
   orderIntents?: Prisma.OrderIntentListRelationFilter
+  checkoutSessionItems?: Prisma.CheckoutSessionItemListRelationFilter
 }, "id" | "weekStart">
 
 export type WeeklyRotationOrderByWithAggregationInput = {
@@ -289,6 +292,7 @@ export type WeeklyRotationCreateInput = {
   orders?: Prisma.OrderCreateNestedManyWithoutRotationInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutRotationInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationUncheckedCreateInput = {
@@ -304,6 +308,7 @@ export type WeeklyRotationUncheckedCreateInput = {
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutRotationInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutRotationInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationUpdateInput = {
@@ -319,6 +324,7 @@ export type WeeklyRotationUpdateInput = {
   orders?: Prisma.OrderUpdateManyWithoutRotationNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutRotationNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateInput = {
@@ -334,6 +340,7 @@ export type WeeklyRotationUncheckedUpdateInput = {
   orders?: Prisma.OrderUncheckedUpdateManyWithoutRotationNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutRotationNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationCreateManyInput = {
@@ -545,6 +552,20 @@ export type WeeklyRotationUpdateOneRequiredWithoutOrderIntentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WeeklyRotationUpdateToOneWithWhereWithoutOrderIntentsInput, Prisma.WeeklyRotationUpdateWithoutOrderIntentsInput>, Prisma.WeeklyRotationUncheckedUpdateWithoutOrderIntentsInput>
 }
 
+export type WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput = {
+  create?: Prisma.XOR<Prisma.WeeklyRotationCreateWithoutCheckoutSessionItemsInput, Prisma.WeeklyRotationUncheckedCreateWithoutCheckoutSessionItemsInput>
+  connectOrCreate?: Prisma.WeeklyRotationCreateOrConnectWithoutCheckoutSessionItemsInput
+  connect?: Prisma.WeeklyRotationWhereUniqueInput
+}
+
+export type WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.WeeklyRotationCreateWithoutCheckoutSessionItemsInput, Prisma.WeeklyRotationUncheckedCreateWithoutCheckoutSessionItemsInput>
+  connectOrCreate?: Prisma.WeeklyRotationCreateOrConnectWithoutCheckoutSessionItemsInput
+  upsert?: Prisma.WeeklyRotationUpsertWithoutCheckoutSessionItemsInput
+  connect?: Prisma.WeeklyRotationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WeeklyRotationUpdateToOneWithWhereWithoutCheckoutSessionItemsInput, Prisma.WeeklyRotationUpdateWithoutCheckoutSessionItemsInput>, Prisma.WeeklyRotationUncheckedUpdateWithoutCheckoutSessionItemsInput>
+}
+
 export type WeeklyRotationCreateWithoutMealsInput = {
   id?: string
   weekStart: Date | string
@@ -557,6 +578,7 @@ export type WeeklyRotationCreateWithoutMealsInput = {
   orders?: Prisma.OrderCreateNestedManyWithoutRotationInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutRotationInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationUncheckedCreateWithoutMealsInput = {
@@ -571,6 +593,7 @@ export type WeeklyRotationUncheckedCreateWithoutMealsInput = {
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutRotationInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutRotationInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationCreateOrConnectWithoutMealsInput = {
@@ -620,6 +643,7 @@ export type WeeklyRotationCreateWithoutOrdersInput = {
   meals?: Prisma.MealCreateNestedManyWithoutRotationsInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutRotationInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationUncheckedCreateWithoutOrdersInput = {
@@ -634,6 +658,7 @@ export type WeeklyRotationUncheckedCreateWithoutOrdersInput = {
   meals?: Prisma.MealUncheckedCreateNestedManyWithoutRotationsInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutRotationInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationCreateOrConnectWithoutOrdersInput = {
@@ -664,6 +689,7 @@ export type WeeklyRotationUpdateWithoutOrdersInput = {
   meals?: Prisma.MealUpdateManyWithoutRotationsNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutRotationNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateWithoutOrdersInput = {
@@ -678,6 +704,7 @@ export type WeeklyRotationUncheckedUpdateWithoutOrdersInput = {
   meals?: Prisma.MealUncheckedUpdateManyWithoutRotationsNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutRotationNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationCreateWithoutRotationPeriodInput = {
@@ -692,6 +719,7 @@ export type WeeklyRotationCreateWithoutRotationPeriodInput = {
   orders?: Prisma.OrderCreateNestedManyWithoutRotationInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutRotationInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationUncheckedCreateWithoutRotationPeriodInput = {
@@ -706,6 +734,7 @@ export type WeeklyRotationUncheckedCreateWithoutRotationPeriodInput = {
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutRotationInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutRotationInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationCreateOrConnectWithoutRotationPeriodInput = {
@@ -746,6 +775,7 @@ export type WeeklyRotationCreateWithoutCartItemsInput = {
   meals?: Prisma.MealCreateNestedManyWithoutRotationsInput
   orders?: Prisma.OrderCreateNestedManyWithoutRotationInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationUncheckedCreateWithoutCartItemsInput = {
@@ -760,6 +790,7 @@ export type WeeklyRotationUncheckedCreateWithoutCartItemsInput = {
   meals?: Prisma.MealUncheckedCreateNestedManyWithoutRotationsInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutRotationInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationCreateOrConnectWithoutCartItemsInput = {
@@ -790,6 +821,7 @@ export type WeeklyRotationUpdateWithoutCartItemsInput = {
   meals?: Prisma.MealUpdateManyWithoutRotationsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutRotationNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateWithoutCartItemsInput = {
@@ -804,6 +836,7 @@ export type WeeklyRotationUncheckedUpdateWithoutCartItemsInput = {
   meals?: Prisma.MealUncheckedUpdateManyWithoutRotationsNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutRotationNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationCreateWithoutOrderIntentsInput = {
@@ -818,6 +851,7 @@ export type WeeklyRotationCreateWithoutOrderIntentsInput = {
   meals?: Prisma.MealCreateNestedManyWithoutRotationsInput
   orders?: Prisma.OrderCreateNestedManyWithoutRotationInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationUncheckedCreateWithoutOrderIntentsInput = {
@@ -832,6 +866,7 @@ export type WeeklyRotationUncheckedCreateWithoutOrderIntentsInput = {
   meals?: Prisma.MealUncheckedCreateNestedManyWithoutRotationsInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutRotationInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutRotationInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutRotationInput
 }
 
 export type WeeklyRotationCreateOrConnectWithoutOrderIntentsInput = {
@@ -862,6 +897,7 @@ export type WeeklyRotationUpdateWithoutOrderIntentsInput = {
   meals?: Prisma.MealUpdateManyWithoutRotationsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutRotationNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateWithoutOrderIntentsInput = {
@@ -876,6 +912,83 @@ export type WeeklyRotationUncheckedUpdateWithoutOrderIntentsInput = {
   meals?: Prisma.MealUncheckedUpdateManyWithoutRotationsNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutRotationNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutRotationNestedInput
+}
+
+export type WeeklyRotationCreateWithoutCheckoutSessionItemsInput = {
+  id?: string
+  weekStart: Date | string
+  weekEnd: Date | string
+  orderCutoff: Date | string
+  status?: $Enums.RotationStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rotationPeriod?: Prisma.RotationPeriodCreateNestedOneWithoutRotationsInput
+  meals?: Prisma.MealCreateNestedManyWithoutRotationsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutRotationInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutRotationInput
+  orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutRotationInput
+}
+
+export type WeeklyRotationUncheckedCreateWithoutCheckoutSessionItemsInput = {
+  id?: string
+  weekStart: Date | string
+  weekEnd: Date | string
+  orderCutoff: Date | string
+  status?: $Enums.RotationStatus
+  rotationPeriodId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  meals?: Prisma.MealUncheckedCreateNestedManyWithoutRotationsInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutRotationInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutRotationInput
+  orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutRotationInput
+}
+
+export type WeeklyRotationCreateOrConnectWithoutCheckoutSessionItemsInput = {
+  where: Prisma.WeeklyRotationWhereUniqueInput
+  create: Prisma.XOR<Prisma.WeeklyRotationCreateWithoutCheckoutSessionItemsInput, Prisma.WeeklyRotationUncheckedCreateWithoutCheckoutSessionItemsInput>
+}
+
+export type WeeklyRotationUpsertWithoutCheckoutSessionItemsInput = {
+  update: Prisma.XOR<Prisma.WeeklyRotationUpdateWithoutCheckoutSessionItemsInput, Prisma.WeeklyRotationUncheckedUpdateWithoutCheckoutSessionItemsInput>
+  create: Prisma.XOR<Prisma.WeeklyRotationCreateWithoutCheckoutSessionItemsInput, Prisma.WeeklyRotationUncheckedCreateWithoutCheckoutSessionItemsInput>
+  where?: Prisma.WeeklyRotationWhereInput
+}
+
+export type WeeklyRotationUpdateToOneWithWhereWithoutCheckoutSessionItemsInput = {
+  where?: Prisma.WeeklyRotationWhereInput
+  data: Prisma.XOR<Prisma.WeeklyRotationUpdateWithoutCheckoutSessionItemsInput, Prisma.WeeklyRotationUncheckedUpdateWithoutCheckoutSessionItemsInput>
+}
+
+export type WeeklyRotationUpdateWithoutCheckoutSessionItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  weekStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weekEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orderCutoff?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rotationPeriod?: Prisma.RotationPeriodUpdateOneWithoutRotationsNestedInput
+  meals?: Prisma.MealUpdateManyWithoutRotationsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutRotationNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutRotationNestedInput
+  orderIntents?: Prisma.OrderIntentUpdateManyWithoutRotationNestedInput
+}
+
+export type WeeklyRotationUncheckedUpdateWithoutCheckoutSessionItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  weekStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weekEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orderCutoff?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRotationStatusFieldUpdateOperationsInput | $Enums.RotationStatus
+  rotationPeriodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  meals?: Prisma.MealUncheckedUpdateManyWithoutRotationsNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutRotationNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutRotationNestedInput
+  orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUpdateWithoutMealsInput = {
@@ -890,6 +1003,7 @@ export type WeeklyRotationUpdateWithoutMealsInput = {
   orders?: Prisma.OrderUpdateManyWithoutRotationNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutRotationNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateWithoutMealsInput = {
@@ -904,6 +1018,7 @@ export type WeeklyRotationUncheckedUpdateWithoutMealsInput = {
   orders?: Prisma.OrderUncheckedUpdateManyWithoutRotationNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutRotationNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateManyWithoutMealsInput = {
@@ -939,6 +1054,7 @@ export type WeeklyRotationUpdateWithoutRotationPeriodInput = {
   orders?: Prisma.OrderUpdateManyWithoutRotationNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutRotationNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateWithoutRotationPeriodInput = {
@@ -953,6 +1069,7 @@ export type WeeklyRotationUncheckedUpdateWithoutRotationPeriodInput = {
   orders?: Prisma.OrderUncheckedUpdateManyWithoutRotationNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutRotationNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutRotationNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutRotationNestedInput
 }
 
 export type WeeklyRotationUncheckedUpdateManyWithoutRotationPeriodInput = {
@@ -975,6 +1092,7 @@ export type WeeklyRotationCountOutputType = {
   orders: number
   cartItems: number
   orderIntents: number
+  checkoutSessionItems: number
 }
 
 export type WeeklyRotationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -982,6 +1100,7 @@ export type WeeklyRotationCountOutputTypeSelect<ExtArgs extends runtime.Types.Ex
   orders?: boolean | WeeklyRotationCountOutputTypeCountOrdersArgs
   cartItems?: boolean | WeeklyRotationCountOutputTypeCountCartItemsArgs
   orderIntents?: boolean | WeeklyRotationCountOutputTypeCountOrderIntentsArgs
+  checkoutSessionItems?: boolean | WeeklyRotationCountOutputTypeCountCheckoutSessionItemsArgs
 }
 
 /**
@@ -1022,6 +1141,13 @@ export type WeeklyRotationCountOutputTypeCountOrderIntentsArgs<ExtArgs extends r
   where?: Prisma.OrderIntentWhereInput
 }
 
+/**
+ * WeeklyRotationCountOutputType without action
+ */
+export type WeeklyRotationCountOutputTypeCountCheckoutSessionItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CheckoutSessionItemWhereInput
+}
+
 
 export type WeeklyRotationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1037,6 +1163,7 @@ export type WeeklyRotationSelect<ExtArgs extends runtime.Types.Extensions.Intern
   orders?: boolean | Prisma.WeeklyRotation$ordersArgs<ExtArgs>
   cartItems?: boolean | Prisma.WeeklyRotation$cartItemsArgs<ExtArgs>
   orderIntents?: boolean | Prisma.WeeklyRotation$orderIntentsArgs<ExtArgs>
+  checkoutSessionItems?: boolean | Prisma.WeeklyRotation$checkoutSessionItemsArgs<ExtArgs>
   _count?: boolean | Prisma.WeeklyRotationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["weeklyRotation"]>
 
@@ -1082,6 +1209,7 @@ export type WeeklyRotationInclude<ExtArgs extends runtime.Types.Extensions.Inter
   orders?: boolean | Prisma.WeeklyRotation$ordersArgs<ExtArgs>
   cartItems?: boolean | Prisma.WeeklyRotation$cartItemsArgs<ExtArgs>
   orderIntents?: boolean | Prisma.WeeklyRotation$orderIntentsArgs<ExtArgs>
+  checkoutSessionItems?: boolean | Prisma.WeeklyRotation$checkoutSessionItemsArgs<ExtArgs>
   _count?: boolean | Prisma.WeeklyRotationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WeeklyRotationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1099,6 +1227,7 @@ export type $WeeklyRotationPayload<ExtArgs extends runtime.Types.Extensions.Inte
     orders: Prisma.$OrderPayload<ExtArgs>[]
     cartItems: Prisma.$CartItemPayload<ExtArgs>[]
     orderIntents: Prisma.$OrderIntentPayload<ExtArgs>[]
+    checkoutSessionItems: Prisma.$CheckoutSessionItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1508,6 +1637,7 @@ export interface Prisma__WeeklyRotationClient<T, Null = never, ExtArgs extends r
   orders<T extends Prisma.WeeklyRotation$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WeeklyRotation$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cartItems<T extends Prisma.WeeklyRotation$cartItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WeeklyRotation$cartItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orderIntents<T extends Prisma.WeeklyRotation$orderIntentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WeeklyRotation$orderIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  checkoutSessionItems<T extends Prisma.WeeklyRotation$checkoutSessionItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WeeklyRotation$checkoutSessionItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheckoutSessionItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2053,6 +2183,30 @@ export type WeeklyRotation$orderIntentsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.OrderIntentScalarFieldEnum | Prisma.OrderIntentScalarFieldEnum[]
+}
+
+/**
+ * WeeklyRotation.checkoutSessionItems
+ */
+export type WeeklyRotation$checkoutSessionItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CheckoutSessionItem
+   */
+  select?: Prisma.CheckoutSessionItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CheckoutSessionItem
+   */
+  omit?: Prisma.CheckoutSessionItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionItemInclude<ExtArgs> | null
+  where?: Prisma.CheckoutSessionItemWhereInput
+  orderBy?: Prisma.CheckoutSessionItemOrderByWithRelationInput | Prisma.CheckoutSessionItemOrderByWithRelationInput[]
+  cursor?: Prisma.CheckoutSessionItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CheckoutSessionItemScalarFieldEnum | Prisma.CheckoutSessionItemScalarFieldEnum[]
 }
 
 /**

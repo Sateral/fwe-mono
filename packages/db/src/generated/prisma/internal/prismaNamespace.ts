@@ -397,6 +397,8 @@ export const ModelName = {
   CartItem: 'CartItem',
   FailedOrder: 'FailedOrder',
   OrderIntent: 'OrderIntent',
+  CheckoutSession: 'CheckoutSession',
+  CheckoutSessionItem: 'CheckoutSessionItem',
   PaymentEvent: 'PaymentEvent',
   User: 'User',
   MealPlan: 'MealPlan',
@@ -423,7 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "meal" | "substitutionGroup" | "substitutionOption" | "modifierGroup" | "modifierOption" | "dietaryTag" | "order" | "rotationPeriod" | "weeklyRotation" | "cart" | "cartItem" | "failedOrder" | "orderIntent" | "paymentEvent" | "user" | "mealPlan" | "mealPlanWindowUsage" | "mealPlanCreditLedger" | "flavorProfile" | "referralCode" | "referralUse" | "session" | "account" | "verification"
+    modelProps: "meal" | "substitutionGroup" | "substitutionOption" | "modifierGroup" | "modifierOption" | "dietaryTag" | "order" | "rotationPeriod" | "weeklyRotation" | "cart" | "cartItem" | "failedOrder" | "orderIntent" | "checkoutSession" | "checkoutSessionItem" | "paymentEvent" | "user" | "mealPlan" | "mealPlanWindowUsage" | "mealPlanCreditLedger" | "flavorProfile" | "referralCode" | "referralUse" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1386,6 +1388,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.OrderIntentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.OrderIntentCountAggregateOutputType> | number
+        }
+      }
+    }
+    CheckoutSession: {
+      payload: Prisma.$CheckoutSessionPayload<ExtArgs>
+      fields: Prisma.CheckoutSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CheckoutSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CheckoutSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.CheckoutSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CheckoutSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionPayload>
+        }
+        findMany: {
+          args: Prisma.CheckoutSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionPayload>[]
+        }
+        create: {
+          args: Prisma.CheckoutSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionPayload>
+        }
+        createMany: {
+          args: Prisma.CheckoutSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CheckoutSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.CheckoutSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionPayload>
+        }
+        update: {
+          args: Prisma.CheckoutSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.CheckoutSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CheckoutSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CheckoutSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.CheckoutSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.CheckoutSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCheckoutSession>
+        }
+        groupBy: {
+          args: Prisma.CheckoutSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CheckoutSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CheckoutSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CheckoutSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    CheckoutSessionItem: {
+      payload: Prisma.$CheckoutSessionItemPayload<ExtArgs>
+      fields: Prisma.CheckoutSessionItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CheckoutSessionItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CheckoutSessionItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionItemPayload>
+        }
+        findFirst: {
+          args: Prisma.CheckoutSessionItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CheckoutSessionItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionItemPayload>
+        }
+        findMany: {
+          args: Prisma.CheckoutSessionItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionItemPayload>[]
+        }
+        create: {
+          args: Prisma.CheckoutSessionItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionItemPayload>
+        }
+        createMany: {
+          args: Prisma.CheckoutSessionItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CheckoutSessionItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionItemPayload>[]
+        }
+        delete: {
+          args: Prisma.CheckoutSessionItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionItemPayload>
+        }
+        update: {
+          args: Prisma.CheckoutSessionItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.CheckoutSessionItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CheckoutSessionItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CheckoutSessionItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.CheckoutSessionItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CheckoutSessionItemPayload>
+        }
+        aggregate: {
+          args: Prisma.CheckoutSessionItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCheckoutSessionItem>
+        }
+        groupBy: {
+          args: Prisma.CheckoutSessionItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CheckoutSessionItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CheckoutSessionItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CheckoutSessionItemCountAggregateOutputType> | number
         }
       }
     }
@@ -2391,6 +2541,7 @@ export type WeeklyRotationScalarFieldEnum = (typeof WeeklyRotationScalarFieldEnu
 
 export const CartScalarFieldEnum = {
   id: 'id',
+  clientRequestId: 'clientRequestId',
   userId: 'userId',
   settlementMethod: 'settlementMethod',
   status: 'status',
@@ -2457,13 +2608,59 @@ export const OrderIntentScalarFieldEnum = {
   deliveryMethod: 'deliveryMethod',
   pickupLocation: 'pickupLocation',
   status: 'status',
-  stripeSessionId: 'stripeSessionId',
-  stripePaymentIntentId: 'stripePaymentIntentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type OrderIntentScalarFieldEnum = (typeof OrderIntentScalarFieldEnum)[keyof typeof OrderIntentScalarFieldEnum]
+
+
+export const CheckoutSessionScalarFieldEnum = {
+  id: 'id',
+  clientRequestId: 'clientRequestId',
+  cartId: 'cartId',
+  userId: 'userId',
+  settlementMethod: 'settlementMethod',
+  status: 'status',
+  customerEmail: 'customerEmail',
+  customerName: 'customerName',
+  deliveryMethod: 'deliveryMethod',
+  pickupLocation: 'pickupLocation',
+  stripeSessionId: 'stripeSessionId',
+  stripePaymentIntentId: 'stripePaymentIntentId',
+  stripeChargeId: 'stripeChargeId',
+  stripeBalanceTransactionId: 'stripeBalanceTransactionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CheckoutSessionScalarFieldEnum = (typeof CheckoutSessionScalarFieldEnum)[keyof typeof CheckoutSessionScalarFieldEnum]
+
+
+export const CheckoutSessionItemScalarFieldEnum = {
+  id: 'id',
+  checkoutSessionId: 'checkoutSessionId',
+  orderIntentId: 'orderIntentId',
+  mealId: 'mealId',
+  mealName: 'mealName',
+  mealSlug: 'mealSlug',
+  mealImageUrl: 'mealImageUrl',
+  rotationId: 'rotationId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  totalAmount: 'totalAmount',
+  currency: 'currency',
+  substitutions: 'substitutions',
+  modifiers: 'modifiers',
+  proteinBoost: 'proteinBoost',
+  notes: 'notes',
+  deliveryMethod: 'deliveryMethod',
+  pickupLocation: 'pickupLocation',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CheckoutSessionItemScalarFieldEnum = (typeof CheckoutSessionItemScalarFieldEnum)[keyof typeof CheckoutSessionItemScalarFieldEnum]
 
 
 export const PaymentEventScalarFieldEnum = {
@@ -3113,6 +3310,8 @@ export type GlobalOmitConfig = {
   cartItem?: Prisma.CartItemOmit
   failedOrder?: Prisma.FailedOrderOmit
   orderIntent?: Prisma.OrderIntentOmit
+  checkoutSession?: Prisma.CheckoutSessionOmit
+  checkoutSessionItem?: Prisma.CheckoutSessionItemOmit
   paymentEvent?: Prisma.PaymentEventOmit
   user?: Prisma.UserOmit
   mealPlan?: Prisma.MealPlanOmit

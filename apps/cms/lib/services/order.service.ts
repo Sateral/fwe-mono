@@ -45,8 +45,7 @@ export const orderService = {
     const existingOrder = await prisma.order.findFirst({
       where: {
         OR: [
-          { stripeSessionId: input.stripeSessionId },
-          { stripePaymentIntentId: input.stripePaymentIntentId },
+          ...(input.orderIntentId ? [{ orderIntentId: input.orderIntentId }] : []),
         ],
       },
       include: this.orderInclude,
@@ -117,8 +116,7 @@ export const orderService = {
       const recoveredOrder = await prisma.order.findFirst({
         where: {
           OR: [
-            { stripeSessionId: input.stripeSessionId },
-            { stripePaymentIntentId: input.stripePaymentIntentId },
+            ...(input.orderIntentId ? [{ orderIntentId: input.orderIntentId }] : []),
           ],
         },
         include: this.orderInclude,
@@ -156,8 +154,17 @@ export const orderService = {
       `[OrderService] Fetching order by Stripe session ${stripeSessionId}`,
     );
 
-    return await prisma.order.findUnique({
+    return await prisma.order.findFirst({
       where: { stripeSessionId },
+      orderBy: { createdAt: "asc" },
+      include: this.orderInclude,
+    });
+  },
+
+  async getOrdersByStripeSessionId(stripeSessionId: string) {
+    return await prisma.order.findMany({
+      where: { stripeSessionId },
+      orderBy: { createdAt: "asc" },
       include: this.orderInclude,
     });
   },

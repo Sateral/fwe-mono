@@ -329,6 +329,7 @@ export type MealWhereInput = {
   tags?: Prisma.DietaryTagListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   orderIntents?: Prisma.OrderIntentListRelationFilter
+  checkoutSessionItems?: Prisma.CheckoutSessionItemListRelationFilter
   rotations?: Prisma.WeeklyRotationListRelationFilter
   rotationPeriods?: Prisma.RotationPeriodListRelationFilter
   cartItems?: Prisma.CartItemListRelationFilter
@@ -356,6 +357,7 @@ export type MealOrderByWithRelationInput = {
   tags?: Prisma.DietaryTagOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
   orderIntents?: Prisma.OrderIntentOrderByRelationAggregateInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemOrderByRelationAggregateInput
   rotations?: Prisma.WeeklyRotationOrderByRelationAggregateInput
   rotationPeriods?: Prisma.RotationPeriodOrderByRelationAggregateInput
   cartItems?: Prisma.CartItemOrderByRelationAggregateInput
@@ -386,6 +388,7 @@ export type MealWhereUniqueInput = Prisma.AtLeast<{
   tags?: Prisma.DietaryTagListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   orderIntents?: Prisma.OrderIntentListRelationFilter
+  checkoutSessionItems?: Prisma.CheckoutSessionItemListRelationFilter
   rotations?: Prisma.WeeklyRotationListRelationFilter
   rotationPeriods?: Prisma.RotationPeriodListRelationFilter
   cartItems?: Prisma.CartItemListRelationFilter
@@ -459,6 +462,7 @@ export type MealCreateInput = {
   tags?: Prisma.DietaryTagCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutMealInput
@@ -486,6 +490,7 @@ export type MealUncheckedCreateInput = {
   tags?: Prisma.DietaryTagUncheckedCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationUncheckedCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMealInput
@@ -513,6 +518,7 @@ export type MealUpdateInput = {
   tags?: Prisma.DietaryTagUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutMealNestedInput
@@ -540,6 +546,7 @@ export type MealUncheckedUpdateInput = {
   tags?: Prisma.DietaryTagUncheckedUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUncheckedUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMealNestedInput
@@ -912,6 +919,20 @@ export type MealUpdateOneRequiredWithoutOrderIntentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MealUpdateToOneWithWhereWithoutOrderIntentsInput, Prisma.MealUpdateWithoutOrderIntentsInput>, Prisma.MealUncheckedUpdateWithoutOrderIntentsInput>
 }
 
+export type MealCreateNestedOneWithoutCheckoutSessionItemsInput = {
+  create?: Prisma.XOR<Prisma.MealCreateWithoutCheckoutSessionItemsInput, Prisma.MealUncheckedCreateWithoutCheckoutSessionItemsInput>
+  connectOrCreate?: Prisma.MealCreateOrConnectWithoutCheckoutSessionItemsInput
+  connect?: Prisma.MealWhereUniqueInput
+}
+
+export type MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.MealCreateWithoutCheckoutSessionItemsInput, Prisma.MealUncheckedCreateWithoutCheckoutSessionItemsInput>
+  connectOrCreate?: Prisma.MealCreateOrConnectWithoutCheckoutSessionItemsInput
+  upsert?: Prisma.MealUpsertWithoutCheckoutSessionItemsInput
+  connect?: Prisma.MealWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MealUpdateToOneWithWhereWithoutCheckoutSessionItemsInput, Prisma.MealUpdateWithoutCheckoutSessionItemsInput>, Prisma.MealUncheckedUpdateWithoutCheckoutSessionItemsInput>
+}
+
 export type MealCreateWithoutSubstitutionGroupsInput = {
   id?: string
   name: string
@@ -933,6 +954,7 @@ export type MealCreateWithoutSubstitutionGroupsInput = {
   tags?: Prisma.DietaryTagCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutMealInput
@@ -959,6 +981,7 @@ export type MealUncheckedCreateWithoutSubstitutionGroupsInput = {
   tags?: Prisma.DietaryTagUncheckedCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationUncheckedCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMealInput
@@ -1001,6 +1024,7 @@ export type MealUpdateWithoutSubstitutionGroupsInput = {
   tags?: Prisma.DietaryTagUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutMealNestedInput
@@ -1027,6 +1051,7 @@ export type MealUncheckedUpdateWithoutSubstitutionGroupsInput = {
   tags?: Prisma.DietaryTagUncheckedUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUncheckedUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMealNestedInput
@@ -1053,6 +1078,7 @@ export type MealCreateWithoutModifierGroupsInput = {
   tags?: Prisma.DietaryTagCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutMealInput
@@ -1079,6 +1105,7 @@ export type MealUncheckedCreateWithoutModifierGroupsInput = {
   tags?: Prisma.DietaryTagUncheckedCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationUncheckedCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMealInput
@@ -1121,6 +1148,7 @@ export type MealUpdateWithoutModifierGroupsInput = {
   tags?: Prisma.DietaryTagUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutMealNestedInput
@@ -1147,6 +1175,7 @@ export type MealUncheckedUpdateWithoutModifierGroupsInput = {
   tags?: Prisma.DietaryTagUncheckedUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUncheckedUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMealNestedInput
@@ -1173,6 +1202,7 @@ export type MealCreateWithoutTagsInput = {
   modifierGroups?: Prisma.ModifierGroupCreateNestedManyWithoutMealInput
   orders?: Prisma.OrderCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutMealInput
@@ -1199,6 +1229,7 @@ export type MealUncheckedCreateWithoutTagsInput = {
   modifierGroups?: Prisma.ModifierGroupUncheckedCreateNestedManyWithoutMealInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationUncheckedCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMealInput
@@ -1268,6 +1299,7 @@ export type MealCreateWithoutOrdersInput = {
   modifierGroups?: Prisma.ModifierGroupCreateNestedManyWithoutMealInput
   tags?: Prisma.DietaryTagCreateNestedManyWithoutMealsInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutMealInput
@@ -1294,6 +1326,7 @@ export type MealUncheckedCreateWithoutOrdersInput = {
   modifierGroups?: Prisma.ModifierGroupUncheckedCreateNestedManyWithoutMealInput
   tags?: Prisma.DietaryTagUncheckedCreateNestedManyWithoutMealsInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationUncheckedCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMealInput
@@ -1336,6 +1369,7 @@ export type MealUpdateWithoutOrdersInput = {
   modifierGroups?: Prisma.ModifierGroupUpdateManyWithoutMealNestedInput
   tags?: Prisma.DietaryTagUpdateManyWithoutMealsNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutMealNestedInput
@@ -1362,6 +1396,7 @@ export type MealUncheckedUpdateWithoutOrdersInput = {
   modifierGroups?: Prisma.ModifierGroupUncheckedUpdateManyWithoutMealNestedInput
   tags?: Prisma.DietaryTagUncheckedUpdateManyWithoutMealsNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUncheckedUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMealNestedInput
@@ -1389,6 +1424,7 @@ export type MealCreateWithoutRotationPeriodsInput = {
   tags?: Prisma.DietaryTagCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutMealInput
 }
@@ -1415,6 +1451,7 @@ export type MealUncheckedCreateWithoutRotationPeriodsInput = {
   tags?: Prisma.DietaryTagUncheckedCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationUncheckedCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMealInput
 }
@@ -1462,6 +1499,7 @@ export type MealCreateWithoutRotationsInput = {
   tags?: Prisma.DietaryTagCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutMealInput
   rotationPeriods?: Prisma.RotationPeriodCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutMealInput
 }
@@ -1488,6 +1526,7 @@ export type MealUncheckedCreateWithoutRotationsInput = {
   tags?: Prisma.DietaryTagUncheckedCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutMealInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMealInput
 }
@@ -1535,6 +1574,7 @@ export type MealCreateWithoutCartItemsInput = {
   tags?: Prisma.DietaryTagCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodCreateNestedManyWithoutMealsInput
 }
@@ -1561,6 +1601,7 @@ export type MealUncheckedCreateWithoutCartItemsInput = {
   tags?: Prisma.DietaryTagUncheckedCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutMealInput
   orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationUncheckedCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedCreateNestedManyWithoutMealsInput
 }
@@ -1603,6 +1644,7 @@ export type MealUpdateWithoutCartItemsInput = {
   tags?: Prisma.DietaryTagUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUpdateManyWithoutMealsNestedInput
 }
@@ -1629,6 +1671,7 @@ export type MealUncheckedUpdateWithoutCartItemsInput = {
   tags?: Prisma.DietaryTagUncheckedUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUncheckedUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedUpdateManyWithoutMealsNestedInput
 }
@@ -1654,6 +1697,7 @@ export type MealCreateWithoutOrderIntentsInput = {
   modifierGroups?: Prisma.ModifierGroupCreateNestedManyWithoutMealInput
   tags?: Prisma.DietaryTagCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutMealInput
@@ -1680,6 +1724,7 @@ export type MealUncheckedCreateWithoutOrderIntentsInput = {
   modifierGroups?: Prisma.ModifierGroupUncheckedCreateNestedManyWithoutMealInput
   tags?: Prisma.DietaryTagUncheckedCreateNestedManyWithoutMealsInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutMealInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutMealInput
   rotations?: Prisma.WeeklyRotationUncheckedCreateNestedManyWithoutMealsInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedCreateNestedManyWithoutMealsInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMealInput
@@ -1722,6 +1767,7 @@ export type MealUpdateWithoutOrderIntentsInput = {
   modifierGroups?: Prisma.ModifierGroupUpdateManyWithoutMealNestedInput
   tags?: Prisma.DietaryTagUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutMealNestedInput
@@ -1748,6 +1794,131 @@ export type MealUncheckedUpdateWithoutOrderIntentsInput = {
   modifierGroups?: Prisma.ModifierGroupUncheckedUpdateManyWithoutMealNestedInput
   tags?: Prisma.DietaryTagUncheckedUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutMealNestedInput
+  rotations?: Prisma.WeeklyRotationUncheckedUpdateManyWithoutMealsNestedInput
+  rotationPeriods?: Prisma.RotationPeriodUncheckedUpdateManyWithoutMealsNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMealNestedInput
+}
+
+export type MealCreateWithoutCheckoutSessionItemsInput = {
+  id?: string
+  name: string
+  slug: string
+  description?: string | null
+  imageUrl?: string | null
+  isFeatured?: boolean
+  isActive?: boolean
+  mealType?: $Enums.MealType
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  calories?: number
+  protein?: number
+  carbs?: number
+  fat?: number
+  fiber?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  substitutionGroups?: Prisma.SubstitutionGroupCreateNestedManyWithoutMealInput
+  modifierGroups?: Prisma.ModifierGroupCreateNestedManyWithoutMealInput
+  tags?: Prisma.DietaryTagCreateNestedManyWithoutMealsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutMealInput
+  orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutMealInput
+  rotations?: Prisma.WeeklyRotationCreateNestedManyWithoutMealsInput
+  rotationPeriods?: Prisma.RotationPeriodCreateNestedManyWithoutMealsInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutMealInput
+}
+
+export type MealUncheckedCreateWithoutCheckoutSessionItemsInput = {
+  id?: string
+  name: string
+  slug: string
+  description?: string | null
+  imageUrl?: string | null
+  isFeatured?: boolean
+  isActive?: boolean
+  mealType?: $Enums.MealType
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  calories?: number
+  protein?: number
+  carbs?: number
+  fat?: number
+  fiber?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  substitutionGroups?: Prisma.SubstitutionGroupUncheckedCreateNestedManyWithoutMealInput
+  modifierGroups?: Prisma.ModifierGroupUncheckedCreateNestedManyWithoutMealInput
+  tags?: Prisma.DietaryTagUncheckedCreateNestedManyWithoutMealsInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutMealInput
+  orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutMealInput
+  rotations?: Prisma.WeeklyRotationUncheckedCreateNestedManyWithoutMealsInput
+  rotationPeriods?: Prisma.RotationPeriodUncheckedCreateNestedManyWithoutMealsInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMealInput
+}
+
+export type MealCreateOrConnectWithoutCheckoutSessionItemsInput = {
+  where: Prisma.MealWhereUniqueInput
+  create: Prisma.XOR<Prisma.MealCreateWithoutCheckoutSessionItemsInput, Prisma.MealUncheckedCreateWithoutCheckoutSessionItemsInput>
+}
+
+export type MealUpsertWithoutCheckoutSessionItemsInput = {
+  update: Prisma.XOR<Prisma.MealUpdateWithoutCheckoutSessionItemsInput, Prisma.MealUncheckedUpdateWithoutCheckoutSessionItemsInput>
+  create: Prisma.XOR<Prisma.MealCreateWithoutCheckoutSessionItemsInput, Prisma.MealUncheckedCreateWithoutCheckoutSessionItemsInput>
+  where?: Prisma.MealWhereInput
+}
+
+export type MealUpdateToOneWithWhereWithoutCheckoutSessionItemsInput = {
+  where?: Prisma.MealWhereInput
+  data: Prisma.XOR<Prisma.MealUpdateWithoutCheckoutSessionItemsInput, Prisma.MealUncheckedUpdateWithoutCheckoutSessionItemsInput>
+}
+
+export type MealUpdateWithoutCheckoutSessionItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mealType?: Prisma.EnumMealTypeFieldUpdateOperationsInput | $Enums.MealType
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  calories?: Prisma.IntFieldUpdateOperationsInput | number
+  protein?: Prisma.IntFieldUpdateOperationsInput | number
+  carbs?: Prisma.IntFieldUpdateOperationsInput | number
+  fat?: Prisma.IntFieldUpdateOperationsInput | number
+  fiber?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutionGroups?: Prisma.SubstitutionGroupUpdateManyWithoutMealNestedInput
+  modifierGroups?: Prisma.ModifierGroupUpdateManyWithoutMealNestedInput
+  tags?: Prisma.DietaryTagUpdateManyWithoutMealsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutMealNestedInput
+  orderIntents?: Prisma.OrderIntentUpdateManyWithoutMealNestedInput
+  rotations?: Prisma.WeeklyRotationUpdateManyWithoutMealsNestedInput
+  rotationPeriods?: Prisma.RotationPeriodUpdateManyWithoutMealsNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutMealNestedInput
+}
+
+export type MealUncheckedUpdateWithoutCheckoutSessionItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mealType?: Prisma.EnumMealTypeFieldUpdateOperationsInput | $Enums.MealType
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  calories?: Prisma.IntFieldUpdateOperationsInput | number
+  protein?: Prisma.IntFieldUpdateOperationsInput | number
+  carbs?: Prisma.IntFieldUpdateOperationsInput | number
+  fat?: Prisma.IntFieldUpdateOperationsInput | number
+  fiber?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutionGroups?: Prisma.SubstitutionGroupUncheckedUpdateManyWithoutMealNestedInput
+  modifierGroups?: Prisma.ModifierGroupUncheckedUpdateManyWithoutMealNestedInput
+  tags?: Prisma.DietaryTagUncheckedUpdateManyWithoutMealsNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutMealNestedInput
+  orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUncheckedUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMealNestedInput
@@ -1774,6 +1945,7 @@ export type MealUpdateWithoutTagsInput = {
   modifierGroups?: Prisma.ModifierGroupUpdateManyWithoutMealNestedInput
   orders?: Prisma.OrderUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutMealNestedInput
@@ -1800,6 +1972,7 @@ export type MealUncheckedUpdateWithoutTagsInput = {
   modifierGroups?: Prisma.ModifierGroupUncheckedUpdateManyWithoutMealNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUncheckedUpdateManyWithoutMealsNestedInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMealNestedInput
@@ -1846,6 +2019,7 @@ export type MealUpdateWithoutRotationPeriodsInput = {
   tags?: Prisma.DietaryTagUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutMealNestedInput
 }
@@ -1872,6 +2046,7 @@ export type MealUncheckedUpdateWithoutRotationPeriodsInput = {
   tags?: Prisma.DietaryTagUncheckedUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutMealNestedInput
   rotations?: Prisma.WeeklyRotationUncheckedUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMealNestedInput
 }
@@ -1917,6 +2092,7 @@ export type MealUpdateWithoutRotationsInput = {
   tags?: Prisma.DietaryTagUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUpdateManyWithoutMealNestedInput
   rotationPeriods?: Prisma.RotationPeriodUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutMealNestedInput
 }
@@ -1943,6 +2119,7 @@ export type MealUncheckedUpdateWithoutRotationsInput = {
   tags?: Prisma.DietaryTagUncheckedUpdateManyWithoutMealsNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutMealNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutMealNestedInput
+  checkoutSessionItems?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutMealNestedInput
   rotationPeriods?: Prisma.RotationPeriodUncheckedUpdateManyWithoutMealsNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMealNestedInput
 }
@@ -1977,6 +2154,7 @@ export type MealCountOutputType = {
   tags: number
   orders: number
   orderIntents: number
+  checkoutSessionItems: number
   rotations: number
   rotationPeriods: number
   cartItems: number
@@ -1988,6 +2166,7 @@ export type MealCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   tags?: boolean | MealCountOutputTypeCountTagsArgs
   orders?: boolean | MealCountOutputTypeCountOrdersArgs
   orderIntents?: boolean | MealCountOutputTypeCountOrderIntentsArgs
+  checkoutSessionItems?: boolean | MealCountOutputTypeCountCheckoutSessionItemsArgs
   rotations?: boolean | MealCountOutputTypeCountRotationsArgs
   rotationPeriods?: boolean | MealCountOutputTypeCountRotationPeriodsArgs
   cartItems?: boolean | MealCountOutputTypeCountCartItemsArgs
@@ -2041,6 +2220,13 @@ export type MealCountOutputTypeCountOrderIntentsArgs<ExtArgs extends runtime.Typ
 /**
  * MealCountOutputType without action
  */
+export type MealCountOutputTypeCountCheckoutSessionItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CheckoutSessionItemWhereInput
+}
+
+/**
+ * MealCountOutputType without action
+ */
 export type MealCountOutputTypeCountRotationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.WeeklyRotationWhereInput
 }
@@ -2082,6 +2268,7 @@ export type MealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   tags?: boolean | Prisma.Meal$tagsArgs<ExtArgs>
   orders?: boolean | Prisma.Meal$ordersArgs<ExtArgs>
   orderIntents?: boolean | Prisma.Meal$orderIntentsArgs<ExtArgs>
+  checkoutSessionItems?: boolean | Prisma.Meal$checkoutSessionItemsArgs<ExtArgs>
   rotations?: boolean | Prisma.Meal$rotationsArgs<ExtArgs>
   rotationPeriods?: boolean | Prisma.Meal$rotationPeriodsArgs<ExtArgs>
   cartItems?: boolean | Prisma.Meal$cartItemsArgs<ExtArgs>
@@ -2152,6 +2339,7 @@ export type MealInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   tags?: boolean | Prisma.Meal$tagsArgs<ExtArgs>
   orders?: boolean | Prisma.Meal$ordersArgs<ExtArgs>
   orderIntents?: boolean | Prisma.Meal$orderIntentsArgs<ExtArgs>
+  checkoutSessionItems?: boolean | Prisma.Meal$checkoutSessionItemsArgs<ExtArgs>
   rotations?: boolean | Prisma.Meal$rotationsArgs<ExtArgs>
   rotationPeriods?: boolean | Prisma.Meal$rotationPeriodsArgs<ExtArgs>
   cartItems?: boolean | Prisma.Meal$cartItemsArgs<ExtArgs>
@@ -2168,6 +2356,7 @@ export type $MealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     tags: Prisma.$DietaryTagPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
     orderIntents: Prisma.$OrderIntentPayload<ExtArgs>[]
+    checkoutSessionItems: Prisma.$CheckoutSessionItemPayload<ExtArgs>[]
     rotations: Prisma.$WeeklyRotationPayload<ExtArgs>[]
     rotationPeriods: Prisma.$RotationPeriodPayload<ExtArgs>[]
     cartItems: Prisma.$CartItemPayload<ExtArgs>[]
@@ -2588,6 +2777,7 @@ export interface Prisma__MealClient<T, Null = never, ExtArgs extends runtime.Typ
   tags<T extends Prisma.Meal$tagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meal$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DietaryTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Meal$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meal$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orderIntents<T extends Prisma.Meal$orderIntentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meal$orderIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  checkoutSessionItems<T extends Prisma.Meal$checkoutSessionItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meal$checkoutSessionItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheckoutSessionItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rotations<T extends Prisma.Meal$rotationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meal$rotationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WeeklyRotationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rotationPeriods<T extends Prisma.Meal$rotationPeriodsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meal$rotationPeriodsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RotationPeriodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cartItems<T extends Prisma.Meal$cartItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meal$cartItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3141,6 +3331,30 @@ export type Meal$orderIntentsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.OrderIntentScalarFieldEnum | Prisma.OrderIntentScalarFieldEnum[]
+}
+
+/**
+ * Meal.checkoutSessionItems
+ */
+export type Meal$checkoutSessionItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CheckoutSessionItem
+   */
+  select?: Prisma.CheckoutSessionItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CheckoutSessionItem
+   */
+  omit?: Prisma.CheckoutSessionItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionItemInclude<ExtArgs> | null
+  where?: Prisma.CheckoutSessionItemWhereInput
+  orderBy?: Prisma.CheckoutSessionItemOrderByWithRelationInput | Prisma.CheckoutSessionItemOrderByWithRelationInput[]
+  cursor?: Prisma.CheckoutSessionItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CheckoutSessionItemScalarFieldEnum | Prisma.CheckoutSessionItemScalarFieldEnum[]
 }
 
 /**

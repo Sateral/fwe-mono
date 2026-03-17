@@ -1,10 +1,12 @@
 import type {
+  ApiCart,
   ApiDietaryTag,
   ApiFailedOrder,
   ApiMeal,
   ApiModifierGroup,
   ApiModifierOption,
   ApiOrder,
+  ApiOrderSession,
   ApiSubstitutionGroup,
   ApiSubstitutionOption,
   ApiUser,
@@ -12,6 +14,8 @@ import type {
   FulfillmentStatus,
 } from "@fwe/types";
 import type {
+  CartCheckoutRequest,
+  CreateCartInput,
   CreateFailedOrderInput,
   CreateOrderInput,
   CheckoutSessionRequest,
@@ -211,9 +215,9 @@ export const ordersApi = {
   /**
    * Get an order by Stripe session ID.
    */
-  async getByStripeSession(sessionId: string): Promise<ApiOrder | null> {
+  async getByStripeSession(sessionId: string): Promise<ApiOrderSession | null> {
     try {
-      return await apiRequest<ApiOrder>(
+      return await apiRequest<ApiOrderSession>(
         `/api/orders/stripe-session/${sessionId}`,
       );
     } catch {
@@ -224,9 +228,9 @@ export const ordersApi = {
   /**
    * Ensure an order exists for a Stripe session.
    */
-  async ensureByStripeSession(sessionId: string): Promise<ApiOrder | null> {
+  async ensureByStripeSession(sessionId: string): Promise<ApiOrderSession | null> {
     try {
-      return await apiRequest<ApiOrder | null>(
+      return await apiRequest<ApiOrderSession | null>(
         `/api/orders/stripe-session/${sessionId}`,
         { method: "POST" },
       );
@@ -269,6 +273,34 @@ export const checkoutApi = {
       method: "POST",
       body: JSON.stringify(input),
     });
+  },
+};
+
+export const cartsApi = {
+  async create(
+    userId: string,
+    input: CreateCartInput,
+  ): Promise<ApiCart> {
+    return apiRequest<ApiCart>(`/api/carts`, {
+      method: "POST",
+      headers: {
+        "x-user-id": userId,
+      },
+      body: JSON.stringify(input),
+    });
+  },
+
+  async checkout(
+    cartId: string,
+    input: CartCheckoutRequest,
+  ): Promise<{ url: string | null; id: string }> {
+    return apiRequest<{ url: string | null; id: string }>(
+      `/api/carts/${cartId}/checkout`,
+      {
+        method: "POST",
+        body: JSON.stringify(input),
+      },
+    );
   },
 };
 

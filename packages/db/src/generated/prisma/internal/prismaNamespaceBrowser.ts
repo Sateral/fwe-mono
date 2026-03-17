@@ -64,6 +64,8 @@ export const ModelName = {
   CartItem: 'CartItem',
   FailedOrder: 'FailedOrder',
   OrderIntent: 'OrderIntent',
+  CheckoutSession: 'CheckoutSession',
+  CheckoutSessionItem: 'CheckoutSessionItem',
   PaymentEvent: 'PaymentEvent',
   User: 'User',
   MealPlan: 'MealPlan',
@@ -242,6 +244,7 @@ export type WeeklyRotationScalarFieldEnum = (typeof WeeklyRotationScalarFieldEnu
 
 export const CartScalarFieldEnum = {
   id: 'id',
+  clientRequestId: 'clientRequestId',
   userId: 'userId',
   settlementMethod: 'settlementMethod',
   status: 'status',
@@ -308,13 +311,59 @@ export const OrderIntentScalarFieldEnum = {
   deliveryMethod: 'deliveryMethod',
   pickupLocation: 'pickupLocation',
   status: 'status',
-  stripeSessionId: 'stripeSessionId',
-  stripePaymentIntentId: 'stripePaymentIntentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type OrderIntentScalarFieldEnum = (typeof OrderIntentScalarFieldEnum)[keyof typeof OrderIntentScalarFieldEnum]
+
+
+export const CheckoutSessionScalarFieldEnum = {
+  id: 'id',
+  clientRequestId: 'clientRequestId',
+  cartId: 'cartId',
+  userId: 'userId',
+  settlementMethod: 'settlementMethod',
+  status: 'status',
+  customerEmail: 'customerEmail',
+  customerName: 'customerName',
+  deliveryMethod: 'deliveryMethod',
+  pickupLocation: 'pickupLocation',
+  stripeSessionId: 'stripeSessionId',
+  stripePaymentIntentId: 'stripePaymentIntentId',
+  stripeChargeId: 'stripeChargeId',
+  stripeBalanceTransactionId: 'stripeBalanceTransactionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CheckoutSessionScalarFieldEnum = (typeof CheckoutSessionScalarFieldEnum)[keyof typeof CheckoutSessionScalarFieldEnum]
+
+
+export const CheckoutSessionItemScalarFieldEnum = {
+  id: 'id',
+  checkoutSessionId: 'checkoutSessionId',
+  orderIntentId: 'orderIntentId',
+  mealId: 'mealId',
+  mealName: 'mealName',
+  mealSlug: 'mealSlug',
+  mealImageUrl: 'mealImageUrl',
+  rotationId: 'rotationId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  totalAmount: 'totalAmount',
+  currency: 'currency',
+  substitutions: 'substitutions',
+  modifiers: 'modifiers',
+  proteinBoost: 'proteinBoost',
+  notes: 'notes',
+  deliveryMethod: 'deliveryMethod',
+  pickupLocation: 'pickupLocation',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CheckoutSessionItemScalarFieldEnum = (typeof CheckoutSessionItemScalarFieldEnum)[keyof typeof CheckoutSessionItemScalarFieldEnum]
 
 
 export const PaymentEventScalarFieldEnum = {

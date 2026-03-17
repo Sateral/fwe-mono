@@ -46,7 +46,8 @@ export const createOrderSchema = z.object({
   stripeSessionId: z.string().min(1, "Stripe session ID is required"),
   stripePaymentIntentId: z
     .string()
-    .min(1, "Stripe payment intent ID is required"),
+    .min(1, "Stripe payment intent ID is required")
+    .optional(),
   stripeChargeId: z.string().optional(),
   stripeBalanceTransactionId: z.string().optional(),
 });

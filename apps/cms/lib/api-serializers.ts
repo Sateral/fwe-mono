@@ -1,10 +1,12 @@
-import type { ApiMeal, ApiOrder } from "../../../packages/types/src";
+import type { ApiCart, ApiMeal, ApiOrder } from "../../../packages/types/src";
 
 import type { mealService } from "@/lib/services/meal.service";
+import type { cartService } from "@/lib/services/cart.service";
 import type { orderService } from "@/lib/services/order.service";
 import type { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
 
 type MealRecord = NonNullable<Awaited<ReturnType<typeof mealService.getMealById>>>;
+type CartRecord = NonNullable<Awaited<ReturnType<typeof cartService.getCartById>>>;
 type OrderRecord = NonNullable<Awaited<ReturnType<typeof orderService.getOrderById>>>;
 type RotationRecord = NonNullable<
   Awaited<ReturnType<typeof weeklyRotationService.getCurrentRotation>>
@@ -133,6 +135,35 @@ export function serializeOrder(order: OrderRecord): ApiOrder {
           email: order.user.email,
         }
       : undefined,
+  };
+}
+
+export function serializeCart(cart: CartRecord): ApiCart {
+  return {
+    id: cart.id,
+    settlementMethod: cart.settlementMethod,
+    status: cart.status,
+    userId: cart.userId,
+    rotationId: cart.items[0]?.rotationId ?? null,
+    items: cart.items.map((item) => ({
+      id: item.id,
+      mealId: item.mealId,
+      rotationId: item.rotationId,
+      quantity: item.quantity,
+      unitPrice: serializeMoney(item.unitPrice),
+      substitutions: item.substitutions as ApiCart["items"][number]["substitutions"],
+      modifiers: item.modifiers as ApiCart["items"][number]["modifiers"],
+      proteinBoost: item.proteinBoost,
+      notes: item.notes,
+      meal: {
+        id: item.meal.id,
+        name: item.meal.name,
+        slug: item.meal.slug,
+        imageUrl: item.meal.imageUrl,
+      },
+    })),
+    createdAt: cart.createdAt.toISOString(),
+    updatedAt: cart.updatedAt.toISOString(),
   };
 }
 

@@ -64,6 +64,7 @@ describe("order.service", () => {
       id: "order_existing",
       stripeSessionId: input.stripeSessionId,
       stripePaymentIntentId: input.stripePaymentIntentId,
+      orderIntentId: input.orderIntentId,
     };
 
     prismaMock.order.findFirst.mockResolvedValue(existing);
@@ -79,6 +80,7 @@ describe("order.service", () => {
       id: "order_race",
       stripeSessionId: input.stripeSessionId,
       stripePaymentIntentId: input.stripePaymentIntentId,
+      orderIntentId: input.orderIntentId,
     };
 
     prismaMock.order.findFirst
@@ -93,5 +95,30 @@ describe("order.service", () => {
 
     expect(order.id).toBe(existing.id);
     expect(prismaMock.order.findFirst).toHaveBeenCalledTimes(2);
+  });
+
+  it("dedupes cart fan-out retries by orderIntentId instead of shared stripe identifiers", async () => {
+    const existing = {
+      id: "order_existing",
+      orderIntentId: input.orderIntentId,
+      stripeSessionId: input.stripeSessionId,
+      stripePaymentIntentId: input.stripePaymentIntentId,
+    };
+
+    prismaMock.order.findFirst.mockResolvedValue(existing);
+
+    await orderService.createOrder({
+      ...input,
+      stripeSessionId: "cs_shared",
+      stripePaymentIntentId: "pi_shared",
+    });
+
+    expect(prismaMock.order.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          OR: [{ orderIntentId: input.orderIntentId }],
+        },
+      }),
+    );
   });
 });

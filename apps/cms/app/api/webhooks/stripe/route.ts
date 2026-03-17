@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import {
   ensureOrderFromSession,
+  ensureOrdersFromSession,
   getOrderIntentIdFromSession,
   updateOrderIntentStatus,
 } from "@/lib/stripe-service";
@@ -75,10 +76,10 @@ export async function POST(request: Request) {
         const session = event.data.object as Stripe.Checkout.Session;
         orderIntentId = getOrderIntentIdFromSession(session);
         if (session.payment_status === "paid") {
-          const order = await ensureOrderFromSession(session.id);
-          orderId = order?.id ?? null;
-          if (order?.orderIntentId) {
-            orderIntentId = order.orderIntentId;
+          const orders = await ensureOrdersFromSession(session.id);
+          orderId = orders[0]?.id ?? null;
+          if (orders[0]?.orderIntentId) {
+            orderIntentId = orders[0].orderIntentId;
           }
         }
         break;
@@ -86,10 +87,10 @@ export async function POST(request: Request) {
       case "checkout.session.async_payment_succeeded": {
         const session = event.data.object as Stripe.Checkout.Session;
         orderIntentId = getOrderIntentIdFromSession(session);
-        const order = await ensureOrderFromSession(session.id);
-        orderId = order?.id ?? null;
-        if (order?.orderIntentId) {
-          orderIntentId = order.orderIntentId;
+        const orders = await ensureOrdersFromSession(session.id);
+        orderId = orders[0]?.id ?? null;
+        if (orders[0]?.orderIntentId) {
+          orderIntentId = orders[0].orderIntentId;
         }
         break;
       }

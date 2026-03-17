@@ -30,6 +30,7 @@ model Meal {
   tags               DietaryTag[]
   orders             Order[]
   orderIntents       OrderIntent[]
+  checkoutSessionItems CheckoutSessionItem[]
   rotations          WeeklyRotation[]    @relation("RotationMeals")
   rotationPeriods    RotationPeriod[]    @relation("RotationPeriodMeals")
   cartItems          CartItem[]
@@ -143,8 +144,8 @@ model Order {
   paidAt                DateTime?
   refundedAt            DateTime?
   refundAmount          Decimal           @default(0) @db.Decimal(10, 2)
-  stripeSessionId       String?           @unique
-  stripePaymentIntentId String?           @unique
+  stripeSessionId       String?
+  stripePaymentIntentId String?
   stripeChargeId        String?
   stripeRefundId        String?
   stripeBalanceTransactionId String?
@@ -170,6 +171,8 @@ model Order {
   @@index([rotationId])      // Fast rotation-based queries
   @@index([mealId])          // Fast meal-based aggregations
   @@index([customerEmail])
+  @@index([stripeSessionId])
+  @@index([stripePaymentIntentId])
 }
 
 enum ModifierType {
@@ -289,6 +292,7 @@ model WeeklyRotation {
   orders      Order[]
   cartItems   CartItem[]
   orderIntents OrderIntent[]
+  checkoutSessionItems CheckoutSessionItem[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
@@ -299,11 +303,13 @@ model WeeklyRotation {
 
 model Cart {
   id               String           @id @default(cuid())
+  clientRequestId  String?          @unique
   userId           String
   user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   settlementMethod SettlementMethod @default(STRIPE)
   status           CartStatus       @default(ACTIVE)
   items            CartItem[]
+  checkoutSessions CheckoutSession[]
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
 
@@ -407,10 +413,8 @@ model OrderIntent {
 
   status OrderIntentStatus @default(CREATED)
 
-  stripeSessionId       String? @unique
-  stripePaymentIntentId String? @unique
-
   order Order? @relation("OrderIntentToOrder")
+  checkoutSessionItems CheckoutSessionItem[]
   paymentEvents PaymentEvent[]
 
   createdAt DateTime @default(now())
@@ -419,6 +423,81 @@ model OrderIntent {
   @@index([userId])
   @@index([status])
   @@index([createdAt])
+  @@index([rotationId])
+}
+
+model CheckoutSession {
+  id String @id @default(cuid())
+
+  clientRequestId String? @unique
+
+  cartId String
+  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  settlementMethod SettlementMethod @default(STRIPE)
+  status           OrderIntentStatus @default(CREATED)
+
+  customerEmail String
+  customerName  String?
+
+  deliveryMethod DeliveryMethod @default(DELIVERY)
+  pickupLocation String?
+
+  stripeSessionId       String? @unique
+  stripePaymentIntentId String? @unique
+  stripeChargeId        String?
+  stripeBalanceTransactionId String?
+
+  items CheckoutSessionItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([cartId])
+  @@index([userId])
+  @@index([status])
+}
+
+model CheckoutSessionItem {
+  id String @id @default(cuid())
+
+  checkoutSessionId String
+  checkoutSession   CheckoutSession @relation(fields: [checkoutSessionId], references: [id], onDelete: Cascade)
+
+  orderIntentId String @unique
+  orderIntent   OrderIntent @relation(fields: [orderIntentId], references: [id], onDelete: Cascade)
+
+  mealId String
+  meal   Meal   @relation(fields: [mealId], references: [id])
+
+  mealName     String
+  mealSlug     String
+  mealImageUrl String?
+
+  rotationId String
+  rotation   WeeklyRotation @relation(fields: [rotationId], references: [id])
+
+  quantity    Int
+  unitPrice   Decimal @db.Decimal(10, 2)
+  totalAmount Decimal @db.Decimal(10, 2)
+  currency    String @default("cad")
+
+  substitutions Json?
+  modifiers     Json?
+  proteinBoost  Boolean @default(false)
+  notes         String? @db.Text
+
+  deliveryMethod DeliveryMethod @default(DELIVERY)
+  pickupLocation String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([checkoutSessionId])
+  @@index([mealId])
   @@index([rotationId])
 }
 
@@ -471,6 +550,7 @@ model User {
   orders           Order[]
   orderIntents     OrderIntent[]
   carts            Cart[]
+  checkoutSessions CheckoutSession[]
   mealPlan         MealPlan?
   flavorProfile    FlavorProfile?
   ownedReferralCode ReferralCode? @relation("ReferralCodeOwner")

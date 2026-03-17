@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import type { CreateCartInput } from "@fwe/validators";
 
 import Container from "@/components/container";
 import { Badge } from "@/components/ui/badge";
@@ -104,20 +105,12 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
         },
       );
 
-      const response = await fetch("/api/checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          requestId,
+      const items: CreateCartInput["items"] = [
+        {
           mealId: meal.id,
           quantity,
           substitutions,
           proteinBoost,
-          deliveryMethod,
-          pickupLocation:
-            deliveryMethod === "PICKUP" ? "Xtreme Couture" : undefined,
           notes: notes || undefined,
           modifiers: Object.entries(selectedModifiers).map(
             ([groupId, optionIds]) => {
@@ -133,6 +126,25 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
               };
             },
           ),
+        },
+      ];
+
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          requestId,
+          mealId: meal.id,
+          quantity,
+          substitutions,
+          proteinBoost,
+          deliveryMethod,
+          pickupLocation:
+            deliveryMethod === "PICKUP" ? "Xtreme Couture" : undefined,
+          notes: notes || undefined,
+          modifiers: items[0]?.modifiers,
         }),
       });
 

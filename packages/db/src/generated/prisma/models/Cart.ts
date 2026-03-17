@@ -26,6 +26,7 @@ export type AggregateCart = {
 
 export type CartMinAggregateOutputType = {
   id: string | null
+  clientRequestId: string | null
   userId: string | null
   settlementMethod: $Enums.SettlementMethod | null
   status: $Enums.CartStatus | null
@@ -35,6 +36,7 @@ export type CartMinAggregateOutputType = {
 
 export type CartMaxAggregateOutputType = {
   id: string | null
+  clientRequestId: string | null
   userId: string | null
   settlementMethod: $Enums.SettlementMethod | null
   status: $Enums.CartStatus | null
@@ -44,6 +46,7 @@ export type CartMaxAggregateOutputType = {
 
 export type CartCountAggregateOutputType = {
   id: number
+  clientRequestId: number
   userId: number
   settlementMethod: number
   status: number
@@ -55,6 +58,7 @@ export type CartCountAggregateOutputType = {
 
 export type CartMinAggregateInputType = {
   id?: true
+  clientRequestId?: true
   userId?: true
   settlementMethod?: true
   status?: true
@@ -64,6 +68,7 @@ export type CartMinAggregateInputType = {
 
 export type CartMaxAggregateInputType = {
   id?: true
+  clientRequestId?: true
   userId?: true
   settlementMethod?: true
   status?: true
@@ -73,6 +78,7 @@ export type CartMaxAggregateInputType = {
 
 export type CartCountAggregateInputType = {
   id?: true
+  clientRequestId?: true
   userId?: true
   settlementMethod?: true
   status?: true
@@ -155,6 +161,7 @@ export type CartGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type CartGroupByOutputType = {
   id: string
+  clientRequestId: string | null
   userId: string
   settlementMethod: $Enums.SettlementMethod
   status: $Enums.CartStatus
@@ -185,6 +192,7 @@ export type CartWhereInput = {
   OR?: Prisma.CartWhereInput[]
   NOT?: Prisma.CartWhereInput | Prisma.CartWhereInput[]
   id?: Prisma.StringFilter<"Cart"> | string
+  clientRequestId?: Prisma.StringNullableFilter<"Cart"> | string | null
   userId?: Prisma.StringFilter<"Cart"> | string
   settlementMethod?: Prisma.EnumSettlementMethodFilter<"Cart"> | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusFilter<"Cart"> | $Enums.CartStatus
@@ -192,10 +200,12 @@ export type CartWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Cart"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   items?: Prisma.CartItemListRelationFilter
+  checkoutSessions?: Prisma.CheckoutSessionListRelationFilter
 }
 
 export type CartOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  clientRequestId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   settlementMethod?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -203,10 +213,12 @@ export type CartOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   items?: Prisma.CartItemOrderByRelationAggregateInput
+  checkoutSessions?: Prisma.CheckoutSessionOrderByRelationAggregateInput
 }
 
 export type CartWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  clientRequestId?: string
   AND?: Prisma.CartWhereInput | Prisma.CartWhereInput[]
   OR?: Prisma.CartWhereInput[]
   NOT?: Prisma.CartWhereInput | Prisma.CartWhereInput[]
@@ -217,10 +229,12 @@ export type CartWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Cart"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   items?: Prisma.CartItemListRelationFilter
-}, "id">
+  checkoutSessions?: Prisma.CheckoutSessionListRelationFilter
+}, "id" | "clientRequestId">
 
 export type CartOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  clientRequestId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   settlementMethod?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -236,6 +250,7 @@ export type CartScalarWhereWithAggregatesInput = {
   OR?: Prisma.CartScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CartScalarWhereWithAggregatesInput | Prisma.CartScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Cart"> | string
+  clientRequestId?: Prisma.StringNullableWithAggregatesFilter<"Cart"> | string | null
   userId?: Prisma.StringWithAggregatesFilter<"Cart"> | string
   settlementMethod?: Prisma.EnumSettlementMethodWithAggregatesFilter<"Cart"> | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusWithAggregatesFilter<"Cart"> | $Enums.CartStatus
@@ -245,46 +260,55 @@ export type CartScalarWhereWithAggregatesInput = {
 
 export type CartCreateInput = {
   id?: string
+  clientRequestId?: string | null
   settlementMethod?: $Enums.SettlementMethod
   status?: $Enums.CartStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCartsInput
   items?: Prisma.CartItemCreateNestedManyWithoutCartInput
+  checkoutSessions?: Prisma.CheckoutSessionCreateNestedManyWithoutCartInput
 }
 
 export type CartUncheckedCreateInput = {
   id?: string
+  clientRequestId?: string | null
   userId: string
   settlementMethod?: $Enums.SettlementMethod
   status?: $Enums.CartStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.CartItemUncheckedCreateNestedManyWithoutCartInput
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedCreateNestedManyWithoutCartInput
 }
 
 export type CartUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusFieldUpdateOperationsInput | $Enums.CartStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCartsNestedInput
   items?: Prisma.CartItemUpdateManyWithoutCartNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUpdateManyWithoutCartNestedInput
 }
 
 export type CartUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusFieldUpdateOperationsInput | $Enums.CartStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.CartItemUncheckedUpdateManyWithoutCartNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedUpdateManyWithoutCartNestedInput
 }
 
 export type CartCreateManyInput = {
   id?: string
+  clientRequestId?: string | null
   userId: string
   settlementMethod?: $Enums.SettlementMethod
   status?: $Enums.CartStatus
@@ -294,6 +318,7 @@ export type CartCreateManyInput = {
 
 export type CartUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusFieldUpdateOperationsInput | $Enums.CartStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -302,6 +327,7 @@ export type CartUpdateManyMutationInput = {
 
 export type CartUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusFieldUpdateOperationsInput | $Enums.CartStatus
@@ -311,6 +337,7 @@ export type CartUncheckedUpdateManyInput = {
 
 export type CartCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientRequestId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   settlementMethod?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -320,6 +347,7 @@ export type CartCountOrderByAggregateInput = {
 
 export type CartMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientRequestId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   settlementMethod?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -329,6 +357,7 @@ export type CartMaxOrderByAggregateInput = {
 
 export type CartMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientRequestId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   settlementMethod?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -367,6 +396,20 @@ export type CartUpdateOneRequiredWithoutItemsNestedInput = {
   upsert?: Prisma.CartUpsertWithoutItemsInput
   connect?: Prisma.CartWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CartUpdateToOneWithWhereWithoutItemsInput, Prisma.CartUpdateWithoutItemsInput>, Prisma.CartUncheckedUpdateWithoutItemsInput>
+}
+
+export type CartCreateNestedOneWithoutCheckoutSessionsInput = {
+  create?: Prisma.XOR<Prisma.CartCreateWithoutCheckoutSessionsInput, Prisma.CartUncheckedCreateWithoutCheckoutSessionsInput>
+  connectOrCreate?: Prisma.CartCreateOrConnectWithoutCheckoutSessionsInput
+  connect?: Prisma.CartWhereUniqueInput
+}
+
+export type CartUpdateOneRequiredWithoutCheckoutSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.CartCreateWithoutCheckoutSessionsInput, Prisma.CartUncheckedCreateWithoutCheckoutSessionsInput>
+  connectOrCreate?: Prisma.CartCreateOrConnectWithoutCheckoutSessionsInput
+  upsert?: Prisma.CartUpsertWithoutCheckoutSessionsInput
+  connect?: Prisma.CartWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CartUpdateToOneWithWhereWithoutCheckoutSessionsInput, Prisma.CartUpdateWithoutCheckoutSessionsInput>, Prisma.CartUncheckedUpdateWithoutCheckoutSessionsInput>
 }
 
 export type CartCreateNestedManyWithoutUserInput = {
@@ -413,20 +456,24 @@ export type CartUncheckedUpdateManyWithoutUserNestedInput = {
 
 export type CartCreateWithoutItemsInput = {
   id?: string
+  clientRequestId?: string | null
   settlementMethod?: $Enums.SettlementMethod
   status?: $Enums.CartStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCartsInput
+  checkoutSessions?: Prisma.CheckoutSessionCreateNestedManyWithoutCartInput
 }
 
 export type CartUncheckedCreateWithoutItemsInput = {
   id?: string
+  clientRequestId?: string | null
   userId: string
   settlementMethod?: $Enums.SettlementMethod
   status?: $Enums.CartStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedCreateNestedManyWithoutCartInput
 }
 
 export type CartCreateOrConnectWithoutItemsInput = {
@@ -447,38 +494,106 @@ export type CartUpdateToOneWithWhereWithoutItemsInput = {
 
 export type CartUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusFieldUpdateOperationsInput | $Enums.CartStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCartsNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUpdateManyWithoutCartNestedInput
 }
 
 export type CartUncheckedUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusFieldUpdateOperationsInput | $Enums.CartStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedUpdateManyWithoutCartNestedInput
 }
 
-export type CartCreateWithoutUserInput = {
+export type CartCreateWithoutCheckoutSessionsInput = {
   id?: string
+  clientRequestId?: string | null
   settlementMethod?: $Enums.SettlementMethod
   status?: $Enums.CartStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutCartsInput
   items?: Prisma.CartItemCreateNestedManyWithoutCartInput
 }
 
-export type CartUncheckedCreateWithoutUserInput = {
+export type CartUncheckedCreateWithoutCheckoutSessionsInput = {
   id?: string
+  clientRequestId?: string | null
+  userId: string
   settlementMethod?: $Enums.SettlementMethod
   status?: $Enums.CartStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.CartItemUncheckedCreateNestedManyWithoutCartInput
+}
+
+export type CartCreateOrConnectWithoutCheckoutSessionsInput = {
+  where: Prisma.CartWhereUniqueInput
+  create: Prisma.XOR<Prisma.CartCreateWithoutCheckoutSessionsInput, Prisma.CartUncheckedCreateWithoutCheckoutSessionsInput>
+}
+
+export type CartUpsertWithoutCheckoutSessionsInput = {
+  update: Prisma.XOR<Prisma.CartUpdateWithoutCheckoutSessionsInput, Prisma.CartUncheckedUpdateWithoutCheckoutSessionsInput>
+  create: Prisma.XOR<Prisma.CartCreateWithoutCheckoutSessionsInput, Prisma.CartUncheckedCreateWithoutCheckoutSessionsInput>
+  where?: Prisma.CartWhereInput
+}
+
+export type CartUpdateToOneWithWhereWithoutCheckoutSessionsInput = {
+  where?: Prisma.CartWhereInput
+  data: Prisma.XOR<Prisma.CartUpdateWithoutCheckoutSessionsInput, Prisma.CartUncheckedUpdateWithoutCheckoutSessionsInput>
+}
+
+export type CartUpdateWithoutCheckoutSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  status?: Prisma.EnumCartStatusFieldUpdateOperationsInput | $Enums.CartStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutCartsNestedInput
+  items?: Prisma.CartItemUpdateManyWithoutCartNestedInput
+}
+
+export type CartUncheckedUpdateWithoutCheckoutSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  status?: Prisma.EnumCartStatusFieldUpdateOperationsInput | $Enums.CartStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.CartItemUncheckedUpdateManyWithoutCartNestedInput
+}
+
+export type CartCreateWithoutUserInput = {
+  id?: string
+  clientRequestId?: string | null
+  settlementMethod?: $Enums.SettlementMethod
+  status?: $Enums.CartStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.CartItemCreateNestedManyWithoutCartInput
+  checkoutSessions?: Prisma.CheckoutSessionCreateNestedManyWithoutCartInput
+}
+
+export type CartUncheckedCreateWithoutUserInput = {
+  id?: string
+  clientRequestId?: string | null
+  settlementMethod?: $Enums.SettlementMethod
+  status?: $Enums.CartStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.CartItemUncheckedCreateNestedManyWithoutCartInput
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedCreateNestedManyWithoutCartInput
 }
 
 export type CartCreateOrConnectWithoutUserInput = {
@@ -512,6 +627,7 @@ export type CartScalarWhereInput = {
   OR?: Prisma.CartScalarWhereInput[]
   NOT?: Prisma.CartScalarWhereInput | Prisma.CartScalarWhereInput[]
   id?: Prisma.StringFilter<"Cart"> | string
+  clientRequestId?: Prisma.StringNullableFilter<"Cart"> | string | null
   userId?: Prisma.StringFilter<"Cart"> | string
   settlementMethod?: Prisma.EnumSettlementMethodFilter<"Cart"> | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusFilter<"Cart"> | $Enums.CartStatus
@@ -521,6 +637,7 @@ export type CartScalarWhereInput = {
 
 export type CartCreateManyUserInput = {
   id?: string
+  clientRequestId?: string | null
   settlementMethod?: $Enums.SettlementMethod
   status?: $Enums.CartStatus
   createdAt?: Date | string
@@ -529,24 +646,29 @@ export type CartCreateManyUserInput = {
 
 export type CartUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusFieldUpdateOperationsInput | $Enums.CartStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.CartItemUpdateManyWithoutCartNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUpdateManyWithoutCartNestedInput
 }
 
 export type CartUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusFieldUpdateOperationsInput | $Enums.CartStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.CartItemUncheckedUpdateManyWithoutCartNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedUpdateManyWithoutCartNestedInput
 }
 
 export type CartUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
   status?: Prisma.EnumCartStatusFieldUpdateOperationsInput | $Enums.CartStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -560,10 +682,12 @@ export type CartUncheckedUpdateManyWithoutUserInput = {
 
 export type CartCountOutputType = {
   items: number
+  checkoutSessions: number
 }
 
 export type CartCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | CartCountOutputTypeCountItemsArgs
+  checkoutSessions?: boolean | CartCountOutputTypeCountCheckoutSessionsArgs
 }
 
 /**
@@ -583,9 +707,17 @@ export type CartCountOutputTypeCountItemsArgs<ExtArgs extends runtime.Types.Exte
   where?: Prisma.CartItemWhereInput
 }
 
+/**
+ * CartCountOutputType without action
+ */
+export type CartCountOutputTypeCountCheckoutSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CheckoutSessionWhereInput
+}
+
 
 export type CartSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  clientRequestId?: boolean
   userId?: boolean
   settlementMethod?: boolean
   status?: boolean
@@ -593,11 +725,13 @@ export type CartSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Cart$itemsArgs<ExtArgs>
+  checkoutSessions?: boolean | Prisma.Cart$checkoutSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.CartCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cart"]>
 
 export type CartSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  clientRequestId?: boolean
   userId?: boolean
   settlementMethod?: boolean
   status?: boolean
@@ -608,6 +742,7 @@ export type CartSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type CartSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  clientRequestId?: boolean
   userId?: boolean
   settlementMethod?: boolean
   status?: boolean
@@ -618,6 +753,7 @@ export type CartSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type CartSelectScalar = {
   id?: boolean
+  clientRequestId?: boolean
   userId?: boolean
   settlementMethod?: boolean
   status?: boolean
@@ -625,10 +761,11 @@ export type CartSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CartOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "settlementMethod" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["cart"]>
+export type CartOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientRequestId" | "userId" | "settlementMethod" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["cart"]>
 export type CartInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Cart$itemsArgs<ExtArgs>
+  checkoutSessions?: boolean | Prisma.Cart$checkoutSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.CartCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CartIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -643,9 +780,11 @@ export type $CartPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     items: Prisma.$CartItemPayload<ExtArgs>[]
+    checkoutSessions: Prisma.$CheckoutSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    clientRequestId: string | null
     userId: string
     settlementMethod: $Enums.SettlementMethod
     status: $Enums.CartStatus
@@ -1047,6 +1186,7 @@ export interface Prisma__CartClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Cart$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Cart$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  checkoutSessions<T extends Prisma.Cart$checkoutSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Cart$checkoutSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheckoutSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1077,6 +1217,7 @@ export interface Prisma__CartClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface CartFieldRefs {
   readonly id: Prisma.FieldRef<"Cart", 'String'>
+  readonly clientRequestId: Prisma.FieldRef<"Cart", 'String'>
   readonly userId: Prisma.FieldRef<"Cart", 'String'>
   readonly settlementMethod: Prisma.FieldRef<"Cart", 'SettlementMethod'>
   readonly status: Prisma.FieldRef<"Cart", 'CartStatus'>
@@ -1499,6 +1640,30 @@ export type Cart$itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.CartItemScalarFieldEnum | Prisma.CartItemScalarFieldEnum[]
+}
+
+/**
+ * Cart.checkoutSessions
+ */
+export type Cart$checkoutSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CheckoutSession
+   */
+  select?: Prisma.CheckoutSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CheckoutSession
+   */
+  omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
+  where?: Prisma.CheckoutSessionWhereInput
+  orderBy?: Prisma.CheckoutSessionOrderByWithRelationInput | Prisma.CheckoutSessionOrderByWithRelationInput[]
+  cursor?: Prisma.CheckoutSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CheckoutSessionScalarFieldEnum | Prisma.CheckoutSessionScalarFieldEnum[]
 }
 
 /**

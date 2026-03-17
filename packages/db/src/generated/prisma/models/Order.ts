@@ -523,8 +523,6 @@ export type OrderOrderByWithRelationInput = {
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  stripeSessionId?: string
-  stripePaymentIntentId?: string
   orderIntentId?: string
   AND?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   OR?: Prisma.OrderWhereInput[]
@@ -555,6 +553,8 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   refundedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   refundAmount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stripeSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
+  stripePaymentIntentId?: Prisma.StringNullableFilter<"Order"> | string | null
   stripeChargeId?: Prisma.StringNullableFilter<"Order"> | string | null
   stripeRefundId?: Prisma.StringNullableFilter<"Order"> | string | null
   stripeBalanceTransactionId?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -567,7 +567,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   referralUse?: Prisma.XOR<Prisma.ReferralUseNullableScalarRelationFilter, Prisma.ReferralUseWhereInput> | null
   paymentEvents?: Prisma.PaymentEventListRelationFilter
   rotation?: Prisma.XOR<Prisma.WeeklyRotationScalarRelationFilter, Prisma.WeeklyRotationWhereInput>
-}, "id" | "stripeSessionId" | "stripePaymentIntentId" | "orderIntentId">
+}, "id" | "orderIntentId">
 
 export type OrderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

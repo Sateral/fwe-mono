@@ -107,6 +107,16 @@ export type FailedOrder = Prisma.FailedOrderModel
  */
 export type OrderIntent = Prisma.OrderIntentModel
 /**
+ * Model CheckoutSession
+ * 
+ */
+export type CheckoutSession = Prisma.CheckoutSessionModel
+/**
+ * Model CheckoutSessionItem
+ * 
+ */
+export type CheckoutSessionItem = Prisma.CheckoutSessionItemModel
+/**
  * Model PaymentEvent
  * 
  */

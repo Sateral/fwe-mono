@@ -135,9 +135,33 @@ export interface ApiOrder {
   };
 }
 
+export interface ApiOrderSession {
+  sessionId: string;
+  orders: ApiOrder[];
+}
+
 export interface ApiCart {
   id: string;
   settlementMethod: SettlementMethod;
+  status: CartStatus;
+  userId: string;
+  rotationId: string | null;
+  items: ApiCartItem[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ApiCartItem {
+  id: string;
+  mealId: string;
+  rotationId: string | null;
+  quantity: number;
+  unitPrice: number;
+  substitutions: { groupName: string; optionName: string }[] | null;
+  modifiers: { groupName: string; optionNames: string[] }[] | null;
+  proteinBoost: boolean;
+  notes: string | null;
+  meal: Pick<ApiMeal, "id" | "name" | "slug" | "imageUrl">;
 }
 
 export interface ApiFailedOrder {
