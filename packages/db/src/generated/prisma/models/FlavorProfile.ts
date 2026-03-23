@@ -44,6 +44,8 @@ export type FlavorProfileCountAggregateOutputType = {
   id: number
   userId: number
   goals: number
+  restrictions: number
+  preferences: number
   involvement: number
   createdAt: number
   updatedAt: number
@@ -71,6 +73,8 @@ export type FlavorProfileCountAggregateInputType = {
   id?: true
   userId?: true
   goals?: true
+  restrictions?: true
+  preferences?: true
   involvement?: true
   createdAt?: true
   updatedAt?: true
@@ -153,6 +157,8 @@ export type FlavorProfileGroupByOutputType = {
   id: string
   userId: string
   goals: string[]
+  restrictions: string[]
+  preferences: string[]
   involvement: $Enums.FlavorProfileInvolvement
   createdAt: Date
   updatedAt: Date
@@ -183,6 +189,8 @@ export type FlavorProfileWhereInput = {
   id?: Prisma.StringFilter<"FlavorProfile"> | string
   userId?: Prisma.StringFilter<"FlavorProfile"> | string
   goals?: Prisma.StringNullableListFilter<"FlavorProfile">
+  restrictions?: Prisma.StringNullableListFilter<"FlavorProfile">
+  preferences?: Prisma.StringNullableListFilter<"FlavorProfile">
   involvement?: Prisma.EnumFlavorProfileInvolvementFilter<"FlavorProfile"> | $Enums.FlavorProfileInvolvement
   createdAt?: Prisma.DateTimeFilter<"FlavorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FlavorProfile"> | Date | string
@@ -193,6 +201,8 @@ export type FlavorProfileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   goals?: Prisma.SortOrder
+  restrictions?: Prisma.SortOrder
+  preferences?: Prisma.SortOrder
   involvement?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -206,6 +216,8 @@ export type FlavorProfileWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.FlavorProfileWhereInput[]
   NOT?: Prisma.FlavorProfileWhereInput | Prisma.FlavorProfileWhereInput[]
   goals?: Prisma.StringNullableListFilter<"FlavorProfile">
+  restrictions?: Prisma.StringNullableListFilter<"FlavorProfile">
+  preferences?: Prisma.StringNullableListFilter<"FlavorProfile">
   involvement?: Prisma.EnumFlavorProfileInvolvementFilter<"FlavorProfile"> | $Enums.FlavorProfileInvolvement
   createdAt?: Prisma.DateTimeFilter<"FlavorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FlavorProfile"> | Date | string
@@ -216,6 +228,8 @@ export type FlavorProfileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   goals?: Prisma.SortOrder
+  restrictions?: Prisma.SortOrder
+  preferences?: Prisma.SortOrder
   involvement?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -231,6 +245,8 @@ export type FlavorProfileScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"FlavorProfile"> | string
   userId?: Prisma.StringWithAggregatesFilter<"FlavorProfile"> | string
   goals?: Prisma.StringNullableListFilter<"FlavorProfile">
+  restrictions?: Prisma.StringNullableListFilter<"FlavorProfile">
+  preferences?: Prisma.StringNullableListFilter<"FlavorProfile">
   involvement?: Prisma.EnumFlavorProfileInvolvementWithAggregatesFilter<"FlavorProfile"> | $Enums.FlavorProfileInvolvement
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FlavorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FlavorProfile"> | Date | string
@@ -239,6 +255,8 @@ export type FlavorProfileScalarWhereWithAggregatesInput = {
 export type FlavorProfileCreateInput = {
   id?: string
   goals?: Prisma.FlavorProfileCreategoalsInput | string[]
+  restrictions?: Prisma.FlavorProfileCreaterestrictionsInput | string[]
+  preferences?: Prisma.FlavorProfileCreatepreferencesInput | string[]
   involvement: $Enums.FlavorProfileInvolvement
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -249,6 +267,8 @@ export type FlavorProfileUncheckedCreateInput = {
   id?: string
   userId: string
   goals?: Prisma.FlavorProfileCreategoalsInput | string[]
+  restrictions?: Prisma.FlavorProfileCreaterestrictionsInput | string[]
+  preferences?: Prisma.FlavorProfileCreatepreferencesInput | string[]
   involvement: $Enums.FlavorProfileInvolvement
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -257,6 +277,8 @@ export type FlavorProfileUncheckedCreateInput = {
 export type FlavorProfileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   goals?: Prisma.FlavorProfileUpdategoalsInput | string[]
+  restrictions?: Prisma.FlavorProfileUpdaterestrictionsInput | string[]
+  preferences?: Prisma.FlavorProfileUpdatepreferencesInput | string[]
   involvement?: Prisma.EnumFlavorProfileInvolvementFieldUpdateOperationsInput | $Enums.FlavorProfileInvolvement
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -267,6 +289,8 @@ export type FlavorProfileUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   goals?: Prisma.FlavorProfileUpdategoalsInput | string[]
+  restrictions?: Prisma.FlavorProfileUpdaterestrictionsInput | string[]
+  preferences?: Prisma.FlavorProfileUpdatepreferencesInput | string[]
   involvement?: Prisma.EnumFlavorProfileInvolvementFieldUpdateOperationsInput | $Enums.FlavorProfileInvolvement
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -276,6 +300,8 @@ export type FlavorProfileCreateManyInput = {
   id?: string
   userId: string
   goals?: Prisma.FlavorProfileCreategoalsInput | string[]
+  restrictions?: Prisma.FlavorProfileCreaterestrictionsInput | string[]
+  preferences?: Prisma.FlavorProfileCreatepreferencesInput | string[]
   involvement: $Enums.FlavorProfileInvolvement
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -284,6 +310,8 @@ export type FlavorProfileCreateManyInput = {
 export type FlavorProfileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   goals?: Prisma.FlavorProfileUpdategoalsInput | string[]
+  restrictions?: Prisma.FlavorProfileUpdaterestrictionsInput | string[]
+  preferences?: Prisma.FlavorProfileUpdatepreferencesInput | string[]
   involvement?: Prisma.EnumFlavorProfileInvolvementFieldUpdateOperationsInput | $Enums.FlavorProfileInvolvement
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -293,6 +321,8 @@ export type FlavorProfileUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   goals?: Prisma.FlavorProfileUpdategoalsInput | string[]
+  restrictions?: Prisma.FlavorProfileUpdaterestrictionsInput | string[]
+  preferences?: Prisma.FlavorProfileUpdatepreferencesInput | string[]
   involvement?: Prisma.EnumFlavorProfileInvolvementFieldUpdateOperationsInput | $Enums.FlavorProfileInvolvement
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -315,6 +345,8 @@ export type FlavorProfileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   goals?: Prisma.SortOrder
+  restrictions?: Prisma.SortOrder
+  preferences?: Prisma.SortOrder
   involvement?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -372,7 +404,25 @@ export type FlavorProfileCreategoalsInput = {
   set: string[]
 }
 
+export type FlavorProfileCreaterestrictionsInput = {
+  set: string[]
+}
+
+export type FlavorProfileCreatepreferencesInput = {
+  set: string[]
+}
+
 export type FlavorProfileUpdategoalsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type FlavorProfileUpdaterestrictionsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type FlavorProfileUpdatepreferencesInput = {
   set?: string[]
   push?: string | string[]
 }
@@ -384,6 +434,8 @@ export type EnumFlavorProfileInvolvementFieldUpdateOperationsInput = {
 export type FlavorProfileCreateWithoutUserInput = {
   id?: string
   goals?: Prisma.FlavorProfileCreategoalsInput | string[]
+  restrictions?: Prisma.FlavorProfileCreaterestrictionsInput | string[]
+  preferences?: Prisma.FlavorProfileCreatepreferencesInput | string[]
   involvement: $Enums.FlavorProfileInvolvement
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -392,6 +444,8 @@ export type FlavorProfileCreateWithoutUserInput = {
 export type FlavorProfileUncheckedCreateWithoutUserInput = {
   id?: string
   goals?: Prisma.FlavorProfileCreategoalsInput | string[]
+  restrictions?: Prisma.FlavorProfileCreaterestrictionsInput | string[]
+  preferences?: Prisma.FlavorProfileCreatepreferencesInput | string[]
   involvement: $Enums.FlavorProfileInvolvement
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -416,6 +470,8 @@ export type FlavorProfileUpdateToOneWithWhereWithoutUserInput = {
 export type FlavorProfileUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   goals?: Prisma.FlavorProfileUpdategoalsInput | string[]
+  restrictions?: Prisma.FlavorProfileUpdaterestrictionsInput | string[]
+  preferences?: Prisma.FlavorProfileUpdatepreferencesInput | string[]
   involvement?: Prisma.EnumFlavorProfileInvolvementFieldUpdateOperationsInput | $Enums.FlavorProfileInvolvement
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -424,6 +480,8 @@ export type FlavorProfileUpdateWithoutUserInput = {
 export type FlavorProfileUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   goals?: Prisma.FlavorProfileUpdategoalsInput | string[]
+  restrictions?: Prisma.FlavorProfileUpdaterestrictionsInput | string[]
+  preferences?: Prisma.FlavorProfileUpdatepreferencesInput | string[]
   involvement?: Prisma.EnumFlavorProfileInvolvementFieldUpdateOperationsInput | $Enums.FlavorProfileInvolvement
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -435,6 +493,8 @@ export type FlavorProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   id?: boolean
   userId?: boolean
   goals?: boolean
+  restrictions?: boolean
+  preferences?: boolean
   involvement?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -445,6 +505,8 @@ export type FlavorProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   userId?: boolean
   goals?: boolean
+  restrictions?: boolean
+  preferences?: boolean
   involvement?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -455,6 +517,8 @@ export type FlavorProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   userId?: boolean
   goals?: boolean
+  restrictions?: boolean
+  preferences?: boolean
   involvement?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -465,12 +529,14 @@ export type FlavorProfileSelectScalar = {
   id?: boolean
   userId?: boolean
   goals?: boolean
+  restrictions?: boolean
+  preferences?: boolean
   involvement?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type FlavorProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "goals" | "involvement" | "createdAt" | "updatedAt", ExtArgs["result"]["flavorProfile"]>
+export type FlavorProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "goals" | "restrictions" | "preferences" | "involvement" | "createdAt" | "updatedAt", ExtArgs["result"]["flavorProfile"]>
 export type FlavorProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -490,6 +556,8 @@ export type $FlavorProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     id: string
     userId: string
     goals: string[]
+    restrictions: string[]
+    preferences: string[]
     involvement: $Enums.FlavorProfileInvolvement
     createdAt: Date
     updatedAt: Date
@@ -920,6 +988,8 @@ export interface FlavorProfileFieldRefs {
   readonly id: Prisma.FieldRef<"FlavorProfile", 'String'>
   readonly userId: Prisma.FieldRef<"FlavorProfile", 'String'>
   readonly goals: Prisma.FieldRef<"FlavorProfile", 'String[]'>
+  readonly restrictions: Prisma.FieldRef<"FlavorProfile", 'String[]'>
+  readonly preferences: Prisma.FieldRef<"FlavorProfile", 'String[]'>
   readonly involvement: Prisma.FieldRef<"FlavorProfile", 'FlavorProfileInvolvement'>
   readonly createdAt: Prisma.FieldRef<"FlavorProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FlavorProfile", 'DateTime'>

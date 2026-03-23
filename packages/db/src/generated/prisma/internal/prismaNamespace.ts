@@ -2697,6 +2697,7 @@ export const UserScalarFieldEnum = {
   mergedIntoUserId: 'mergedIntoUserId',
   mergedAt: 'mergedAt',
   profileComplete: 'profileComplete',
+  onboardingStatus: 'onboardingStatus',
   phone: 'phone',
   deliveryAddress: 'deliveryAddress',
   deliveryCity: 'deliveryCity',
@@ -2756,6 +2757,8 @@ export const FlavorProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   goals: 'goals',
+  restrictions: 'restrictions',
+  preferences: 'preferences',
   involvement: 'involvement',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -3130,6 +3133,20 @@ export type EnumGuestSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'GuestSource[]'
  */
 export type ListEnumGuestSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GuestSource[]'>
+    
+
+
+/**
+ * Reference to a field of type 'OnboardingStatus'
+ */
+export type EnumOnboardingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OnboardingStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'OnboardingStatus[]'
+ */
+export type ListEnumOnboardingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OnboardingStatus[]'>
     
 
 

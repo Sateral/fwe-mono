@@ -260,6 +260,12 @@ enum FlavorProfileInvolvement {
   HANDS_OFF
 }
 
+enum OnboardingStatus {
+  PENDING
+  SKIPPED
+  COMPLETED
+}
+
 enum ReferralCodeStatus {
   ACTIVE
   DISABLED
@@ -567,7 +573,8 @@ model User {
   mergedAt          DateTime?
 
   // Profile completion for onboarding
-  profileComplete  Boolean  @default(false)
+  profileComplete  Boolean          @default(false)
+  onboardingStatus OnboardingStatus @default(PENDING)
   phone            String?
   deliveryAddress  String?
   deliveryCity     String?
@@ -635,6 +642,8 @@ model FlavorProfile {
   userId      String                     @unique
   user        User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
   goals       String[]
+  restrictions String[]                  @default([])
+  preferences  String[]                  @default([])
   involvement FlavorProfileInvolvement
   createdAt   DateTime                   @default(now())
   updatedAt   DateTime                   @updatedAt

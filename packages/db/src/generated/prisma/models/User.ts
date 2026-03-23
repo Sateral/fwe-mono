@@ -40,6 +40,7 @@ export type UserMinAggregateOutputType = {
   mergedIntoUserId: string | null
   mergedAt: Date | null
   profileComplete: boolean | null
+  onboardingStatus: $Enums.OnboardingStatus | null
   phone: string | null
   deliveryAddress: string | null
   deliveryCity: string | null
@@ -66,6 +67,7 @@ export type UserMaxAggregateOutputType = {
   mergedIntoUserId: string | null
   mergedAt: Date | null
   profileComplete: boolean | null
+  onboardingStatus: $Enums.OnboardingStatus | null
   phone: string | null
   deliveryAddress: string | null
   deliveryCity: string | null
@@ -93,6 +95,7 @@ export type UserCountAggregateOutputType = {
   mergedIntoUserId: number
   mergedAt: number
   profileComplete: number
+  onboardingStatus: number
   phone: number
   deliveryAddress: number
   deliveryCity: number
@@ -121,6 +124,7 @@ export type UserMinAggregateInputType = {
   mergedIntoUserId?: true
   mergedAt?: true
   profileComplete?: true
+  onboardingStatus?: true
   phone?: true
   deliveryAddress?: true
   deliveryCity?: true
@@ -147,6 +151,7 @@ export type UserMaxAggregateInputType = {
   mergedIntoUserId?: true
   mergedAt?: true
   profileComplete?: true
+  onboardingStatus?: true
   phone?: true
   deliveryAddress?: true
   deliveryCity?: true
@@ -174,6 +179,7 @@ export type UserCountAggregateInputType = {
   mergedIntoUserId?: true
   mergedAt?: true
   profileComplete?: true
+  onboardingStatus?: true
   phone?: true
   deliveryAddress?: true
   deliveryCity?: true
@@ -274,6 +280,7 @@ export type UserGroupByOutputType = {
   mergedIntoUserId: string | null
   mergedAt: Date | null
   profileComplete: boolean
+  onboardingStatus: $Enums.OnboardingStatus
   phone: string | null
   deliveryAddress: string | null
   deliveryCity: string | null
@@ -322,6 +329,7 @@ export type UserWhereInput = {
   mergedIntoUserId?: Prisma.StringNullableFilter<"User"> | string | null
   mergedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"User"> | $Enums.OnboardingStatus
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   deliveryAddress?: Prisma.StringNullableFilter<"User"> | string | null
   deliveryCity?: Prisma.StringNullableFilter<"User"> | string | null
@@ -361,6 +369,7 @@ export type UserOrderByWithRelationInput = {
   mergedIntoUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   mergedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
+  onboardingStatus?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryCity?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -403,6 +412,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   mergedIntoUserId?: Prisma.StringNullableFilter<"User"> | string | null
   mergedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"User"> | $Enums.OnboardingStatus
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   deliveryAddress?: Prisma.StringNullableFilter<"User"> | string | null
   deliveryCity?: Prisma.StringNullableFilter<"User"> | string | null
@@ -442,6 +452,7 @@ export type UserOrderByWithAggregationInput = {
   mergedIntoUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   mergedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
+  onboardingStatus?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryCity?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -475,6 +486,7 @@ export type UserScalarWhereWithAggregatesInput = {
   mergedIntoUserId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   mergedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   profileComplete?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusWithAggregatesFilter<"User"> | $Enums.OnboardingStatus
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   deliveryAddress?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   deliveryCity?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -501,6 +513,7 @@ export type UserCreateInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -540,6 +553,7 @@ export type UserUncheckedCreateInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -577,6 +591,7 @@ export type UserUpdateInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -616,6 +631,7 @@ export type UserUncheckedUpdateInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -654,6 +670,7 @@ export type UserCreateManyInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -680,6 +697,7 @@ export type UserUpdateManyMutationInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -707,6 +725,7 @@ export type UserUncheckedUpdateManyInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -754,6 +773,7 @@ export type UserCountOrderByAggregateInput = {
   mergedIntoUserId?: Prisma.SortOrder
   mergedAt?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
+  onboardingStatus?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
   deliveryCity?: Prisma.SortOrder
@@ -780,6 +800,7 @@ export type UserMaxOrderByAggregateInput = {
   mergedIntoUserId?: Prisma.SortOrder
   mergedAt?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
+  onboardingStatus?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
   deliveryCity?: Prisma.SortOrder
@@ -806,6 +827,7 @@ export type UserMinOrderByAggregateInput = {
   mergedIntoUserId?: Prisma.SortOrder
   mergedAt?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
+  onboardingStatus?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
   deliveryCity?: Prisma.SortOrder
@@ -898,6 +920,10 @@ export type EnumRoleFieldUpdateOperationsInput = {
 
 export type NullableEnumGuestSourceFieldUpdateOperationsInput = {
   set?: $Enums.GuestSource | null
+}
+
+export type EnumOnboardingStatusFieldUpdateOperationsInput = {
+  set?: $Enums.OnboardingStatus
 }
 
 export type NullableBoolFieldUpdateOperationsInput = {
@@ -1042,6 +1068,7 @@ export type UserCreateWithoutOrdersInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1080,6 +1107,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1132,6 +1160,7 @@ export type UserUpdateWithoutOrdersInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1170,6 +1199,7 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1206,6 +1236,7 @@ export type UserCreateWithoutCartsInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1244,6 +1275,7 @@ export type UserUncheckedCreateWithoutCartsInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1296,6 +1328,7 @@ export type UserUpdateWithoutCartsInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1334,6 +1367,7 @@ export type UserUncheckedUpdateWithoutCartsInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1370,6 +1404,7 @@ export type UserCreateWithoutOrderIntentsInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1408,6 +1443,7 @@ export type UserUncheckedCreateWithoutOrderIntentsInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1460,6 +1496,7 @@ export type UserUpdateWithoutOrderIntentsInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1498,6 +1535,7 @@ export type UserUncheckedUpdateWithoutOrderIntentsInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1534,6 +1572,7 @@ export type UserCreateWithoutCheckoutSessionsInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1572,6 +1611,7 @@ export type UserUncheckedCreateWithoutCheckoutSessionsInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1624,6 +1664,7 @@ export type UserUpdateWithoutCheckoutSessionsInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1662,6 +1703,7 @@ export type UserUncheckedUpdateWithoutCheckoutSessionsInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1698,6 +1740,7 @@ export type UserCreateWithoutMergedGuestUsersInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1736,6 +1779,7 @@ export type UserUncheckedCreateWithoutMergedGuestUsersInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1777,6 +1821,7 @@ export type UserCreateWithoutMergedIntoUserInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1814,6 +1859,7 @@ export type UserUncheckedCreateWithoutMergedIntoUserInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -1872,6 +1918,7 @@ export type UserUpdateWithoutMergedGuestUsersInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1910,6 +1957,7 @@ export type UserUncheckedUpdateWithoutMergedGuestUsersInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1966,6 +2014,7 @@ export type UserScalarWhereInput = {
   mergedIntoUserId?: Prisma.StringNullableFilter<"User"> | string | null
   mergedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"User"> | $Enums.OnboardingStatus
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   deliveryAddress?: Prisma.StringNullableFilter<"User"> | string | null
   deliveryCity?: Prisma.StringNullableFilter<"User"> | string | null
@@ -1992,6 +2041,7 @@ export type UserCreateWithoutMealPlanInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2030,6 +2080,7 @@ export type UserUncheckedCreateWithoutMealPlanInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2082,6 +2133,7 @@ export type UserUpdateWithoutMealPlanInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2120,6 +2172,7 @@ export type UserUncheckedUpdateWithoutMealPlanInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2156,6 +2209,7 @@ export type UserCreateWithoutFlavorProfileInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2194,6 +2248,7 @@ export type UserUncheckedCreateWithoutFlavorProfileInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2246,6 +2301,7 @@ export type UserUpdateWithoutFlavorProfileInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2284,6 +2340,7 @@ export type UserUncheckedUpdateWithoutFlavorProfileInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2320,6 +2377,7 @@ export type UserCreateWithoutOwnedReferralCodeInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2358,6 +2416,7 @@ export type UserUncheckedCreateWithoutOwnedReferralCodeInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2410,6 +2469,7 @@ export type UserUpdateWithoutOwnedReferralCodeInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2448,6 +2508,7 @@ export type UserUncheckedUpdateWithoutOwnedReferralCodeInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2484,6 +2545,7 @@ export type UserCreateWithoutReferralUseInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2522,6 +2584,7 @@ export type UserUncheckedCreateWithoutReferralUseInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2574,6 +2637,7 @@ export type UserUpdateWithoutReferralUseInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2612,6 +2676,7 @@ export type UserUncheckedUpdateWithoutReferralUseInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2648,6 +2713,7 @@ export type UserCreateWithoutSessionsInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2686,6 +2752,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2738,6 +2805,7 @@ export type UserUpdateWithoutSessionsInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2776,6 +2844,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2812,6 +2881,7 @@ export type UserCreateWithoutAccountsInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2850,6 +2920,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   mergedIntoUserId?: string | null
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -2902,6 +2973,7 @@ export type UserUpdateWithoutAccountsInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2940,6 +3012,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2976,6 +3049,7 @@ export type UserCreateManyMergedIntoUserInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Date | string | null
   profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
   phone?: string | null
   deliveryAddress?: string | null
   deliveryCity?: string | null
@@ -3002,6 +3076,7 @@ export type UserUpdateWithoutMergedIntoUserInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3039,6 +3114,7 @@ export type UserUncheckedUpdateWithoutMergedIntoUserInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3076,6 +3152,7 @@ export type UserUncheckedUpdateManyWithoutMergedIntoUserInput = {
   guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3188,6 +3265,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   mergedIntoUserId?: boolean
   mergedAt?: boolean
   profileComplete?: boolean
+  onboardingStatus?: boolean
   phone?: boolean
   deliveryAddress?: boolean
   deliveryCity?: boolean
@@ -3228,6 +3306,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   mergedIntoUserId?: boolean
   mergedAt?: boolean
   profileComplete?: boolean
+  onboardingStatus?: boolean
   phone?: boolean
   deliveryAddress?: boolean
   deliveryCity?: boolean
@@ -3256,6 +3335,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   mergedIntoUserId?: boolean
   mergedAt?: boolean
   profileComplete?: boolean
+  onboardingStatus?: boolean
   phone?: boolean
   deliveryAddress?: boolean
   deliveryCity?: boolean
@@ -3284,6 +3364,7 @@ export type UserSelectScalar = {
   mergedIntoUserId?: boolean
   mergedAt?: boolean
   profileComplete?: boolean
+  onboardingStatus?: boolean
   phone?: boolean
   deliveryAddress?: boolean
   deliveryCity?: boolean
@@ -3294,7 +3375,7 @@ export type UserSelectScalar = {
   banExpires?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "role" | "createdAt" | "updatedAt" | "emailVerified" | "image" | "stripeCustomerId" | "isGuest" | "guestSource" | "guestSourceId" | "guestMetadata" | "mergedIntoUserId" | "mergedAt" | "profileComplete" | "phone" | "deliveryAddress" | "deliveryCity" | "deliveryPostal" | "deliveryNotes" | "banned" | "banReason" | "banExpires", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "role" | "createdAt" | "updatedAt" | "emailVerified" | "image" | "stripeCustomerId" | "isGuest" | "guestSource" | "guestSourceId" | "guestMetadata" | "mergedIntoUserId" | "mergedAt" | "profileComplete" | "onboardingStatus" | "phone" | "deliveryAddress" | "deliveryCity" | "deliveryPostal" | "deliveryNotes" | "banned" | "banReason" | "banExpires", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -3350,6 +3431,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     mergedIntoUserId: string | null
     mergedAt: Date | null
     profileComplete: boolean
+    onboardingStatus: $Enums.OnboardingStatus
     phone: string | null
     deliveryAddress: string | null
     deliveryCity: string | null
@@ -3809,6 +3891,7 @@ export interface UserFieldRefs {
   readonly mergedIntoUserId: Prisma.FieldRef<"User", 'String'>
   readonly mergedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly profileComplete: Prisma.FieldRef<"User", 'Boolean'>
+  readonly onboardingStatus: Prisma.FieldRef<"User", 'OnboardingStatus'>
   readonly phone: Prisma.FieldRef<"User", 'String'>
   readonly deliveryAddress: Prisma.FieldRef<"User", 'String'>
   readonly deliveryCity: Prisma.FieldRef<"User", 'String'>

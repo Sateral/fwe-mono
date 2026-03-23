@@ -117,10 +117,12 @@ export default async function ProfilePage() {
             deliveryCity: user?.deliveryCity ?? "",
             deliveryPostal: user?.deliveryPostal ?? "",
             deliveryNotes: user?.deliveryNotes ?? "",
+            flavorProfile: user?.flavorProfile ?? undefined,
           }}
           submitLabel="Save Changes"
           successMessage="Profile updated!"
           onSuccessRedirect={null}
+          showFlavorProfileSection
         />
       </div>
     </main>

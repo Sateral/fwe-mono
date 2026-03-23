@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import type { FlavorProfile } from "@fwe/validators";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -51,16 +52,40 @@ const formSchema = z.object({
   deliveryCity: optionalMinLength(2, "City is required"),
   deliveryPostal: optionalMinLength(3, "Postal code is required"),
   deliveryNotes: z.string().trim().optional(),
+  goalsInput: z.string().trim().optional(),
+  restrictionsInput: z.string().trim().optional(),
+  preferencesInput: z.string().trim().optional(),
+  involvement: z.enum(["HANDS_ON", "HANDS_OFF"]),
 });
 
 type ProfileFormValues = z.infer<typeof formSchema>;
 
 interface ProfileSetupFormProps extends React.ComponentProps<"div"> {
   defaultName?: string;
-  defaultValues?: Partial<ProfileFormValues>;
+  defaultValues?: Partial<Omit<ProfileFormValues, "goalsInput" | "restrictionsInput" | "preferencesInput" | "involvement">> & {
+    flavorProfile?: FlavorProfile;
+  };
   submitLabel?: string;
   successMessage?: string;
   onSuccessRedirect?: string | null;
+  showFlavorProfileSection?: boolean;
+  startInEditingMode?: boolean;
+  showEditToggle?: boolean;
+  allowSkip?: boolean;
+  skipHref?: string;
+  heading?: string;
+  description?: string;
+}
+
+function joinValues(values?: string[]) {
+  return values?.join(", ") ?? "";
+}
+
+function splitValues(value?: string) {
+  return (value ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 const ReadonlyField = ({
@@ -90,10 +115,17 @@ export function ProfileSetupForm({
   submitLabel = "Complete Setup",
   successMessage = "Profile setup complete!",
   onSuccessRedirect = "/menu",
+  showFlavorProfileSection = false,
+  startInEditingMode = false,
+  showEditToggle = true,
+  allowSkip = false,
+  skipHref = "/menu",
+  heading = "Profile Details",
+  description = "Review your personal info and delivery preferences.",
   ...props
 }: ProfileSetupFormProps) {
   const [isPending, setIsPending] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(startInEditingMode);
   const router = useRouter();
   const { data: session } = useSession();
   const resolvedDefaults: ProfileFormValues = useMemo(
@@ -104,6 +136,10 @@ export function ProfileSetupForm({
       deliveryCity: defaultValues?.deliveryCity ?? "",
       deliveryPostal: defaultValues?.deliveryPostal ?? "",
       deliveryNotes: defaultValues?.deliveryNotes ?? "",
+      goalsInput: joinValues(defaultValues?.flavorProfile?.goals),
+      restrictionsInput: joinValues(defaultValues?.flavorProfile?.restrictions),
+      preferencesInput: joinValues(defaultValues?.flavorProfile?.preferences),
+      involvement: defaultValues?.flavorProfile?.involvement ?? "HANDS_ON",
     }),
     [defaultValues, defaultName]
   );
@@ -117,6 +153,26 @@ export function ProfileSetupForm({
     if (!defaultValues) return;
     form.reset(resolvedDefaults);
   }, [defaultValues, resolvedDefaults, form]);
+
+  const persistProfile = async (payload: Record<string, unknown>) => {
+    if (!session?.user?.id) {
+      toast.error("Please sign in to continue");
+      return false;
+    }
+
+    const response = await fetch(`/api/user/${session.user.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to update profile");
+    }
+
+    return true;
+  };
 
   const handleSubmit = async (data: ProfileFormValues) => {
     if (!session?.user?.id) {
@@ -137,18 +193,18 @@ export function ProfileSetupForm({
         deliveryCity: toNull(data.deliveryCity),
         deliveryPostal: toNull(data.deliveryPostal),
         deliveryNotes: toNull(data.deliveryNotes),
+        flavorProfile: showFlavorProfileSection
+          ? {
+              goals: splitValues(data.goalsInput),
+              restrictions: splitValues(data.restrictionsInput),
+              preferences: splitValues(data.preferencesInput),
+              involvement: data.involvement,
+            }
+          : undefined,
+        onboardingStatus: showFlavorProfileSection ? "COMPLETED" : undefined,
       };
 
-      const response = await fetch(`/api/user/${session.user.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to update profile");
-      }
+      await persistProfile(payload);
 
       toast.success(successMessage);
       setIsEditing(false);
@@ -166,28 +222,28 @@ export function ProfileSetupForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold">Profile Details</h2>
-          <p className="text-sm text-muted-foreground">
-            Review your personal info and delivery preferences.
-          </p>
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-2xl font-semibold">{heading}</h2>
+            <p className="text-sm text-muted-foreground">{description}</p>
+          </div>
+          {showEditToggle && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                if (isEditing) {
+                  form.reset(resolvedDefaults);
+                }
+                setIsEditing((prev) => !prev);
+              }}
+              className="gap-2"
+            >
+              <Pencil className="h-4 w-4" />
+              {isEditing ? "Cancel editing" : "Edit profile"}
+            </Button>
+          )}
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => {
-            if (isEditing) {
-              form.reset(resolvedDefaults);
-            }
-            setIsEditing((prev) => !prev);
-          }}
-          className="gap-2"
-        >
-          <Pencil className="h-4 w-4" />
-          {isEditing ? "Cancel editing" : "Edit profile"}
-        </Button>
-      </div>
 
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="grid gap-6">
@@ -411,20 +467,196 @@ export function ProfileSetupForm({
             </CardContent>
           </Card>
 
+          {showFlavorProfileSection && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Flavor Profile</CardTitle>
+                <CardDescription>
+                  Share your goals, preferences, and how hands-on you want to be.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isEditing ? (
+                  <FieldGroup>
+                    <Controller
+                      name="goalsInput"
+                      disabled={isPending}
+                      control={form.control}
+                      render={({ field }) => (
+                        <Field>
+                          <FieldLabel htmlFor="goalsInput">Goals</FieldLabel>
+                          <Textarea
+                            {...field}
+                            id="goalsInput"
+                            placeholder="fat-loss, save-time, muscle-gain"
+                            rows={3}
+                            className="min-h-[96px] resize-none border-border/70 bg-muted/40"
+                          />
+                          <FieldDescription>
+                            Separate each goal with a comma.
+                          </FieldDescription>
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="restrictionsInput"
+                      disabled={isPending}
+                      control={form.control}
+                      render={({ field }) => (
+                        <Field>
+                          <FieldLabel htmlFor="restrictionsInput">
+                            Restrictions
+                          </FieldLabel>
+                          <Textarea
+                            {...field}
+                            id="restrictionsInput"
+                            placeholder="shellfish, dairy, gluten"
+                            rows={3}
+                            className="min-h-[96px] resize-none border-border/70 bg-muted/40"
+                          />
+                          <FieldDescription>
+                            Allergies, dislikes, or ingredients to avoid.
+                          </FieldDescription>
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="preferencesInput"
+                      disabled={isPending}
+                      control={form.control}
+                      render={({ field }) => (
+                        <Field>
+                          <FieldLabel htmlFor="preferencesInput">
+                            Preferences
+                          </FieldLabel>
+                          <Textarea
+                            {...field}
+                            id="preferencesInput"
+                            placeholder="high-protein, spicy, extra veggies"
+                            rows={3}
+                            className="min-h-[96px] resize-none border-border/70 bg-muted/40"
+                          />
+                          <FieldDescription>
+                            Separate each preference with a comma.
+                          </FieldDescription>
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="involvement"
+                      disabled={isPending}
+                      control={form.control}
+                      render={({ field }) => (
+                        <Field>
+                          <FieldLabel>Involvement</FieldLabel>
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <button
+                              type="button"
+                              className={cn(
+                                "rounded-lg border px-4 py-3 text-left transition",
+                                field.value === "HANDS_ON"
+                                  ? "border-primary bg-primary/5 text-foreground"
+                                  : "border-border/60 bg-muted/20 text-muted-foreground",
+                              )}
+                              onClick={() => field.onChange("HANDS_ON")}
+                            >
+                              <div className="font-medium">Hands On</div>
+                              <div className="mt-1 text-sm">
+                                I want to choose meals and customize my own order.
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              className={cn(
+                                "rounded-lg border px-4 py-3 text-left transition",
+                                field.value === "HANDS_OFF"
+                                  ? "border-primary bg-primary/5 text-foreground"
+                                  : "border-border/60 bg-muted/20 text-muted-foreground",
+                              )}
+                              onClick={() => field.onChange("HANDS_OFF")}
+                            >
+                              <div className="font-medium">Hands Off</div>
+                              <div className="mt-1 text-sm">
+                                I want recommendations based on my profile.
+                              </div>
+                            </button>
+                          </div>
+                        </Field>
+                      )}
+                    />
+                  </FieldGroup>
+                ) : (
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <ReadonlyField
+                      label="Goals"
+                      value={form.getValues("goalsInput")}
+                    />
+                    <ReadonlyField
+                      label="Restrictions"
+                      value={form.getValues("restrictionsInput")}
+                    />
+                    <ReadonlyField
+                      label="Preferences"
+                      value={form.getValues("preferencesInput")}
+                    />
+                    <ReadonlyField
+                      label="Involvement"
+                      value={
+                        form.getValues("involvement") === "HANDS_OFF"
+                          ? "Hands Off"
+                          : "Hands On"
+                      }
+                    />
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           {isEditing && (
             <Field orientation="vertical" className="pt-2">
-              <Button type="submit" disabled={isPending} size="lg">
-                {isPending ? (
-                  <>
-                    <Spinner /> Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4" />
-                    {submitLabel}
-                  </>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button type="submit" disabled={isPending} size="lg">
+                  {isPending ? (
+                    <>
+                      <Spinner /> Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4" />
+                      {submitLabel}
+                    </>
+                  )}
+                </Button>
+                {allowSkip && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="lg"
+                    disabled={isPending}
+                    onClick={async () => {
+                      try {
+                        setIsPending(true);
+                        await persistProfile({ onboardingStatus: "SKIPPED" });
+                        router.push(skipHref);
+                      } catch (error) {
+                        toast.error(
+                          error instanceof Error
+                            ? error.message
+                            : "Failed to skip onboarding",
+                        );
+                      } finally {
+                        setIsPending(false);
+                      }
+                    }}
+                  >
+                    Skip for now
+                  </Button>
                 )}
-              </Button>
+              </div>
             </Field>
           )}
         </div>

@@ -4,6 +4,7 @@ import type {
   FlavorProfile,
   FlavorProfileInvolvement,
   MealPlan,
+  OnboardingStatus,
   SettlementMethod,
 } from "@fwe/validators";
 
@@ -196,6 +197,7 @@ export interface ApiUser {
   deliveryPostal: string | null;
   deliveryNotes: string | null;
   profileComplete: boolean;
+  onboardingStatus?: OnboardingStatus;
   guestMergeRequiresReview?: boolean;
   mealPlan?: ApiMealPlan | null;
   flavorProfile?: ApiFlavorProfile | null;

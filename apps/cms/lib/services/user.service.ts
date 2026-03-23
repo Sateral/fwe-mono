@@ -11,6 +11,9 @@ export const userService = {
   async findById(id: string) {
     return await prisma.user.findUnique({
       where: { id },
+      include: {
+        flavorProfile: true,
+      },
     });
   },
 
@@ -20,6 +23,9 @@ export const userService = {
 
     const user = await prisma.user.findUnique({
       where: { id },
+      include: {
+        flavorProfile: true,
+      },
     });
 
     return {

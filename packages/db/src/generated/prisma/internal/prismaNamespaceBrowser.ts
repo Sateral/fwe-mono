@@ -400,6 +400,7 @@ export const UserScalarFieldEnum = {
   mergedIntoUserId: 'mergedIntoUserId',
   mergedAt: 'mergedAt',
   profileComplete: 'profileComplete',
+  onboardingStatus: 'onboardingStatus',
   phone: 'phone',
   deliveryAddress: 'deliveryAddress',
   deliveryCity: 'deliveryCity',
@@ -459,6 +460,8 @@ export const FlavorProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   goals: 'goals',
+  restrictions: 'restrictions',
+  preferences: 'preferences',
   involvement: 'involvement',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

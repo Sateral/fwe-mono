@@ -14,6 +14,8 @@ type IsEqual<A, B> = (<T>() => T extends A ? 1 : 2) extends <T>() =>
 
 const flavorProfile: ApiFlavorProfile = {
   goals: ["High protein"],
+  restrictions: ["Shellfish"],
+  preferences: ["Spicy"],
   involvement: "HANDS_ON",
 };
 
@@ -33,6 +35,7 @@ const user: ApiUser = {
   deliveryPostal: null,
   deliveryNotes: null,
   profileComplete: false,
+  onboardingStatus: "PENDING",
   mealPlan,
   flavorProfile,
   referralCode: null,

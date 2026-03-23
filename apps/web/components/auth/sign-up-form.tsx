@@ -74,7 +74,7 @@ export function SignUpForm({
         <CardHeader>
           <CardTitle>Create an account</CardTitle>
           <CardDescription>
-            Enter your details below to create your account
+            Enter your details below to create your account and continue to onboarding
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -147,9 +147,9 @@ export function SignUpForm({
                       <Spinner /> Creating account...
                     </>
                   ) : (
-                    "Sign Up"
-                  )}
-                </Button>
+                      "Sign Up and Continue"
+                    )}
+                  </Button>
                 <Button variant="outline" type="button" disabled={isPending}>
                   Sign Up with Google
                 </Button>

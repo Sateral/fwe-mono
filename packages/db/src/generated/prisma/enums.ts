@@ -133,6 +133,15 @@ export const FlavorProfileInvolvement = {
 export type FlavorProfileInvolvement = (typeof FlavorProfileInvolvement)[keyof typeof FlavorProfileInvolvement]
 
 
+export const OnboardingStatus = {
+  PENDING: 'PENDING',
+  SKIPPED: 'SKIPPED',
+  COMPLETED: 'COMPLETED'
+} as const
+
+export type OnboardingStatus = (typeof OnboardingStatus)[keyof typeof OnboardingStatus]
+
+
 export const ReferralCodeStatus = {
   ACTIVE: 'ACTIVE',
   DISABLED: 'DISABLED'

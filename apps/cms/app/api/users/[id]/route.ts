@@ -2,6 +2,7 @@ import { updateProfileRequestSchema } from "@fwe/validators";
 import { NextRequest, NextResponse } from "next/server";
 
 import { requireInternalAuth } from "@/lib/api-auth";
+import { flavorProfileService } from "@/lib/services/flavor-profile.service";
 import { userService } from "@/lib/services/user.service";
 
 /**
@@ -37,7 +38,9 @@ export async function GET(
       deliveryPostal: user.deliveryPostal,
       deliveryNotes: user.deliveryNotes,
       profileComplete: user.profileComplete,
+      onboardingStatus: user.onboardingStatus,
       guestMergeRequiresReview,
+      flavorProfile: user.flavorProfile,
     });
   } catch (error) {
     console.error("[API] Error fetching user:", error);
@@ -85,6 +88,8 @@ export async function PATCH(
       deliveryCity,
       deliveryPostal,
       deliveryNotes,
+      flavorProfile,
+      onboardingStatus,
     } = validation.data;
 
     const updatedUser = await userService.updateProfile(id, {
@@ -95,6 +100,16 @@ export async function PATCH(
       deliveryPostal,
       deliveryNotes,
     });
+
+    const savedFlavorProfile = flavorProfile
+      ? await flavorProfileService.upsertProfile(id, flavorProfile)
+      : (await userService.findById(id))?.flavorProfile ?? null;
+
+    if (onboardingStatus === "SKIPPED" && !flavorProfile) {
+      await flavorProfileService.markOnboardingSkipped(id);
+    }
+
+    const refreshedUser = await userService.findById(id);
 
     return NextResponse.json({
       id: updatedUser.id,
@@ -107,6 +122,8 @@ export async function PATCH(
       deliveryPostal: updatedUser.deliveryPostal,
       deliveryNotes: updatedUser.deliveryNotes,
       profileComplete: updatedUser.profileComplete,
+      onboardingStatus: refreshedUser?.onboardingStatus ?? updatedUser.onboardingStatus,
+      flavorProfile: savedFlavorProfile,
     });
   } catch (error) {
     console.error("[API] Error updating user profile:", error);
