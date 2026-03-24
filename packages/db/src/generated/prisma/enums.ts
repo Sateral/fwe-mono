@@ -75,6 +75,83 @@ export const DeliveryMethod = {
 export type DeliveryMethod = (typeof DeliveryMethod)[keyof typeof DeliveryMethod]
 
 
+export const SettlementMethod = {
+  STRIPE: 'STRIPE',
+  MEAL_PLAN_CREDITS: 'MEAL_PLAN_CREDITS'
+} as const
+
+export type SettlementMethod = (typeof SettlementMethod)[keyof typeof SettlementMethod]
+
+
+export const CartStatus = {
+  ACTIVE: 'ACTIVE',
+  CHECKED_OUT: 'CHECKED_OUT',
+  ABANDONED: 'ABANDONED',
+  MERGED: 'MERGED'
+} as const
+
+export type CartStatus = (typeof CartStatus)[keyof typeof CartStatus]
+
+
+export const GuestSource = {
+  CHECKOUT: 'CHECKOUT',
+  MANUAL: 'MANUAL',
+  IMPORT: 'IMPORT',
+  OTHER: 'OTHER'
+} as const
+
+export type GuestSource = (typeof GuestSource)[keyof typeof GuestSource]
+
+
+export const MealPlanStatus = {
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type MealPlanStatus = (typeof MealPlanStatus)[keyof typeof MealPlanStatus]
+
+
+export const MealPlanLedgerEvent = {
+  PURCHASE: 'PURCHASE',
+  REDEMPTION: 'REDEMPTION',
+  PLAN_STARTED: 'PLAN_STARTED',
+  PLAN_RENEWED: 'PLAN_RENEWED',
+  ORDER_REDEEMED: 'ORDER_REDEEMED',
+  ORDER_REVERSED: 'ORDER_REVERSED',
+  MANUAL_ADJUSTMENT: 'MANUAL_ADJUSTMENT',
+  REFERRAL_BONUS: 'REFERRAL_BONUS',
+  EXPIRATION: 'EXPIRATION'
+} as const
+
+export type MealPlanLedgerEvent = (typeof MealPlanLedgerEvent)[keyof typeof MealPlanLedgerEvent]
+
+
+export const FlavorProfileInvolvement = {
+  HANDS_ON: 'HANDS_ON',
+  HANDS_OFF: 'HANDS_OFF'
+} as const
+
+export type FlavorProfileInvolvement = (typeof FlavorProfileInvolvement)[keyof typeof FlavorProfileInvolvement]
+
+
+export const OnboardingStatus = {
+  PENDING: 'PENDING',
+  SKIPPED: 'SKIPPED',
+  COMPLETED: 'COMPLETED'
+} as const
+
+export type OnboardingStatus = (typeof OnboardingStatus)[keyof typeof OnboardingStatus]
+
+
+export const ReferralCodeStatus = {
+  ACTIVE: 'ACTIVE',
+  DISABLED: 'DISABLED'
+} as const
+
+export type ReferralCodeStatus = (typeof ReferralCodeStatus)[keyof typeof ReferralCodeStatus]
+
+
 export const FailedOrderStatus = {
   PENDING: 'PENDING',
   RETRYING: 'RETRYING',

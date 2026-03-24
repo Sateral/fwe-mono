@@ -3,9 +3,12 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import type { CreateCartInput } from "@fwe/validators";
 
 import Container from "@/components/container";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import type { Meal } from "@/types";
 import { toast } from "sonner";
 import NutritionBreakdown from "./nutrition-breakdown";
@@ -14,10 +17,15 @@ import OrderSummary from "./order-summary";
 
 interface OrderPageClientProps {
   meal: Meal;
+  initialCustomer?: {
+    email: string;
+    name: string;
+  } | null;
 }
 
-const OrderPageClient = ({ meal }: OrderPageClientProps) => {
+const OrderPageClient = ({ meal, initialCustomer = null }: OrderPageClientProps) => {
   const router = useRouter();
+  const isAuthenticated = Boolean(initialCustomer?.email);
   const [quantity, setQuantity] = useState(4);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutRequestId, setCheckoutRequestId] = useState<string | null>(
@@ -31,6 +39,8 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
   >({});
   const [notes, setNotes] = useState("");
   const [proteinBoost, setProteinBoost] = useState(false);
+  const [guestName, setGuestName] = useState(initialCustomer?.name ?? "");
+  const [guestEmail, setGuestEmail] = useState(initialCustomer?.email ?? "");
 
   // Initialize substitutions with default options
   const [selectedSubstitutions, setSelectedSubstitutions] = useState<
@@ -74,12 +84,21 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
     proteinBoost,
     deliveryMethod,
     notes,
+    guestName,
+    guestEmail,
   ]);
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
 
     try {
+      const normalizedGuestName = guestName.trim();
+      const normalizedGuestEmail = guestEmail.trim();
+
+      if (!isAuthenticated && (!normalizedGuestName || !normalizedGuestEmail)) {
+        throw new Error("Name and email are required for guest checkout");
+      }
+
       const requestId =
         checkoutRequestId ??
         (globalThis.crypto?.randomUUID
@@ -104,20 +123,12 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
         },
       );
 
-      const response = await fetch("/api/checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          requestId,
+      const items: CreateCartInput["items"] = [
+        {
           mealId: meal.id,
           quantity,
           substitutions,
           proteinBoost,
-          deliveryMethod,
-          pickupLocation:
-            deliveryMethod === "PICKUP" ? "Xtreme Couture" : undefined,
           notes: notes || undefined,
           modifiers: Object.entries(selectedModifiers).map(
             ([groupId, optionIds]) => {
@@ -133,6 +144,31 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
               };
             },
           ),
+        },
+      ];
+
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          requestId,
+          mealId: meal.id,
+          quantity,
+          guest: isAuthenticated
+            ? undefined
+            : {
+                name: normalizedGuestName,
+                email: normalizedGuestEmail,
+              },
+          substitutions,
+          proteinBoost,
+          deliveryMethod,
+          pickupLocation:
+            deliveryMethod === "PICKUP" ? "Xtreme Couture" : undefined,
+          notes: notes || undefined,
+          modifiers: items[0]?.modifiers,
         }),
       });
 
@@ -241,6 +277,42 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
               onNotesChange={setNotes}
             />
 
+            {!isAuthenticated && (
+              <div className="rounded-2xl border border-gray-200 bg-white p-5 space-y-4">
+                <div>
+                  <h3 className="text-base font-semibold text-gray-900">Guest checkout</h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Use your real name and email for order updates. You can claim this
+                    order later by signing in with the same email.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="guest-name">Full name</Label>
+                    <Input
+                      id="guest-name"
+                      value={guestName}
+                      onChange={(event) => setGuestName(event.target.value)}
+                      placeholder="Your name"
+                      autoComplete="name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="guest-email">Email</Label>
+                    <Input
+                      id="guest-email"
+                      type="email"
+                      value={guestEmail}
+                      onChange={(event) => setGuestEmail(event.target.value)}
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
             <OrderSummary
               meal={meal}
               quantity={quantity}
@@ -254,6 +326,7 @@ const OrderPageClient = ({ meal }: OrderPageClientProps) => {
               onCheckout={handleCheckout}
               onSaveForLater={() => console.log("Save for later", meal.id)}
               isCheckingOut={isCheckingOut}
+              checkoutLabel={isAuthenticated ? "Place Order" : "Continue as Guest"}
             />
           </div>
         </div>

@@ -15,10 +15,10 @@ model Meal {
   imageUrl    String?
   isFeatured  Boolean  @default(false)
   isActive    Boolean  @default(true)
-  mealType    MealType @default(SIGNATURE)
+  mealType    MealType @default(SIGNATURE) // Legacy categorization; storefront availability comes from rotations
 
   // Default pricing & macros
-  price    Float @default(0)
+  price    Decimal @default(0) @db.Decimal(10, 2)
   calories Int   @default(0)
   protein  Int   @default(0)
   carbs    Int   @default(0)
@@ -30,7 +30,10 @@ model Meal {
   tags               DietaryTag[]
   orders             Order[]
   orderIntents       OrderIntent[]
+  checkoutSessionItems CheckoutSessionItem[]
   rotations          WeeklyRotation[]    @relation("RotationMeals")
+  rotationPeriods    RotationPeriod[]    @relation("RotationPeriodMeals")
+  cartItems          CartItem[]
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
 
@@ -55,7 +58,7 @@ model SubstitutionOption {
   id              String            @id @default(cuid())
   name            String // e.g., "White Rice", "Brown Rice", "Quinoa"
   isDefault       Boolean           @default(false)
-  priceAdjustment Float             @default(0) // e.g., +1.50 for quinoa
+  priceAdjustment Decimal           @default(0) @db.Decimal(10, 2) // e.g., +1.50 for quinoa
   calorieAdjust   Int               @default(0)
   proteinAdjust   Int               @default(0)
   carbsAdjust     Int               @default(0)
@@ -83,7 +86,7 @@ model ModifierGroup {
 model ModifierOption {
   id              String        @id @default(cuid())
   name            String
-  extraPrice      Float         @default(0.00)
+  extraPrice      Decimal       @default(0) @db.Decimal(10, 2)
   modifierGroupId String
   modifierGroup   ModifierGroup @relation(fields: [modifierGroupId], references: [id], onDelete: Cascade)
 
@@ -103,14 +106,26 @@ model Order {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
+  settlementMethod SettlementMethod @default(STRIPE)
+
+  // Order-time customer snapshot
+  customerName            String?
+  customerEmail           String?
+  customerPhone           String?
+  customerDeliveryAddress String?
+  customerDeliveryCity    String?
+  customerDeliveryPostal  String?
+  customerDeliveryNotes   String? @db.Text
+  customerIsGuest         Boolean @default(false)
+
   // Meal reference
   mealId String
   meal   Meal   @relation(fields: [mealId], references: [id])
 
   // Pricing
   quantity    Int
-  unitPrice   Float // Price per meal at time of order
-  totalAmount Float // Final amount charged
+  unitPrice   Decimal @db.Decimal(10, 2) // Price per meal at time of order
+  totalAmount Decimal @db.Decimal(10, 2) // Final amount charged
 
   // Customizations (for chef preparation)
   substitutions Json? // [{ groupName, optionName }]
@@ -128,15 +143,16 @@ model Order {
   currency              String            @default("cad")
   paidAt                DateTime?
   refundedAt            DateTime?
-  refundAmount          Float             @default(0)
-  stripeSessionId       String?           @unique
-  stripePaymentIntentId String?           @unique
+  refundAmount          Decimal           @default(0) @db.Decimal(10, 2)
+  stripeSessionId       String?
+  stripePaymentIntentId String?
   stripeChargeId        String?
   stripeRefundId        String?
   stripeBalanceTransactionId String?
 
   orderIntentId String? @unique
   orderIntent   OrderIntent? @relation("OrderIntentToOrder", fields: [orderIntentId], references: [id])
+  referralUse   ReferralUse?
 
   paymentEvents PaymentEvent[]
 
@@ -154,6 +170,9 @@ model Order {
   @@index([createdAt])       // Fast date-range queries
   @@index([rotationId])      // Fast rotation-based queries
   @@index([mealId])          // Fast meal-based aggregations
+  @@index([customerEmail])
+  @@index([stripeSessionId])
+  @@index([stripePaymentIntentId])
 }
 
 enum ModifierType {
@@ -186,8 +205,8 @@ enum OrderIntentStatus {
 }
 
 enum MealType {
-  SIGNATURE  // Always available
-  ROTATING   // Weekly specials only
+  SIGNATURE  // Legacy category retained for compatibility
+  ROTATING   // Legacy category retained for compatibility
 }
 
 enum RotationStatus {
@@ -201,6 +220,70 @@ enum DeliveryMethod {
   PICKUP
 }
 
+enum SettlementMethod {
+  STRIPE
+  MEAL_PLAN_CREDITS
+}
+
+enum CartStatus {
+  ACTIVE
+  CHECKED_OUT
+  ABANDONED
+  MERGED
+}
+
+enum GuestSource {
+  CHECKOUT
+  MANUAL
+  IMPORT
+  OTHER
+}
+
+enum MealPlanStatus {
+  ACTIVE
+  PAUSED
+  CANCELLED
+}
+
+enum MealPlanLedgerEvent {
+  PURCHASE
+  REDEMPTION
+  PLAN_STARTED
+  PLAN_RENEWED
+  ORDER_REDEEMED
+  ORDER_REVERSED
+  MANUAL_ADJUSTMENT
+  REFERRAL_BONUS
+  EXPIRATION
+}
+
+enum FlavorProfileInvolvement {
+  HANDS_ON
+  HANDS_OFF
+}
+
+enum OnboardingStatus {
+  PENDING
+  SKIPPED
+  COMPLETED
+}
+
+enum ReferralCodeStatus {
+  ACTIVE
+  DISABLED
+}
+
+model RotationPeriod {
+  id        String         @id @default(cuid())
+  key       String         @unique
+  name      String
+  status    RotationStatus @default(DRAFT)
+  rotations WeeklyRotation[]
+  meals     Meal[]         @relation("RotationPeriodMeals")
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
 // ============================================
 // Weekly Rotation System
 // ============================================
@@ -211,14 +294,58 @@ model WeeklyRotation {
   weekEnd     DateTime       // Sunday 23:59 Toronto time
   orderCutoff DateTime       // Friday 23:59 Toronto time
   status      RotationStatus @default(DRAFT)
+  rotationPeriodId String?
+  rotationPeriod   RotationPeriod? @relation(fields: [rotationPeriodId], references: [id], onDelete: SetNull)
   meals       Meal[]         @relation("RotationMeals")
   orders      Order[]
+  cartItems   CartItem[]
   orderIntents OrderIntent[]
+  checkoutSessionItems CheckoutSessionItem[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
   @@unique([weekStart])
   @@index([status])
+  @@index([rotationPeriodId])
+}
+
+model Cart {
+  id               String           @id @default(cuid())
+  clientRequestId  String?          @unique
+  userId           String
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  settlementMethod SettlementMethod @default(STRIPE)
+  status           CartStatus       @default(ACTIVE)
+  items            CartItem[]
+  checkoutSessions CheckoutSession[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([userId, status])
+}
+
+model CartItem {
+  id           String          @id @default(cuid())
+  cartId       String
+  cart         Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  mealId       String
+  meal         Meal            @relation(fields: [mealId], references: [id])
+  rotationId   String?
+  rotation     WeeklyRotation? @relation(fields: [rotationId], references: [id], onDelete: SetNull)
+  quantity     Int
+  unitPrice    Decimal @db.Decimal(10, 2)
+  substitutions Json?
+  modifiers     Json?
+  proteinBoost  Boolean @default(false)
+  notes         String? @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([cartId])
+  @@index([mealId])
+  @@index([rotationId])
 }
 
 // ============================================
@@ -279,9 +406,10 @@ model OrderIntent {
   rotation   WeeklyRotation @relation(fields: [rotationId], references: [id])
 
   quantity    Int
-  unitPrice   Float
-  totalAmount Float
+  unitPrice   Decimal @db.Decimal(10, 2)
+  totalAmount Decimal @db.Decimal(10, 2)
   currency    String @default("cad")
+  settlementMethod SettlementMethod @default(STRIPE)
 
   substitutions Json?
   modifiers     Json?
@@ -293,10 +421,8 @@ model OrderIntent {
 
   status OrderIntentStatus @default(CREATED)
 
-  stripeSessionId       String? @unique
-  stripePaymentIntentId String? @unique
-
   order Order? @relation("OrderIntentToOrder")
+  checkoutSessionItems CheckoutSessionItem[]
   paymentEvents PaymentEvent[]
 
   createdAt DateTime @default(now())
@@ -305,6 +431,81 @@ model OrderIntent {
   @@index([userId])
   @@index([status])
   @@index([createdAt])
+  @@index([rotationId])
+}
+
+model CheckoutSession {
+  id String @id @default(cuid())
+
+  clientRequestId String? @unique
+
+  cartId String
+  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  settlementMethod SettlementMethod @default(STRIPE)
+  status           OrderIntentStatus @default(CREATED)
+
+  customerEmail String
+  customerName  String?
+
+  deliveryMethod DeliveryMethod @default(DELIVERY)
+  pickupLocation String?
+
+  stripeSessionId       String? @unique
+  stripePaymentIntentId String? @unique
+  stripeChargeId        String?
+  stripeBalanceTransactionId String?
+
+  items CheckoutSessionItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([cartId])
+  @@index([userId])
+  @@index([status])
+}
+
+model CheckoutSessionItem {
+  id String @id @default(cuid())
+
+  checkoutSessionId String
+  checkoutSession   CheckoutSession @relation(fields: [checkoutSessionId], references: [id], onDelete: Cascade)
+
+  orderIntentId String @unique
+  orderIntent   OrderIntent @relation(fields: [orderIntentId], references: [id], onDelete: Cascade)
+
+  mealId String
+  meal   Meal   @relation(fields: [mealId], references: [id])
+
+  mealName     String
+  mealSlug     String
+  mealImageUrl String?
+
+  rotationId String
+  rotation   WeeklyRotation @relation(fields: [rotationId], references: [id])
+
+  quantity    Int
+  unitPrice   Decimal @db.Decimal(10, 2)
+  totalAmount Decimal @db.Decimal(10, 2)
+  currency    String @default("cad")
+
+  substitutions Json?
+  modifiers     Json?
+  proteinBoost  Boolean @default(false)
+  notes         String? @db.Text
+
+  deliveryMethod DeliveryMethod @default(DELIVERY)
+  pickupLocation String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([checkoutSessionId])
+  @@index([mealId])
   @@index([rotationId])
 }
 
@@ -356,10 +557,26 @@ model User {
 
   orders           Order[]
   orderIntents     OrderIntent[]
+  carts            Cart[]
+  checkoutSessions CheckoutSession[]
+  mealPlan         MealPlan?
+  flavorProfile    FlavorProfile?
+  ownedReferralCode ReferralCode? @relation("ReferralCodeOwner")
+  referralUse      ReferralUse?   @relation("ReferralUseReferredUser")
   stripeCustomerId String? @unique @map(name: "stripe_customer_id")
 
+  isGuest           Boolean     @default(false)
+  guestSource       GuestSource?
+  guestSourceId     String?     @unique
+  guestMetadata     Json?
+  mergedIntoUserId  String?
+  mergedIntoUser    User?       @relation("GuestAccountMerge", fields: [mergedIntoUserId], references: [id], onDelete: SetNull)
+  mergedGuestUsers  User[]      @relation("GuestAccountMerge")
+  mergedAt          DateTime?
+
   // Profile completion for onboarding
-  profileComplete  Boolean  @default(false)
+  profileComplete  Boolean          @default(false)
+  onboardingStatus OnboardingStatus @default(PENDING)
   phone            String?
   deliveryAddress  String?
   deliveryCity     String?
@@ -370,7 +587,96 @@ model User {
   banReason  String?
   banExpires DateTime?
 
+  @@index([isGuest])
+  @@index([mergedIntoUserId])
   @@map("user")
+}
+
+model MealPlan {
+  id              String                  @id @default(cuid())
+  userId          String                  @unique
+  user            User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status          MealPlanStatus          @default(ACTIVE)
+  weeklyCreditCap Int
+  startsAt        DateTime                @default(now())
+  endsAt          DateTime?
+  autoRenew       Boolean                 @default(true)
+  windowUsages    MealPlanWindowUsage[]
+  creditLedger    MealPlanCreditLedger[]
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  @@index([status])
+}
+
+model MealPlanWindowUsage {
+  id          String   @id @default(cuid())
+  mealPlanId  String
+  mealPlan    MealPlan @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  windowStart DateTime
+  windowEnd   DateTime
+  creditsUsed Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([mealPlanId, windowStart])
+  @@index([windowStart])
+  @@index([windowEnd])
+}
+
+model MealPlanCreditLedger {
+  id           String              @id @default(cuid())
+  mealPlanId   String
+  mealPlan     MealPlan            @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  eventType    MealPlanLedgerEvent
+  creditDelta  Int
+  referenceType String?
+  referenceId  String?
+  note         String?             @db.Text
+  createdAt    DateTime            @default(now())
+
+  @@index([mealPlanId, createdAt])
+  @@index([mealPlanId, referenceType, referenceId])
+  @@index([eventType])
+}
+
+model FlavorProfile {
+  id          String                     @id @default(cuid())
+  userId      String                     @unique
+  user        User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goals       String[]
+  restrictions String[]                  @default([])
+  preferences  String[]                  @default([])
+  involvement FlavorProfileInvolvement
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @updatedAt
+}
+
+model ReferralCode {
+  id          String             @id @default(cuid())
+  ownerUserId String             @unique
+  ownerUser   User               @relation("ReferralCodeOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  code        String             @unique
+  status      ReferralCodeStatus @default(ACTIVE)
+  maxUses     Int?
+  uses        ReferralUse[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([status])
+}
+
+model ReferralUse {
+  id             String       @id @default(cuid())
+  referralCodeId String
+  referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id], onDelete: Restrict)
+  referredUserId String       @unique
+  referredUser   User         @relation("ReferralUseReferredUser", fields: [referredUserId], references: [id], onDelete: Cascade)
+  orderId        String?      @unique
+  order          Order?       @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  createdAt      DateTime     @default(now())
+
+  @@index([referralCodeId])
 }
 
 enum Role {

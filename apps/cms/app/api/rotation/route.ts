@@ -1,4 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  serializeAvailableMeals,
+  serializeRotation,
+  serializeRotationSummary,
+} from "@/lib/api-serializers";
 import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
 import { requireInternalAuth } from "@/lib/api-auth";
 
@@ -22,7 +27,7 @@ export async function GET(request: NextRequest) {
     // If requesting available meals
     if (availableParam === "true") {
       const result = await weeklyRotationService.getAvailableMeals();
-      return NextResponse.json(result);
+      return NextResponse.json(serializeAvailableMeals(result));
     }
 
     // If requesting specific week
@@ -37,7 +42,7 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      return NextResponse.json(rotation);
+      return NextResponse.json(serializeRotation(rotation));
     }
 
     // Default: get current rotation
@@ -53,7 +58,7 @@ export async function GET(request: NextRequest) {
     const isOrderingOpen = await weeklyRotationService.isOrderingOpen();
 
     return NextResponse.json({
-      ...rotation,
+      ...serializeRotation(rotation),
       isOrderingOpen,
     });
   } catch (error) {
@@ -90,7 +95,7 @@ export async function POST(request: NextRequest) {
       new Date(weekStart),
     );
 
-    return NextResponse.json(rotation, { status: 201 });
+    return NextResponse.json(serializeRotationSummary(rotation), { status: 201 });
   } catch (error) {
     console.error("[API] Error creating rotation:", error);
 

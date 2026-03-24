@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { requireInternalAuth } from "@/lib/api-auth";
+import { serializeMeal, serializeMeals } from "@/lib/api-serializers";
 import { mealService } from "@/lib/services/meal.service";
 
 // ============================================
@@ -15,6 +16,7 @@ import { mealService } from "@/lib/services/meal.service";
  * Query params:
  * - featured=true: Only featured meals
  * - tag=TagName: Filter by dietary tag
+ * - includeInactive=true: Include inactive meals for admin/internal tools
  */
 export async function GET(request: Request) {
   const authError = requireInternalAuth(request);
@@ -24,6 +26,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const featured = searchParams.get("featured");
     const tag = searchParams.get("tag");
+    const includeInactive = searchParams.get("includeInactive") === "true";
 
     let meals;
 
@@ -34,11 +37,13 @@ export async function GET(request: Request) {
       console.log(`[API] GET /api/meals?tag=${tag}`);
       meals = await mealService.getMealsByTag(tag);
     } else {
-      console.log("[API] GET /api/meals (all)");
-      meals = await mealService.getMeals();
+      console.log(
+        `[API] GET /api/meals (${includeInactive ? "including inactive" : "active only"})`,
+      );
+      meals = await mealService.getMeals({ includeInactive });
     }
 
-    return NextResponse.json(meals);
+    return NextResponse.json(serializeMeals(meals));
   } catch (error) {
     console.error("[API] Failed to fetch meals:", error);
     return NextResponse.json(
@@ -63,9 +68,18 @@ export async function POST(request: Request) {
       );
     }
 
-    const meal = await mealService.createMeal(parsed.data);
+    const createdMeal = await mealService.createMeal(parsed.data);
+    const meal = await mealService.getMealById(createdMeal.id);
+
+    if (!meal) {
+      return NextResponse.json(
+        { error: "Failed to load created meal" },
+        { status: 500 },
+      );
+    }
+
     revalidatePath("/dashboard/menu");
-    return NextResponse.json(meal, { status: 201 });
+    return NextResponse.json(serializeMeal(meal), { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to create meal" },

@@ -52,7 +52,7 @@ export function MealRow({ meal }: MealRowProps) {
       <TableRow>
         <TableCell className="font-medium">{meal.name}</TableCell>
         <TableCell>{meal.slug}</TableCell>
-        <TableCell>${meal.price.toFixed(2)}</TableCell>
+        <TableCell>${Number(meal.price).toFixed(2)}</TableCell>
         <TableCell>
           <Badge variant={meal.isActive ? "default" : "secondary"}>
             {meal.isActive ? "Active" : "Draft"}

@@ -27,7 +27,7 @@ export type AggregateSubstitutionOption = {
 }
 
 export type SubstitutionOptionAvgAggregateOutputType = {
-  priceAdjustment: number | null
+  priceAdjustment: runtime.Decimal | null
   calorieAdjust: number | null
   proteinAdjust: number | null
   carbsAdjust: number | null
@@ -36,7 +36,7 @@ export type SubstitutionOptionAvgAggregateOutputType = {
 }
 
 export type SubstitutionOptionSumAggregateOutputType = {
-  priceAdjustment: number | null
+  priceAdjustment: runtime.Decimal | null
   calorieAdjust: number | null
   proteinAdjust: number | null
   carbsAdjust: number | null
@@ -48,7 +48,7 @@ export type SubstitutionOptionMinAggregateOutputType = {
   id: string | null
   name: string | null
   isDefault: boolean | null
-  priceAdjustment: number | null
+  priceAdjustment: runtime.Decimal | null
   calorieAdjust: number | null
   proteinAdjust: number | null
   carbsAdjust: number | null
@@ -61,7 +61,7 @@ export type SubstitutionOptionMaxAggregateOutputType = {
   id: string | null
   name: string | null
   isDefault: boolean | null
-  priceAdjustment: number | null
+  priceAdjustment: runtime.Decimal | null
   calorieAdjust: number | null
   proteinAdjust: number | null
   carbsAdjust: number | null
@@ -233,7 +233,7 @@ export type SubstitutionOptionGroupByOutputType = {
   id: string
   name: string
   isDefault: boolean
-  priceAdjustment: number
+  priceAdjustment: runtime.Decimal
   calorieAdjust: number
   proteinAdjust: number
   carbsAdjust: number
@@ -269,7 +269,7 @@ export type SubstitutionOptionWhereInput = {
   id?: Prisma.StringFilter<"SubstitutionOption"> | string
   name?: Prisma.StringFilter<"SubstitutionOption"> | string
   isDefault?: Prisma.BoolFilter<"SubstitutionOption"> | boolean
-  priceAdjustment?: Prisma.FloatFilter<"SubstitutionOption"> | number
+  priceAdjustment?: Prisma.DecimalFilter<"SubstitutionOption"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: Prisma.IntFilter<"SubstitutionOption"> | number
   proteinAdjust?: Prisma.IntFilter<"SubstitutionOption"> | number
   carbsAdjust?: Prisma.IntFilter<"SubstitutionOption"> | number
@@ -300,7 +300,7 @@ export type SubstitutionOptionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SubstitutionOptionWhereInput | Prisma.SubstitutionOptionWhereInput[]
   name?: Prisma.StringFilter<"SubstitutionOption"> | string
   isDefault?: Prisma.BoolFilter<"SubstitutionOption"> | boolean
-  priceAdjustment?: Prisma.FloatFilter<"SubstitutionOption"> | number
+  priceAdjustment?: Prisma.DecimalFilter<"SubstitutionOption"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: Prisma.IntFilter<"SubstitutionOption"> | number
   proteinAdjust?: Prisma.IntFilter<"SubstitutionOption"> | number
   carbsAdjust?: Prisma.IntFilter<"SubstitutionOption"> | number
@@ -335,7 +335,7 @@ export type SubstitutionOptionScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"SubstitutionOption"> | string
   name?: Prisma.StringWithAggregatesFilter<"SubstitutionOption"> | string
   isDefault?: Prisma.BoolWithAggregatesFilter<"SubstitutionOption"> | boolean
-  priceAdjustment?: Prisma.FloatWithAggregatesFilter<"SubstitutionOption"> | number
+  priceAdjustment?: Prisma.DecimalWithAggregatesFilter<"SubstitutionOption"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: Prisma.IntWithAggregatesFilter<"SubstitutionOption"> | number
   proteinAdjust?: Prisma.IntWithAggregatesFilter<"SubstitutionOption"> | number
   carbsAdjust?: Prisma.IntWithAggregatesFilter<"SubstitutionOption"> | number
@@ -348,7 +348,7 @@ export type SubstitutionOptionCreateInput = {
   id?: string
   name: string
   isDefault?: boolean
-  priceAdjustment?: number
+  priceAdjustment?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: number
   proteinAdjust?: number
   carbsAdjust?: number
@@ -361,7 +361,7 @@ export type SubstitutionOptionUncheckedCreateInput = {
   id?: string
   name: string
   isDefault?: boolean
-  priceAdjustment?: number
+  priceAdjustment?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: number
   proteinAdjust?: number
   carbsAdjust?: number
@@ -374,7 +374,7 @@ export type SubstitutionOptionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  priceAdjustment?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceAdjustment?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   proteinAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   carbsAdjust?: Prisma.IntFieldUpdateOperationsInput | number
@@ -387,7 +387,7 @@ export type SubstitutionOptionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  priceAdjustment?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceAdjustment?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   proteinAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   carbsAdjust?: Prisma.IntFieldUpdateOperationsInput | number
@@ -400,7 +400,7 @@ export type SubstitutionOptionCreateManyInput = {
   id?: string
   name: string
   isDefault?: boolean
-  priceAdjustment?: number
+  priceAdjustment?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: number
   proteinAdjust?: number
   carbsAdjust?: number
@@ -413,7 +413,7 @@ export type SubstitutionOptionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  priceAdjustment?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceAdjustment?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   proteinAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   carbsAdjust?: Prisma.IntFieldUpdateOperationsInput | number
@@ -425,7 +425,7 @@ export type SubstitutionOptionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  priceAdjustment?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceAdjustment?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   proteinAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   carbsAdjust?: Prisma.IntFieldUpdateOperationsInput | number
@@ -547,7 +547,7 @@ export type SubstitutionOptionCreateWithoutGroupInput = {
   id?: string
   name: string
   isDefault?: boolean
-  priceAdjustment?: number
+  priceAdjustment?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: number
   proteinAdjust?: number
   carbsAdjust?: number
@@ -559,7 +559,7 @@ export type SubstitutionOptionUncheckedCreateWithoutGroupInput = {
   id?: string
   name: string
   isDefault?: boolean
-  priceAdjustment?: number
+  priceAdjustment?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: number
   proteinAdjust?: number
   carbsAdjust?: number
@@ -600,7 +600,7 @@ export type SubstitutionOptionScalarWhereInput = {
   id?: Prisma.StringFilter<"SubstitutionOption"> | string
   name?: Prisma.StringFilter<"SubstitutionOption"> | string
   isDefault?: Prisma.BoolFilter<"SubstitutionOption"> | boolean
-  priceAdjustment?: Prisma.FloatFilter<"SubstitutionOption"> | number
+  priceAdjustment?: Prisma.DecimalFilter<"SubstitutionOption"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: Prisma.IntFilter<"SubstitutionOption"> | number
   proteinAdjust?: Prisma.IntFilter<"SubstitutionOption"> | number
   carbsAdjust?: Prisma.IntFilter<"SubstitutionOption"> | number
@@ -613,7 +613,7 @@ export type SubstitutionOptionCreateManyGroupInput = {
   id?: string
   name: string
   isDefault?: boolean
-  priceAdjustment?: number
+  priceAdjustment?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: number
   proteinAdjust?: number
   carbsAdjust?: number
@@ -625,7 +625,7 @@ export type SubstitutionOptionUpdateWithoutGroupInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  priceAdjustment?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceAdjustment?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   proteinAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   carbsAdjust?: Prisma.IntFieldUpdateOperationsInput | number
@@ -637,7 +637,7 @@ export type SubstitutionOptionUncheckedUpdateWithoutGroupInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  priceAdjustment?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceAdjustment?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   proteinAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   carbsAdjust?: Prisma.IntFieldUpdateOperationsInput | number
@@ -649,7 +649,7 @@ export type SubstitutionOptionUncheckedUpdateManyWithoutGroupInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  priceAdjustment?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceAdjustment?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calorieAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   proteinAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   carbsAdjust?: Prisma.IntFieldUpdateOperationsInput | number
@@ -734,7 +734,7 @@ export type $SubstitutionOptionPayload<ExtArgs extends runtime.Types.Extensions.
     id: string
     name: string
     isDefault: boolean
-    priceAdjustment: number
+    priceAdjustment: runtime.Decimal
     calorieAdjust: number
     proteinAdjust: number
     carbsAdjust: number
@@ -1168,7 +1168,7 @@ export interface SubstitutionOptionFieldRefs {
   readonly id: Prisma.FieldRef<"SubstitutionOption", 'String'>
   readonly name: Prisma.FieldRef<"SubstitutionOption", 'String'>
   readonly isDefault: Prisma.FieldRef<"SubstitutionOption", 'Boolean'>
-  readonly priceAdjustment: Prisma.FieldRef<"SubstitutionOption", 'Float'>
+  readonly priceAdjustment: Prisma.FieldRef<"SubstitutionOption", 'Decimal'>
   readonly calorieAdjust: Prisma.FieldRef<"SubstitutionOption", 'Int'>
   readonly proteinAdjust: Prisma.FieldRef<"SubstitutionOption", 'Int'>
   readonly carbsAdjust: Prisma.FieldRef<"SubstitutionOption", 'Int'>

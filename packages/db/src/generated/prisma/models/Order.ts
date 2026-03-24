@@ -28,25 +28,34 @@ export type AggregateOrder = {
 
 export type OrderAvgAggregateOutputType = {
   quantity: number | null
-  unitPrice: number | null
-  totalAmount: number | null
-  refundAmount: number | null
+  unitPrice: runtime.Decimal | null
+  totalAmount: runtime.Decimal | null
+  refundAmount: runtime.Decimal | null
 }
 
 export type OrderSumAggregateOutputType = {
   quantity: number | null
-  unitPrice: number | null
-  totalAmount: number | null
-  refundAmount: number | null
+  unitPrice: runtime.Decimal | null
+  totalAmount: runtime.Decimal | null
+  refundAmount: runtime.Decimal | null
 }
 
 export type OrderMinAggregateOutputType = {
   id: string | null
   userId: string | null
+  settlementMethod: $Enums.SettlementMethod | null
+  customerName: string | null
+  customerEmail: string | null
+  customerPhone: string | null
+  customerDeliveryAddress: string | null
+  customerDeliveryCity: string | null
+  customerDeliveryPostal: string | null
+  customerDeliveryNotes: string | null
+  customerIsGuest: boolean | null
   mealId: string | null
   quantity: number | null
-  unitPrice: number | null
-  totalAmount: number | null
+  unitPrice: runtime.Decimal | null
+  totalAmount: runtime.Decimal | null
   proteinBoost: boolean | null
   notes: string | null
   deliveryMethod: $Enums.DeliveryMethod | null
@@ -56,7 +65,7 @@ export type OrderMinAggregateOutputType = {
   currency: string | null
   paidAt: Date | null
   refundedAt: Date | null
-  refundAmount: number | null
+  refundAmount: runtime.Decimal | null
   stripeSessionId: string | null
   stripePaymentIntentId: string | null
   stripeChargeId: string | null
@@ -71,10 +80,19 @@ export type OrderMinAggregateOutputType = {
 export type OrderMaxAggregateOutputType = {
   id: string | null
   userId: string | null
+  settlementMethod: $Enums.SettlementMethod | null
+  customerName: string | null
+  customerEmail: string | null
+  customerPhone: string | null
+  customerDeliveryAddress: string | null
+  customerDeliveryCity: string | null
+  customerDeliveryPostal: string | null
+  customerDeliveryNotes: string | null
+  customerIsGuest: boolean | null
   mealId: string | null
   quantity: number | null
-  unitPrice: number | null
-  totalAmount: number | null
+  unitPrice: runtime.Decimal | null
+  totalAmount: runtime.Decimal | null
   proteinBoost: boolean | null
   notes: string | null
   deliveryMethod: $Enums.DeliveryMethod | null
@@ -84,7 +102,7 @@ export type OrderMaxAggregateOutputType = {
   currency: string | null
   paidAt: Date | null
   refundedAt: Date | null
-  refundAmount: number | null
+  refundAmount: runtime.Decimal | null
   stripeSessionId: string | null
   stripePaymentIntentId: string | null
   stripeChargeId: string | null
@@ -99,6 +117,15 @@ export type OrderMaxAggregateOutputType = {
 export type OrderCountAggregateOutputType = {
   id: number
   userId: number
+  settlementMethod: number
+  customerName: number
+  customerEmail: number
+  customerPhone: number
+  customerDeliveryAddress: number
+  customerDeliveryCity: number
+  customerDeliveryPostal: number
+  customerDeliveryNotes: number
+  customerIsGuest: number
   mealId: number
   quantity: number
   unitPrice: number
@@ -145,6 +172,15 @@ export type OrderSumAggregateInputType = {
 export type OrderMinAggregateInputType = {
   id?: true
   userId?: true
+  settlementMethod?: true
+  customerName?: true
+  customerEmail?: true
+  customerPhone?: true
+  customerDeliveryAddress?: true
+  customerDeliveryCity?: true
+  customerDeliveryPostal?: true
+  customerDeliveryNotes?: true
+  customerIsGuest?: true
   mealId?: true
   quantity?: true
   unitPrice?: true
@@ -173,6 +209,15 @@ export type OrderMinAggregateInputType = {
 export type OrderMaxAggregateInputType = {
   id?: true
   userId?: true
+  settlementMethod?: true
+  customerName?: true
+  customerEmail?: true
+  customerPhone?: true
+  customerDeliveryAddress?: true
+  customerDeliveryCity?: true
+  customerDeliveryPostal?: true
+  customerDeliveryNotes?: true
+  customerIsGuest?: true
   mealId?: true
   quantity?: true
   unitPrice?: true
@@ -201,6 +246,15 @@ export type OrderMaxAggregateInputType = {
 export type OrderCountAggregateInputType = {
   id?: true
   userId?: true
+  settlementMethod?: true
+  customerName?: true
+  customerEmail?: true
+  customerPhone?: true
+  customerDeliveryAddress?: true
+  customerDeliveryCity?: true
+  customerDeliveryPostal?: true
+  customerDeliveryNotes?: true
+  customerIsGuest?: true
   mealId?: true
   quantity?: true
   unitPrice?: true
@@ -318,10 +372,19 @@ export type OrderGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type OrderGroupByOutputType = {
   id: string
   userId: string
+  settlementMethod: $Enums.SettlementMethod
+  customerName: string | null
+  customerEmail: string | null
+  customerPhone: string | null
+  customerDeliveryAddress: string | null
+  customerDeliveryCity: string | null
+  customerDeliveryPostal: string | null
+  customerDeliveryNotes: string | null
+  customerIsGuest: boolean
   mealId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal
+  totalAmount: runtime.Decimal
   substitutions: runtime.JsonValue | null
   modifiers: runtime.JsonValue | null
   proteinBoost: boolean
@@ -333,7 +396,7 @@ export type OrderGroupByOutputType = {
   currency: string
   paidAt: Date | null
   refundedAt: Date | null
-  refundAmount: number
+  refundAmount: runtime.Decimal
   stripeSessionId: string | null
   stripePaymentIntentId: string | null
   stripeChargeId: string | null
@@ -371,10 +434,19 @@ export type OrderWhereInput = {
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   id?: Prisma.StringFilter<"Order"> | string
   userId?: Prisma.StringFilter<"Order"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodFilter<"Order"> | $Enums.SettlementMethod
+  customerName?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerEmail?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerPhone?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryAddress?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryCity?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryPostal?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryNotes?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerIsGuest?: Prisma.BoolFilter<"Order"> | boolean
   mealId?: Prisma.StringFilter<"Order"> | string
   quantity?: Prisma.IntFilter<"Order"> | number
-  unitPrice?: Prisma.FloatFilter<"Order"> | number
-  totalAmount?: Prisma.FloatFilter<"Order"> | number
+  unitPrice?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.JsonNullableFilter<"Order">
   modifiers?: Prisma.JsonNullableFilter<"Order">
   proteinBoost?: Prisma.BoolFilter<"Order"> | boolean
@@ -386,7 +458,7 @@ export type OrderWhereInput = {
   currency?: Prisma.StringFilter<"Order"> | string
   paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   refundedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
-  refundAmount?: Prisma.FloatFilter<"Order"> | number
+  refundAmount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
   stripePaymentIntentId?: Prisma.StringNullableFilter<"Order"> | string | null
   stripeChargeId?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -399,6 +471,7 @@ export type OrderWhereInput = {
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
   orderIntent?: Prisma.XOR<Prisma.OrderIntentNullableScalarRelationFilter, Prisma.OrderIntentWhereInput> | null
+  referralUse?: Prisma.XOR<Prisma.ReferralUseNullableScalarRelationFilter, Prisma.ReferralUseWhereInput> | null
   paymentEvents?: Prisma.PaymentEventListRelationFilter
   rotation?: Prisma.XOR<Prisma.WeeklyRotationScalarRelationFilter, Prisma.WeeklyRotationWhereInput>
 }
@@ -406,6 +479,15 @@ export type OrderWhereInput = {
 export type OrderOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
+  customerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryCity?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryPostal?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerIsGuest?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -434,23 +516,31 @@ export type OrderOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   meal?: Prisma.MealOrderByWithRelationInput
   orderIntent?: Prisma.OrderIntentOrderByWithRelationInput
+  referralUse?: Prisma.ReferralUseOrderByWithRelationInput
   paymentEvents?: Prisma.PaymentEventOrderByRelationAggregateInput
   rotation?: Prisma.WeeklyRotationOrderByWithRelationInput
 }
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  stripeSessionId?: string
-  stripePaymentIntentId?: string
   orderIntentId?: string
   AND?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   OR?: Prisma.OrderWhereInput[]
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   userId?: Prisma.StringFilter<"Order"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodFilter<"Order"> | $Enums.SettlementMethod
+  customerName?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerEmail?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerPhone?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryAddress?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryCity?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryPostal?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryNotes?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerIsGuest?: Prisma.BoolFilter<"Order"> | boolean
   mealId?: Prisma.StringFilter<"Order"> | string
   quantity?: Prisma.IntFilter<"Order"> | number
-  unitPrice?: Prisma.FloatFilter<"Order"> | number
-  totalAmount?: Prisma.FloatFilter<"Order"> | number
+  unitPrice?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.JsonNullableFilter<"Order">
   modifiers?: Prisma.JsonNullableFilter<"Order">
   proteinBoost?: Prisma.BoolFilter<"Order"> | boolean
@@ -462,7 +552,9 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   currency?: Prisma.StringFilter<"Order"> | string
   paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   refundedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
-  refundAmount?: Prisma.FloatFilter<"Order"> | number
+  refundAmount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stripeSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
+  stripePaymentIntentId?: Prisma.StringNullableFilter<"Order"> | string | null
   stripeChargeId?: Prisma.StringNullableFilter<"Order"> | string | null
   stripeRefundId?: Prisma.StringNullableFilter<"Order"> | string | null
   stripeBalanceTransactionId?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -472,13 +564,23 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
   orderIntent?: Prisma.XOR<Prisma.OrderIntentNullableScalarRelationFilter, Prisma.OrderIntentWhereInput> | null
+  referralUse?: Prisma.XOR<Prisma.ReferralUseNullableScalarRelationFilter, Prisma.ReferralUseWhereInput> | null
   paymentEvents?: Prisma.PaymentEventListRelationFilter
   rotation?: Prisma.XOR<Prisma.WeeklyRotationScalarRelationFilter, Prisma.WeeklyRotationWhereInput>
-}, "id" | "stripeSessionId" | "stripePaymentIntentId" | "orderIntentId">
+}, "id" | "orderIntentId">
 
 export type OrderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
+  customerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryCity?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryPostal?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerDeliveryNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerIsGuest?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -517,10 +619,19 @@ export type OrderScalarWhereWithAggregatesInput = {
   NOT?: Prisma.OrderScalarWhereWithAggregatesInput | Prisma.OrderScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Order"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Order"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodWithAggregatesFilter<"Order"> | $Enums.SettlementMethod
+  customerName?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerEmail?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerPhone?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerDeliveryAddress?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerDeliveryCity?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerDeliveryPostal?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerDeliveryNotes?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  customerIsGuest?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
   mealId?: Prisma.StringWithAggregatesFilter<"Order"> | string
   quantity?: Prisma.IntWithAggregatesFilter<"Order"> | number
-  unitPrice?: Prisma.FloatWithAggregatesFilter<"Order"> | number
-  totalAmount?: Prisma.FloatWithAggregatesFilter<"Order"> | number
+  unitPrice?: Prisma.DecimalWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.JsonNullableWithAggregatesFilter<"Order">
   modifiers?: Prisma.JsonNullableWithAggregatesFilter<"Order">
   proteinBoost?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
@@ -532,7 +643,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   currency?: Prisma.StringWithAggregatesFilter<"Order"> | string
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   refundedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
-  refundAmount?: Prisma.FloatWithAggregatesFilter<"Order"> | number
+  refundAmount?: Prisma.DecimalWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   stripePaymentIntentId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   stripeChargeId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -546,9 +657,18 @@ export type OrderScalarWhereWithAggregatesInput = {
 
 export type OrderCreateInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -560,7 +680,7 @@ export type OrderCreateInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -571,6 +691,7 @@ export type OrderCreateInput = {
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   meal: Prisma.MealCreateNestedOneWithoutOrdersInput
   orderIntent?: Prisma.OrderIntentCreateNestedOneWithoutOrderInput
+  referralUse?: Prisma.ReferralUseCreateNestedOneWithoutOrderInput
   paymentEvents?: Prisma.PaymentEventCreateNestedManyWithoutOrderInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrdersInput
 }
@@ -578,10 +699,19 @@ export type OrderCreateInput = {
 export type OrderUncheckedCreateInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -593,7 +723,7 @@ export type OrderUncheckedCreateInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -603,14 +733,24 @@ export type OrderUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rotationId: string
+  referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutOrderInput
   paymentEvents?: Prisma.PaymentEventUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -622,7 +762,7 @@ export type OrderUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -633,6 +773,7 @@ export type OrderUpdateInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   meal?: Prisma.MealUpdateOneRequiredWithoutOrdersNestedInput
   orderIntent?: Prisma.OrderIntentUpdateOneWithoutOrderNestedInput
+  referralUse?: Prisma.ReferralUseUpdateOneWithoutOrderNestedInput
   paymentEvents?: Prisma.PaymentEventUpdateManyWithoutOrderNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrdersNestedInput
 }
@@ -640,10 +781,19 @@ export type OrderUpdateInput = {
 export type OrderUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -655,7 +805,7 @@ export type OrderUncheckedUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -665,16 +815,26 @@ export type OrderUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
+  referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutOrderNestedInput
   paymentEvents?: Prisma.PaymentEventUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -686,7 +846,7 @@ export type OrderCreateManyInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -700,9 +860,18 @@ export type OrderCreateManyInput = {
 
 export type OrderUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -714,7 +883,7 @@ export type OrderUpdateManyMutationInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -727,10 +896,19 @@ export type OrderUpdateManyMutationInput = {
 export type OrderUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -742,7 +920,7 @@ export type OrderUncheckedUpdateManyInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -767,6 +945,15 @@ export type OrderOrderByRelationAggregateInput = {
 export type OrderCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
+  customerName?: Prisma.SortOrder
+  customerEmail?: Prisma.SortOrder
+  customerPhone?: Prisma.SortOrder
+  customerDeliveryAddress?: Prisma.SortOrder
+  customerDeliveryCity?: Prisma.SortOrder
+  customerDeliveryPostal?: Prisma.SortOrder
+  customerDeliveryNotes?: Prisma.SortOrder
+  customerIsGuest?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -804,6 +991,15 @@ export type OrderAvgOrderByAggregateInput = {
 export type OrderMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
+  customerName?: Prisma.SortOrder
+  customerEmail?: Prisma.SortOrder
+  customerPhone?: Prisma.SortOrder
+  customerDeliveryAddress?: Prisma.SortOrder
+  customerDeliveryCity?: Prisma.SortOrder
+  customerDeliveryPostal?: Prisma.SortOrder
+  customerDeliveryNotes?: Prisma.SortOrder
+  customerIsGuest?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -832,6 +1028,15 @@ export type OrderMaxOrderByAggregateInput = {
 export type OrderMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  settlementMethod?: Prisma.SortOrder
+  customerName?: Prisma.SortOrder
+  customerEmail?: Prisma.SortOrder
+  customerPhone?: Prisma.SortOrder
+  customerDeliveryAddress?: Prisma.SortOrder
+  customerDeliveryCity?: Prisma.SortOrder
+  customerDeliveryPostal?: Prisma.SortOrder
+  customerDeliveryNotes?: Prisma.SortOrder
+  customerIsGuest?: Prisma.SortOrder
   mealId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -909,6 +1114,10 @@ export type OrderUncheckedUpdateManyWithoutMealNestedInput = {
   update?: Prisma.OrderUpdateWithWhereUniqueWithoutMealInput | Prisma.OrderUpdateWithWhereUniqueWithoutMealInput[]
   updateMany?: Prisma.OrderUpdateManyWithWhereWithoutMealInput | Prisma.OrderUpdateManyWithWhereWithoutMealInput[]
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type EnumSettlementMethodFieldUpdateOperationsInput = {
+  set?: $Enums.SettlementMethod
 }
 
 export type EnumDeliveryMethodFieldUpdateOperationsInput = {
@@ -1059,11 +1268,36 @@ export type OrderUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
+export type OrderCreateNestedOneWithoutReferralUseInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutReferralUseInput, Prisma.OrderUncheckedCreateWithoutReferralUseInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutReferralUseInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneWithoutReferralUseNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutReferralUseInput, Prisma.OrderUncheckedCreateWithoutReferralUseInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutReferralUseInput
+  upsert?: Prisma.OrderUpsertWithoutReferralUseInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutReferralUseInput, Prisma.OrderUpdateWithoutReferralUseInput>, Prisma.OrderUncheckedUpdateWithoutReferralUseInput>
+}
+
 export type OrderCreateWithoutMealInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1075,7 +1309,7 @@ export type OrderCreateWithoutMealInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1085,6 +1319,7 @@ export type OrderCreateWithoutMealInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   orderIntent?: Prisma.OrderIntentCreateNestedOneWithoutOrderInput
+  referralUse?: Prisma.ReferralUseCreateNestedOneWithoutOrderInput
   paymentEvents?: Prisma.PaymentEventCreateNestedManyWithoutOrderInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrdersInput
 }
@@ -1092,9 +1327,18 @@ export type OrderCreateWithoutMealInput = {
 export type OrderUncheckedCreateWithoutMealInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1106,7 +1350,7 @@ export type OrderUncheckedCreateWithoutMealInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1116,6 +1360,7 @@ export type OrderUncheckedCreateWithoutMealInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rotationId: string
+  referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutOrderInput
   paymentEvents?: Prisma.PaymentEventUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -1151,10 +1396,19 @@ export type OrderScalarWhereInput = {
   NOT?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
   id?: Prisma.StringFilter<"Order"> | string
   userId?: Prisma.StringFilter<"Order"> | string
+  settlementMethod?: Prisma.EnumSettlementMethodFilter<"Order"> | $Enums.SettlementMethod
+  customerName?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerEmail?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerPhone?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryAddress?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryCity?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryPostal?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerDeliveryNotes?: Prisma.StringNullableFilter<"Order"> | string | null
+  customerIsGuest?: Prisma.BoolFilter<"Order"> | boolean
   mealId?: Prisma.StringFilter<"Order"> | string
   quantity?: Prisma.IntFilter<"Order"> | number
-  unitPrice?: Prisma.FloatFilter<"Order"> | number
-  totalAmount?: Prisma.FloatFilter<"Order"> | number
+  unitPrice?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.JsonNullableFilter<"Order">
   modifiers?: Prisma.JsonNullableFilter<"Order">
   proteinBoost?: Prisma.BoolFilter<"Order"> | boolean
@@ -1166,7 +1420,7 @@ export type OrderScalarWhereInput = {
   currency?: Prisma.StringFilter<"Order"> | string
   paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   refundedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
-  refundAmount?: Prisma.FloatFilter<"Order"> | number
+  refundAmount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
   stripePaymentIntentId?: Prisma.StringNullableFilter<"Order"> | string | null
   stripeChargeId?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -1180,9 +1434,18 @@ export type OrderScalarWhereInput = {
 
 export type OrderCreateWithoutRotationInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1194,7 +1457,7 @@ export type OrderCreateWithoutRotationInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1205,16 +1468,26 @@ export type OrderCreateWithoutRotationInput = {
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   meal: Prisma.MealCreateNestedOneWithoutOrdersInput
   orderIntent?: Prisma.OrderIntentCreateNestedOneWithoutOrderInput
+  referralUse?: Prisma.ReferralUseCreateNestedOneWithoutOrderInput
   paymentEvents?: Prisma.PaymentEventCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutRotationInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1226,7 +1499,7 @@ export type OrderUncheckedCreateWithoutRotationInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1235,6 +1508,7 @@ export type OrderUncheckedCreateWithoutRotationInput = {
   orderIntentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutOrderInput
   paymentEvents?: Prisma.PaymentEventUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -1266,9 +1540,18 @@ export type OrderUpdateManyWithWhereWithoutRotationInput = {
 
 export type OrderCreateWithoutOrderIntentInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1280,7 +1563,7 @@ export type OrderCreateWithoutOrderIntentInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1290,6 +1573,7 @@ export type OrderCreateWithoutOrderIntentInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   meal: Prisma.MealCreateNestedOneWithoutOrdersInput
+  referralUse?: Prisma.ReferralUseCreateNestedOneWithoutOrderInput
   paymentEvents?: Prisma.PaymentEventCreateNestedManyWithoutOrderInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrdersInput
 }
@@ -1297,10 +1581,19 @@ export type OrderCreateWithoutOrderIntentInput = {
 export type OrderUncheckedCreateWithoutOrderIntentInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1312,7 +1605,7 @@ export type OrderUncheckedCreateWithoutOrderIntentInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1321,6 +1614,7 @@ export type OrderUncheckedCreateWithoutOrderIntentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rotationId: string
+  referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutOrderInput
   paymentEvents?: Prisma.PaymentEventUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -1342,9 +1636,18 @@ export type OrderUpdateToOneWithWhereWithoutOrderIntentInput = {
 
 export type OrderUpdateWithoutOrderIntentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1356,7 +1659,7 @@ export type OrderUpdateWithoutOrderIntentInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1366,6 +1669,7 @@ export type OrderUpdateWithoutOrderIntentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   meal?: Prisma.MealUpdateOneRequiredWithoutOrdersNestedInput
+  referralUse?: Prisma.ReferralUseUpdateOneWithoutOrderNestedInput
   paymentEvents?: Prisma.PaymentEventUpdateManyWithoutOrderNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrdersNestedInput
 }
@@ -1373,10 +1677,19 @@ export type OrderUpdateWithoutOrderIntentInput = {
 export type OrderUncheckedUpdateWithoutOrderIntentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1388,7 +1701,7 @@ export type OrderUncheckedUpdateWithoutOrderIntentInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1397,14 +1710,24 @@ export type OrderUncheckedUpdateWithoutOrderIntentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
+  referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutOrderNestedInput
   paymentEvents?: Prisma.PaymentEventUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPaymentEventsInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1416,7 +1739,7 @@ export type OrderCreateWithoutPaymentEventsInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1427,16 +1750,26 @@ export type OrderCreateWithoutPaymentEventsInput = {
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   meal: Prisma.MealCreateNestedOneWithoutOrdersInput
   orderIntent?: Prisma.OrderIntentCreateNestedOneWithoutOrderInput
+  referralUse?: Prisma.ReferralUseCreateNestedOneWithoutOrderInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrdersInput
 }
 
 export type OrderUncheckedCreateWithoutPaymentEventsInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1448,7 +1781,7 @@ export type OrderUncheckedCreateWithoutPaymentEventsInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1458,6 +1791,7 @@ export type OrderUncheckedCreateWithoutPaymentEventsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rotationId: string
+  referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPaymentEventsInput = {
@@ -1478,9 +1812,18 @@ export type OrderUpdateToOneWithWhereWithoutPaymentEventsInput = {
 
 export type OrderUpdateWithoutPaymentEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1492,7 +1835,7 @@ export type OrderUpdateWithoutPaymentEventsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1503,16 +1846,26 @@ export type OrderUpdateWithoutPaymentEventsInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   meal?: Prisma.MealUpdateOneRequiredWithoutOrdersNestedInput
   orderIntent?: Prisma.OrderIntentUpdateOneWithoutOrderNestedInput
+  referralUse?: Prisma.ReferralUseUpdateOneWithoutOrderNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrdersNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPaymentEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1524,7 +1877,7 @@ export type OrderUncheckedUpdateWithoutPaymentEventsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1534,13 +1887,23 @@ export type OrderUncheckedUpdateWithoutPaymentEventsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
+  referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutUserInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1552,7 +1915,7 @@ export type OrderCreateWithoutUserInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1562,16 +1925,26 @@ export type OrderCreateWithoutUserInput = {
   updatedAt?: Date | string
   meal: Prisma.MealCreateNestedOneWithoutOrdersInput
   orderIntent?: Prisma.OrderIntentCreateNestedOneWithoutOrderInput
+  referralUse?: Prisma.ReferralUseCreateNestedOneWithoutOrderInput
   paymentEvents?: Prisma.PaymentEventCreateNestedManyWithoutOrderInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrdersInput
 }
 
 export type OrderUncheckedCreateWithoutUserInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1583,7 +1956,7 @@ export type OrderUncheckedCreateWithoutUserInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1593,6 +1966,7 @@ export type OrderUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rotationId: string
+  referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutOrderInput
   paymentEvents?: Prisma.PaymentEventUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -1622,12 +1996,20 @@ export type OrderUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutUserInput>
 }
 
-export type OrderCreateManyMealInput = {
+export type OrderCreateWithoutReferralUseInput = {
   id?: string
-  userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1639,7 +2021,184 @@ export type OrderCreateManyMealInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  stripeSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  stripeChargeId?: string | null
+  stripeRefundId?: string | null
+  stripeBalanceTransactionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutOrdersInput
+  meal: Prisma.MealCreateNestedOneWithoutOrdersInput
+  orderIntent?: Prisma.OrderIntentCreateNestedOneWithoutOrderInput
+  paymentEvents?: Prisma.PaymentEventCreateNestedManyWithoutOrderInput
+  rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrdersInput
+}
+
+export type OrderUncheckedCreateWithoutReferralUseInput = {
+  id?: string
+  userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
+  mealId: string
+  quantity: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  proteinBoost?: boolean
+  notes?: string | null
+  deliveryMethod?: $Enums.DeliveryMethod
+  pickupLocation?: string | null
+  paymentStatus?: $Enums.PaymentStatus
+  fulfillmentStatus?: $Enums.FulfillmentStatus
+  currency?: string
+  paidAt?: Date | string | null
+  refundedAt?: Date | string | null
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  stripeSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  stripeChargeId?: string | null
+  stripeRefundId?: string | null
+  stripeBalanceTransactionId?: string | null
+  orderIntentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rotationId: string
+  paymentEvents?: Prisma.PaymentEventUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutReferralUseInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutReferralUseInput, Prisma.OrderUncheckedCreateWithoutReferralUseInput>
+}
+
+export type OrderUpsertWithoutReferralUseInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutReferralUseInput, Prisma.OrderUncheckedUpdateWithoutReferralUseInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutReferralUseInput, Prisma.OrderUncheckedCreateWithoutReferralUseInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutReferralUseInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutReferralUseInput, Prisma.OrderUncheckedUpdateWithoutReferralUseInput>
+}
+
+export type OrderUpdateWithoutReferralUseInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+  pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeBalanceTransactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
+  meal?: Prisma.MealUpdateOneRequiredWithoutOrdersNestedInput
+  orderIntent?: Prisma.OrderIntentUpdateOneWithoutOrderNestedInput
+  paymentEvents?: Prisma.PaymentEventUpdateManyWithoutOrderNestedInput
+  rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrdersNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutReferralUseInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+  pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  fulfillmentStatus?: Prisma.EnumFulfillmentStatusFieldUpdateOperationsInput | $Enums.FulfillmentStatus
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeBalanceTransactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rotationId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentEvents?: Prisma.PaymentEventUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateManyMealInput = {
+  id?: string
+  userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
+  quantity: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  proteinBoost?: boolean
+  notes?: string | null
+  deliveryMethod?: $Enums.DeliveryMethod
+  pickupLocation?: string | null
+  paymentStatus?: $Enums.PaymentStatus
+  fulfillmentStatus?: $Enums.FulfillmentStatus
+  currency?: string
+  paidAt?: Date | string | null
+  refundedAt?: Date | string | null
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1653,9 +2212,18 @@ export type OrderCreateManyMealInput = {
 
 export type OrderUpdateWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1667,7 +2235,7 @@ export type OrderUpdateWithoutMealInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1677,6 +2245,7 @@ export type OrderUpdateWithoutMealInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   orderIntent?: Prisma.OrderIntentUpdateOneWithoutOrderNestedInput
+  referralUse?: Prisma.ReferralUseUpdateOneWithoutOrderNestedInput
   paymentEvents?: Prisma.PaymentEventUpdateManyWithoutOrderNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrdersNestedInput
 }
@@ -1684,9 +2253,18 @@ export type OrderUpdateWithoutMealInput = {
 export type OrderUncheckedUpdateWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1698,7 +2276,7 @@ export type OrderUncheckedUpdateWithoutMealInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1708,15 +2286,25 @@ export type OrderUncheckedUpdateWithoutMealInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
+  referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutOrderNestedInput
   paymentEvents?: Prisma.PaymentEventUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1728,7 +2316,7 @@ export type OrderUncheckedUpdateManyWithoutMealInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1743,10 +2331,19 @@ export type OrderUncheckedUpdateManyWithoutMealInput = {
 export type OrderCreateManyRotationInput = {
   id?: string
   userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1758,7 +2355,7 @@ export type OrderCreateManyRotationInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1771,9 +2368,18 @@ export type OrderCreateManyRotationInput = {
 
 export type OrderUpdateWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1785,7 +2391,7 @@ export type OrderUpdateWithoutRotationInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1796,16 +2402,26 @@ export type OrderUpdateWithoutRotationInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   meal?: Prisma.MealUpdateOneRequiredWithoutOrdersNestedInput
   orderIntent?: Prisma.OrderIntentUpdateOneWithoutOrderNestedInput
+  referralUse?: Prisma.ReferralUseUpdateOneWithoutOrderNestedInput
   paymentEvents?: Prisma.PaymentEventUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1817,7 +2433,7 @@ export type OrderUncheckedUpdateWithoutRotationInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1826,16 +2442,26 @@ export type OrderUncheckedUpdateWithoutRotationInput = {
   orderIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutOrderNestedInput
   paymentEvents?: Prisma.PaymentEventUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1847,7 +2473,7 @@ export type OrderUncheckedUpdateManyWithoutRotationInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1860,10 +2486,19 @@ export type OrderUncheckedUpdateManyWithoutRotationInput = {
 
 export type OrderCreateManyUserInput = {
   id?: string
+  settlementMethod?: $Enums.SettlementMethod
+  customerName?: string | null
+  customerEmail?: string | null
+  customerPhone?: string | null
+  customerDeliveryAddress?: string | null
+  customerDeliveryCity?: string | null
+  customerDeliveryPostal?: string | null
+  customerDeliveryNotes?: string | null
+  customerIsGuest?: boolean
   mealId: string
   quantity: number
-  unitPrice: number
-  totalAmount: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: boolean
@@ -1875,7 +2510,7 @@ export type OrderCreateManyUserInput = {
   currency?: string
   paidAt?: Date | string | null
   refundedAt?: Date | string | null
-  refundAmount?: number
+  refundAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: string | null
   stripePaymentIntentId?: string | null
   stripeChargeId?: string | null
@@ -1889,9 +2524,18 @@ export type OrderCreateManyUserInput = {
 
 export type OrderUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1903,7 +2547,7 @@ export type OrderUpdateWithoutUserInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1913,16 +2557,26 @@ export type OrderUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   meal?: Prisma.MealUpdateOneRequiredWithoutOrdersNestedInput
   orderIntent?: Prisma.OrderIntentUpdateOneWithoutOrderNestedInput
+  referralUse?: Prisma.ReferralUseUpdateOneWithoutOrderNestedInput
   paymentEvents?: Prisma.PaymentEventUpdateManyWithoutOrderNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrdersNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1934,7 +2588,7 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1944,15 +2598,25 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
+  referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutOrderNestedInput
   paymentEvents?: Prisma.PaymentEventUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerDeliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerIsGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1964,7 +2628,7 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  refundAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  refundAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2010,6 +2674,15 @@ export type OrderCountOutputTypeCountPaymentEventsArgs<ExtArgs extends runtime.T
 export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  settlementMethod?: boolean
+  customerName?: boolean
+  customerEmail?: boolean
+  customerPhone?: boolean
+  customerDeliveryAddress?: boolean
+  customerDeliveryCity?: boolean
+  customerDeliveryPostal?: boolean
+  customerDeliveryNotes?: boolean
+  customerIsGuest?: boolean
   mealId?: boolean
   quantity?: boolean
   unitPrice?: boolean
@@ -2038,6 +2711,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
   orderIntent?: boolean | Prisma.Order$orderIntentArgs<ExtArgs>
+  referralUse?: boolean | Prisma.Order$referralUseArgs<ExtArgs>
   paymentEvents?: boolean | Prisma.Order$paymentEventsArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
@@ -2046,6 +2720,15 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  settlementMethod?: boolean
+  customerName?: boolean
+  customerEmail?: boolean
+  customerPhone?: boolean
+  customerDeliveryAddress?: boolean
+  customerDeliveryCity?: boolean
+  customerDeliveryPostal?: boolean
+  customerDeliveryNotes?: boolean
+  customerIsGuest?: boolean
   mealId?: boolean
   quantity?: boolean
   unitPrice?: boolean
@@ -2080,6 +2763,15 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  settlementMethod?: boolean
+  customerName?: boolean
+  customerEmail?: boolean
+  customerPhone?: boolean
+  customerDeliveryAddress?: boolean
+  customerDeliveryCity?: boolean
+  customerDeliveryPostal?: boolean
+  customerDeliveryNotes?: boolean
+  customerIsGuest?: boolean
   mealId?: boolean
   quantity?: boolean
   unitPrice?: boolean
@@ -2114,6 +2806,15 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type OrderSelectScalar = {
   id?: boolean
   userId?: boolean
+  settlementMethod?: boolean
+  customerName?: boolean
+  customerEmail?: boolean
+  customerPhone?: boolean
+  customerDeliveryAddress?: boolean
+  customerDeliveryCity?: boolean
+  customerDeliveryPostal?: boolean
+  customerDeliveryNotes?: boolean
+  customerIsGuest?: boolean
   mealId?: boolean
   quantity?: boolean
   unitPrice?: boolean
@@ -2141,11 +2842,12 @@ export type OrderSelectScalar = {
   rotationId?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "mealId" | "quantity" | "unitPrice" | "totalAmount" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "deliveryMethod" | "pickupLocation" | "paymentStatus" | "fulfillmentStatus" | "currency" | "paidAt" | "refundedAt" | "refundAmount" | "stripeSessionId" | "stripePaymentIntentId" | "stripeChargeId" | "stripeRefundId" | "stripeBalanceTransactionId" | "orderIntentId" | "createdAt" | "updatedAt" | "rotationId", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "settlementMethod" | "customerName" | "customerEmail" | "customerPhone" | "customerDeliveryAddress" | "customerDeliveryCity" | "customerDeliveryPostal" | "customerDeliveryNotes" | "customerIsGuest" | "mealId" | "quantity" | "unitPrice" | "totalAmount" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "deliveryMethod" | "pickupLocation" | "paymentStatus" | "fulfillmentStatus" | "currency" | "paidAt" | "refundedAt" | "refundAmount" | "stripeSessionId" | "stripePaymentIntentId" | "stripeChargeId" | "stripeRefundId" | "stripeBalanceTransactionId" | "orderIntentId" | "createdAt" | "updatedAt" | "rotationId", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
   orderIntent?: boolean | Prisma.Order$orderIntentArgs<ExtArgs>
+  referralUse?: boolean | Prisma.Order$referralUseArgs<ExtArgs>
   paymentEvents?: boolean | Prisma.Order$paymentEventsArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
@@ -2169,16 +2871,26 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     user: Prisma.$UserPayload<ExtArgs>
     meal: Prisma.$MealPayload<ExtArgs>
     orderIntent: Prisma.$OrderIntentPayload<ExtArgs> | null
+    referralUse: Prisma.$ReferralUsePayload<ExtArgs> | null
     paymentEvents: Prisma.$PaymentEventPayload<ExtArgs>[]
     rotation: Prisma.$WeeklyRotationPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
+    settlementMethod: $Enums.SettlementMethod
+    customerName: string | null
+    customerEmail: string | null
+    customerPhone: string | null
+    customerDeliveryAddress: string | null
+    customerDeliveryCity: string | null
+    customerDeliveryPostal: string | null
+    customerDeliveryNotes: string | null
+    customerIsGuest: boolean
     mealId: string
     quantity: number
-    unitPrice: number
-    totalAmount: number
+    unitPrice: runtime.Decimal
+    totalAmount: runtime.Decimal
     substitutions: runtime.JsonValue | null
     modifiers: runtime.JsonValue | null
     proteinBoost: boolean
@@ -2190,7 +2902,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     currency: string
     paidAt: Date | null
     refundedAt: Date | null
-    refundAmount: number
+    refundAmount: runtime.Decimal
     stripeSessionId: string | null
     stripePaymentIntentId: string | null
     stripeChargeId: string | null
@@ -2597,6 +3309,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   meal<T extends Prisma.MealDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MealDefaultArgs<ExtArgs>>): Prisma.Prisma__MealClient<runtime.Types.Result.GetResult<Prisma.$MealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   orderIntent<T extends Prisma.Order$orderIntentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$orderIntentArgs<ExtArgs>>): Prisma.Prisma__OrderIntentClient<runtime.Types.Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  referralUse<T extends Prisma.Order$referralUseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$referralUseArgs<ExtArgs>>): Prisma.Prisma__ReferralUseClient<runtime.Types.Result.GetResult<Prisma.$ReferralUsePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   paymentEvents<T extends Prisma.Order$paymentEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$paymentEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rotation<T extends Prisma.WeeklyRotationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WeeklyRotationDefaultArgs<ExtArgs>>): Prisma.Prisma__WeeklyRotationClient<runtime.Types.Result.GetResult<Prisma.$WeeklyRotationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -2630,10 +3343,19 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface OrderFieldRefs {
   readonly id: Prisma.FieldRef<"Order", 'String'>
   readonly userId: Prisma.FieldRef<"Order", 'String'>
+  readonly settlementMethod: Prisma.FieldRef<"Order", 'SettlementMethod'>
+  readonly customerName: Prisma.FieldRef<"Order", 'String'>
+  readonly customerEmail: Prisma.FieldRef<"Order", 'String'>
+  readonly customerPhone: Prisma.FieldRef<"Order", 'String'>
+  readonly customerDeliveryAddress: Prisma.FieldRef<"Order", 'String'>
+  readonly customerDeliveryCity: Prisma.FieldRef<"Order", 'String'>
+  readonly customerDeliveryPostal: Prisma.FieldRef<"Order", 'String'>
+  readonly customerDeliveryNotes: Prisma.FieldRef<"Order", 'String'>
+  readonly customerIsGuest: Prisma.FieldRef<"Order", 'Boolean'>
   readonly mealId: Prisma.FieldRef<"Order", 'String'>
   readonly quantity: Prisma.FieldRef<"Order", 'Int'>
-  readonly unitPrice: Prisma.FieldRef<"Order", 'Float'>
-  readonly totalAmount: Prisma.FieldRef<"Order", 'Float'>
+  readonly unitPrice: Prisma.FieldRef<"Order", 'Decimal'>
+  readonly totalAmount: Prisma.FieldRef<"Order", 'Decimal'>
   readonly substitutions: Prisma.FieldRef<"Order", 'Json'>
   readonly modifiers: Prisma.FieldRef<"Order", 'Json'>
   readonly proteinBoost: Prisma.FieldRef<"Order", 'Boolean'>
@@ -2645,7 +3367,7 @@ export interface OrderFieldRefs {
   readonly currency: Prisma.FieldRef<"Order", 'String'>
   readonly paidAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly refundedAt: Prisma.FieldRef<"Order", 'DateTime'>
-  readonly refundAmount: Prisma.FieldRef<"Order", 'Float'>
+  readonly refundAmount: Prisma.FieldRef<"Order", 'Decimal'>
   readonly stripeSessionId: Prisma.FieldRef<"Order", 'String'>
   readonly stripePaymentIntentId: Prisma.FieldRef<"Order", 'String'>
   readonly stripeChargeId: Prisma.FieldRef<"Order", 'String'>
@@ -3067,6 +3789,25 @@ export type Order$orderIntentArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.OrderIntentInclude<ExtArgs> | null
   where?: Prisma.OrderIntentWhereInput
+}
+
+/**
+ * Order.referralUse
+ */
+export type Order$referralUseArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReferralUse
+   */
+  select?: Prisma.ReferralUseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ReferralUse
+   */
+  omit?: Prisma.ReferralUseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReferralUseInclude<ExtArgs> | null
+  where?: Prisma.ReferralUseWhereInput
 }
 
 /**

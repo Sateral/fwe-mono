@@ -5,8 +5,9 @@ import prisma from "@/lib/prisma";
 
 export const mealService = {
   // MEALS
-  async getMeals() {
+  async getMeals(options?: { includeInactive?: boolean }) {
     return await prisma.meal.findMany({
+      where: options?.includeInactive ? undefined : { isActive: true },
       include: {
         substitutionGroups: {
           include: {

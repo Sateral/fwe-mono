@@ -39,12 +39,11 @@ import { Badge } from "@/components/ui/badge";
 
 export type Order = {
   id: string;
-  totalAmount: number;
+  totalAmount: number | { toString(): string };
   paymentStatus: "PENDING" | "PAID" | "FAILED" | "REFUNDED";
   fulfillmentStatus: "NEW" | "PREPARING" | "READY" | "DELIVERED" | "CANCELLED";
   currency: string;
   createdAt: Date;
-  // Add other fields as needed for display
 };
 
 export const columns: ColumnDef<Order>[] = [
@@ -97,7 +96,7 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "totalAmount",
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("totalAmount"));
+      const amount = Number(row.getValue("totalAmount"));
       const currency = (row.original.currency || "cad").toUpperCase();
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",

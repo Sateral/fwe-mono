@@ -1,17 +1,23 @@
 import type Stripe from "stripe";
 import type { CreateOrderInput } from "@fwe/validators";
+import { Prisma } from "@fwe/db";
 
-import prisma from "@/lib/prisma";
-import { stripe } from "@/lib/stripe";
-import { orderService } from "@/lib/services/order.service";
+import prisma from "./prisma";
+import { stripe } from "./stripe";
+import {
+  finalizeCartCheckoutSession,
+  getCheckoutSessionIdFromCheckoutSession,
+  updateCartCheckoutStatus,
+} from "./services/cart-checkout.service";
+import { orderService } from "./services/order.service";
 
 export function getOrderIntentIdFromSession(
   session: Stripe.Checkout.Session,
 ): string | null {
-  return session.metadata?.orderIntentId || session.client_reference_id || null;
+  return session.metadata?.orderIntentId || null;
 }
 
-function extractPaymentIntentIds(
+export function extractPaymentIntentIds(
   paymentIntent: Stripe.PaymentIntent | string | null | undefined,
 ) {
   if (!paymentIntent)
@@ -44,9 +50,14 @@ function extractPaymentIntentIds(
   };
 }
 
+function toNumber(value: Prisma.Decimal | number) {
+  return typeof value === "number" ? value : new Prisma.Decimal(value).toNumber();
+}
+
 export async function ensureOrderFromSession(sessionId: string) {
-  const existing = await prisma.order.findUnique({
+  const existing = await prisma.order.findFirst({
     where: { stripeSessionId: sessionId },
+    orderBy: { createdAt: "asc" },
     include: orderService.orderInclude,
   });
 
@@ -54,6 +65,48 @@ export async function ensureOrderFromSession(sessionId: string) {
     return existing;
   }
 
+  try {
+    const createdOrders = await finalizeCartCheckoutSession(sessionId);
+    return createdOrders[0] ?? null;
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === `Checkout session snapshot not found for ${sessionId}`
+    ) {
+      return ensureLegacyOrderFromSession(sessionId);
+    }
+
+    throw error;
+  }
+}
+
+export async function ensureOrdersFromSession(sessionId: string) {
+  const existing = await prisma.order.findMany({
+    where: { stripeSessionId: sessionId },
+    orderBy: { createdAt: "asc" },
+    include: orderService.orderInclude,
+  });
+
+  if (existing.length > 0) {
+    return existing;
+  }
+
+  try {
+    return await finalizeCartCheckoutSession(sessionId);
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === `Checkout session snapshot not found for ${sessionId}`
+    ) {
+      const order = await ensureLegacyOrderFromSession(sessionId);
+      return order ? [order] : [];
+    }
+
+    throw error;
+  }
+}
+
+async function ensureLegacyOrderFromSession(sessionId: string) {
   const session = await stripe.checkout.sessions.retrieve(sessionId, {
     expand: ["payment_intent", "payment_intent.latest_charge"],
   });
@@ -85,8 +138,8 @@ export async function ensureOrderFromSession(sessionId: string) {
     mealId: orderIntent.mealId,
     rotationId: orderIntent.rotationId,
     quantity: orderIntent.quantity,
-    unitPrice: orderIntent.unitPrice,
-    totalAmount: orderIntent.totalAmount,
+    unitPrice: toNumber(orderIntent.unitPrice),
+    totalAmount: toNumber(orderIntent.totalAmount),
     currency: orderIntent.currency,
     orderIntentId: orderIntent.id,
     substitutions: (orderIntent.substitutions ??
@@ -98,7 +151,7 @@ export async function ensureOrderFromSession(sessionId: string) {
     deliveryMethod: orderIntent.deliveryMethod,
     pickupLocation: orderIntent.pickupLocation ?? undefined,
     stripeSessionId: session.id,
-    stripePaymentIntentId: paymentIntentId ?? session.id,
+    stripePaymentIntentId: paymentIntentId ?? undefined,
     stripeChargeId: chargeId,
     stripeBalanceTransactionId: balanceTransactionId,
   };
@@ -109,9 +162,6 @@ export async function ensureOrderFromSession(sessionId: string) {
     where: { id: orderIntent.id },
     data: {
       status: "PAID",
-      stripeSessionId: session.id,
-      stripePaymentIntentId:
-        paymentIntentId ?? orderIntent.stripePaymentIntentId,
     },
   });
 
@@ -122,6 +172,26 @@ export async function updateOrderIntentStatus(
   session: Stripe.Checkout.Session,
   status: "FAILED" | "EXPIRED" | "CANCELLED",
 ) {
+  const checkoutSessionId = getCheckoutSessionIdFromCheckoutSession(session);
+  const checkoutSession = checkoutSessionId
+    ? await prisma.checkoutSession.findUnique({
+        where: { id: checkoutSessionId },
+        include: { items: true },
+      })
+    : await prisma.checkoutSession.findUnique({
+        where: { stripeSessionId: session.id },
+        include: { items: true },
+      });
+
+  if (checkoutSession) {
+    await updateCartCheckoutStatus(session, status);
+
+    const firstOrderIntentId = checkoutSession?.items[0]?.orderIntentId;
+    return firstOrderIntentId
+      ? prisma.orderIntent.findUnique({ where: { id: firstOrderIntentId } })
+      : null;
+  }
+
   const orderIntentId = getOrderIntentIdFromSession(session);
   if (!orderIntentId) return null;
 
@@ -129,11 +199,6 @@ export async function updateOrderIntentStatus(
     where: { id: orderIntentId },
     data: {
       status,
-      stripeSessionId: session.id,
-      stripePaymentIntentId:
-        typeof session.payment_intent === "string"
-          ? session.payment_intent
-          : session.payment_intent?.id,
     },
   });
 }

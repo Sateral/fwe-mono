@@ -67,6 +67,7 @@ export async function GET(request: Request) {
         mealId: string;
         mealName: string;
         totalQuantity: number;
+        assignedQuantity: number;
         variations: {
           key: string; // signature of mods + subs
           substitutions: any;
@@ -82,12 +83,19 @@ export async function GET(request: Request) {
           mealId: order.mealId,
           mealName: order.meal.name,
           totalQuantity: 0,
+          assignedQuantity: 0,
           variations: [],
         });
       }
 
       const entry = summary.get(order.mealId)!;
       entry.totalQuantity += order.quantity;
+      if (
+        order.settlementMethod === "MEAL_PLAN_CREDITS" &&
+        order.orderIntentId === null
+      ) {
+        entry.assignedQuantity += order.quantity;
+      }
 
       // Variation Handling
       // Create a unique key for this configuration
@@ -127,6 +135,9 @@ export async function GET(request: Request) {
         meal: order.meal.name,
         quantity: order.quantity,
         details: {
+          assignedByChef:
+            order.settlementMethod === "MEAL_PLAN_CREDITS" &&
+            order.orderIntentId === null,
           substitutions: order.substitutions,
           modifiers: order.modifiers,
           proteinBoost: order.proteinBoost,

@@ -1,10 +1,14 @@
 import type {
+  ApiCart,
   ApiDietaryTag,
   ApiFailedOrder,
   ApiMeal,
+  ApiMealPlan,
+  ApiMealPlanUsage,
   ApiModifierGroup,
   ApiModifierOption,
   ApiOrder,
+  ApiOrderSession,
   ApiSubstitutionGroup,
   ApiSubstitutionOption,
   ApiUser,
@@ -12,6 +16,8 @@ import type {
   FulfillmentStatus,
 } from "@fwe/types";
 import type {
+  CartCheckoutRequest,
+  CreateCartInput,
   CreateFailedOrderInput,
   CreateOrderInput,
   CheckoutSessionRequest,
@@ -145,13 +151,11 @@ export const mealsApi = {
 
   /**
    * Get available meals for ordering.
-   * Returns signature meals + orderable rotation meals.
+   * Returns the current orderable rotation meals.
    * Week runs Wed-Tue. Orders placed now are delivered next week.
    */
   async getAvailable(): Promise<{
     meals: ApiMeal[];
-    signatureMeals?: ApiMeal[];
-    rotationMeals?: ApiMeal[];
     isOrderingOpen: boolean;
     currentWeekDisplay?: string;
     deliveryWeekDisplay?: string;
@@ -213,9 +217,9 @@ export const ordersApi = {
   /**
    * Get an order by Stripe session ID.
    */
-  async getByStripeSession(sessionId: string): Promise<ApiOrder | null> {
+  async getByStripeSession(sessionId: string): Promise<ApiOrderSession | null> {
     try {
-      return await apiRequest<ApiOrder>(
+      return await apiRequest<ApiOrderSession>(
         `/api/orders/stripe-session/${sessionId}`,
       );
     } catch {
@@ -226,9 +230,9 @@ export const ordersApi = {
   /**
    * Ensure an order exists for a Stripe session.
    */
-  async ensureByStripeSession(sessionId: string): Promise<ApiOrder | null> {
+  async ensureByStripeSession(sessionId: string): Promise<ApiOrderSession | null> {
     try {
-      return await apiRequest<ApiOrder | null>(
+      return await apiRequest<ApiOrderSession | null>(
         `/api/orders/stripe-session/${sessionId}`,
         { method: "POST" },
       );
@@ -271,6 +275,38 @@ export const checkoutApi = {
       method: "POST",
       body: JSON.stringify(input),
     });
+  },
+};
+
+export const cartsApi = {
+  async create(
+    userId: string | undefined,
+    input: CreateCartInput,
+  ): Promise<ApiCart> {
+    const headers = userId
+      ? {
+          "x-user-id": userId,
+        }
+      : undefined;
+
+    return apiRequest<ApiCart>(`/api/carts`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(input),
+    });
+  },
+
+  async checkout(
+    cartId: string,
+    input: CartCheckoutRequest,
+  ): Promise<{ url: string | null; id: string }> {
+    return apiRequest<{ url: string | null; id: string }>(
+      `/api/carts/${cartId}/checkout`,
+      {
+        method: "POST",
+        body: JSON.stringify(input),
+      },
+    );
   },
 };
 
@@ -364,12 +400,35 @@ export const usersApi = {
   },
 };
 
+export const mealPlansApi = {
+  async getUsage(id: string): Promise<ApiMealPlanUsage | null> {
+    try {
+      return await apiRequest<ApiMealPlanUsage>(`/api/meal-plans/${id}/usage`);
+    } catch {
+      return null;
+    }
+  },
+
+  async purchase(input: {
+    userId: string;
+    weeklyCreditCap: number;
+    creditAmount: number;
+    autoRenew?: boolean;
+  }): Promise<ApiMealPlan> {
+    return apiRequest<ApiMealPlan>(`/api/meal-plans`, {
+      method: "POST",
+      body: JSON.stringify(input),
+    });
+  },
+};
+
 // ============================================
 // Unified API Export
 // ============================================
 
 export const cmsApi = {
   meals: mealsApi,
+  mealPlans: mealPlansApi,
   orders: ordersApi,
   failedOrders: failedOrdersApi,
   users: usersApi,

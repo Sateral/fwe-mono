@@ -15,6 +15,7 @@ interface OrderSummaryProps {
   onCheckout: () => void;
   onSaveForLater: () => void;
   isCheckingOut?: boolean;
+  checkoutLabel?: string;
 }
 
 const OrderSummary = ({
@@ -28,6 +29,7 @@ const OrderSummary = ({
   onCheckout,
   onSaveForLater,
   isCheckingOut = false,
+  checkoutLabel = "Place Order",
 }: OrderSummaryProps) => {
   // Calculate base price from meal
   const basePrice = meal.price;
@@ -183,7 +185,7 @@ const OrderSummary = ({
           ) : (
             <>
               <CreditCard className="w-4 h-4 mr-2" />
-              Place Order
+              {checkoutLabel}
             </>
           )}
         </Button>

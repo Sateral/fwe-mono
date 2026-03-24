@@ -3,11 +3,11 @@ import type {
   FulfillmentStatus,
   PaymentStatus,
 } from "@fwe/validators";
-import prisma from "@/lib/prisma";
+import prisma from "../prisma";
 import {
   getOrderingWindowForDeliveryWeek,
   weeklyRotationService,
-} from "@/lib/services/weekly-rotation.service";
+} from "./weekly-rotation.service";
 
 // ============================================
 // Order Service
@@ -33,6 +33,11 @@ export const orderService = {
         tags: true,
       },
     },
+    orderIntent: {
+      select: {
+        clientRequestId: true,
+      },
+    },
     user: true,
   },
   /**
@@ -45,8 +50,7 @@ export const orderService = {
     const existingOrder = await prisma.order.findFirst({
       where: {
         OR: [
-          { stripeSessionId: input.stripeSessionId },
-          { stripePaymentIntentId: input.stripePaymentIntentId },
+          ...(input.orderIntentId ? [{ orderIntentId: input.orderIntentId }] : []),
         ],
       },
       include: this.orderInclude,
@@ -81,6 +85,14 @@ export const orderService = {
           userId: input.userId,
           mealId: input.mealId,
           rotationId,
+          customerName: input.customerName,
+          customerEmail: input.customerEmail,
+          customerPhone: input.customerPhone,
+          customerDeliveryAddress: input.customerDeliveryAddress,
+          customerDeliveryCity: input.customerDeliveryCity,
+          customerDeliveryPostal: input.customerDeliveryPostal,
+          customerDeliveryNotes: input.customerDeliveryNotes,
+          customerIsGuest: input.customerIsGuest ?? false,
           quantity: input.quantity,
           unitPrice: input.unitPrice,
           totalAmount: input.totalAmount,
@@ -109,8 +121,7 @@ export const orderService = {
       const recoveredOrder = await prisma.order.findFirst({
         where: {
           OR: [
-            { stripeSessionId: input.stripeSessionId },
-            { stripePaymentIntentId: input.stripePaymentIntentId },
+            ...(input.orderIntentId ? [{ orderIntentId: input.orderIntentId }] : []),
           ],
         },
         include: this.orderInclude,
@@ -148,8 +159,17 @@ export const orderService = {
       `[OrderService] Fetching order by Stripe session ${stripeSessionId}`,
     );
 
-    return await prisma.order.findUnique({
+    return await prisma.order.findFirst({
       where: { stripeSessionId },
+      orderBy: { createdAt: "asc" },
+      include: this.orderInclude,
+    });
+  },
+
+  async getOrdersByStripeSessionId(stripeSessionId: string) {
+    return await prisma.order.findMany({
+      where: { stripeSessionId },
+      orderBy: { createdAt: "asc" },
       include: this.orderInclude,
     });
   },
@@ -341,6 +361,11 @@ export const orderService = {
                 options: true,
               },
             },
+          },
+        },
+        orderIntent: {
+          select: {
+            clientRequestId: true,
           },
         },
         user: {

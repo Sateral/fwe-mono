@@ -2,6 +2,8 @@ import { updateProfileRequestSchema } from "@fwe/validators";
 import { NextRequest, NextResponse } from "next/server";
 
 import { requireInternalAuth } from "@/lib/api-auth";
+import { flavorProfileService } from "@/lib/services/flavor-profile.service";
+import { mealPlanService } from "@/lib/services/meal-plan.service";
 import { userService } from "@/lib/services/user.service";
 
 /**
@@ -18,7 +20,9 @@ export async function GET(
 
   try {
     const { id } = await params;
-    const user = await userService.findById(id);
+    const { user, guestMergeRequiresReview } =
+      await userService.findByIdWithGuestMerge(id);
+    const mealPlan = await mealPlanService.getPlanSummaryByUserId(id);
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -29,12 +33,17 @@ export async function GET(
       id: user.id,
       name: user.name,
       email: user.email,
+      image: user.image,
       phone: user.phone,
       deliveryAddress: user.deliveryAddress,
       deliveryCity: user.deliveryCity,
       deliveryPostal: user.deliveryPostal,
       deliveryNotes: user.deliveryNotes,
       profileComplete: user.profileComplete,
+      onboardingStatus: user.onboardingStatus,
+      guestMergeRequiresReview,
+      mealPlan,
+      flavorProfile: user.flavorProfile,
     });
   } catch (error) {
     console.error("[API] Error fetching user:", error);
@@ -82,6 +91,8 @@ export async function PATCH(
       deliveryCity,
       deliveryPostal,
       deliveryNotes,
+      flavorProfile,
+      onboardingStatus,
     } = validation.data;
 
     const updatedUser = await userService.updateProfile(id, {
@@ -93,16 +104,31 @@ export async function PATCH(
       deliveryNotes,
     });
 
+    const savedFlavorProfile = flavorProfile
+      ? await flavorProfileService.upsertProfile(id, flavorProfile)
+      : (await userService.findById(id))?.flavorProfile ?? null;
+
+    if (onboardingStatus === "SKIPPED" && !flavorProfile) {
+      await flavorProfileService.markOnboardingSkipped(id);
+    }
+
+    const refreshedUser = await userService.findById(id);
+    const refreshedMealPlan = await mealPlanService.getPlanSummaryByUserId(id);
+
     return NextResponse.json({
       id: updatedUser.id,
       name: updatedUser.name,
       email: updatedUser.email,
+      image: updatedUser.image,
       phone: updatedUser.phone,
       deliveryAddress: updatedUser.deliveryAddress,
       deliveryCity: updatedUser.deliveryCity,
       deliveryPostal: updatedUser.deliveryPostal,
       deliveryNotes: updatedUser.deliveryNotes,
       profileComplete: updatedUser.profileComplete,
+      onboardingStatus: refreshedUser?.onboardingStatus ?? updatedUser.onboardingStatus,
+      mealPlan: refreshedMealPlan,
+      flavorProfile: savedFlavorProfile,
     });
   } catch (error) {
     console.error("[API] Error updating user profile:", error);

@@ -2,6 +2,7 @@ import { createOrderSchema } from "@fwe/validators";
 import { NextResponse } from "next/server";
 
 import { requireInternalAuth } from "@/lib/api-auth";
+import { serializeOrder, serializeOrders } from "@/lib/api-serializers";
 import { orderService } from "@/lib/services/order.service";
 
 // ============================================
@@ -34,7 +35,7 @@ export async function GET(request: Request) {
       orders = await orderService.getAllOrders();
     }
 
-    return NextResponse.json(orders);
+    return NextResponse.json(serializeOrders(orders));
   } catch (error) {
     console.error("[API] Failed to fetch orders:", error);
     return NextResponse.json(
@@ -75,7 +76,7 @@ export async function POST(request: Request) {
     const order = await orderService.createOrder(parsed.data);
 
     console.log(`[API] Order ${order.id} created successfully`);
-    return NextResponse.json(order, { status: 201 });
+    return NextResponse.json(serializeOrder(order), { status: 201 });
   } catch (error) {
     console.error("[API] Failed to create order:", error);
     return NextResponse.json(

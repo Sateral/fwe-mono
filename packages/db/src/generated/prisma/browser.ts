@@ -53,10 +53,25 @@ export type DietaryTag = Prisma.DietaryTagModel
  */
 export type Order = Prisma.OrderModel
 /**
+ * Model RotationPeriod
+ * 
+ */
+export type RotationPeriod = Prisma.RotationPeriodModel
+/**
  * Model WeeklyRotation
  * 
  */
 export type WeeklyRotation = Prisma.WeeklyRotationModel
+/**
+ * Model Cart
+ * 
+ */
+export type Cart = Prisma.CartModel
+/**
+ * Model CartItem
+ * 
+ */
+export type CartItem = Prisma.CartItemModel
 /**
  * Model FailedOrder
  * Stores failed order creation attempts for admin recovery.
@@ -70,6 +85,16 @@ export type FailedOrder = Prisma.FailedOrderModel
  */
 export type OrderIntent = Prisma.OrderIntentModel
 /**
+ * Model CheckoutSession
+ * 
+ */
+export type CheckoutSession = Prisma.CheckoutSessionModel
+/**
+ * Model CheckoutSessionItem
+ * 
+ */
+export type CheckoutSessionItem = Prisma.CheckoutSessionItemModel
+/**
  * Model PaymentEvent
  * 
  */
@@ -79,6 +104,36 @@ export type PaymentEvent = Prisma.PaymentEventModel
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model MealPlan
+ * 
+ */
+export type MealPlan = Prisma.MealPlanModel
+/**
+ * Model MealPlanWindowUsage
+ * 
+ */
+export type MealPlanWindowUsage = Prisma.MealPlanWindowUsageModel
+/**
+ * Model MealPlanCreditLedger
+ * 
+ */
+export type MealPlanCreditLedger = Prisma.MealPlanCreditLedgerModel
+/**
+ * Model FlavorProfile
+ * 
+ */
+export type FlavorProfile = Prisma.FlavorProfileModel
+/**
+ * Model ReferralCode
+ * 
+ */
+export type ReferralCode = Prisma.ReferralCodeModel
+/**
+ * Model ReferralUse
+ * 
+ */
+export type ReferralUse = Prisma.ReferralUseModel
 /**
  * Model Session
  * 

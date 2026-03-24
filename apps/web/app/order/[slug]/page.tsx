@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getMealBySlug } from "@/actions/meal-services";
+import { getServerSession } from "@/lib/auth-server";
 import OrderPageClient from "@/components/order/order-page-client";
 import { Plus_Jakarta_Sans } from "next/font/google";
 
@@ -33,6 +34,7 @@ export async function generateMetadata({ params }: OrderPageProps) {
 export default async function OrderPage({ params }: OrderPageProps) {
   const { slug } = await params;
   const meal = await getMealBySlug(slug);
+  const session = await getServerSession();
 
   if (!meal) {
     notFound();
@@ -40,7 +42,17 @@ export default async function OrderPage({ params }: OrderPageProps) {
 
   return (
     <div className={plusJakartaSans.className}>
-      <OrderPageClient meal={meal} />
+      <OrderPageClient
+        meal={meal}
+        initialCustomer={
+          session?.user
+            ? {
+                email: session.user.email,
+                name: session.user.name ?? "",
+              }
+            : null
+        }
+      />
     </div>
   );
 }

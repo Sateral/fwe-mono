@@ -55,14 +55,8 @@ export async function getMealsByTag(tag: string): Promise<ApiMeal[]> {
 
 /**
  * Get available meals for ordering (cached, 1 min TTL).
- * Returns signature meals + current week's rotation meals (if before cutoff).
+ * Returns the current orderable rotation meals.
  */
 export async function getAvailableMeals() {
-  try {
-    return await getCachedAvailableMeals();
-  } catch {
-    // Fallback to all meals if rotation endpoint fails
-    const meals = await getCachedMeals();
-    return { meals, isOrderingOpen: true };
-  }
+  return getCachedAvailableMeals();
 }

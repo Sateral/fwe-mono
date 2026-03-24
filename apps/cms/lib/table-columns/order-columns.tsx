@@ -101,6 +101,11 @@ export function getOrderColumns(
                   Boost
                 </span>
               )}
+              {row.original.orderIntent?.clientRequestId?.startsWith("assignment:") && (
+                  <span className="rounded-full border bg-emerald-500/10 px-2 py-0.5 text-emerald-700 dark:text-emerald-300">
+                    Chef assigned
+                  </span>
+                )}
               {subsDisplay && (
                 <span className="rounded-full border bg-muted/40 px-2 py-0.5">
                   {subsDisplay}

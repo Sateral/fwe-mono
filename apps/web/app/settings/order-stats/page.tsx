@@ -11,6 +11,7 @@ import { redirect } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getServerSession } from "@/lib/auth-server";
+import { cmsApi } from "@/lib/cms-api";
 import { getUserOrders } from "@/lib/order-service";
 
 export default async function OrderStatsPage() {
@@ -20,7 +21,11 @@ export default async function OrderStatsPage() {
     redirect("/sign-in");
   }
 
+  const user = await cmsApi.users.getById(session.user.id);
   const orders = await getUserOrders(session.user.id).catch(() => []);
+  const mealPlanUsage = user?.mealPlan
+    ? await cmsApi.mealPlans.getUsage(user.mealPlan.id)
+    : null;
   const totalOrders = orders.length;
   const totalSpent = orders.reduce((sum, order) => sum + order.totalAmount, 0);
   const averageOrder = totalOrders > 0 ? totalSpent / totalOrders : 0;
@@ -157,6 +162,43 @@ export default async function OrderStatsPage() {
               <div className="rounded-lg border border-border/60 bg-muted/40 px-4 py-3 text-xs text-muted-foreground">
                 Totals are calculated across your full order history.
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <CreditCard className="h-5 w-5 text-primary" />
+                Meal Plan Usage
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm">
+              {mealPlanUsage ? (
+                <>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Weekly cap</span>
+                    <span className="font-semibold">{mealPlanUsage.weeklyCreditCap}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Credits used</span>
+                    <span className="font-semibold">{mealPlanUsage.creditsUsed}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Week remaining</span>
+                    <span className="font-semibold">
+                      {mealPlanUsage.currentWeekCreditsRemaining}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Balance</span>
+                    <span className="font-semibold">{mealPlanUsage.remainingCredits}</span>
+                  </div>
+                </>
+              ) : (
+                <div className="rounded-lg border border-border/60 bg-muted/40 px-4 py-3 text-xs text-muted-foreground">
+                  No active meal plan usage yet.
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

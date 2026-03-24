@@ -24,7 +24,7 @@ async function requireAdmin() {
 // ============ MEALS ============
 
 export async function getMeals() {
-  return await mealService.getMeals();
+  return await mealService.getMeals({ includeInactive: true });
 }
 
 export async function getMeal(id: string) {

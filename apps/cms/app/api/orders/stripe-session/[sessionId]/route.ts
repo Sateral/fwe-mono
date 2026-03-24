@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
 import { requireInternalAuth } from "@/lib/api-auth";
-import { ensureOrderFromSession } from "@/lib/stripe-service";
+import { serializeOrder } from "@/lib/api-serializers";
+import { ensureOrdersFromSession } from "@/lib/stripe-service";
 import { orderService } from "@/lib/services/order.service";
 
 // ============================================
@@ -24,13 +25,16 @@ export async function GET(
     const { sessionId } = await params;
     console.log(`[API] GET /api/orders/stripe-session/${sessionId}`);
 
-    const order = await orderService.getOrderByStripeSessionId(sessionId);
+    const orders = await orderService.getOrdersByStripeSessionId(sessionId);
 
-    if (!order) {
-      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    if (!orders.length) {
+      return NextResponse.json({ error: "Orders not found" }, { status: 404 });
     }
 
-    return NextResponse.json(order);
+    return NextResponse.json({
+      sessionId,
+      orders: orders.map(serializeOrder),
+    });
   } catch (error) {
     console.error("[API] Failed to fetch order by Stripe session:", error);
     return NextResponse.json(
@@ -59,13 +63,16 @@ export async function POST(
     const { sessionId } = await params;
     console.log(`[API] POST /api/orders/stripe-session/${sessionId}`);
 
-    const order = await ensureOrderFromSession(sessionId);
+    const orders = await ensureOrdersFromSession(sessionId);
 
-    if (!order) {
+    if (!orders.length) {
       return NextResponse.json(null, { status: 202 });
     }
 
-    return NextResponse.json(order);
+    return NextResponse.json({
+      sessionId,
+      orders: orders.map(serializeOrder),
+    });
   } catch (error) {
     console.error("[API] Failed to ensure order:", error);
     return NextResponse.json(

@@ -46,6 +46,7 @@ import {
   archiveRotation,
   unarchiveRotation,
 } from "@/lib/actions/weekly-rotation.actions";
+import { assignHandsOffMeals } from "@/lib/actions/hands-off-assignment.actions";
 import Link from "next/link";
 
 // Types from server actions
@@ -85,6 +86,7 @@ export function RotationManager({
   const [selectedMealIds, setSelectedMealIds] = React.useState<string[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [creating, setCreating] = React.useState(false);
+  const [assigningHandsOff, setAssigningHandsOff] = React.useState(false);
 
   // Get current and ordering week starts (Week runs Wed-Tue)
   const today = new Date();
@@ -180,6 +182,28 @@ export function RotationManager({
     }
   };
 
+  const handleAssignHandsOff = async () => {
+    try {
+      setAssigningHandsOff(true);
+      const result = await assignHandsOffMeals();
+      toast.success(
+        `Assigned ${result.assignedMeals.length} meal${
+          result.assignedMeals.length === 1 ? "" : "s"
+        } for ${result.assignedUsers.length} Hands OFF user${
+          result.assignedUsers.length === 1 ? "" : "s"
+        }`,
+      );
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to assign Hands OFF meals",
+      );
+    } finally {
+      setAssigningHandsOff(false);
+    }
+  };
+
   // Check if a week has a rotation
   const getRotationForWeek = (weekStart: Date) => {
     return rotations.find((r) =>
@@ -258,6 +282,16 @@ export function RotationManager({
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  {currentRotation.status === "PUBLISHED" && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleAssignHandsOff}
+                      disabled={assigningHandsOff}
+                    >
+                      {assigningHandsOff ? "Assigning..." : "Assign Hands OFF Meals"}
+                    </Button>
+                  )}
                   <Button size="sm" variant="outline" asChild>
                     <Link
                       href={`/dashboard/orders?rotationId=${currentRotation.id}`}

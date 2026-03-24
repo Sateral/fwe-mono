@@ -58,11 +58,22 @@ export const ModelName = {
   ModifierOption: 'ModifierOption',
   DietaryTag: 'DietaryTag',
   Order: 'Order',
+  RotationPeriod: 'RotationPeriod',
   WeeklyRotation: 'WeeklyRotation',
+  Cart: 'Cart',
+  CartItem: 'CartItem',
   FailedOrder: 'FailedOrder',
   OrderIntent: 'OrderIntent',
+  CheckoutSession: 'CheckoutSession',
+  CheckoutSessionItem: 'CheckoutSessionItem',
   PaymentEvent: 'PaymentEvent',
   User: 'User',
+  MealPlan: 'MealPlan',
+  MealPlanWindowUsage: 'MealPlanWindowUsage',
+  MealPlanCreditLedger: 'MealPlanCreditLedger',
+  FlavorProfile: 'FlavorProfile',
+  ReferralCode: 'ReferralCode',
+  ReferralUse: 'ReferralUse',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification'
@@ -166,6 +177,15 @@ export type DietaryTagScalarFieldEnum = (typeof DietaryTagScalarFieldEnum)[keyof
 export const OrderScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  settlementMethod: 'settlementMethod',
+  customerName: 'customerName',
+  customerEmail: 'customerEmail',
+  customerPhone: 'customerPhone',
+  customerDeliveryAddress: 'customerDeliveryAddress',
+  customerDeliveryCity: 'customerDeliveryCity',
+  customerDeliveryPostal: 'customerDeliveryPostal',
+  customerDeliveryNotes: 'customerDeliveryNotes',
+  customerIsGuest: 'customerIsGuest',
   mealId: 'mealId',
   quantity: 'quantity',
   unitPrice: 'unitPrice',
@@ -196,17 +216,61 @@ export const OrderScalarFieldEnum = {
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
 
 
+export const RotationPeriodScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  name: 'name',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RotationPeriodScalarFieldEnum = (typeof RotationPeriodScalarFieldEnum)[keyof typeof RotationPeriodScalarFieldEnum]
+
+
 export const WeeklyRotationScalarFieldEnum = {
   id: 'id',
   weekStart: 'weekStart',
   weekEnd: 'weekEnd',
   orderCutoff: 'orderCutoff',
   status: 'status',
+  rotationPeriodId: 'rotationPeriodId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type WeeklyRotationScalarFieldEnum = (typeof WeeklyRotationScalarFieldEnum)[keyof typeof WeeklyRotationScalarFieldEnum]
+
+
+export const CartScalarFieldEnum = {
+  id: 'id',
+  clientRequestId: 'clientRequestId',
+  userId: 'userId',
+  settlementMethod: 'settlementMethod',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CartScalarFieldEnum = (typeof CartScalarFieldEnum)[keyof typeof CartScalarFieldEnum]
+
+
+export const CartItemScalarFieldEnum = {
+  id: 'id',
+  cartId: 'cartId',
+  mealId: 'mealId',
+  rotationId: 'rotationId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  substitutions: 'substitutions',
+  modifiers: 'modifiers',
+  proteinBoost: 'proteinBoost',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CartItemScalarFieldEnum = (typeof CartItemScalarFieldEnum)[keyof typeof CartItemScalarFieldEnum]
 
 
 export const FailedOrderScalarFieldEnum = {
@@ -239,6 +303,7 @@ export const OrderIntentScalarFieldEnum = {
   unitPrice: 'unitPrice',
   totalAmount: 'totalAmount',
   currency: 'currency',
+  settlementMethod: 'settlementMethod',
   substitutions: 'substitutions',
   modifiers: 'modifiers',
   proteinBoost: 'proteinBoost',
@@ -246,13 +311,59 @@ export const OrderIntentScalarFieldEnum = {
   deliveryMethod: 'deliveryMethod',
   pickupLocation: 'pickupLocation',
   status: 'status',
-  stripeSessionId: 'stripeSessionId',
-  stripePaymentIntentId: 'stripePaymentIntentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type OrderIntentScalarFieldEnum = (typeof OrderIntentScalarFieldEnum)[keyof typeof OrderIntentScalarFieldEnum]
+
+
+export const CheckoutSessionScalarFieldEnum = {
+  id: 'id',
+  clientRequestId: 'clientRequestId',
+  cartId: 'cartId',
+  userId: 'userId',
+  settlementMethod: 'settlementMethod',
+  status: 'status',
+  customerEmail: 'customerEmail',
+  customerName: 'customerName',
+  deliveryMethod: 'deliveryMethod',
+  pickupLocation: 'pickupLocation',
+  stripeSessionId: 'stripeSessionId',
+  stripePaymentIntentId: 'stripePaymentIntentId',
+  stripeChargeId: 'stripeChargeId',
+  stripeBalanceTransactionId: 'stripeBalanceTransactionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CheckoutSessionScalarFieldEnum = (typeof CheckoutSessionScalarFieldEnum)[keyof typeof CheckoutSessionScalarFieldEnum]
+
+
+export const CheckoutSessionItemScalarFieldEnum = {
+  id: 'id',
+  checkoutSessionId: 'checkoutSessionId',
+  orderIntentId: 'orderIntentId',
+  mealId: 'mealId',
+  mealName: 'mealName',
+  mealSlug: 'mealSlug',
+  mealImageUrl: 'mealImageUrl',
+  rotationId: 'rotationId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  totalAmount: 'totalAmount',
+  currency: 'currency',
+  substitutions: 'substitutions',
+  modifiers: 'modifiers',
+  proteinBoost: 'proteinBoost',
+  notes: 'notes',
+  deliveryMethod: 'deliveryMethod',
+  pickupLocation: 'pickupLocation',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CheckoutSessionItemScalarFieldEnum = (typeof CheckoutSessionItemScalarFieldEnum)[keyof typeof CheckoutSessionItemScalarFieldEnum]
 
 
 export const PaymentEventScalarFieldEnum = {
@@ -282,7 +393,14 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   stripeCustomerId: 'stripeCustomerId',
+  isGuest: 'isGuest',
+  guestSource: 'guestSource',
+  guestSourceId: 'guestSourceId',
+  guestMetadata: 'guestMetadata',
+  mergedIntoUserId: 'mergedIntoUserId',
+  mergedAt: 'mergedAt',
   profileComplete: 'profileComplete',
+  onboardingStatus: 'onboardingStatus',
   phone: 'phone',
   deliveryAddress: 'deliveryAddress',
   deliveryCity: 'deliveryCity',
@@ -294,6 +412,86 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const MealPlanScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  status: 'status',
+  weeklyCreditCap: 'weeklyCreditCap',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  autoRenew: 'autoRenew',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MealPlanScalarFieldEnum = (typeof MealPlanScalarFieldEnum)[keyof typeof MealPlanScalarFieldEnum]
+
+
+export const MealPlanWindowUsageScalarFieldEnum = {
+  id: 'id',
+  mealPlanId: 'mealPlanId',
+  windowStart: 'windowStart',
+  windowEnd: 'windowEnd',
+  creditsUsed: 'creditsUsed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MealPlanWindowUsageScalarFieldEnum = (typeof MealPlanWindowUsageScalarFieldEnum)[keyof typeof MealPlanWindowUsageScalarFieldEnum]
+
+
+export const MealPlanCreditLedgerScalarFieldEnum = {
+  id: 'id',
+  mealPlanId: 'mealPlanId',
+  eventType: 'eventType',
+  creditDelta: 'creditDelta',
+  referenceType: 'referenceType',
+  referenceId: 'referenceId',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type MealPlanCreditLedgerScalarFieldEnum = (typeof MealPlanCreditLedgerScalarFieldEnum)[keyof typeof MealPlanCreditLedgerScalarFieldEnum]
+
+
+export const FlavorProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  goals: 'goals',
+  restrictions: 'restrictions',
+  preferences: 'preferences',
+  involvement: 'involvement',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FlavorProfileScalarFieldEnum = (typeof FlavorProfileScalarFieldEnum)[keyof typeof FlavorProfileScalarFieldEnum]
+
+
+export const ReferralCodeScalarFieldEnum = {
+  id: 'id',
+  ownerUserId: 'ownerUserId',
+  code: 'code',
+  status: 'status',
+  maxUses: 'maxUses',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReferralCodeScalarFieldEnum = (typeof ReferralCodeScalarFieldEnum)[keyof typeof ReferralCodeScalarFieldEnum]
+
+
+export const ReferralUseScalarFieldEnum = {
+  id: 'id',
+  referralCodeId: 'referralCodeId',
+  referredUserId: 'referredUserId',
+  orderId: 'orderId',
+  createdAt: 'createdAt'
+} as const
+
+export type ReferralUseScalarFieldEnum = (typeof ReferralUseScalarFieldEnum)[keyof typeof ReferralUseScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {

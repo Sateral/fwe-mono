@@ -2,8 +2,30 @@ import { checkoutRequestSchema } from "@fwe/validators";
 import { NextRequest, NextResponse } from "next/server";
 
 import { getServerSession } from "@/lib/auth-server";
-import { checkoutApi } from "@/lib/cms-api";
+import { cartsApi, mealsApi } from "@/lib/cms-api";
 import { checkoutRateLimiter } from "@/lib/rate-limit";
+
+function resolveCheckoutErrorStatus(error: unknown) {
+  if (!(error instanceof Error)) {
+    return 500;
+  }
+
+  if (
+    error.message === "Hybrid carts are not supported in v1" ||
+    error.message === "No active meal plan found"
+  ) {
+    return 409;
+  }
+
+  if (
+    error.message === "Not enough meal plan credits" ||
+    error.message === "Cart exceeds weekly credit cap"
+  ) {
+    return 400;
+  }
+
+  return 500;
+}
 
 // ============================================
 // Route Handler
@@ -17,14 +39,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Authenticate user
     const session = await getServerSession();
 
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Parse and validate request body
     const body = await request.json();
     const validationResult = checkoutRequestSchema.safeParse(body);
 
@@ -36,11 +52,55 @@ export async function POST(request: NextRequest) {
     }
 
     const data = validationResult.data;
-    const checkoutSession = await checkoutApi.createSession({
-      ...data,
-      userId: session.user.id,
-      userEmail: session.user.email,
-      userName: session.user.name ?? undefined,
+    const userId = session?.user?.id;
+    const userEmail = session?.user?.email ?? data.guest?.email;
+    const userName = session?.user?.name ?? data.guest?.name;
+
+    if (!userEmail) {
+      return NextResponse.json(
+        { error: "Customer email is required for checkout" },
+        { status: 400 },
+      );
+    }
+
+    if (!session?.user && !data.guest?.name) {
+      return NextResponse.json(
+        { error: "Guest details are required for anonymous checkout" },
+        { status: 400 },
+      );
+    }
+
+    const rotation = await mealsApi.getActiveRotation();
+    if (!rotation) {
+      return NextResponse.json(
+        { error: "No active ordering rotation" },
+        { status: 409 },
+      );
+    }
+
+    const cart = await cartsApi.create(userId, {
+      requestId: data.requestId,
+      rotationId: rotation.id,
+      settlementMethod: data.settlementMethod,
+      guest: data.guest,
+      items: [
+        {
+          mealId: data.mealId,
+          quantity: data.quantity,
+          substitutions: data.substitutions,
+          modifiers: data.modifiers,
+          proteinBoost: data.proteinBoost,
+          notes: data.notes,
+        },
+      ],
+    });
+
+    const checkoutSession = await cartsApi.checkout(cart.id, {
+      userEmail,
+      userName: userName ?? undefined,
+      deliveryMethod: data.deliveryMethod,
+      pickupLocation: data.pickupLocation,
+      requestId: data.requestId,
     });
 
     return NextResponse.json({
@@ -50,8 +110,13 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Checkout error:", error);
     return NextResponse.json(
-      { error: "Failed to create checkout session" },
-      { status: 500 },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to create checkout session",
+      },
+      { status: resolveCheckoutErrorStatus(error) },
     );
   }
 }

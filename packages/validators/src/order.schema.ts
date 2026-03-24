@@ -35,10 +35,19 @@ export const createOrderSchema = z.object({
   notes: z.string().optional(),
   deliveryMethod: z.enum(["DELIVERY", "PICKUP"]).optional(),
   pickupLocation: z.string().optional(),
-  stripeSessionId: z.string().min(1, "Stripe session ID is required"),
+  customerName: z.string().min(1).optional(),
+  customerEmail: z.string().email().optional(),
+  customerPhone: z.string().min(1).optional(),
+  customerDeliveryAddress: z.string().min(1).optional(),
+  customerDeliveryCity: z.string().min(1).optional(),
+  customerDeliveryPostal: z.string().min(1).optional(),
+  customerDeliveryNotes: z.string().optional(),
+  customerIsGuest: z.boolean().optional(),
+  stripeSessionId: z.string().min(1, "Stripe session ID is required").optional(),
   stripePaymentIntentId: z
     .string()
-    .min(1, "Stripe payment intent ID is required"),
+    .min(1, "Stripe payment intent ID is required")
+    .optional(),
   stripeChargeId: z.string().optional(),
   stripeBalanceTransactionId: z.string().optional(),
 });

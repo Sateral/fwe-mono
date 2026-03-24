@@ -52,7 +52,7 @@ export function CustomerOrdersDialog({
   const { totalMeals, totalAmount } = React.useMemo(
     () => ({
       totalMeals: orders.reduce((sum, o) => sum + o.quantity, 0),
-      totalAmount: orders.reduce((sum, o) => sum + o.totalAmount, 0),
+      totalAmount: orders.reduce((sum, o) => sum + Number(o.totalAmount), 0),
     }),
     [orders],
   );
@@ -201,13 +201,13 @@ function OrderItemCard({
         <div className="min-w-0">
           <h4 className="font-semibold break-words">{order.meal?.name}</h4>
           <div className="text-xs text-muted-foreground mt-1">
-            Qty {order.quantity} • ${order.unitPrice.toFixed(2)} each
+             Qty {order.quantity} • ${Number(order.unitPrice).toFixed(2)} each
           </div>
         </div>
         <div className="text-right shrink-0">
           <StatusBadge status={order.fulfillmentStatus as FulfillmentStatus} />
           <div className="mt-1 font-semibold">
-            ${order.totalAmount.toFixed(2)}
+             ${Number(order.totalAmount).toFixed(2)}
           </div>
         </div>
       </div>

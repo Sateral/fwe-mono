@@ -1,4 +1,12 @@
-import type { CreateOrderInput } from "@fwe/validators";
+import type {
+  CartStatus,
+  CreateOrderInput,
+  FlavorProfile,
+  FlavorProfileInvolvement,
+  MealPlan,
+  OnboardingStatus,
+  SettlementMethod,
+} from "@fwe/validators";
 
 export type ModifierType = "SINGLE_SELECT" | "MULTI_SELECT";
 export type MealType = "SIGNATURE" | "ROTATING";
@@ -15,6 +23,9 @@ export type FailedOrderStatus =
   | "RETRYING"
   | "RESOLVED"
   | "ABANDONED";
+export type ApiFlavorProfileInvolvement = FlavorProfileInvolvement;
+
+export type { CartStatus, SettlementMethod };
 
 export interface ApiMeal {
   id: string;
@@ -86,6 +97,9 @@ export interface ApiOrder {
   id: string;
   userId: string;
   mealId: string;
+  settlementMethod: SettlementMethod;
+  orderIntentId?: string | null;
+  assignedByChef?: boolean;
   quantity: number;
   unitPrice: number;
   totalAmount: number;
@@ -106,6 +120,14 @@ export interface ApiOrder {
   stripeChargeId?: string | null;
   stripeRefundId?: string | null;
   stripeBalanceTransactionId?: string | null;
+  customerName: string | null;
+  customerEmail: string | null;
+  customerPhone: string | null;
+  customerDeliveryAddress: string | null;
+  customerDeliveryCity: string | null;
+  customerDeliveryPostal: string | null;
+  customerDeliveryNotes: string | null;
+  customerIsGuest: boolean;
   createdAt: string;
   updatedAt: string;
   meal: ApiMeal;
@@ -115,6 +137,35 @@ export interface ApiOrder {
     name: string;
     email: string;
   };
+}
+
+export interface ApiOrderSession {
+  sessionId: string;
+  orders: ApiOrder[];
+}
+
+export interface ApiCart {
+  id: string;
+  settlementMethod: SettlementMethod;
+  status: CartStatus;
+  userId: string;
+  rotationId: string | null;
+  items: ApiCartItem[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ApiCartItem {
+  id: string;
+  mealId: string;
+  rotationId: string | null;
+  quantity: number;
+  unitPrice: number;
+  substitutions: { groupName: string; optionName: string }[] | null;
+  modifiers: { groupName: string; optionNames: string[] }[] | null;
+  proteinBoost: boolean;
+  notes: string | null;
+  meal: Pick<ApiMeal, "id" | "name" | "slug" | "imageUrl">;
 }
 
 export interface ApiFailedOrder {
@@ -134,6 +185,20 @@ export interface ApiFailedOrder {
   resolvedBy: string | null;
 }
 
+export type ApiMealPlan = MealPlan;
+
+export interface ApiMealPlanUsage {
+  mealPlanId: string;
+  windowStart: string;
+  windowEnd: string;
+  creditsUsed: number;
+  weeklyCreditCap: number;
+  remainingCredits: number;
+  currentWeekCreditsRemaining: number;
+}
+
+export type ApiFlavorProfile = FlavorProfile;
+
 export interface ApiUser {
   id: string;
   name: string;
@@ -145,4 +210,9 @@ export interface ApiUser {
   deliveryPostal: string | null;
   deliveryNotes: string | null;
   profileComplete: boolean;
+  onboardingStatus?: OnboardingStatus;
+  guestMergeRequiresReview?: boolean;
+  mealPlan?: ApiMealPlan | null;
+  flavorProfile?: ApiFlavorProfile | null;
+  referralCode?: string | null;
 }
