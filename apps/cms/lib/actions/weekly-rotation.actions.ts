@@ -1,6 +1,7 @@
 "use server";
 
 import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
+import { toPlainObject } from "@/lib/utils";
 
 // ============================================
 // Server Actions for Weekly Rotations
@@ -10,28 +11,30 @@ import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
  * Get all rotations (for dashboard list).
  */
 export async function getRotations() {
-  return await weeklyRotationService.getAllRotations();
+  return toPlainObject(await weeklyRotationService.getAllRotations());
 }
 
 /**
  * Get current active rotation.
  */
 export async function getCurrentRotation() {
-  return await weeklyRotationService.getCurrentRotation();
+  return toPlainObject(await weeklyRotationService.getCurrentRotation());
 }
 
 /**
  * Get rotation by week start date.
  */
 export async function getRotationByWeek(weekStart: Date) {
-  return await weeklyRotationService.getRotationByWeek(weekStart);
+  return toPlainObject(await weeklyRotationService.getRotationByWeek(weekStart));
 }
 
 /**
  * Create a new rotation for a specific week.
  */
 export async function createRotation(weekStartDate: Date) {
-  return await weeklyRotationService.createRotation(weekStartDate);
+  return toPlainObject(
+    await weeklyRotationService.createRotation(weekStartDate),
+  );
 }
 
 /**
@@ -41,35 +44,43 @@ export async function updateRotationMeals(
   rotationId: string,
   mealIds: string[],
 ) {
-  return await weeklyRotationService.updateRotationMeals(rotationId, mealIds);
+  return toPlainObject(
+    await weeklyRotationService.updateRotationMeals(rotationId, mealIds),
+  );
 }
 
 /**
  * Publish a rotation.
  */
 export async function publishRotation(rotationId: string) {
-  return await weeklyRotationService.publishRotation(rotationId);
+  return toPlainObject(
+    await weeklyRotationService.publishRotation(rotationId),
+  );
 }
 
 /**
  * Archive a rotation.
  */
 export async function archiveRotation(rotationId: string) {
-  return await weeklyRotationService.archiveRotation(rotationId);
+  return toPlainObject(
+    await weeklyRotationService.archiveRotation(rotationId),
+  );
 }
 
 /**
  * Unarchive a rotation (set back to PUBLISHED).
  */
 export async function unarchiveRotation(rotationId: string) {
-  return await weeklyRotationService.unarchiveRotation(rotationId);
+  return toPlainObject(
+    await weeklyRotationService.unarchiveRotation(rotationId),
+  );
 }
 
 /**
  * Get all rotating meals (for meal selector).
  */
 export async function getRotatingMeals() {
-  return await weeklyRotationService.getRotatingMeals();
+  return toPlainObject(await weeklyRotationService.getRotatingMeals());
 }
 
 /**
@@ -83,5 +94,5 @@ export async function checkNextWeekWarning() {
  * Get available meals for ordering (signature + current rotation).
  */
 export async function getAvailableMeals() {
-  return await weeklyRotationService.getAvailableMeals();
+  return toPlainObject(await weeklyRotationService.getAvailableMeals());
 }

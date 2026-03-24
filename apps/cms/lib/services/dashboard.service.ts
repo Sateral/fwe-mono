@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { toPlainObject } from "@/lib/utils";
 
 export const dashboardService = {
   async getMetrics() {
@@ -31,12 +32,12 @@ export const dashboardService = {
 
     const totalRevenue = totalRevenueAgg._sum?.totalAmount ?? 0;
 
-    return {
+    return toPlainObject({
       totalRevenue: Number(totalRevenue),
       activeMealsCount,
       totalOrdersCount,
       recentOrders,
-    };
+    });
   },
 
   async getRevenueChartData() {

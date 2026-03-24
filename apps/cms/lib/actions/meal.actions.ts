@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
 import { mealService } from "@/lib/services/meal.service";
+import { toPlainObject } from "@/lib/utils";
 
 // Helper to check if user is admin
 async function requireAdmin() {
@@ -24,11 +25,11 @@ async function requireAdmin() {
 // ============ MEALS ============
 
 export async function getMeals() {
-  return await mealService.getMeals({ includeInactive: true });
+  return toPlainObject(await mealService.getMeals({ includeInactive: true }));
 }
 
 export async function getMeal(id: string) {
-  return await mealService.getMealById(id);
+  return toPlainObject(await mealService.getMealById(id));
 }
 
 export async function createMeal(data: MealFormValues) {

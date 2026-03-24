@@ -4,6 +4,7 @@ import type { FulfillmentStatus } from "@fwe/validators";
 
 import type { OrderFilters } from "@/lib/types/order-types";
 import { orderService } from "@/lib/services/order.service";
+import { toPlainObject } from "@/lib/utils";
 
 // ============================================
 // Server Actions
@@ -13,14 +14,14 @@ import { orderService } from "@/lib/services/order.service";
  * Get all orders with optional filtering.
  */
 export async function getOrders(filters?: OrderFilters) {
-  return await orderService.getOrdersWithFilters(filters);
+  return toPlainObject(await orderService.getOrdersWithFilters(filters));
 }
 
 /**
  * Get a single order by ID with full relations.
  */
 export async function getOrder(id: string) {
-  return await orderService.getOrderById(id);
+  return toPlainObject(await orderService.getOrderById(id));
 }
 
 /**
@@ -30,7 +31,9 @@ export async function updateFulfillmentStatus(
   orderId: string,
   fulfillmentStatus: FulfillmentStatus,
 ) {
-  return await orderService.updateFulfillmentStatus(orderId, fulfillmentStatus);
+  return toPlainObject(
+    await orderService.updateFulfillmentStatus(orderId, fulfillmentStatus),
+  );
 }
 
 /**
@@ -44,7 +47,9 @@ export async function getFulfillmentStats() {
  * Get orders for a specific delivery week.
  */
 export async function getOrdersForDeliveryWeek(deliveryWeekDate: Date) {
-  return await orderService.getOrdersForDeliveryWeek(deliveryWeekDate);
+  return toPlainObject(
+    await orderService.getOrdersForDeliveryWeek(deliveryWeekDate),
+  );
 }
 
 /**
@@ -62,5 +67,5 @@ export async function getProductionSummary(
 }
 
 export async function getOrdersByRotation(rotationId: string) {
-  return await orderService.getOrdersByRotationId(rotationId);
+  return toPlainObject(await orderService.getOrdersByRotationId(rotationId));
 }
