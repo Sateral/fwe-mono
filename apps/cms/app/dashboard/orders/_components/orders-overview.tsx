@@ -21,6 +21,11 @@ export function OrdersOverview({ orders }: OrdersOverviewProps) {
     (sum, order) => sum + (order.proteinBoost ? order.quantity : 0),
     0,
   );
+  const assignedMeals = paidOrders.reduce(
+    (sum, order) =>
+      sum + (order.orderIntent?.clientRequestId?.startsWith("assignment:") ? order.quantity : 0),
+    0,
+  );
   const uniqueCustomers = new Set(
     paidOrders.map((o) => o.userId || o.user?.email || "guest"),
   ).size;
@@ -63,7 +68,7 @@ export function OrdersOverview({ orders }: OrdersOverviewProps) {
               {totalMeals}
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              {boosts} protein boosts
+              {boosts} protein boosts • {assignedMeals} chef-assigned
             </p>
           </div>
 

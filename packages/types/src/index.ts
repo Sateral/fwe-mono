@@ -97,6 +97,9 @@ export interface ApiOrder {
   id: string;
   userId: string;
   mealId: string;
+  settlementMethod: SettlementMethod;
+  orderIntentId?: string | null;
+  assignedByChef?: boolean;
   quantity: number;
   unitPrice: number;
   totalAmount: number;

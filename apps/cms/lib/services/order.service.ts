@@ -33,6 +33,11 @@ export const orderService = {
         tags: true,
       },
     },
+    orderIntent: {
+      select: {
+        clientRequestId: true,
+      },
+    },
     user: true,
   },
   /**
@@ -356,6 +361,11 @@ export const orderService = {
                 options: true,
               },
             },
+          },
+        },
+        orderIntent: {
+          select: {
+            clientRequestId: true,
           },
         },
         user: {

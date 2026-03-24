@@ -32,6 +32,9 @@ export default async function ProfilePage() {
   const lastOrderDate = lastOrder
     ? format(new Date(lastOrder.createdAt), "MMM d, yyyy")
     : "No orders yet";
+  const assignedMeals = orders.filter(
+    (order) => order.assignedByChef,
+  );
   const memberSince =
     "createdAt" in session.user && session.user.createdAt
       ? format(new Date(session.user.createdAt), "MMM yyyy")
@@ -138,6 +141,41 @@ export default async function ProfilePage() {
               )}
             </CardContent>
           </Card>
+
+          {user?.flavorProfile?.involvement === "HANDS_OFF" && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Package className="h-5 w-5 text-primary" />
+                  Chef Assigned Meals
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                {assignedMeals.length > 0 ? (
+                  assignedMeals.slice(0, 4).map((order) => (
+                    <div
+                      key={order.id}
+                      className="flex items-center justify-between rounded-lg border border-border/60 bg-muted/40 px-4 py-3"
+                    >
+                      <div>
+                        <div className="font-medium text-foreground">
+                          {order.meal?.name ?? "Assigned meal"}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Added {format(new Date(order.createdAt), "MMM d, yyyy")}
+                        </div>
+                      </div>
+                      <div className="text-sm font-semibold">Qty {order.quantity}</div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-muted-foreground">
+                    Your chef-assigned meals will appear here after the ordering window closes.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         <ProfileSetupForm
