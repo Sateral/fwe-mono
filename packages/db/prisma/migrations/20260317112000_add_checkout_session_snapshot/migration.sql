@@ -72,7 +72,7 @@ FOREIGN KEY ("cartId") REFERENCES "Cart"("id") ON DELETE CASCADE ON UPDATE CASCA
 
 ALTER TABLE "CheckoutSession"
 ADD CONSTRAINT "CheckoutSession_userId_fkey"
-FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE "CheckoutSessionItem"
 ADD CONSTRAINT "CheckoutSessionItem_checkoutSessionId_fkey"
