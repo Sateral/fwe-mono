@@ -28,6 +28,14 @@ export const auth = betterAuth({
         return;
       }
 
+      // The web app proxies auth requests through the CMS and sets this header
+      // to identify customer sign-ins. Only enforce the admin-only restriction
+      // for direct CMS sign-in attempts (the admin dashboard).
+      const authSource = ctx.headers?.get("x-auth-source");
+      if (authSource === "web") {
+        return;
+      }
+
       const email = ctx.body?.email;
 
       if (email) {

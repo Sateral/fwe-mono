@@ -10,6 +10,9 @@ async function proxyAuth(request: NextRequest) {
 
   const headers = new Headers(request.headers);
   headers.delete("host");
+  // Identify this request as originating from the web app so the CMS auth
+  // hook can skip the admin-only sign-in restriction for customer logins.
+  headers.set("x-auth-source", "web");
 
   const body =
     request.method === "GET" || request.method === "HEAD"
