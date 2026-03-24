@@ -5,6 +5,28 @@ import { getServerSession } from "@/lib/auth-server";
 import { cartsApi, mealsApi } from "@/lib/cms-api";
 import { checkoutRateLimiter } from "@/lib/rate-limit";
 
+function resolveCheckoutErrorStatus(error: unknown) {
+  if (!(error instanceof Error)) {
+    return 500;
+  }
+
+  if (
+    error.message === "Hybrid carts are not supported in v1" ||
+    error.message === "No active meal plan found"
+  ) {
+    return 409;
+  }
+
+  if (
+    error.message === "Not enough meal plan credits" ||
+    error.message === "Cart exceeds weekly credit cap"
+  ) {
+    return 400;
+  }
+
+  return 500;
+}
+
 // ============================================
 // Route Handler
 // ============================================
@@ -59,7 +81,7 @@ export async function POST(request: NextRequest) {
     const cart = await cartsApi.create(userId, {
       requestId: data.requestId,
       rotationId: rotation.id,
-      settlementMethod: "STRIPE",
+      settlementMethod: data.settlementMethod,
       guest: data.guest,
       items: [
         {
@@ -88,8 +110,13 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Checkout error:", error);
     return NextResponse.json(
-      { error: "Failed to create checkout session" },
-      { status: 500 },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to create checkout session",
+      },
+      { status: resolveCheckoutErrorStatus(error) },
     );
   }
 }

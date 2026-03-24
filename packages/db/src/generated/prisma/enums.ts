@@ -113,6 +113,8 @@ export type MealPlanStatus = (typeof MealPlanStatus)[keyof typeof MealPlanStatus
 
 
 export const MealPlanLedgerEvent = {
+  PURCHASE: 'PURCHASE',
+  REDEMPTION: 'REDEMPTION',
   PLAN_STARTED: 'PLAN_STARTED',
   PLAN_RENEWED: 'PLAN_RENEWED',
   ORDER_REDEEMED: 'ORDER_REDEEMED',

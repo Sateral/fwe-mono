@@ -246,6 +246,8 @@ enum MealPlanStatus {
 }
 
 enum MealPlanLedgerEvent {
+  PURCHASE
+  REDEMPTION
   PLAN_STARTED
   PLAN_RENEWED
   ORDER_REDEEMED
@@ -634,6 +636,7 @@ model MealPlanCreditLedger {
   createdAt    DateTime            @default(now())
 
   @@index([mealPlanId, createdAt])
+  @@index([mealPlanId, referenceType, referenceId])
   @@index([eventType])
 }
 

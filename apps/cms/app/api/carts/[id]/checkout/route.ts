@@ -4,6 +4,28 @@ import { NextResponse } from "next/server";
 import { requireInternalAuth } from "@/lib/api-auth";
 import { createStripeCheckoutSessionForCart } from "@/lib/services/cart-checkout.service";
 
+function resolveCheckoutErrorStatus(error: unknown) {
+  if (!(error instanceof Error)) {
+    return 500;
+  }
+
+  if (
+    error.message === "Hybrid carts are not supported in v1" ||
+    error.message === "No active meal plan found"
+  ) {
+    return 409;
+  }
+
+  if (
+    error.message === "Not enough meal plan credits" ||
+    error.message === "Cart exceeds weekly credit cap"
+  ) {
+    return 400;
+  }
+
+  return 500;
+}
+
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -32,8 +54,13 @@ export async function POST(
   } catch (error) {
     console.error("[API] Failed to create cart checkout session:", error);
     return NextResponse.json(
-      { error: "Failed to create checkout session" },
-      { status: 500 },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to create checkout session",
+      },
+      { status: resolveCheckoutErrorStatus(error) },
     );
   }
 }

@@ -43,7 +43,7 @@ export const createOrderSchema = z.object({
   customerDeliveryPostal: z.string().min(1).optional(),
   customerDeliveryNotes: z.string().optional(),
   customerIsGuest: z.boolean().optional(),
-  stripeSessionId: z.string().min(1, "Stripe session ID is required"),
+  stripeSessionId: z.string().min(1, "Stripe session ID is required").optional(),
   stripePaymentIntentId: z
     .string()
     .min(1, "Stripe payment intent ID is required")

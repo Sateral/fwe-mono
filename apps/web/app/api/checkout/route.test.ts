@@ -145,4 +145,93 @@ describe("web checkout route", () => {
       requestId: "4db6c5c0-bb24-4d18-b6f6-e165cdb4e0b3",
     });
   });
+
+  it("forwards meal plan settlement when requested", async () => {
+    rateLimitMock.checkoutRateLimiter.check.mockResolvedValue({ success: true });
+    authMock.getServerSession.mockResolvedValue({
+      user: {
+        id: "user_123",
+        email: "customer@example.com",
+        name: "Customer",
+      },
+    });
+    cmsApiMock.mealsApi.getActiveRotation.mockResolvedValue({
+      id: "rotation_123",
+    });
+    cmsApiMock.cartsApi.create.mockResolvedValue({ id: "cart_plan_123" });
+    cmsApiMock.cartsApi.checkout.mockResolvedValue({
+      id: "meal-plan-cart_plan_123",
+      url: null,
+    });
+
+    const response = await POST(
+      new Request("http://localhost/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          requestId: "4db6c5c0-bb24-4d18-b6f6-e165cdb4e0b3",
+          mealId: "meal_1",
+          quantity: 2,
+          deliveryMethod: "DELIVERY",
+          settlementMethod: "MEAL_PLAN_CREDITS",
+        }),
+      }) as never,
+    );
+
+    expect(response?.status).toBe(200);
+    expect(cmsApiMock.cartsApi.create).toHaveBeenCalledWith("user_123", {
+      requestId: "4db6c5c0-bb24-4d18-b6f6-e165cdb4e0b3",
+      rotationId: "rotation_123",
+      settlementMethod: "MEAL_PLAN_CREDITS",
+      guest: undefined,
+      items: [
+        {
+          mealId: "meal_1",
+          quantity: 2,
+          substitutions: undefined,
+          modifiers: undefined,
+          proteinBoost: false,
+          notes: undefined,
+        },
+      ],
+    });
+  });
+
+  it("returns a 409 when meal plan checkout is rejected by business rules", async () => {
+    rateLimitMock.checkoutRateLimiter.check.mockResolvedValue({ success: true });
+    authMock.getServerSession.mockResolvedValue({
+      user: {
+        id: "user_123",
+        email: "customer@example.com",
+        name: "Customer",
+      },
+    });
+    cmsApiMock.mealsApi.getActiveRotation.mockResolvedValue({
+      id: "rotation_123",
+    });
+    cmsApiMock.cartsApi.create.mockResolvedValue({ id: "cart_plan_123" });
+    cmsApiMock.cartsApi.checkout.mockRejectedValue(
+      new Error("Hybrid carts are not supported in v1"),
+    );
+
+    const response = await POST(
+      new Request("http://localhost/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          requestId: "4db6c5c0-bb24-4d18-b6f6-e165cdb4e0b3",
+          mealId: "meal_1",
+          quantity: 2,
+          deliveryMethod: "DELIVERY",
+          settlementMethod: "MEAL_PLAN_CREDITS",
+        }),
+      }) as never,
+    );
+
+    expect(response?.status).toBe(409);
+  });
 });

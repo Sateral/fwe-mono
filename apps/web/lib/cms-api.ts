@@ -3,6 +3,8 @@ import type {
   ApiDietaryTag,
   ApiFailedOrder,
   ApiMeal,
+  ApiMealPlan,
+  ApiMealPlanUsage,
   ApiModifierGroup,
   ApiModifierOption,
   ApiOrder,
@@ -398,12 +400,35 @@ export const usersApi = {
   },
 };
 
+export const mealPlansApi = {
+  async getUsage(id: string): Promise<ApiMealPlanUsage | null> {
+    try {
+      return await apiRequest<ApiMealPlanUsage>(`/api/meal-plans/${id}/usage`);
+    } catch {
+      return null;
+    }
+  },
+
+  async purchase(input: {
+    userId: string;
+    weeklyCreditCap: number;
+    creditAmount: number;
+    autoRenew?: boolean;
+  }): Promise<ApiMealPlan> {
+    return apiRequest<ApiMealPlan>(`/api/meal-plans`, {
+      method: "POST",
+      body: JSON.stringify(input),
+    });
+  },
+};
+
 // ============================================
 // Unified API Export
 // ============================================
 
 export const cmsApi = {
   meals: mealsApi,
+  mealPlans: mealPlansApi,
   orders: ordersApi,
   failedOrders: failedOrdersApi,
   users: usersApi,

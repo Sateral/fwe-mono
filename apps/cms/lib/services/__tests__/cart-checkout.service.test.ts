@@ -3,7 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const prismaMock = vi.hoisted(() => ({
   order: {
+    findFirst: vi.fn(),
     findMany: vi.fn(),
+    create: vi.fn(),
   },
   cart: {
     findUnique: vi.fn(),
@@ -20,6 +22,7 @@ const prismaMock = vi.hoisted(() => ({
     create: vi.fn(),
     updateMany: vi.fn(),
   },
+  $transaction: vi.fn(),
 }));
 
 const stripeMock = vi.hoisted(() => ({
@@ -35,6 +38,11 @@ const orderServiceMock = vi.hoisted(() => ({
   createOrder: vi.fn(),
 }));
 
+const mealPlanServiceMock = vi.hoisted(() => ({
+  getPlanSummaryByUserId: vi.fn(),
+  redeemCart: vi.fn(),
+}));
+
 vi.mock("@/lib/prisma", () => ({
   default: prismaMock,
 }));
@@ -47,6 +55,10 @@ vi.mock("@/lib/services/order.service", () => ({
   orderService: orderServiceMock,
 }));
 
+vi.mock("@/lib/services/meal-plan.service", () => ({
+  mealPlanService: mealPlanServiceMock,
+}));
+
 import {
   createStripeCheckoutSessionForCart,
   finalizeCartCheckoutSession,
@@ -56,17 +68,132 @@ describe("cart-checkout.service", () => {
   beforeEach(() => {
     prismaMock.cart.findUnique.mockReset();
     prismaMock.cart.update.mockReset();
+    prismaMock.order.findFirst.mockReset();
     prismaMock.checkoutSession.findFirst.mockReset();
     prismaMock.checkoutSession.findUnique.mockReset();
     prismaMock.checkoutSession.create.mockReset();
     prismaMock.checkoutSession.update.mockReset();
     prismaMock.order.findMany.mockReset();
+    prismaMock.order.create.mockReset();
     prismaMock.orderIntent.findFirst.mockReset();
     prismaMock.orderIntent.create.mockReset();
     prismaMock.orderIntent.updateMany.mockReset();
+    prismaMock.$transaction.mockReset();
     stripeMock.checkout.sessions.create.mockReset();
     stripeMock.checkout.sessions.retrieve.mockReset();
     orderServiceMock.createOrder.mockReset();
+    mealPlanServiceMock.getPlanSummaryByUserId.mockReset();
+    mealPlanServiceMock.redeemCart.mockReset();
+  });
+
+  it("bypasses Stripe for carts fully covered by meal plan credits", async () => {
+    prismaMock.cart.findUnique.mockResolvedValue({
+      id: "cart_credits_123",
+      userId: "user_123",
+      settlementMethod: "MEAL_PLAN_CREDITS",
+      status: "ACTIVE",
+      items: [
+        {
+          id: "item_1",
+          mealId: "meal_1",
+          quantity: 2,
+          unitPrice: 12.5,
+          substitutions: [],
+          modifiers: [],
+          proteinBoost: false,
+          notes: null,
+          meal: {
+            id: "meal_1",
+            name: "Jerk Chicken",
+            slug: "jerk-chicken",
+            imageUrl: "https://example.com/meal-1.jpg",
+          },
+          rotationId: "rotation_123",
+        },
+      ],
+    });
+    prismaMock.orderIntent.findFirst.mockResolvedValue(null);
+    prismaMock.orderIntent.create.mockResolvedValue({ id: "intent_1", rotationId: "rotation_123" });
+    mealPlanServiceMock.getPlanSummaryByUserId.mockResolvedValue({
+      id: "plan_123",
+      remainingCredits: 10,
+      currentWeekCreditsRemaining: 10,
+    });
+    mealPlanServiceMock.redeemCart.mockResolvedValue({ mealPlanId: "plan_123", creditsRedeemed: 2 });
+    prismaMock.order.findFirst.mockResolvedValue(null);
+    prismaMock.order.create.mockResolvedValue({ id: "order_1", orderIntentId: "intent_1" });
+    prismaMock.$transaction.mockImplementation(async (callback) =>
+      callback(prismaMock),
+    );
+
+    const session = await createStripeCheckoutSessionForCart({
+      cartId: "cart_credits_123",
+      userEmail: "customer@example.com",
+      userName: "Customer",
+      deliveryMethod: "DELIVERY",
+      requestId: "request_credits_123",
+    });
+
+    expect(session).toEqual({ id: "meal-plan-cart_credits_123", url: null });
+    expect(mealPlanServiceMock.redeemCart).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "cart_credits_123" }),
+      expect.any(Date),
+      expect.anything(),
+    );
+    expect(prismaMock.order.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          settlementMethod: "MEAL_PLAN_CREDITS",
+        }),
+      }),
+    );
+    expect(stripeMock.checkout.sessions.create).not.toHaveBeenCalled();
+  });
+
+  it("rejects hybrid meal plan carts in v1 when credits do not fully cover the cart", async () => {
+    prismaMock.cart.findUnique.mockResolvedValue({
+      id: "cart_hybrid_123",
+      userId: "user_123",
+      settlementMethod: "MEAL_PLAN_CREDITS",
+      status: "ACTIVE",
+      items: [
+        {
+          id: "item_1",
+          mealId: "meal_1",
+          quantity: 3,
+          unitPrice: 12.5,
+          substitutions: [],
+          modifiers: [],
+          proteinBoost: false,
+          notes: null,
+          meal: {
+            id: "meal_1",
+            name: "Jerk Chicken",
+            slug: "jerk-chicken",
+            imageUrl: "https://example.com/meal-1.jpg",
+          },
+          rotationId: "rotation_123",
+        },
+      ],
+    });
+    mealPlanServiceMock.getPlanSummaryByUserId.mockResolvedValue({
+      id: "plan_123",
+      remainingCredits: 2,
+      currentWeekCreditsRemaining: 2,
+    });
+
+    await expect(
+      createStripeCheckoutSessionForCart({
+        cartId: "cart_hybrid_123",
+        userEmail: "customer@example.com",
+        userName: "Customer",
+        deliveryMethod: "DELIVERY",
+        requestId: "request_hybrid_123",
+      }),
+    ).rejects.toThrow("Hybrid carts are not supported in v1");
+
+    expect(mealPlanServiceMock.redeemCart).not.toHaveBeenCalled();
+    expect(stripeMock.checkout.sessions.create).not.toHaveBeenCalled();
   });
 
   it("creates one stripe session with multiple line items and stores an immutable checkout snapshot", async () => {

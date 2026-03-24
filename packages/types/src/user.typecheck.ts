@@ -20,8 +20,15 @@ const flavorProfile: ApiFlavorProfile = {
 };
 
 const mealPlan: ApiMealPlan = {
+  id: "plan_test",
+  status: "ACTIVE",
   remainingCredits: 5,
   weeklyCreditCap: 7,
+  currentWeekCreditsUsed: 2,
+  currentWeekCreditsRemaining: 5,
+  autoRenew: true,
+  startsAt: new Date().toISOString(),
+  endsAt: null,
 };
 
 const user: ApiUser = {

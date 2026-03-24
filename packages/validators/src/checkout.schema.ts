@@ -60,6 +60,7 @@ export const cartCheckoutRequestSchema = z.object({
 export const checkoutRequestSchema = z.object({
   mealId: z.string().min(1, "Meal ID is required"),
   quantity: z.number().int().min(1, "Quantity must be at least 1"),
+  settlementMethod: settlementMethodSchema.optional().default("STRIPE"),
   substitutions: z.array(substitutionItemSchema).optional(),
   modifiers: z.array(modifierItemSchema).optional(),
   proteinBoost: z.boolean().default(false),

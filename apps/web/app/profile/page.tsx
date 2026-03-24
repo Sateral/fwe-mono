@@ -107,6 +107,37 @@ export default async function ProfilePage() {
               </Link>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Package className="h-5 w-5 text-primary" />
+                Meal Plan
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm">
+              {user?.mealPlan ? (
+                <>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Remaining credits</span>
+                    <span className="font-semibold">{user.mealPlan.remainingCredits}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Weekly cap</span>
+                    <span className="font-semibold">{user.mealPlan.weeklyCreditCap}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">This week used</span>
+                    <span className="font-semibold">{user.mealPlan.currentWeekCreditsUsed}</span>
+                  </div>
+                </>
+              ) : (
+                <p className="text-muted-foreground">
+                  No meal plan yet. Credits and weekly redemption limits will show here.
+                </p>
+              )}
+            </CardContent>
+          </Card>
         </div>
 
         <ProfileSetupForm

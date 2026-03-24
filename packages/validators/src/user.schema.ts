@@ -18,8 +18,15 @@ export const onboardingStatusSchema = z.enum([
 ]);
 
 export const mealPlanSchema = z.object({
+  id: z.string().min(1),
+  status: z.enum(["ACTIVE", "PAUSED", "CANCELLED"]),
   remainingCredits: z.number().int().min(0),
   weeklyCreditCap: z.number().int().min(0),
+  currentWeekCreditsUsed: z.number().int().min(0),
+  currentWeekCreditsRemaining: z.number().int().min(0),
+  autoRenew: z.boolean(),
+  startsAt: z.string(),
+  endsAt: z.string().nullable(),
 });
 
 export const flavorProfileSchema = z.object({

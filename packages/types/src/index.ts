@@ -184,6 +184,16 @@ export interface ApiFailedOrder {
 
 export type ApiMealPlan = MealPlan;
 
+export interface ApiMealPlanUsage {
+  mealPlanId: string;
+  windowStart: string;
+  windowEnd: string;
+  creditsUsed: number;
+  weeklyCreditCap: number;
+  remainingCredits: number;
+  currentWeekCreditsRemaining: number;
+}
+
 export type ApiFlavorProfile = FlavorProfile;
 
 export interface ApiUser {

@@ -8,6 +8,7 @@ import {
 } from "@fwe/utils/format-utils";
 
 import prisma from "@/lib/prisma";
+import { mealPlanService } from "@/lib/services/meal-plan.service";
 import { stripe } from "@/lib/stripe";
 import { orderService } from "@/lib/services/order.service";
 
@@ -123,6 +124,98 @@ async function getCheckoutCart(cartId: string) {
     where: { id: cartId },
     include: checkoutCartInclude,
   }) as Promise<CheckoutCart | null>;
+}
+
+async function finalizeMealPlanCart(
+  cart: CheckoutCart,
+  input: { cartId: string } & CartCheckoutRequest,
+  deliveryMethod: "DELIVERY" | "PICKUP",
+  pickupLocation: string | undefined,
+) {
+  const creditsRequired = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+  const mealPlanSummary = await mealPlanService.getPlanSummaryByUserId(cart.userId);
+
+  if (!mealPlanSummary) {
+    throw new Error("No active meal plan found");
+  }
+
+  if (
+    mealPlanSummary.remainingCredits < creditsRequired ||
+    mealPlanSummary.currentWeekCreditsRemaining < creditsRequired
+  ) {
+    throw new Error("Hybrid carts are not supported in v1");
+  }
+
+  const orderIntents: Array<{ id: string; rotationId: string }> = [];
+  for (const item of cart.items) {
+    orderIntents.push(
+      await ensureOrderIntentForCartItem(
+        cart,
+        item,
+        deliveryMethod,
+        pickupLocation,
+        input.requestId,
+      ),
+    );
+  }
+
+  await prisma.$transaction(async (tx) => {
+    await mealPlanService.redeemCart(cart, new Date(), tx);
+
+    for (const [index, item] of cart.items.entries()) {
+      const existingOrder = await tx.order.findFirst({
+        where: {
+          orderIntentId: orderIntents[index]!.id,
+        },
+      });
+
+      if (!existingOrder) {
+        await tx.order.create({
+          data: {
+            userId: cart.userId,
+            mealId: item.mealId,
+            rotationId: item.rotationId ?? orderIntents[index]!.rotationId,
+            settlementMethod: cart.settlementMethod,
+            quantity: item.quantity,
+            unitPrice: toNumber(item.unitPrice),
+            totalAmount: toNumber(item.unitPrice) * item.quantity,
+            substitutions: item.substitutions as object[] | undefined,
+            modifiers: item.modifiers as object[] | undefined,
+            orderIntentId: orderIntents[index]!.id,
+            proteinBoost: item.proteinBoost,
+            notes: item.notes,
+            deliveryMethod,
+            pickupLocation,
+            paymentStatus: "PAID",
+            fulfillmentStatus: "NEW",
+            currency: "cad",
+            paidAt: new Date(),
+            customerEmail: input.userEmail,
+            customerName: input.userName ?? undefined,
+          },
+        });
+      }
+    }
+
+    await tx.orderIntent.updateMany({
+      where: {
+        id: { in: orderIntents.map((intent) => intent.id) },
+      },
+      data: {
+        status: "PAID",
+      },
+    });
+
+    await tx.cart.update({
+      where: { id: cart.id },
+      data: { status: "CHECKED_OUT" },
+    });
+  });
+
+  return {
+    id: `meal-plan-${cart.id}`,
+    url: null,
+  };
 }
 
 async function ensureOrderIntentForCartItem(
@@ -280,13 +373,17 @@ export async function createStripeCheckoutSessionForCart(
     throw new Error("Cart is empty");
   }
 
-  if (cart.settlementMethod !== "STRIPE") {
-    throw new Error(`Unsupported settlement method ${cart.settlementMethod}`);
-  }
-
   const deliveryMethod = input.deliveryMethod ?? "DELIVERY";
   const pickupLocation =
     deliveryMethod === "PICKUP" ? input.pickupLocation ?? undefined : undefined;
+
+  if (cart.settlementMethod === "MEAL_PLAN_CREDITS") {
+    return finalizeMealPlanCart(cart, input, deliveryMethod, pickupLocation);
+  }
+
+  if (cart.settlementMethod !== "STRIPE") {
+    throw new Error(`Unsupported settlement method ${cart.settlementMethod}`);
+  }
 
   const existingSnapshot = await getExistingCheckoutSnapshot(cart.id, input.requestId);
   if (existingSnapshot?.stripeSessionId) {

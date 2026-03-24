@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { requireInternalAuth } from "@/lib/api-auth";
 import { flavorProfileService } from "@/lib/services/flavor-profile.service";
+import { mealPlanService } from "@/lib/services/meal-plan.service";
 import { userService } from "@/lib/services/user.service";
 
 /**
@@ -21,6 +22,7 @@ export async function GET(
     const { id } = await params;
     const { user, guestMergeRequiresReview } =
       await userService.findByIdWithGuestMerge(id);
+    const mealPlan = await mealPlanService.getPlanSummaryByUserId(id);
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -40,6 +42,7 @@ export async function GET(
       profileComplete: user.profileComplete,
       onboardingStatus: user.onboardingStatus,
       guestMergeRequiresReview,
+      mealPlan,
       flavorProfile: user.flavorProfile,
     });
   } catch (error) {
@@ -110,6 +113,7 @@ export async function PATCH(
     }
 
     const refreshedUser = await userService.findById(id);
+    const refreshedMealPlan = await mealPlanService.getPlanSummaryByUserId(id);
 
     return NextResponse.json({
       id: updatedUser.id,
@@ -123,6 +127,7 @@ export async function PATCH(
       deliveryNotes: updatedUser.deliveryNotes,
       profileComplete: updatedUser.profileComplete,
       onboardingStatus: refreshedUser?.onboardingStatus ?? updatedUser.onboardingStatus,
+      mealPlan: refreshedMealPlan,
       flavorProfile: savedFlavorProfile,
     });
   } catch (error) {
