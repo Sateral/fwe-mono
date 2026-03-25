@@ -1,5 +1,0 @@
-ALTER TABLE "FlavorProfile"
-ADD COLUMN "restrictions" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[];
-
-ALTER TABLE "FlavorProfile"
-ADD COLUMN "preferences" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[];

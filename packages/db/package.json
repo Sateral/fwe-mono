@@ -10,6 +10,7 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "generate": "prisma generate",
+    "db:push": "prisma db push",
     "migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "studio": "prisma studio",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@repo/typescript-config": "*",
     "@types/node": "^20",
+    "better-auth": "^1.4.1",
     "dotenv": "^17.2.3",
     "prisma": "^7.3.0",
     "tsx": "^4.20.6",

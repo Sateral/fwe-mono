@@ -22,10 +22,6 @@ monorepo. The CMS is the source of truth for data and authentication.
 
 ## Business Rules (Ordering Window)
 
-- Ordering is open **Wednesday 12:00am → Tuesday 11:59pm** (local business time).
-- Orders placed in the current window are **prepared and delivered next week**.
-- While customers order for Week N, the chef prepares Week N-1.
-
 ---
 
 ## Data Flow
@@ -123,57 +119,6 @@ Run a single app:
 bun run dev --filter=web
 bun run dev --filter=cms
 ```
-
----
-
-## Migration Plan (Phased)
-
-1. Monorepo scaffold + move apps under `apps/`.
-2. Extract Prisma into `packages/db` and update imports.
-3. Extract shared Zod schemas and shared types.
-4. Evaluate shared UI (only if styles converge).
-5. Centralize ESLint/TS configs as needed.
-
----
-
-## Revamp Roadmap (Transactions + CMS UX)
-
-### Phase A — Audit & Baseline
-
-- Inventory current Stripe flow: Checkout, webhooks, cron fallback, dedupe.
-- Map order creation path and idempotency points.
-- Review data model for payment + fulfillment state gaps.
-
-### Phase B — Stripe Workflow Spec
-
-- Choose flow (Stripe Checkout vs Payment Intents).
-- Define canonical event flow (session create → webhook → order create).
-- Idempotency and dedupe strategy.
-- Failure recovery + reconciliation steps.
-
-### Phase C — Data Model Safety
-
-- Split payment vs fulfillment status.
-- Add Stripe identifiers, currency, refunds, and audit fields.
-- Consider payment event log table.
-
-### Phase D — CMS Orders UX
-
-- Views: by customer, by meal, by delivery/pickup.
-- Prep totals, modifiers, and substitutions summaries.
-- Bulk actions and PDF/CSV exports.
-
-### Phase E — Implementation (Safe + Testable)
-
-- Backend first, then web checkout.
-- Migrations + data backfills.
-- Validation and audit logs.
-
-### Phase F — Validation & Rollout
-
-- Webhook signature verification tests.
-- Idempotency tests and duplicate event handling.
-- Reconciliation checks (Stripe vs DB).
 
 ---
 

@@ -36,7 +36,6 @@ export function ProductionSummary({
       {
         mealId: string;
         mealName: string;
-        isRotating: boolean;
         totalQty: number;
         standardQty: number;
         boostQty: number;
@@ -99,7 +98,6 @@ export function ProductionSummary({
         mealMap.set(order.mealId, {
           mealId: order.mealId,
           mealName: order.meal?.name || "Unknown meal",
-          isRotating: order.meal?.mealType === "ROTATING",
           totalQty: 0,
           standardQty: 0,
           boostQty: 0,
@@ -400,18 +398,7 @@ export function ProductionSummary({
                       return (
                         <tr key={meal.mealId} className="border-t">
                           <td className="px-3 py-2">
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">
-                                {meal.mealName}
-                              </span>
-                              <Badge
-                                variant={
-                                  meal.isRotating ? "secondary" : "outline"
-                                }
-                              >
-                                {meal.isRotating ? "Special" : "Signature"}
-                              </Badge>
-                            </div>
+                            <span className="font-medium">{meal.mealName}</span>
                           </td>
                           <td className="px-3 py-2 text-center font-semibold">
                             {meal.totalQty}

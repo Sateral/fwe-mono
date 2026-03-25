@@ -11,7 +11,6 @@ export const mealSchema = z.object({
   imageUrl: z.string().nullable().optional(),
   isFeatured: z.boolean().default(false),
   isActive: z.boolean().default(true),
-  mealType: z.enum(["SIGNATURE", "ROTATING"]).default("SIGNATURE"),
   // Direct meal pricing & macros
   price: z.coerce.number().min(0, "Price must be positive"),
   calories: z.coerce.number().min(0),

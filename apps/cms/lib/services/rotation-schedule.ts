@@ -1,16 +1,44 @@
+/**
+ * Toronto fulfillment cycles and ordering windows (America/Toronto).
+ *
+ * Fulfillment cycle: Thursday 00:00 through the following Wednesday 23:59:59.999.
+ * `WeeklyRotation.weekStart` is that Thursday 00:00.
+ *
+ * Ordering (n+1): Thu 3:00pm through the next Thu 2:59:59.999 feeds the fulfillment
+ * cycle that *starts* on the closing Thursday. While that window is open, customers
+ * are ordering into that cycle; the chef may still be prepping the prior cycle.
+ *
+ * `RotationPeriod` groups two consecutive fulfillment cycles that share the same menu.
+ */
+
 import { formatInTimeZone, fromZonedTime, toZonedTime } from "date-fns-tz";
 
 export const BUSINESS_TIMEZONE = "America/Toronto";
-export const ORDERING_OPEN = { day: 4, hour: 15, minute: 0 } as const;
+
+/** Thursday 3:00pm local — ordering window opens */
+export const ORDERING_OPEN = { hour: 15, minute: 0 } as const;
+
+/** Thursday 2:59:59.999pm local — ordering window closes for the cycle starting that day */
 export const ORDERING_CLOSE = {
-  day: 4,
   hour: 14,
   minute: 59,
   second: 59,
 } as const;
 
+/** JS weekday: 0 = Sunday, 4 = Thursday */
+const THURSDAY_JS = 4;
+
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
-const MONDAY_INDEX = 1;
+
+/**
+ * When no rotation periods exist yet, pair 2-cycle groups from this Thursday 00:00 Toronto.
+ * (2026-01-08 is a Thursday.)
+ */
+export const DEFAULT_ROTATION_ANCHOR_FULFILLMENT_START: Date = fromZonedTime(
+  new Date(2026, 0, 8, 0, 0, 0, 0),
+  BUSINESS_TIMEZONE,
+);
+
 type WallClock = {
   hour: number;
   minute: number;
@@ -42,23 +70,6 @@ function getBusinessOrdinal(date: Date): number {
   );
 }
 
-function ordinalToBusinessDate(ordinal: number): Date {
-  const utcDate = new Date(ordinal * MS_PER_DAY);
-  const businessDate = new Date(
-    Date.UTC(
-      utcDate.getUTCFullYear(),
-      utcDate.getUTCMonth(),
-      utcDate.getUTCDate(),
-      0,
-      0,
-      0,
-      0,
-    ),
-  );
-
-  return fromBusinessTime(businessDate);
-}
-
 function setWallClock(date: Date, wallClock: WallClock): Date {
   const businessDate = clone(toBusinessTime(date));
 
@@ -83,52 +94,41 @@ export function formatBusinessTime(date: Date, pattern: string): string {
   return formatInTimeZone(date, BUSINESS_TIMEZONE, pattern);
 }
 
-export function resolveDeliveryWeekStart(date: Date): Date {
+/** Start of the fulfillment cycle (Thursday 00:00 Toronto) containing `date`. */
+export function resolveFulfillmentCycleStart(date: Date): Date {
   const businessDate = clone(toBusinessTime(date));
   const day = businessDate.getDay();
-  const daysToSubtract = (day - MONDAY_INDEX + 7) % 7;
-
-  businessDate.setDate(businessDate.getDate() - daysToSubtract);
+  const daysSinceThursday = (day - THURSDAY_JS + 7) % 7;
+  businessDate.setDate(businessDate.getDate() - daysSinceThursday);
   businessDate.setHours(0, 0, 0, 0);
 
   return fromBusinessTime(businessDate);
 }
 
-export function resolveDeliveryWeekEnd(weekStart: Date): Date {
-  const businessWeekStart = clone(toBusinessTime(resolveDeliveryWeekStart(weekStart)));
+/** End of cycle: Wednesday 23:59:59.999 after the given Thursday start. */
+export function resolveFulfillmentCycleEnd(cycleStart: Date): Date {
+  const start = clone(toBusinessTime(resolveFulfillmentCycleStart(cycleStart)));
+  start.setDate(start.getDate() + 6);
+  start.setHours(23, 59, 59, 999);
 
-  businessWeekStart.setDate(businessWeekStart.getDate() + 6);
-  businessWeekStart.setHours(23, 59, 59, 999);
-
-  return fromBusinessTime(businessWeekStart);
+  return fromBusinessTime(start);
 }
 
-export function shiftDeliveryWeek(weekStart: Date, weeks: number): Date {
-  return shiftBusinessDays(resolveDeliveryWeekStart(weekStart), weeks * 7);
-}
-
-function resolveIsoWeekYear(weekStart: Date): number {
-  const thursday = toBusinessTime(shiftBusinessDays(weekStart, 3));
-
-  return thursday.getFullYear();
-}
-
-function resolveIsoWeekYearStart(weekStart: Date): Date {
-  const isoWeekYear = resolveIsoWeekYear(weekStart);
-  const januaryFourth = fromBusinessTime(
-    new Date(Date.UTC(isoWeekYear, 0, 4, 0, 0, 0, 0)),
+export function shiftFulfillmentCycle(cycleStart: Date, cycles: number): Date {
+  return shiftBusinessDays(
+    resolveFulfillmentCycleStart(cycleStart),
+    cycles * 7,
   );
-
-  return resolveDeliveryWeekStart(januaryFourth);
 }
 
-export function resolveOrderCutoff(deliveryWeekStart: Date): Date {
-  const thursdayOfDeliveryWeek = shiftBusinessDays(
-    resolveDeliveryWeekStart(deliveryWeekStart),
-    ORDERING_CLOSE.day - MONDAY_INDEX,
-  );
+/**
+ * Last instant of the ordering window for `fulfillmentCycleStart`
+ * (that Thursday 2:59:59.999pm Toronto).
+ */
+export function resolveOrderCutoff(fulfillmentCycleStart: Date): Date {
+  const thursday = resolveFulfillmentCycleStart(fulfillmentCycleStart);
 
-  return setWallClock(thursdayOfDeliveryWeek, {
+  return setWallClock(thursday, {
     hour: ORDERING_CLOSE.hour,
     minute: ORDERING_CLOSE.minute,
     second: ORDERING_CLOSE.second,
@@ -136,61 +136,88 @@ export function resolveOrderCutoff(deliveryWeekStart: Date): Date {
   });
 }
 
-export function getOrderingWindowForDeliveryWeek(deliveryWeekStart: Date) {
-  const weekStart = resolveDeliveryWeekStart(deliveryWeekStart);
-  const previousThursday = shiftBusinessDays(weekStart, -4);
-  const currentThursday = shiftBusinessDays(
-    weekStart,
-    ORDERING_OPEN.day - MONDAY_INDEX,
+/**
+ * Ordering window whose orders land in this fulfillment cycle
+ * (previous Thu 3pm through this cycle's Thu 2:59:59.999pm).
+ */
+export function getOrderingWindowForFulfillmentCycle(
+  fulfillmentCycleStart: Date,
+) {
+  const cycleThursday = resolveFulfillmentCycleStart(fulfillmentCycleStart);
+  const windowStart = setWallClock(
+    shiftBusinessDays(cycleThursday, -7),
+    ORDERING_OPEN,
   );
+  const windowEnd = resolveOrderCutoff(cycleThursday);
 
-  return {
-    windowStart: setWallClock(previousThursday, {
-      hour: ORDERING_OPEN.hour,
-      minute: ORDERING_OPEN.minute,
-    }),
-    windowEnd: setWallClock(currentThursday, {
-      hour: ORDERING_OPEN.hour,
-      minute: ORDERING_OPEN.minute,
-    }),
-  };
+  return { windowStart, windowEnd };
 }
 
-export function resolveOrderableWeekStart(now: Date): Date {
-  const currentWeekStart = resolveDeliveryWeekStart(now);
-  const currentWeekCutoff = resolveOrderCutoff(currentWeekStart);
+/** @deprecated Use getOrderingWindowForFulfillmentCycle — arg is fulfillment cycle start */
+export function getOrderingWindowForDeliveryWeek(fulfillmentCycleStart: Date) {
+  return getOrderingWindowForFulfillmentCycle(fulfillmentCycleStart);
+}
 
-  if (now <= currentWeekCutoff) {
-    return currentWeekStart;
+/**
+ * Fulfillment cycle customers are ordering into right now (n+1 vs the cycle calendar).
+ */
+export function resolveOrderableFulfillmentCycleStart(now: Date): Date {
+  const currentCycle = resolveFulfillmentCycleStart(now);
+  const cutoff = resolveOrderCutoff(currentCycle);
+
+  if (now <= cutoff) {
+    return currentCycle;
   }
 
-  return shiftDeliveryWeek(currentWeekStart, 1);
+  return shiftFulfillmentCycle(currentCycle, 1);
 }
 
-export function resolveRotationPeriodStart(weekStart: Date): Date {
-  const normalizedWeekStart = resolveDeliveryWeekStart(weekStart);
-  const isoWeekYearStart = resolveIsoWeekYearStart(normalizedWeekStart);
+/** @deprecated Use resolveOrderableFulfillmentCycleStart */
+export function resolveOrderableWeekStart(now: Date): Date {
+  return resolveOrderableFulfillmentCycleStart(now);
+}
+
+export function resolveRotationPeriodStartFromAnchor(
+  fulfillmentCycleStart: Date,
+  anchorFulfillmentStart: Date,
+): Date {
+  const normalized = resolveFulfillmentCycleStart(fulfillmentCycleStart);
+  const anchor = resolveFulfillmentCycleStart(anchorFulfillmentStart);
   const diffWeeks = Math.floor(
-    (getBusinessOrdinal(normalizedWeekStart) - getBusinessOrdinal(isoWeekYearStart)) /
-      7,
+    (getBusinessOrdinal(normalized) - getBusinessOrdinal(anchor)) / 7,
   );
   const periodOffsetWeeks = Math.floor(diffWeeks / 2) * 2;
 
-  return shiftDeliveryWeek(isoWeekYearStart, periodOffsetWeeks);
+  return shiftFulfillmentCycle(anchor, periodOffsetWeeks);
 }
 
-export function resolveRotationPeriodKey(weekStart: Date): string {
-  return formatBusinessTime(resolveRotationPeriodStart(weekStart), "yyyy-MM-dd");
+export function resolveRotationPeriodStart(
+  fulfillmentCycleStart: Date,
+  anchorFulfillmentStart: Date = fulfillmentCycleStart,
+): Date {
+  return resolveRotationPeriodStartFromAnchor(
+    fulfillmentCycleStart,
+    anchorFulfillmentStart,
+  );
+}
+
+export function resolveRotationPeriodKey(
+  fulfillmentCycleStart: Date,
+  anchorFulfillmentStart: Date = fulfillmentCycleStart,
+): string {
+  return formatBusinessTime(
+    resolveRotationPeriodStart(fulfillmentCycleStart, anchorFulfillmentStart),
+    "yyyy-MM-dd",
+  );
 }
 
 export function resolveOrderingWindow(now: Date) {
-  const orderableWeekStart = resolveOrderableWeekStart(now);
-  const rotationPeriodStart = resolveRotationPeriodStart(orderableWeekStart);
-  const secondWeekStart = shiftDeliveryWeek(rotationPeriodStart, 1);
-  const { windowStart } = getOrderingWindowForDeliveryWeek(rotationPeriodStart);
+  const orderableCycleStart = resolveOrderableFulfillmentCycleStart(now);
+  const { windowStart, windowEnd } =
+    getOrderingWindowForFulfillmentCycle(orderableCycleStart);
 
   return {
     startsAt: windowStart,
-    endsAt: resolveOrderCutoff(secondWeekStart),
+    endsAt: windowEnd,
   };
 }

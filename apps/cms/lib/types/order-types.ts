@@ -92,7 +92,6 @@ export interface ProductionSummaryItem {
   mealId: string;
   mealName: string;
   count: number;
-  isRotating: boolean;
 }
 
 // ============================================

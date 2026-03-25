@@ -10,10 +10,9 @@ import { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
  * Returns the rotation that orders should be grouped into under the
  * Thursday 3pm Toronto schedule.
  *
- * WORKFLOW:
- * - Delivery weeks run Monday to Sunday
- * - Ordering windows open Thursday at 3:00pm Toronto
- * - If the rotation record doesn't exist yet, it is created as DRAFT
+ * Fulfillment cycles are Thu 00:00 - Wed 23:59 Toronto. Ordering for a cycle
+ * runs from the prior Thu 3pm through that cycle's Thu 2:59pm (n+1 grouping).
+ * Missing `WeeklyRotation` rows are created as DRAFT.
  *
  * This is used by:
  * - Checkout flow to lock in which rotation an order belongs to

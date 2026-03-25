@@ -29,16 +29,16 @@ describe("weeklyRotationService period menu authority", () => {
   it("uses the linked rotation period menu even when it is empty", async () => {
     prismaMock.weeklyRotation.findUnique.mockResolvedValue({
       id: "rotation_1",
-      weekStart: new Date("2026-01-12T05:00:00.000Z"),
-      weekEnd: new Date("2026-01-19T04:59:59.999Z"),
-      orderCutoff: new Date("2026-01-15T19:59:59.999Z"),
-      status: "PUBLISHED",
+      weekStart: new Date("2026-01-08T05:00:00.000Z"),
+      weekEnd: new Date("2026-01-15T04:59:59.999Z"),
+      orderCutoff: new Date("2026-01-08T19:59:59.999Z"),
+      status: "DRAFT",
       createdAt: new Date("2026-01-01T00:00:00.000Z"),
       updatedAt: new Date("2026-01-01T00:00:00.000Z"),
       meals: [{ id: "legacy_meal" }],
       rotationPeriod: {
         id: "period_1",
-        name: "2026-01-12",
+        name: "2026-01-08",
         status: "DRAFT",
         meals: [],
       },

@@ -60,7 +60,7 @@ export async function getProductionSummary(
   orders: Array<{
     mealId: string;
     quantity: number;
-    meal: { name: string; mealType: string } | null;
+    meal: { name: string } | null;
   }>,
 ) {
   return orderService.getProductionSummary(orders);

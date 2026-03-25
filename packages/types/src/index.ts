@@ -9,7 +9,6 @@ import type {
 } from "@fwe/validators";
 
 export type ModifierType = "SINGLE_SELECT" | "MULTI_SELECT";
-export type MealType = "SIGNATURE" | "ROTATING";
 export type PaymentStatus = "PENDING" | "PAID" | "FAILED" | "REFUNDED";
 export type FulfillmentStatus =
   | "NEW"
@@ -35,7 +34,6 @@ export interface ApiMeal {
   imageUrl: string | null;
   isFeatured: boolean;
   isActive: boolean;
-  mealType: MealType;
   price: number;
   calories: number;
   protein: number;

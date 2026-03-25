@@ -23,7 +23,6 @@ import type {
   OrderWithRelations,
   FulfillmentStatus,
   BulkUpdateResult,
-  ProductionSummaryItem,
 } from "@/lib/types/order-types";
 
 // ============================================

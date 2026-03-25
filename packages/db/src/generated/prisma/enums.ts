@@ -50,14 +50,6 @@ export const OrderIntentStatus = {
 export type OrderIntentStatus = (typeof OrderIntentStatus)[keyof typeof OrderIntentStatus]
 
 
-export const MealType = {
-  SIGNATURE: 'SIGNATURE',
-  ROTATING: 'ROTATING'
-} as const
-
-export type MealType = (typeof MealType)[keyof typeof MealType]
-
-
 export const RotationStatus = {
   DRAFT: 'DRAFT',
   PUBLISHED: 'PUBLISHED',

@@ -79,9 +79,9 @@ export function RotationSelector() {
                       {label}
                     </Badge>
                   )}
-                  {rotation.status !== "PUBLISHED" && (
+                  {rotation.status === "ARCHIVED" && (
                     <Badge variant="outline" className="text-xs">
-                      {rotation.status}
+                      Archived
                     </Badge>
                   )}
                 </div>

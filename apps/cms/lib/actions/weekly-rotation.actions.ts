@@ -25,7 +25,9 @@ export async function getCurrentRotation() {
  * Get rotation by week start date.
  */
 export async function getRotationByWeek(weekStart: Date) {
-  return toPlainObject(await weeklyRotationService.getRotationByWeek(weekStart));
+  return toPlainObject(
+    await weeklyRotationService.getRotationByWeek(weekStart),
+  );
 }
 
 /**
@@ -50,25 +52,14 @@ export async function updateRotationMeals(
 }
 
 /**
- * Publish a rotation.
- */
-export async function publishRotation(rotationId: string) {
-  return toPlainObject(
-    await weeklyRotationService.publishRotation(rotationId),
-  );
-}
-
-/**
  * Archive a rotation.
  */
 export async function archiveRotation(rotationId: string) {
-  return toPlainObject(
-    await weeklyRotationService.archiveRotation(rotationId),
-  );
+  return toPlainObject(await weeklyRotationService.archiveRotation(rotationId));
 }
 
 /**
- * Unarchive a rotation (set back to PUBLISHED).
+ * Unarchive a rotation (set back to DRAFT / on-menu).
  */
 export async function unarchiveRotation(rotationId: string) {
   return toPlainObject(
@@ -91,8 +82,41 @@ export async function checkNextWeekWarning() {
 }
 
 /**
- * Get available meals for ordering (signature + current rotation).
+ * Get available meals for ordering (current rotation period menu).
  */
 export async function getAvailableMeals() {
   return toPlainObject(await weeklyRotationService.getAvailableMeals());
 }
+
+// ============================================
+// Server Actions for Rotation Periods (Biweekly)
+// ============================================
+
+/**
+ * Get all non-archived rotation periods with their rotations and meals.
+ */
+export async function getRotationPeriods() {
+  return toPlainObject(await weeklyRotationService.getRotationPeriods());
+}
+
+/**
+ * Create a rotation period with its two weekly rotations.
+ */
+export async function createRotationPeriodWithWeeks(periodStartDate: Date) {
+  return toPlainObject(
+    await weeklyRotationService.createRotationPeriodWithWeeks(periodStartDate),
+  );
+}
+
+/**
+ * Update meals for a rotation period.
+ */
+export async function updateRotationPeriodMeals(
+  periodId: string,
+  mealIds: string[],
+) {
+  return toPlainObject(
+    await weeklyRotationService.updateRotationPeriodMeals(periodId, mealIds),
+  );
+}
+

@@ -38,7 +38,6 @@ export function serializeMeal(meal: MealRecord): ApiMeal {
     imageUrl: meal.imageUrl,
     isFeatured: meal.isFeatured,
     isActive: meal.isActive,
-    mealType: meal.mealType,
     price: serializeMoney(meal.price),
     calories: meal.calories,
     protein: meal.protein,

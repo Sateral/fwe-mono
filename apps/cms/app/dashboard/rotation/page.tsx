@@ -1,16 +1,13 @@
-import { Badge } from "@/components/ui/badge";
 import {
-  getRotations,
+  getRotationPeriods,
   getRotatingMeals,
-  checkNextWeekWarning,
 } from "@/lib/actions/weekly-rotation.actions";
-import { RotationManager } from "./_components/rotation-manager";
+import { RotationPeriodManager } from "./_components/rotation-period-manager";
 
 export default async function RotationPage() {
-  const [rotations, rotatingMeals, nextWeekWarning] = await Promise.all([
-    getRotations(),
+  const [periodData, rotatingMeals] = await Promise.all([
+    getRotationPeriods(),
     getRotatingMeals(),
-    checkNextWeekWarning(),
   ]);
 
   return (
@@ -18,21 +15,24 @@ export default async function RotationPage() {
       <div className="flex flex-col gap-4 border-b pb-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
-            Rotation
-            <Badge variant="secondary">Planning</Badge>
+            Menu
           </div>
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-            Weekly Rotation
+            Meal Rotations
           </h1>
           <p className="text-sm text-muted-foreground">
-            Manage weekly meal rotations and publish customer-facing menus.
+            Set the menu for the current and next two-week rotation periods
+            (Thursday-anchored fulfillment cycles). No publish step: empty
+            periods show no meals until you add them.
           </p>
         </div>
       </div>
-      <RotationManager
-        initialRotations={rotations}
+      <RotationPeriodManager
+        initialPeriods={periodData.periods}
+        currentPeriodKey={periodData.currentPeriodKey}
+        currentWeekStart={periodData.currentWeekStart}
+        anchorWeekStart={periodData.anchorWeekStart}
         rotatingMeals={rotatingMeals}
-        nextWeekWarning={nextWeekWarning}
       />
     </div>
   );

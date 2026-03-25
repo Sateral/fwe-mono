@@ -56,7 +56,6 @@ export function MealForm({ initialData, tags, onSubmit }: MealFormProps) {
       imageUrl: "",
       isActive: true,
       isFeatured: false,
-      mealType: "SIGNATURE",
       price: 0,
       calories: 0,
       protein: 0,
@@ -225,39 +224,6 @@ export function MealForm({ initialData, tags, onSubmit }: MealFormProps) {
                     )}
                   />
                 </div>
-
-                <FormField
-                  control={form.control}
-                  name="mealType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Meal Type</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select meal type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="SIGNATURE">
-                            Signature (Always Available)
-                          </SelectItem>
-                          <SelectItem value="ROTATING">
-                            Rotating (Weekly Special)
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormDescription>
-                        Signature meals are always on the menu. Rotating meals
-                        are weekly specials set in the rotation manager.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
               </CardContent>
             </Card>
 

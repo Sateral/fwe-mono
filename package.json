@@ -4,6 +4,8 @@
   "scripts": {
     "build": "turbo run build",
     "db:generate": "turbo run generate --filter=@fwe/db",
+    "db:push": "cd packages/db && bunx prisma db push",
+    "db:push:reset": "cd packages/db && bunx prisma db push --force-reset --accept-data-loss",
     "db:migrate": "turbo run migrate --filter=@fwe/db",
     "db:migrate:deploy": "turbo run migrate:deploy --filter=@fwe/db",
     "db:seed": "turbo run seed --filter=@fwe/db",

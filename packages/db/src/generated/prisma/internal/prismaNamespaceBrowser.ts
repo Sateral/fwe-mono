@@ -103,7 +103,6 @@ export const MealScalarFieldEnum = {
   imageUrl: 'imageUrl',
   isFeatured: 'isFeatured',
   isActive: 'isActive',
-  mealType: 'mealType',
   price: 'price',
   calories: 'calories',
   protein: 'protein',

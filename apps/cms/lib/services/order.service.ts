@@ -310,18 +310,14 @@ export const orderService = {
   },
 
   /**
-   * Get orders for a specific delivery week.
-   * Logic: Orders placed in Week N (Wed-Tue) are for Delivery Week N+1.
-   * So we filter for orders created in (DeliveryWeek - 7 days) to (DeliveryWeek).
-   * Range: [Wednesday 00:00, Following Wednesday 00:00)
+   * Orders for a fulfillment cycle: `createdAt` in the ordering window that feeds
+   * that cycle (previous Thu 3pm through that cycle's Thu 2:59:59pm Toronto).
    */
   async getOrdersForDeliveryWeek(deliveryWeekStart: Date) {
     console.log(
-      `[OrderService] Fetching orders for delivery week starting ${deliveryWeekStart.toISOString()}`,
+      `[OrderService] Fetching orders for fulfillment cycle starting ${deliveryWeekStart.toISOString()}`,
     );
 
-    // Delivery Week starts on Wednesday.
-    // The ordering window for this week was the PREVIOUS week (7 days prior).
     const { windowStart, windowEnd } =
       getOrderingWindowForDeliveryWeek(deliveryWeekStart);
 
@@ -391,7 +387,7 @@ export const orderService = {
   getProductionSummary(orders: any[]) {
     const summary = new Map<
       string,
-      { mealId: string; mealName: string; count: number; isRotating: boolean }
+      { mealId: string; mealName: string; count: number }
     >();
 
     for (const order of orders) {
@@ -407,7 +403,6 @@ export const orderService = {
           mealId: order.mealId,
           mealName: order.meal.name,
           count: order.quantity,
-          isRotating: order.meal.mealType === "ROTATING",
         });
       }
     }

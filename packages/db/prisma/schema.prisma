@@ -15,7 +15,6 @@ model Meal {
   imageUrl    String?
   isFeatured  Boolean  @default(false)
   isActive    Boolean  @default(true)
-  mealType    MealType @default(SIGNATURE) // Legacy categorization; storefront availability comes from rotations
 
   // Default pricing & macros
   price    Decimal @default(0) @db.Decimal(10, 2)
@@ -40,7 +39,6 @@ model Meal {
   // Performance indexes
   @@index([isActive])                   // Fast active meal filtering
   @@index([isFeatured])                 // Fast featured meal queries
-  @@index([mealType])                   // Fast meal type filtering
   @@index([isActive, isFeatured])       // Compound index for common query
 }
 
@@ -204,15 +202,10 @@ enum OrderIntentStatus {
   CANCELLED
 }
 
-enum MealType {
-  SIGNATURE  // Legacy category retained for compatibility
-  ROTATING   // Legacy category retained for compatibility
-}
-
 enum RotationStatus {
-  DRAFT      // Being prepared, not visible to customers
-  PUBLISHED  // Live and orderable
-  ARCHIVED   // Past rotation, for records
+  DRAFT      // On menu unless ARCHIVED; legacy PUBLISHED treated like DRAFT in app code paths
+  PUBLISHED  // Kept for existing rows; storefront uses not-ARCHIVED
+  ARCHIVED   // Hidden from menu and period lists
 }
 
 enum DeliveryMethod {
@@ -290,9 +283,9 @@ model RotationPeriod {
 
 model WeeklyRotation {
   id          String         @id @default(cuid())
-  weekStart   DateTime       // Monday 00:00 Toronto time
-  weekEnd     DateTime       // Sunday 23:59 Toronto time
-  orderCutoff DateTime       // Friday 23:59 Toronto time
+  weekStart   DateTime       // Thursday 00:00 America/Toronto (fulfillment cycle start; Thu-Wed)
+  weekEnd     DateTime       // Following Wednesday 23:59:59.999 America/Toronto
+  orderCutoff DateTime       // That Thursday 14:59:59.999 (ordering closes for this cycle)
   status      RotationStatus @default(DRAFT)
   rotationPeriodId String?
   rotationPeriod   RotationPeriod? @relation(fields: [rotationPeriodId], references: [id], onDelete: SetNull)

@@ -43,7 +43,7 @@ export async function GET(
  * PATCH /api/rotation/[id]
  * Update rotation (meals or status).
  *
- * Body: { mealIds?: string[], status?: "DRAFT" | "PUBLISHED" | "ARCHIVED" }
+ * Body: { mealIds?: string[], status?: "DRAFT" | "ARCHIVED" }
  */
 export async function PATCH(
   request: NextRequest,
@@ -66,8 +66,8 @@ export async function PATCH(
 
     // Update status if provided
     if (status) {
-      if (status === "PUBLISHED") {
-        rotation = await weeklyRotationService.publishRotation(id);
+      if (status === "DRAFT") {
+        rotation = await weeklyRotationService.unarchiveRotation(id);
       } else if (status === "ARCHIVED") {
         rotation = await weeklyRotationService.archiveRotation(id);
       }

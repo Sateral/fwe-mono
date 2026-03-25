@@ -2,14 +2,16 @@ import { RotationStatus } from "@fwe/db";
 
 import prisma from "../prisma";
 import {
+  DEFAULT_ROTATION_ANCHOR_FULFILLMENT_START,
   formatBusinessTime,
   getOrderingWindowForDeliveryWeek,
-  resolveDeliveryWeekEnd,
-  resolveDeliveryWeekStart,
+  resolveFulfillmentCycleEnd,
+  resolveFulfillmentCycleStart,
   resolveOrderCutoff,
-  resolveOrderableWeekStart,
+  resolveOrderableFulfillmentCycleStart,
   resolveRotationPeriodKey,
-  shiftDeliveryWeek,
+  resolveRotationPeriodStartFromAnchor,
+  shiftFulfillmentCycle,
 } from "./rotation-schedule";
 
 export interface CreateRotationInput {
@@ -62,24 +64,25 @@ function getNow(): Date {
   return new Date();
 }
 
-function buildDeliveryWeekDisplay(weekStart: Date, weekEnd?: Date): string {
-  const resolvedWeekEnd = weekEnd ?? resolveDeliveryWeekEnd(weekStart);
+function buildFulfillmentCycleDisplay(
+  cycleStart: Date,
+  cycleEnd?: Date,
+): string {
+  const resolvedEnd = cycleEnd ?? resolveFulfillmentCycleEnd(cycleStart);
 
-  return `${formatBusinessTime(weekStart, "MMM d")} - ${formatBusinessTime(
-    resolvedWeekEnd,
+  return `${formatBusinessTime(cycleStart, "MMM d")} - ${formatBusinessTime(
+    resolvedEnd,
     "MMM d",
   )}`;
 }
 
-function getRotationPeriodKey(weekStart: Date): string {
-  return resolveRotationPeriodKey(weekStart);
+function isRotationOnMenu(rotation: { status: RotationStatus }) {
+  return rotation.status !== "ARCHIVED";
 }
 
-function isRotationVisible(rotation: { status: RotationStatus }) {
-  return rotation.status === "PUBLISHED";
-}
-
-function withEffectiveMeals<T extends RotationWithEffectiveMeals>(rotation: T): T {
+function withEffectiveMeals<T extends RotationWithEffectiveMeals>(
+  rotation: T,
+): T {
   const effectiveMeals = rotation.rotationPeriod
     ? rotation.rotationPeriod.meals
     : rotation.meals;
@@ -100,8 +103,55 @@ async function getRotationPeriodByKey(key: string) {
   return prisma.rotationPeriod.findUnique({ where: { key } });
 }
 
+/** Earliest non-archived period / rotation; drives 2-cycle grouping keys. */
+async function getRotationPeriodAnchorFulfillmentStart(): Promise<Date | null> {
+  const firstPeriod = await prisma.rotationPeriod.findFirst({
+    where: { status: { not: "ARCHIVED" } },
+    include: {
+      rotations: {
+        select: { weekStart: true },
+        orderBy: { weekStart: "asc" },
+        take: 1,
+      },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  const fromPeriod = firstPeriod?.rotations[0]?.weekStart;
+  if (fromPeriod) {
+    return resolveFulfillmentCycleStart(fromPeriod);
+  }
+
+  const firstRotation = await prisma.weeklyRotation.findFirst({
+    where: {
+      rotationPeriodId: { not: null },
+      status: { not: "ARCHIVED" },
+    },
+    select: { weekStart: true },
+    orderBy: { weekStart: "asc" },
+  });
+
+  if (firstRotation?.weekStart) {
+    return resolveFulfillmentCycleStart(firstRotation.weekStart);
+  }
+
+  return null;
+}
+
+async function resolveRotationPeriodKeyForWeek(
+  weekStart: Date,
+): Promise<string> {
+  const normalized = resolveFulfillmentCycleStart(weekStart);
+  const anchor =
+    (await getRotationPeriodAnchorFulfillmentStart()) ??
+    DEFAULT_ROTATION_ANCHOR_FULFILLMENT_START;
+  const periodStart = resolveRotationPeriodStartFromAnchor(normalized, anchor);
+
+  return resolveRotationPeriodKey(periodStart, periodStart);
+}
+
 async function getOrCreateRotationPeriodForWeek(weekStart: Date) {
-  const key = getRotationPeriodKey(weekStart);
+  const key = await resolveRotationPeriodKeyForWeek(weekStart);
   const existing = await getRotationPeriodByKey(key);
 
   if (existing) {
@@ -138,7 +188,9 @@ async function ensureRotationPeriodForRotation(rotationId: string) {
     };
   }
 
-  const rotationPeriod = await getOrCreateRotationPeriodForWeek(rotation.weekStart);
+  const rotationPeriod = await getOrCreateRotationPeriodForWeek(
+    rotation.weekStart,
+  );
 
   await prisma.weeklyRotation.update({
     where: { id: rotation.id },
@@ -157,19 +209,21 @@ export { getOrderingWindowForDeliveryWeek };
 export const weeklyRotationService = {
   async getCurrentRotation() {
     const now = getNow();
-    const currentWeekStart = resolveDeliveryWeekStart(now);
+    const currentFulfillmentStart = resolveFulfillmentCycleStart(now);
 
     console.log(
       `[RotationService] Getting current rotation for ${now.toISOString()}`,
     );
 
     const rotation = await prisma.weeklyRotation.findUnique({
-      where: { weekStart: currentWeekStart },
+      where: { weekStart: currentFulfillmentStart },
       include: detailedRotationInclude,
     });
 
     const currentRotation =
-      rotation && isRotationVisible(rotation) ? withEffectiveMeals(rotation) : null;
+      rotation && isRotationOnMenu(rotation)
+        ? withEffectiveMeals(rotation)
+        : null;
 
     console.log(
       `[RotationService] Found current rotation: ${
@@ -182,9 +236,9 @@ export const weeklyRotationService = {
 
   async getOrderableRotation() {
     const now = getNow();
-    const currentWeekStart = resolveDeliveryWeekStart(now);
-    const deliveryWeekStart = resolveOrderableWeekStart(now);
-    const fallbackCutoff = resolveOrderCutoff(deliveryWeekStart);
+    const currentFulfillmentStart = resolveFulfillmentCycleStart(now);
+    const targetCycleStart = resolveOrderableFulfillmentCycleStart(now);
+    const fallbackCutoff = resolveOrderCutoff(targetCycleStart);
 
     console.log(
       `[RotationService] Getting orderable rotation at ${formatBusinessTime(
@@ -194,18 +248,18 @@ export const weeklyRotationService = {
     );
 
     const rotation = await prisma.weeklyRotation.findUnique({
-      where: { weekStart: deliveryWeekStart },
+      where: { weekStart: targetCycleStart },
       include: detailedRotationInclude,
     });
 
-    if (!rotation || !isRotationVisible(rotation)) {
+    if (!rotation || !isRotationOnMenu(rotation)) {
       console.log(
-        `[RotationService] No published rotation found for ordering week ${deliveryWeekStart.toISOString()}`,
+        `[RotationService] No on-menu rotation for fulfillment cycle ${targetCycleStart.toISOString()}`,
       );
 
       return {
         rotation: null,
-        currentWeekStart,
+        currentWeekStart: currentFulfillmentStart,
         deliveryWeekStart: null,
         deliveryWeekDisplay: null,
         orderCutoff: fallbackCutoff,
@@ -214,20 +268,20 @@ export const weeklyRotationService = {
 
     const normalizedRotation = withEffectiveMeals(rotation);
     const orderCutoff = new Date(rotation.orderCutoff);
-    const deliveryWeekEnd = resolveDeliveryWeekEnd(deliveryWeekStart);
+    const deliveryWeekEnd = resolveFulfillmentCycleEnd(targetCycleStart);
 
     console.log(
       `[RotationService] Found orderable rotation: ${normalizedRotation.id}, ` +
-        `delivery week: ${buildDeliveryWeekDisplay(deliveryWeekStart, deliveryWeekEnd)}, ` +
+        `fulfillment: ${buildFulfillmentCycleDisplay(targetCycleStart, deliveryWeekEnd)}, ` +
         `cutoff: ${formatBusinessTime(orderCutoff, "EEE MMM d h:mm a")}`,
     );
 
     return {
       rotation: normalizedRotation,
-      currentWeekStart,
-      deliveryWeekStart,
-      deliveryWeekDisplay: buildDeliveryWeekDisplay(
-        deliveryWeekStart,
+      currentWeekStart: currentFulfillmentStart,
+      deliveryWeekStart: targetCycleStart,
+      deliveryWeekDisplay: buildFulfillmentCycleDisplay(
+        targetCycleStart,
         deliveryWeekEnd,
       ),
       orderCutoff,
@@ -235,14 +289,14 @@ export const weeklyRotationService = {
   },
 
   async getRotationByWeek(weekStart: Date) {
-    const normalizedWeekStart = resolveDeliveryWeekStart(weekStart);
+    const normalized = resolveFulfillmentCycleStart(weekStart);
 
     console.log(
-      `[RotationService] Getting rotation for week starting ${normalizedWeekStart.toISOString()}`,
+      `[RotationService] Getting rotation for cycle starting ${normalized.toISOString()}`,
     );
 
     const rotation = await prisma.weeklyRotation.findUnique({
-      where: { weekStart: normalizedWeekStart },
+      where: { weekStart: normalized },
       include: detailedRotationInclude,
     });
 
@@ -261,13 +315,13 @@ export const weeklyRotationService = {
   },
 
   async createRotation(weekStartDate: Date) {
-    const weekStart = resolveDeliveryWeekStart(weekStartDate);
-    const weekEnd = resolveDeliveryWeekEnd(weekStart);
+    const weekStart = resolveFulfillmentCycleStart(weekStartDate);
+    const weekEnd = resolveFulfillmentCycleEnd(weekStart);
     const orderCutoff = resolveOrderCutoff(weekStart);
     const rotationPeriod = await getOrCreateRotationPeriodForWeek(weekStart);
 
     console.log(
-      `[RotationService] Creating rotation for delivery week ${weekStart.toISOString()}, cutoff: ${orderCutoff.toISOString()}`,
+      `[RotationService] Creating rotation for fulfillment cycle ${weekStart.toISOString()}, cutoff: ${orderCutoff.toISOString()}`,
     );
 
     const rotation = await prisma.weeklyRotation.create({
@@ -289,7 +343,8 @@ export const weeklyRotationService = {
       `[RotationService] Updating rotation ${rotationId} with ${mealIds.length} meals`,
     );
 
-    const { rotationPeriodId } = await ensureRotationPeriodForRotation(rotationId);
+    const { rotationPeriodId } =
+      await ensureRotationPeriodForRotation(rotationId);
 
     await prisma.rotationPeriod.update({
       where: { id: rotationPeriodId },
@@ -312,32 +367,16 @@ export const weeklyRotationService = {
     return withEffectiveMeals(rotation);
   },
 
-  async publishRotation(rotationId: string) {
-    console.log(`[RotationService] Publishing rotation ${rotationId}`);
-
-    const { rotationPeriodId } = await ensureRotationPeriodForRotation(rotationId);
-
-    await prisma.weeklyRotation.update({
-      where: { id: rotationId },
-      data: { status: "PUBLISHED" },
-    });
-
-    const rotation = await prisma.weeklyRotation.findUnique({
-      where: { id: rotationId },
-      include: summaryRotationInclude,
-    });
-
-    if (!rotation) {
-      throw new Error(`Rotation ${rotationId} not found after publish`);
-    }
-
-    return withEffectiveMeals(rotation);
-  },
-
   async archiveRotation(rotationId: string) {
     console.log(`[RotationService] Archiving rotation ${rotationId}`);
 
-    const { rotationPeriodId } = await ensureRotationPeriodForRotation(rotationId);
+    const { rotationPeriodId } =
+      await ensureRotationPeriodForRotation(rotationId);
+
+    await prisma.rotationPeriod.update({
+      where: { id: rotationPeriodId },
+      data: { status: "ARCHIVED" },
+    });
 
     await prisma.weeklyRotation.update({
       where: { id: rotationId },
@@ -359,11 +398,17 @@ export const weeklyRotationService = {
   async unarchiveRotation(rotationId: string) {
     console.log(`[RotationService] Unarchiving rotation ${rotationId}`);
 
-    const { rotationPeriodId } = await ensureRotationPeriodForRotation(rotationId);
+    const { rotationPeriodId } =
+      await ensureRotationPeriodForRotation(rotationId);
+
+    await prisma.rotationPeriod.update({
+      where: { id: rotationPeriodId },
+      data: { status: "DRAFT" },
+    });
 
     await prisma.weeklyRotation.update({
       where: { id: rotationId },
-      data: { status: "PUBLISHED" },
+      data: { status: "DRAFT" },
     });
 
     const rotation = await prisma.weeklyRotation.findUnique({
@@ -380,7 +425,9 @@ export const weeklyRotationService = {
 
   async isOrderingOpen(): Promise<boolean> {
     const now = getNow();
-    const window = getOrderingWindowForDeliveryWeek(resolveOrderableWeekStart(now));
+    const window = getOrderingWindowForDeliveryWeek(
+      resolveOrderableFulfillmentCycleStart(now),
+    );
 
     return now >= window.windowStart && now < window.windowEnd;
   },
@@ -389,32 +436,32 @@ export const weeklyRotationService = {
     console.log(`[RotationService] Getting available meals`);
 
     const now = getNow();
-    const currentWeekStart = resolveDeliveryWeekStart(now);
-    const fallbackDeliveryWeekStart = resolveOrderableWeekStart(now);
-    const fallbackDeliveryWeekEnd = resolveDeliveryWeekEnd(fallbackDeliveryWeekStart);
-    const fallbackOrderCutoff = resolveOrderCutoff(fallbackDeliveryWeekStart);
+    const currentFulfillmentStart = resolveFulfillmentCycleStart(now);
+    const fallbackTargetCycle = resolveOrderableFulfillmentCycleStart(now);
+    const fallbackEnd = resolveFulfillmentCycleEnd(fallbackTargetCycle);
+    const fallbackOrderCutoff = resolveOrderCutoff(fallbackTargetCycle);
     const orderableData = await this.getOrderableRotation();
     const { rotation, deliveryWeekStart, deliveryWeekDisplay, orderCutoff } =
       orderableData;
     const meals = (rotation?.meals || []).filter((meal) => meal.isActive);
     const resolvedDeliveryWeekStart =
-      deliveryWeekStart || fallbackDeliveryWeekStart;
+      deliveryWeekStart || fallbackTargetCycle;
     const resolvedDeliveryWeekDisplay =
       deliveryWeekDisplay ||
-      buildDeliveryWeekDisplay(fallbackDeliveryWeekStart, fallbackDeliveryWeekEnd);
+      buildFulfillmentCycleDisplay(fallbackTargetCycle, fallbackEnd);
     const resolvedOrderCutoff = orderCutoff || fallbackOrderCutoff;
 
     console.log(
-      `[RotationService] Returning ${meals.length} rotating meals` +
+      `[RotationService] Returning ${meals.length} menu meals` +
         (deliveryWeekDisplay
           ? ` for ${deliveryWeekDisplay}`
-          : " (no rotation available)"),
+          : " (no rotation row)"),
     );
 
     return {
       meals,
       isOrderingOpen: await this.isOrderingOpen(),
-      currentWeekDisplay: buildDeliveryWeekDisplay(currentWeekStart),
+      currentWeekDisplay: buildFulfillmentCycleDisplay(currentFulfillmentStart),
       deliveryWeekDisplay: resolvedDeliveryWeekDisplay,
       deliveryWeekStart: formatBusinessTime(
         resolvedDeliveryWeekStart,
@@ -426,7 +473,7 @@ export const weeklyRotationService = {
 
   async getOrCreateOrderingRotation() {
     const now = getNow();
-    const deliveryWeekStart = resolveOrderableWeekStart(now);
+    const deliveryWeekStart = resolveOrderableFulfillmentCycleStart(now);
 
     let rotation = await prisma.weeklyRotation.findUnique({
       where: { weekStart: deliveryWeekStart },
@@ -455,10 +502,196 @@ export const weeklyRotationService = {
     };
   },
 
+  async getMenuMeals() {
+    return await prisma.meal.findMany({
+      where: { isActive: true },
+      include: { tags: true },
+      orderBy: { updatedAt: "desc" },
+    });
+  },
+
   async getRotatingMeals() {
     return await prisma.meal.findMany({
-      where: { mealType: "ROTATING" },
+      where: { isActive: true },
       include: { tags: true },
+      orderBy: { name: "asc" },
+    });
+  },
+
+  async getRotationPeriods() {
+    console.log(`[RotationService] Getting rotation periods`);
+
+    const now = getNow();
+    const currentFulfillmentStart = resolveFulfillmentCycleStart(now);
+
+    const anchor =
+      (await getRotationPeriodAnchorFulfillmentStart()) ??
+      DEFAULT_ROTATION_ANCHOR_FULFILLMENT_START;
+    const currentPeriodStart = resolveRotationPeriodStartFromAnchor(
+      currentFulfillmentStart,
+      anchor,
+    );
+    const currentPeriodKey = resolveRotationPeriodKey(
+      currentPeriodStart,
+      currentPeriodStart,
+    );
+    const nextPeriodStart = shiftFulfillmentCycle(currentPeriodStart, 2);
+    const nextPeriodKey = resolveRotationPeriodKey(
+      nextPeriodStart,
+      nextPeriodStart,
+    );
+
+    const periods = await prisma.rotationPeriod.findMany({
+      where: {
+        status: { not: "ARCHIVED" },
+        key: { in: [currentPeriodKey, nextPeriodKey] },
+      },
+      include: {
+        meals: {
+          include: {
+            tags: true,
+          },
+        },
+        rotations: {
+          orderBy: { weekStart: "asc" },
+          select: {
+            id: true,
+            weekStart: true,
+            weekEnd: true,
+            orderCutoff: true,
+            status: true,
+          },
+        },
+      },
+      orderBy: { key: "asc" },
+    });
+
+    return {
+      periods,
+      currentPeriodKey,
+      currentWeekStart: currentFulfillmentStart,
+      anchorWeekStart: anchor,
+    };
+  },
+
+  async getOrCreateCurrentRotationPeriod() {
+    const now = getNow();
+    const currentFulfillmentStart = resolveFulfillmentCycleStart(now);
+
+    return await getOrCreateRotationPeriodForWeek(currentFulfillmentStart);
+  },
+
+  async getOrCreateNextRotationPeriod() {
+    const now = getNow();
+    const currentFulfillmentStart = resolveFulfillmentCycleStart(now);
+    const anchor =
+      (await getRotationPeriodAnchorFulfillmentStart()) ??
+      DEFAULT_ROTATION_ANCHOR_FULFILLMENT_START;
+    const currentPeriodStart = resolveRotationPeriodStartFromAnchor(
+      currentFulfillmentStart,
+      anchor,
+    );
+    const nextPeriodStart = shiftFulfillmentCycle(currentPeriodStart, 2);
+
+    return await getOrCreateRotationPeriodForWeek(nextPeriodStart);
+  },
+
+  async createRotationPeriodWithWeeks(periodStartDate: Date) {
+    const periodStart = resolveFulfillmentCycleStart(periodStartDate);
+    const period = await getOrCreateRotationPeriodForWeek(periodStart);
+
+    const week1Start = periodStart;
+    const week2Start = shiftFulfillmentCycle(periodStart, 1);
+
+    let rotation1 = await prisma.weeklyRotation.findUnique({
+      where: { weekStart: week1Start },
+    });
+
+    let rotation2 = await prisma.weeklyRotation.findUnique({
+      where: { weekStart: week2Start },
+    });
+
+    if (!rotation1) {
+      rotation1 = await prisma.weeklyRotation.create({
+        data: {
+          weekStart: week1Start,
+          weekEnd: resolveFulfillmentCycleEnd(week1Start),
+          orderCutoff: resolveOrderCutoff(week1Start),
+          status: "DRAFT",
+          rotationPeriodId: period.id,
+        },
+      });
+    } else if (!rotation1.rotationPeriodId) {
+      await prisma.weeklyRotation.update({
+        where: { id: rotation1.id },
+        data: { rotationPeriodId: period.id },
+      });
+    }
+
+    if (!rotation2) {
+      rotation2 = await prisma.weeklyRotation.create({
+        data: {
+          weekStart: week2Start,
+          weekEnd: resolveFulfillmentCycleEnd(week2Start),
+          orderCutoff: resolveOrderCutoff(week2Start),
+          status: "DRAFT",
+          rotationPeriodId: period.id,
+        },
+      });
+    } else if (!rotation2.rotationPeriodId) {
+      await prisma.weeklyRotation.update({
+        where: { id: rotation2.id },
+        data: { rotationPeriodId: period.id },
+      });
+    }
+
+    return await prisma.rotationPeriod.findUnique({
+      where: { id: period.id },
+      include: {
+        meals: { include: { tags: true } },
+        rotations: {
+          orderBy: { weekStart: "asc" },
+          select: {
+            id: true,
+            weekStart: true,
+            weekEnd: true,
+            orderCutoff: true,
+            status: true,
+          },
+        },
+      },
+    });
+  },
+
+  async updateRotationPeriodMeals(periodId: string, mealIds: string[]) {
+    console.log(
+      `[RotationService] Updating period ${periodId} with ${mealIds.length} meals`,
+    );
+
+    await prisma.rotationPeriod.update({
+      where: { id: periodId },
+      data: {
+        meals: {
+          set: mealIds.map((id) => ({ id })),
+        },
+      },
+    });
+
+    return await prisma.rotationPeriod.findUnique({
+      where: { id: periodId },
+      include: {
+        meals: { include: { tags: true } },
+        rotations: {
+          orderBy: { weekStart: "asc" },
+          select: {
+            id: true,
+            weekStart: true,
+            weekEnd: true,
+            orderCutoff: true,
+            status: true,
+          },
+        },
+      },
     });
   },
 
@@ -467,33 +700,41 @@ export const weeklyRotationService = {
     message?: string;
   }> {
     const now = getNow();
-    const currentWeekStart = resolveDeliveryWeekStart(now);
-    const nextWeekStart = shiftDeliveryWeek(currentWeekStart, 1);
-    const currentWeekEnd = resolveDeliveryWeekEnd(currentWeekStart);
-    const daysUntilWeekEnd = Math.ceil(
-      (currentWeekEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+    const currentFulfillment = resolveFulfillmentCycleStart(now);
+    const currentEnd = resolveFulfillmentCycleEnd(currentFulfillment);
+    const daysUntilEnd = Math.ceil(
+      (currentEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
     );
 
-    if (daysUntilWeekEnd > 3) {
+    if (daysUntilEnd > 3) {
       return { needsAttention: false };
     }
 
+    const nextCycleStart = shiftFulfillmentCycle(currentFulfillment, 1);
     const nextRotation = await prisma.weeklyRotation.findUnique({
-      where: { weekStart: nextWeekStart },
-      include: { rotationPeriod: true },
+      where: { weekStart: nextCycleStart },
+      include: {
+        rotationPeriod: {
+          include: {
+            meals: { select: { id: true } },
+          },
+        },
+      },
     });
 
     if (!nextRotation) {
       return {
         needsAttention: true,
-        message: `No rotation created for next week (starting ${formatBusinessTime(nextWeekStart, "MMM d, yyyy")})`,
+        message: `No rotation row for next fulfillment cycle (starts ${formatBusinessTime(nextCycleStart, "MMM d, yyyy")})`,
       };
     }
 
-    if (!isRotationVisible(nextRotation)) {
+    const mealCount = nextRotation.rotationPeriod?.meals?.length ?? 0;
+    if (mealCount === 0) {
       return {
         needsAttention: true,
-        message: `Next week's rotation is in ${nextRotation.status} status - needs to be published`,
+        message:
+          "Next fulfillment cycle has no meals on its rotation period — add meals in Rotations.",
       };
     }
 
