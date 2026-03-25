@@ -2,6 +2,12 @@ import { Prisma } from "@fwe/db";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const prismaMock = vi.hoisted(() => ({
+  user: {
+    findUnique: vi.fn(),
+  },
+  weeklyRotation: {
+    findUnique: vi.fn(),
+  },
   meal: {
     findMany: vi.fn(),
   },
@@ -21,11 +27,18 @@ import { cartService } from "../cart.service";
 
 describe("cart.service", () => {
   beforeEach(() => {
+    prismaMock.user.findUnique.mockReset();
+    prismaMock.weeklyRotation.findUnique.mockReset();
     prismaMock.meal.findMany.mockReset();
     prismaMock.cart.findFirst.mockReset();
     prismaMock.cart.create.mockReset();
     prismaMock.cart.findUnique.mockReset();
     prismaMock.cart.update.mockReset();
+
+    prismaMock.user.findUnique.mockResolvedValue({ id: "user_123" });
+    prismaMock.weeklyRotation.findUnique.mockResolvedValue({
+      id: "rotation_123",
+    });
   });
 
   it("reuses an existing cart for the same client request id", async () => {

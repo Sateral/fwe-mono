@@ -11,19 +11,10 @@ import { useSelectedRotation } from "@/lib/context/rotation-context";
 import { useOrdersByRotation, useRotations } from "@/hooks/use-orders";
 
 export function PrepManifestDashboard() {
-  const { selectedRotationId, setSelectedRotationId } = useSelectedRotation();
+  const { selectedRotationId } = useSelectedRotation();
   const { data: rotations = [] } = useRotations();
   const { data: orders = [], isLoading: ordersLoading } =
     useOrdersByRotation(selectedRotationId);
-
-  React.useEffect(() => {
-    if (!selectedRotationId && rotations.length > 0) {
-      const firstRotation = rotations[0];
-      if (firstRotation) {
-        setSelectedRotationId(firstRotation.id);
-      }
-    }
-  }, [selectedRotationId, rotations, setSelectedRotationId]);
 
   const currentRotation = rotations.find((r) => r.id === selectedRotationId);
   const paidOrders = orders.filter(

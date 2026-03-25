@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Bookmark, CreditCard, Loader2 } from "lucide-react";
+import { Bookmark, CreditCard, Loader2, ShoppingBag } from "lucide-react";
 import type { Meal } from "@/types";
 
 interface OrderSummaryProps {
@@ -16,6 +16,9 @@ interface OrderSummaryProps {
   onSaveForLater: () => void;
   isCheckingOut?: boolean;
   checkoutLabel?: string;
+  /** Use bag icon for add-to-cart flows; card for direct payment. */
+  primaryActionIcon?: "cart" | "payment";
+  primaryDisabled?: boolean;
 }
 
 const OrderSummary = ({
@@ -30,7 +33,10 @@ const OrderSummary = ({
   onSaveForLater,
   isCheckingOut = false,
   checkoutLabel = "Place Order",
+  primaryActionIcon = "payment",
+  primaryDisabled = false,
 }: OrderSummaryProps) => {
+  const PrimaryIcon = primaryActionIcon === "cart" ? ShoppingBag : CreditCard;
   // Calculate base price from meal
   const basePrice = meal.price;
   const proteinBoostPrice = proteinBoost ? 2.0 : 0;
@@ -106,7 +112,7 @@ const OrderSummary = ({
 
       <p className="text-xs text-gray-500 mb-4">
         Taxes and <span className="text-primary font-medium">delivery</span>{" "}
-        calculated at checkout.
+        are finalized at checkout. Delivery or pickup is chosen on your cart.
       </p>
 
       {/* Summary Details */}
@@ -175,7 +181,7 @@ const OrderSummary = ({
         <Button
           className="flex-1 py-6 rounded-full bg-primary hover:bg-primary/90"
           onClick={onCheckout}
-          disabled={isCheckingOut}
+          disabled={isCheckingOut || primaryDisabled}
         >
           {isCheckingOut ? (
             <>
@@ -184,7 +190,7 @@ const OrderSummary = ({
             </>
           ) : (
             <>
-              <CreditCard className="w-4 h-4 mr-2" />
+              <PrimaryIcon className="w-4 h-4 mr-2" />
               {checkoutLabel}
             </>
           )}

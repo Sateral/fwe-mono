@@ -1016,7 +1016,7 @@ describe("cart-checkout.service", () => {
 
     expect(stripeMock.checkout.sessions.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        cancel_url: "http://localhost:3000/order/jerk-chicken",
+        cancel_url: "http://localhost:3000/cart",
         line_items: [
           expect.objectContaining({
             price_data: expect.objectContaining({

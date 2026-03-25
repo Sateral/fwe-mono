@@ -1,4 +1,7 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
+
+import { getRotations } from "@/lib/actions/weekly-rotation.actions";
 import { RotationProvider } from "@/lib/context/rotation-context";
 import { PrepManifestDashboard } from "../_components/prep-manifest-dashboard";
 
@@ -8,6 +11,14 @@ interface Props {
 
 export default async function PrepManifestPage({ searchParams }: Props) {
   const resolvedParams = await searchParams;
+
+  if (!resolvedParams.rotationId) {
+    const rotations = await getRotations();
+    const first = rotations[0];
+    if (first) {
+      redirect(`/dashboard/orders/prep-manifest?rotationId=${first.id}`);
+    }
+  }
 
   return (
     <Suspense fallback={<PrepManifestSkeleton />}>

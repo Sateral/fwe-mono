@@ -95,12 +95,20 @@ export async function POST(request: NextRequest) {
       ],
     });
 
-    const checkoutSession = await cartsApi.checkout(cart.id, {
+    const checkoutSession = await cartsApi.checkout(cart.id, userId, {
       userEmail,
       userName: userName ?? undefined,
       deliveryMethod: data.deliveryMethod,
       pickupLocation: data.pickupLocation,
       requestId: data.requestId,
+      guest: session?.user
+        ? undefined
+        : data.guest
+          ? {
+              name: data.guest.name,
+              email: data.guest.email,
+            }
+          : undefined,
     });
 
     return NextResponse.json({

@@ -2,18 +2,61 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
+import type { ApiCart } from "@fwe/types";
 import type { CreateCartInput } from "@fwe/validators";
 
+import { useSetCartNavCount } from "@/components/cart-count-provider";
 import Container from "@/components/container";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import type { GuestFulfillmentPreference } from "@/lib/cart-cookies";
+import { countCartItemQuantity } from "@/lib/cart-item-count";
 import type { Meal } from "@/types";
 import { toast } from "sonner";
 import NutritionBreakdown from "./nutrition-breakdown";
 import OrderBuilder from "./order-builder";
 import OrderSummary from "./order-summary";
+
+export type OrderBuilderInitialFromCart = {
+  quantity: number;
+  selectedSubstitutions: Record<string, string>;
+  selectedModifiers: Record<string, string[]>;
+  proteinBoost: boolean;
+  notes: string;
+};
+
+function defaultModifiersFromMeal(meal: Meal): Record<string, string[]> {
+  const initial: Record<string, string[]> = {};
+  for (const group of meal.modifierGroups) {
+    if (
+      group.type === "SINGLE_SELECT" &&
+      group.minSelection > 0 &&
+      group.options.length > 0
+    ) {
+      const first = group.options[0];
+      if (first) {
+        initial[group.id] = [first.id];
+      }
+    }
+  }
+  return initial;
+}
+
+function defaultSubstitutionsFromMeal(meal: Meal): Record<string, string> {
+  const defaults: Record<string, string> = {};
+  meal.substitutionGroups.forEach((group) => {
+    const defaultOption = group.options.find((o) => o.isDefault);
+    if (defaultOption) {
+      defaults[group.id] = defaultOption.id;
+    } else if (group.options.length > 0) {
+      const firstOption = group.options[0];
+      if (firstOption) {
+        defaults[group.id] = firstOption.id;
+      }
+    }
+  });
+  return defaults;
+}
 
 interface OrderPageClientProps {
   meal: Meal;
@@ -21,45 +64,57 @@ interface OrderPageClientProps {
     email: string;
     name: string;
   } | null;
+  /** Delivery vs pickup shown in summary; chosen on the cart for guests. */
+  initialFulfillment?: GuestFulfillmentPreference | null;
+  /** When set, load this cart line into the builder and update it on submit. */
+  editCartItemId?: string | null;
+  /** Hydrated builder state from server when `editCartItemId` is set. */
+  initialEditBuilder?: OrderBuilderInitialFromCart | null;
 }
 
-const OrderPageClient = ({ meal, initialCustomer = null }: OrderPageClientProps) => {
+const OrderPageClient = ({
+  meal,
+  initialCustomer = null,
+  initialFulfillment = null,
+  editCartItemId = null,
+  initialEditBuilder = null,
+}: OrderPageClientProps) => {
   const router = useRouter();
+  const setCartNavCount = useSetCartNavCount();
   const isAuthenticated = Boolean(initialCustomer?.email);
-  const [quantity, setQuantity] = useState(4);
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [checkoutRequestId, setCheckoutRequestId] = useState<string | null>(
-    null,
+  const [quantity, setQuantity] = useState(
+    () => initialEditBuilder?.quantity ?? 4,
   );
-  const [deliveryMethod, setDeliveryMethod] = useState<"DELIVERY" | "PICKUP">(
-    "DELIVERY",
-  );
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [selectedModifiers, setSelectedModifiers] = useState<
     Record<string, string[]>
-  >({});
-  const [notes, setNotes] = useState("");
-  const [proteinBoost, setProteinBoost] = useState(false);
-  const [guestName, setGuestName] = useState(initialCustomer?.name ?? "");
-  const [guestEmail, setGuestEmail] = useState(initialCustomer?.email ?? "");
+  >(
+    () =>
+      initialEditBuilder?.selectedModifiers ?? defaultModifiersFromMeal(meal),
+  );
+  const [notes, setNotes] = useState(() => initialEditBuilder?.notes ?? "");
+  const [proteinBoost, setProteinBoost] = useState(
+    () => initialEditBuilder?.proteinBoost ?? false,
+  );
 
-  // Initialize substitutions with default options
+  const { deliveryMethod, pickupLocation } = useMemo(() => {
+    const method = initialFulfillment?.deliveryMethod ?? "DELIVERY";
+    return {
+      deliveryMethod: method,
+      pickupLocation:
+        method === "PICKUP"
+          ? (initialFulfillment?.pickupLocation ?? "Xtreme Couture")
+          : undefined,
+    };
+  }, [initialFulfillment]);
+
   const [selectedSubstitutions, setSelectedSubstitutions] = useState<
     Record<string, string>
-  >(() => {
-    const defaults: Record<string, string> = {};
-    meal.substitutionGroups.forEach((group) => {
-      const defaultOption = group.options.find((o) => o.isDefault);
-      if (defaultOption) {
-        defaults[group.id] = defaultOption.id;
-      } else if (group.options.length > 0) {
-        const firstOption = group.options[0];
-        if (firstOption) {
-          defaults[group.id] = firstOption.id;
-        }
-      }
-    });
-    return defaults;
-  });
+  >(
+    () =>
+      initialEditBuilder?.selectedSubstitutions ??
+      defaultSubstitutionsFromMeal(meal),
+  );
 
   const handleModifierChange = (groupId: string, optionIds: string[]) => {
     setSelectedModifiers((prev) => ({
@@ -75,40 +130,10 @@ const OrderPageClient = ({ meal, initialCustomer = null }: OrderPageClientProps)
     }));
   };
 
-  useEffect(() => {
-    setCheckoutRequestId(null);
-  }, [
-    quantity,
-    selectedModifiers,
-    selectedSubstitutions,
-    proteinBoost,
-    deliveryMethod,
-    notes,
-    guestName,
-    guestEmail,
-  ]);
-
-  const handleCheckout = async () => {
-    setIsCheckingOut(true);
+  const handleAddToCart = async () => {
+    setIsAddingToCart(true);
 
     try {
-      const normalizedGuestName = guestName.trim();
-      const normalizedGuestEmail = guestEmail.trim();
-
-      if (!isAuthenticated && (!normalizedGuestName || !normalizedGuestEmail)) {
-        throw new Error("Name and email are required for guest checkout");
-      }
-
-      const requestId =
-        checkoutRequestId ??
-        (globalThis.crypto?.randomUUID
-          ? globalThis.crypto.randomUUID()
-          : undefined);
-
-      if (requestId && !checkoutRequestId) {
-        setCheckoutRequestId(requestId);
-      }
-
       // Build substitutions with human-readable names
       const substitutions = Object.entries(selectedSubstitutions).map(
         ([groupId, optionId]) => {
@@ -123,6 +148,60 @@ const OrderPageClient = ({ meal, initialCustomer = null }: OrderPageClientProps)
         },
       );
 
+      const modifiers = Object.entries(selectedModifiers)
+        .filter(([, optionIds]) => optionIds.length > 0)
+        .map(([groupId, optionIds]) => {
+          const group = meal.modifierGroups.find((g) => g.id === groupId);
+          const optionNames = optionIds
+            .map((id) => group?.options.find((o) => o.id === id)?.name)
+            .filter(Boolean) as string[];
+          return {
+            groupId,
+            groupName: group?.name || "",
+            optionIds,
+            optionNames,
+          };
+        });
+
+      if (editCartItemId) {
+        const response = await fetch(`/api/cart/items/${editCartItemId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            mealId: meal.id,
+            quantity,
+            substitutions,
+            proteinBoost,
+            notes: notes || undefined,
+            modifiers,
+          }),
+        });
+
+        const payload = (await response.json()) as
+          | ApiCart
+          | { error?: string; code?: string };
+
+        if (!response.ok) {
+          const err = payload as { error?: string; code?: string };
+          if (err.code === "GUEST_PROFILE_REQUIRED") {
+            toast.error(
+              "Save your name and email on the cart page before editing items.",
+            );
+            router.push("/cart");
+            return;
+          }
+          throw new Error(err.error || "Failed to update cart line");
+        }
+
+        setCartNavCount(countCartItemQuantity(payload as ApiCart));
+
+        toast.success("Cart updated");
+        router.push("/cart");
+        return;
+      }
+
       const items: CreateCartInput["items"] = [
         {
           mealId: meal.id,
@@ -130,66 +209,49 @@ const OrderPageClient = ({ meal, initialCustomer = null }: OrderPageClientProps)
           substitutions,
           proteinBoost,
           notes: notes || undefined,
-          modifiers: Object.entries(selectedModifiers).map(
-            ([groupId, optionIds]) => {
-              const group = meal.modifierGroups.find((g) => g.id === groupId);
-              const optionNames = optionIds
-                .map((id) => group?.options.find((o) => o.id === id)?.name)
-                .filter(Boolean) as string[];
-              return {
-                groupId,
-                groupName: group?.name || "",
-                optionIds,
-                optionNames,
-              };
-            },
-          ),
+          modifiers,
         },
       ];
 
-      const response = await fetch("/api/checkout", {
+      const response = await fetch("/api/cart/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          requestId,
-          mealId: meal.id,
-          quantity,
-          guest: isAuthenticated
-            ? undefined
-            : {
-                name: normalizedGuestName,
-                email: normalizedGuestEmail,
-              },
-          substitutions,
-          proteinBoost,
-          deliveryMethod,
-          pickupLocation:
-            deliveryMethod === "PICKUP" ? "Xtreme Couture" : undefined,
-          notes: notes || undefined,
-          modifiers: items[0]?.modifiers,
+          items,
         }),
       });
 
-      const data = await response.json();
+      const payload = (await response.json()) as
+        | ApiCart
+        | { error?: string; code?: string };
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create checkout session");
+        const err = payload as { error?: string; code?: string };
+        if (err.code === "GUEST_PROFILE_REQUIRED") {
+          toast.error(
+            "Save your name and email on the cart page before adding items from the menu.",
+          );
+          router.push("/cart");
+          return;
+        }
+        throw new Error(err.error || "Failed to add to cart");
       }
 
-      // Redirect to Stripe Checkout
-      if (data.url) {
-        router.push(data.url);
-      }
+      setCartNavCount(countCartItemQuantity(payload as ApiCart));
+
+      toast.success("Added to cart");
+      router.push("/cart");
     } catch (error) {
-      console.error("Checkout error:", error);
-      setIsCheckingOut(false);
+      console.error("Add to cart error:", error);
       toast.error(
         error instanceof Error
           ? error.message
-          : "Checkout failed. Please try again.",
+          : "Could not add to cart. Please try again.",
       );
+    } finally {
+      setIsAddingToCart(false);
     }
   };
 
@@ -243,6 +305,11 @@ const OrderPageClient = ({ meal, initialCustomer = null }: OrderPageClientProps)
 
             {/* Meal Info */}
             <div>
+              {editCartItemId ? (
+                <p className="text-sm font-medium text-primary mb-2">
+                  Editing cart line
+                </p>
+              ) : null}
               <h1 className="text-3xl font-bold text-gray-900 mb-3">
                 {meal.name}
               </h1>
@@ -271,47 +338,24 @@ const OrderPageClient = ({ meal, initialCustomer = null }: OrderPageClientProps)
               onSubstitutionChange={handleSubstitutionChange}
               proteinBoost={proteinBoost}
               onProteinBoostChange={setProteinBoost}
-              deliveryMethod={deliveryMethod}
-              onDeliveryMethodChange={setDeliveryMethod}
               notes={notes}
               onNotesChange={setNotes}
             />
 
-            {!isAuthenticated && (
-              <div className="rounded-2xl border border-gray-200 bg-white p-5 space-y-4">
-                <div>
-                  <h3 className="text-base font-semibold text-gray-900">Guest checkout</h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Use your real name and email for order updates. You can claim this
-                    order later by signing in with the same email.
-                  </p>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="guest-name">Full name</Label>
-                    <Input
-                      id="guest-name"
-                      value={guestName}
-                      onChange={(event) => setGuestName(event.target.value)}
-                      placeholder="Your name"
-                      autoComplete="name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="guest-email">Email</Label>
-                    <Input
-                      id="guest-email"
-                      type="email"
-                      value={guestEmail}
-                      onChange={(event) => setGuestEmail(event.target.value)}
-                      placeholder="you@example.com"
-                      autoComplete="email"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
+            {!isAuthenticated ? (
+              <p className="text-sm text-gray-600 rounded-2xl border border-gray-200 bg-white p-4">
+                Name, email, and delivery or pickup are set on your{" "}
+                <button
+                  type="button"
+                  className="text-primary font-medium underline underline-offset-2"
+                  onClick={() => router.push("/cart")}
+                >
+                  cart
+                </button>
+                . Save your details there once before adding meals from the
+                menu.
+              </p>
+            ) : null}
 
             <OrderSummary
               meal={meal}
@@ -320,13 +364,18 @@ const OrderPageClient = ({ meal, initialCustomer = null }: OrderPageClientProps)
               selectedSubstitutions={selectedSubstitutions}
               proteinBoost={proteinBoost}
               deliveryMethod={deliveryMethod}
-              pickupLocation={
-                deliveryMethod === "PICKUP" ? "Xtreme Couture" : undefined
+              pickupLocation={pickupLocation}
+              onCheckout={handleAddToCart}
+              onSaveForLater={() =>
+                editCartItemId
+                  ? router.push("/cart")
+                  : router.push("/menu")
               }
-              onCheckout={handleCheckout}
-              onSaveForLater={() => console.log("Save for later", meal.id)}
-              isCheckingOut={isCheckingOut}
-              checkoutLabel={isAuthenticated ? "Place Order" : "Continue as Guest"}
+              isCheckingOut={isAddingToCart}
+              checkoutLabel={
+                editCartItemId ? "Save to cart" : "Add to cart"
+              }
+              primaryActionIcon="cart"
             />
           </div>
         </div>

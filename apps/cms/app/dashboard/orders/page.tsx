@@ -1,4 +1,7 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
+
+import { getRotations } from "@/lib/actions/weekly-rotation.actions";
 import { RotationProvider } from "@/lib/context/rotation-context";
 import { OrdersDashboard } from "./_components/orders-dashboard";
 
@@ -8,6 +11,14 @@ interface Props {
 
 export default async function OrdersPage({ searchParams }: Props) {
   const resolvedParams = await searchParams;
+
+  if (!resolvedParams.rotationId) {
+    const rotations = await getRotations();
+    const first = rotations[0];
+    if (first) {
+      redirect(`/dashboard/orders?rotationId=${first.id}`);
+    }
+  }
 
   return (
     <Suspense fallback={<OrdersDashboardSkeleton />}>

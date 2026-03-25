@@ -137,13 +137,21 @@ describe("web checkout route", () => {
         },
       ],
     });
-    expect(cmsApiMock.cartsApi.checkout).toHaveBeenCalledWith("cart_guest_123", {
-      userEmail: "guest@example.com",
-      userName: "Guest Customer",
-      deliveryMethod: "DELIVERY",
-      pickupLocation: undefined,
-      requestId: "4db6c5c0-bb24-4d18-b6f6-e165cdb4e0b3",
-    });
+    expect(cmsApiMock.cartsApi.checkout).toHaveBeenCalledWith(
+      "cart_guest_123",
+      undefined,
+      {
+        userEmail: "guest@example.com",
+        userName: "Guest Customer",
+        deliveryMethod: "DELIVERY",
+        pickupLocation: undefined,
+        requestId: "4db6c5c0-bb24-4d18-b6f6-e165cdb4e0b3",
+        guest: {
+          name: "Guest Customer",
+          email: "guest@example.com",
+        },
+      },
+    );
   });
 
   it("forwards meal plan settlement when requested", async () => {

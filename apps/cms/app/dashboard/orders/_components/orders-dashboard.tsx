@@ -20,20 +20,10 @@ import type { OrderWithRelations } from "@/lib/types/order-types";
 
 export function OrdersDashboard() {
   // Get selected rotation from context
-  const { selectedRotationId, setSelectedRotationId } = useSelectedRotation();
+  const { selectedRotationId } = useSelectedRotation();
 
   // Fetch rotations
   const { data: rotations = [], isLoading: rotationsLoading } = useRotations();
-
-  // Auto-select first rotation if none selected
-  React.useEffect(() => {
-    if (!selectedRotationId && rotations.length > 0) {
-      const firstRotation = rotations[0];
-      if (firstRotation) {
-        setSelectedRotationId(firstRotation.id);
-      }
-    }
-  }, [selectedRotationId, rotations, setSelectedRotationId]);
 
   // Fetch orders for selected rotation
   const { data: orders = [], isLoading: ordersLoading } =

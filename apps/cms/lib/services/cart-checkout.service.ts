@@ -437,7 +437,7 @@ export async function createStripeCheckoutSessionForCart(
           pickupLocation: existingSnapshot.pickupLocation ?? "",
         },
         success_url: `${WEB_BASE_URL}/order/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${WEB_BASE_URL}/order/${existingSnapshot.items[0]?.mealSlug ?? "menu"}`,
+        cancel_url: `${WEB_BASE_URL}/cart`,
       },
       {
         idempotencyKey: `${existingSnapshot.id}:retry:${existingSnapshot.stripeSessionId ?? "unknown"}`,
@@ -463,11 +463,6 @@ export async function createStripeCheckoutSessionForCart(
       data: {
         status: "SESSION_CREATED",
       },
-    });
-
-    await prisma.cart.update({
-      where: { id: cart.id },
-      data: { status: "CHECKED_OUT" },
     });
 
     return {
@@ -560,7 +555,6 @@ export async function createStripeCheckoutSessionForCart(
       .slice(0, 10),
   ).slice(0, 200);
 
-  const firstMeal = cart.items[0]?.meal;
   const session = await stripe.checkout.sessions.create(
     {
       mode: "payment",
@@ -582,7 +576,7 @@ export async function createStripeCheckoutSessionForCart(
         pickupLocation: pickupLocation ?? "",
       },
       success_url: `${WEB_BASE_URL}/order/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${WEB_BASE_URL}/order/${firstMeal?.slug ?? "menu"}`,
+      cancel_url: `${WEB_BASE_URL}/cart`,
     },
     {
       idempotencyKey: snapshot.id,
@@ -608,11 +602,6 @@ export async function createStripeCheckoutSessionForCart(
     data: {
       status: "SESSION_CREATED",
     },
-  });
-
-  await prisma.cart.update({
-    where: { id: cart.id },
-    data: { status: "CHECKED_OUT" },
   });
 
   return {
@@ -715,6 +704,11 @@ export async function finalizeCartCheckoutSession(sessionId: string) {
     },
   });
 
+  await prisma.cart.update({
+    where: { id: snapshot.cartId },
+    data: { status: "CHECKED_OUT" },
+  });
+
   return prisma.order.findMany({
     where: { stripeSessionId: sessionId },
     orderBy: { createdAt: "asc" },
@@ -740,7 +734,7 @@ export async function updateCartCheckoutStatus(
 
   await prisma.cart.update({
     where: { id: snapshot.cartId },
-    data: { status: "ABANDONED" },
+    data: { status: "ACTIVE" },
   });
 
   await prisma.checkoutSession.update({

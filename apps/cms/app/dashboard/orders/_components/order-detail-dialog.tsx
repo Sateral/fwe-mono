@@ -45,24 +45,23 @@ interface OrderDetailDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function OrderDetailDialog({
+function OrderDetailDialogWithOrder({
   order,
   open,
   onOpenChange,
-}: OrderDetailDialogProps) {
+}: {
+  order: OrderWithRelations;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const [cancelConfirmationOpen, setCancelConfirmationOpen] =
     React.useState(false);
   const [localFulfillmentStatus, setLocalFulfillmentStatus] =
-    React.useState<FulfillmentStatus>("NEW");
+    React.useState<FulfillmentStatus>(
+      () => order.fulfillmentStatus as FulfillmentStatus,
+    );
 
   const updateStatusMutation = useUpdateFulfillmentStatus();
-
-  React.useEffect(() => {
-    if (!order) return;
-    setLocalFulfillmentStatus(order.fulfillmentStatus as FulfillmentStatus);
-  }, [order?.id, order?.fulfillmentStatus]);
-
-  if (!order) return null;
 
   const substitutions =
     (order.substitutions as OrderSubstitution[] | null) || [];
@@ -464,5 +463,23 @@ export function OrderDetailDialog({
         </DialogContent>
       </Dialog>
     </>
+  );
+}
+
+export function OrderDetailDialog({
+  order,
+  open,
+  onOpenChange,
+}: OrderDetailDialogProps) {
+  if (!order) {
+    return null;
+  }
+  return (
+    <OrderDetailDialogWithOrder
+      key={order.id}
+      order={order}
+      open={open}
+      onOpenChange={onOpenChange}
+    />
   );
 }

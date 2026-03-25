@@ -153,14 +153,29 @@ export interface ApiCart {
   updatedAt: string;
 }
 
+/** Stored cart JSON includes ids; older rows may omit them. */
+export interface ApiCartSubstitutionLine {
+  groupId?: string;
+  groupName: string;
+  optionId?: string;
+  optionName: string;
+}
+
+export interface ApiCartModifierLine {
+  groupId?: string;
+  groupName: string;
+  optionIds: string[];
+  optionNames: string[];
+}
+
 export interface ApiCartItem {
   id: string;
   mealId: string;
   rotationId: string | null;
   quantity: number;
   unitPrice: number;
-  substitutions: { groupName: string; optionName: string }[] | null;
-  modifiers: { groupName: string; optionNames: string[] }[] | null;
+  substitutions: ApiCartSubstitutionLine[] | null;
+  modifiers: ApiCartModifierLine[] | null;
   proteinBoost: boolean;
   notes: string | null;
   meal: Pick<ApiMeal, "id" | "name" | "slug" | "imageUrl">;

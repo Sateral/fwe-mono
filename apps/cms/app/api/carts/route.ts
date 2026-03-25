@@ -1,3 +1,4 @@
+import { Prisma } from "@fwe/db";
 import { createCartSchema } from "@fwe/validators";
 import { NextResponse } from "next/server";
 
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
       );
     }
 
-    let userId = request.headers.get("x-user-id");
+    let userId = request.headers.get("x-user-id")?.trim() ?? null;
     if (!userId && parsed.data.guest) {
       const guestUser = await guestUserService.findOrCreateCheckoutGuestUser(
         parsed.data.guest,
@@ -38,6 +39,30 @@ export async function POST(request: Request) {
     return NextResponse.json(serializeCart(cart), { status: 201 });
   } catch (error) {
     console.error("[API] Failed to create cart:", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2003") {
+        return NextResponse.json(
+          {
+            error:
+              "Cart could not be created: invalid user, meal, or rotation. Try signing out and back in, or refresh the page.",
+          },
+          { status: 400 },
+        );
+      }
+    }
+
+    if (error instanceof Error) {
+      const msg = error.message;
+      if (
+        msg.startsWith("Meal ") ||
+        msg.startsWith("User not found") ||
+        msg.startsWith("Rotation not found")
+      ) {
+        return NextResponse.json({ error: msg }, { status: 400 });
+      }
+    }
+
     return NextResponse.json({ error: "Failed to create cart" }, { status: 500 });
   }
 }

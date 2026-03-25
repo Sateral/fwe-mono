@@ -7,17 +7,20 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useSession, signOut } from "@/lib/auth-client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCartNavCount } from "@/components/cart-count-provider";
 
 const routes = [
   { href: "/", label: "Home" },
   { href: "/menu", label: "Menu" },
+  { href: "/cart", label: "Cart" },
 ];
 
 const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { data: session, isPending, error, refetch } = useSession();
+  const { data: session, isPending } = useSession();
+  const cartItemCount = useCartNavCount();
 
   const handleSignOut = async () => {
     await signOut({
@@ -44,12 +47,17 @@ const Navbar = () => {
                 key={route.href}
                 href={route.href}
                 className={cn(
-                  "transition-colors",
+                  "transition-colors inline-flex items-center gap-1.5",
                   pathname === route.href ? "text-white" : "text-white/80",
                   "hover:text-white",
                 )}
               >
                 {route.label}
+                {route.href === "/cart" && cartItemCount > 0 ? (
+                  <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                    {cartItemCount > 99 ? "99+" : cartItemCount}
+                  </span>
+                ) : null}
               </Link>
             ))}
           </div>

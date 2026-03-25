@@ -11,10 +11,8 @@ import {
   Droplet,
   Cookie,
   Apple,
-  MapPin,
-  Store,
 } from "lucide-react";
-import type { Meal, SubstitutionGroup, ModifierOption } from "@/types";
+import type { Meal, ModifierGroup, SubstitutionGroup } from "@/types";
 
 interface OrderBuilderProps {
   meal: Meal;
@@ -26,8 +24,6 @@ interface OrderBuilderProps {
   onSubstitutionChange: (groupId: string, optionId: string) => void;
   proteinBoost: boolean;
   onProteinBoostChange: (value: boolean) => void;
-  deliveryMethod: "DELIVERY" | "PICKUP";
-  onDeliveryMethodChange: (method: "DELIVERY" | "PICKUP") => void;
   notes: string;
   onNotesChange: (notes: string) => void;
 }
@@ -42,14 +38,14 @@ const OrderBuilder = ({
   onSubstitutionChange,
   proteinBoost,
   onProteinBoostChange,
-  deliveryMethod,
-  onDeliveryMethodChange,
   notes,
   onNotesChange,
 }: OrderBuilderProps) => {
-  // Get multi-select modifier groups for add-ons
+  const singleSelectModifierGroups = meal.modifierGroups.filter(
+    (g) => g.type === "SINGLE_SELECT",
+  );
   const multiSelectGroups = meal.modifierGroups.filter(
-    (g) => g.type === "MULTI_SELECT"
+    (g) => g.type === "MULTI_SELECT",
   );
 
   const handleMultiSelect = (groupId: string, optionId: string) => {
@@ -166,6 +162,25 @@ const OrderBuilder = ({
         </div>
       )}
 
+      {/* Single-select modifier groups (e.g. choose one base / sauce) */}
+      {singleSelectModifierGroups.length > 0 && (
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Modifications
+          </label>
+          <div className="space-y-3">
+            {singleSelectModifierGroups.map((group) => (
+              <ModifierSingleSelect
+                key={group.id}
+                group={group}
+                selectedOptionId={selectedModifiers[group.id]?.[0]}
+                onChange={(optionId) => onModifierChange(group.id, [optionId])}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Multi Select Modifier Groups (Add-ons) */}
       {multiSelectGroups.length > 0 && (
         <div className="mb-6">
@@ -229,66 +244,6 @@ const OrderBuilder = ({
         </div>
       )}
 
-      {/* Delivery method */}
-      {/* Notes */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Delivery method
-        </label>
-        <div className="space-y-3">
-          <button
-            type="button"
-            className={`w-full flex items-center justify-between rounded-xl border-2 p-4 text-left transition-colors ${
-              deliveryMethod === "DELIVERY"
-                ? "border-emerald-500 bg-emerald-50"
-                : "border-gray-200 bg-white hover:border-gray-300"
-            }`}
-            onClick={() => onDeliveryMethodChange("DELIVERY")}
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                <MapPin className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="font-medium text-gray-900">Delivery</p>
-                <p className="text-sm text-gray-500">
-                  Delivered to your saved address
-                </p>
-              </div>
-            </div>
-            <span className="text-xs text-gray-500">
-              {deliveryMethod === "DELIVERY" ? "Selected" : ""}
-            </span>
-          </button>
-          <button
-            type="button"
-            className={`w-full flex items-center justify-between rounded-xl border-2 p-4 text-left transition-colors ${
-              deliveryMethod === "PICKUP"
-                ? "border-emerald-500 bg-emerald-50"
-                : "border-gray-200 bg-white hover:border-gray-300"
-            }`}
-            onClick={() => onDeliveryMethodChange("PICKUP")}
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                <Store className="w-5 h-5 text-purple-600" />
-              </div>
-              <div>
-                <p className="font-medium text-gray-900">
-                  Pickup at Xtreme Couture
-                </p>
-                <p className="text-sm text-gray-500">
-                  Skip delivery details, pick up at the gym
-                </p>
-              </div>
-            </div>
-            <span className="text-xs text-gray-500">
-              {deliveryMethod === "PICKUP" ? "Selected" : ""}
-            </span>
-          </button>
-        </div>
-      </div>
-
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Notes (optional)
@@ -300,6 +255,80 @@ const OrderBuilder = ({
           className="w-full h-24 px-4 py-3 rounded-xl border border-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
         />
       </div>
+    </div>
+  );
+};
+
+// Single-select modifier group (same interaction pattern as substitutions)
+interface ModifierSingleSelectProps {
+  group: ModifierGroup;
+  selectedOptionId?: string;
+  onChange: (optionId: string) => void;
+}
+
+const ModifierSingleSelect = ({
+  group,
+  selectedOptionId,
+  onChange,
+}: ModifierSingleSelectProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const selectedOption = group.options.find((o) => o.id === selectedOptionId);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-white hover:border-gray-300 transition-colors text-left"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-gray-500 shrink-0">✓</span>
+          <span className="text-sm min-w-0">
+            <span className="text-gray-500">{group.name}:</span>{" "}
+            <span className="font-medium text-gray-900">
+              {selectedOption?.name || "Select..."}
+            </span>
+          </span>
+        </div>
+        <ChevronDown
+          className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {isOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-10"
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-20 overflow-hidden max-h-60 overflow-y-auto">
+            {group.options.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                className={`w-full px-4 py-3 text-left text-sm hover:bg-gray-50 transition-colors ${
+                  option.id === selectedOptionId
+                    ? "bg-emerald-50 text-emerald-700"
+                    : "text-gray-900"
+                }`}
+                onClick={() => {
+                  onChange(option.id);
+                  setIsOpen(false);
+                }}
+              >
+                {option.name}
+                {option.extraPrice > 0 && (
+                  <span className="text-gray-500 ml-2">
+                    (+${option.extraPrice.toFixed(2)})
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -2,6 +2,8 @@ import { cartCheckoutRequestSchema } from "@fwe/validators";
 import { NextResponse } from "next/server";
 
 import { requireInternalAuth } from "@/lib/api-auth";
+import { resolveCartOwnerUserId } from "@/lib/cart-request-user";
+import { cartService } from "@/lib/services/cart.service";
 import { createStripeCheckoutSessionForCart } from "@/lib/services/cart-checkout.service";
 
 function resolveCheckoutErrorStatus(error: unknown) {
@@ -45,6 +47,19 @@ export async function POST(
     }
 
     const { id } = await params;
+    const cart = await cartService.getCartById(id);
+    if (!cart) {
+      return NextResponse.json({ error: "Cart not found" }, { status: 404 });
+    }
+
+    const userId = await resolveCartOwnerUserId(
+      request,
+      parsed.data.guest ?? null,
+    );
+    if (!userId || cart.userId !== userId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const session = await createStripeCheckoutSessionForCart({
       cartId: id,
       ...parsed.data,

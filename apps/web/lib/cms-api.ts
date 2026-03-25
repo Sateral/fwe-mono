@@ -16,11 +16,15 @@ import type {
   FulfillmentStatus,
 } from "@fwe/types";
 import type {
+  AddCartItemsBody,
   CartCheckoutRequest,
   CreateCartInput,
   CreateFailedOrderInput,
   CreateOrderInput,
   CheckoutSessionRequest,
+  GuestCheckoutIdentity,
+  ReplaceCartItemBody,
+  UpdateCartItemQuantityBody,
   UpdateProfileInput,
 } from "@fwe/validators";
 
@@ -296,14 +300,97 @@ export const cartsApi = {
     });
   },
 
+  async getActiveCart(
+    userId: string | undefined,
+    rotationId: string | undefined,
+    guest?: GuestCheckoutIdentity,
+  ): Promise<ApiCart | null> {
+    const params = new URLSearchParams();
+    if (rotationId) {
+      params.set("rotationId", rotationId);
+    }
+    if (guest) {
+      params.set("guestEmail", guest.email);
+      params.set("guestName", guest.name);
+    }
+    const qs = params.toString();
+    const headers = userId ? { "x-user-id": userId } : undefined;
+    return apiRequest<ApiCart | null>(
+      `/api/carts/active${qs ? `?${qs}` : ""}`,
+      { headers },
+    );
+  },
+
+  async getCartById(
+    cartId: string,
+    userId: string | undefined,
+    guest?: GuestCheckoutIdentity,
+  ): Promise<ApiCart> {
+    const params = new URLSearchParams();
+    if (guest) {
+      params.set("guestEmail", guest.email);
+      params.set("guestName", guest.name);
+    }
+    const qs = params.toString();
+    const headers = userId ? { "x-user-id": userId } : undefined;
+    return apiRequest<ApiCart>(
+      `/api/carts/${cartId}${qs ? `?${qs}` : ""}`,
+      { headers },
+    );
+  },
+
+  async addCartItems(
+    cartId: string,
+    userId: string | undefined,
+    body: AddCartItemsBody,
+  ): Promise<ApiCart> {
+    const headers = userId ? { "x-user-id": userId } : undefined;
+    return apiRequest<ApiCart>(`/api/carts/${cartId}/items`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    });
+  },
+
+  async updateCartItemQuantity(
+    cartId: string,
+    itemId: string,
+    userId: string | undefined,
+    body: UpdateCartItemQuantityBody,
+  ): Promise<ApiCart> {
+    const headers = userId ? { "x-user-id": userId } : undefined;
+    return apiRequest<ApiCart>(`/api/carts/${cartId}/items/${itemId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify(body),
+    });
+  },
+
+  async replaceCartItem(
+    cartId: string,
+    itemId: string,
+    userId: string | undefined,
+    body: ReplaceCartItemBody,
+  ): Promise<ApiCart> {
+    const headers = userId ? { "x-user-id": userId } : undefined;
+    return apiRequest<ApiCart>(`/api/carts/${cartId}/items/${itemId}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(body),
+    });
+  },
+
   async checkout(
     cartId: string,
+    userId: string | undefined,
     input: CartCheckoutRequest,
   ): Promise<{ url: string | null; id: string }> {
+    const headers = userId ? { "x-user-id": userId } : undefined;
     return apiRequest<{ url: string | null; id: string }>(
       `/api/carts/${cartId}/checkout`,
       {
         method: "POST",
+        headers,
         body: JSON.stringify(input),
       },
     );

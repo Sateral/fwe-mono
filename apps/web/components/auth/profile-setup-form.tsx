@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useSession } from "@/lib/auth-client";
 import {
@@ -108,26 +108,8 @@ const ReadonlyField = ({
   </div>
 );
 
-export function ProfileSetupForm({
-  className,
-  defaultName = "",
-  defaultValues,
-  submitLabel = "Complete Setup",
-  successMessage = "Profile setup complete!",
-  onSuccessRedirect = "/menu",
-  showFlavorProfileSection = false,
-  startInEditingMode = false,
-  showEditToggle = true,
-  allowSkip = false,
-  skipHref = "/menu",
-  heading = "Profile Details",
-  description = "Review your personal info and delivery preferences.",
-  ...props
-}: ProfileSetupFormProps) {
-  const [isPending, setIsPending] = useState(false);
-  const [isEditing, setIsEditing] = useState(startInEditingMode);
-  const router = useRouter();
-  const { data: session } = useSession();
+export function ProfileSetupForm(props: ProfileSetupFormProps) {
+  const { defaultName = "", defaultValues, ...restForInner } = props;
   const resolvedDefaults: ProfileFormValues = useMemo(
     () => ({
       name: defaultValues?.name ?? defaultName ?? "",
@@ -141,18 +123,49 @@ export function ProfileSetupForm({
       preferencesInput: joinValues(defaultValues?.flavorProfile?.preferences),
       involvement: defaultValues?.flavorProfile?.involvement ?? "HANDS_ON",
     }),
-    [defaultValues, defaultName]
+    [defaultValues, defaultName],
   );
+
+  const formResetKey = JSON.stringify(resolvedDefaults);
+
+  return (
+    <ProfileSetupFormInner
+      key={formResetKey}
+      {...restForInner}
+      resolvedDefaults={resolvedDefaults}
+    />
+  );
+}
+
+type ProfileSetupFormInnerProps = Omit<
+  ProfileSetupFormProps,
+  "defaultName" | "defaultValues"
+> & { resolvedDefaults: ProfileFormValues };
+
+function ProfileSetupFormInner({
+  className,
+  resolvedDefaults,
+  submitLabel = "Complete Setup",
+  successMessage = "Profile setup complete!",
+  onSuccessRedirect = "/menu",
+  showFlavorProfileSection = false,
+  startInEditingMode = false,
+  showEditToggle = true,
+  allowSkip = false,
+  skipHref = "/menu",
+  heading = "Profile Details",
+  description = "Review your personal info and delivery preferences.",
+  ...props
+}: ProfileSetupFormInnerProps) {
+  const [isPending, setIsPending] = useState(false);
+  const [isEditing, setIsEditing] = useState(startInEditingMode);
+  const router = useRouter();
+  const { data: session } = useSession();
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: resolvedDefaults,
   });
-
-  useEffect(() => {
-    if (!defaultValues) return;
-    form.reset(resolvedDefaults);
-  }, [defaultValues, resolvedDefaults, form]);
 
   const persistProfile = async (payload: Record<string, unknown>) => {
     if (!session?.user?.id) {

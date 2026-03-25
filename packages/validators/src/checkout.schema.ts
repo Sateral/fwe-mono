@@ -49,12 +49,42 @@ export const updateCartSchema = createCartSchema.partial().extend({
   status: cartStatusSchema.optional(),
 });
 
+/** Merge additional lines into an existing cart (same meal+mods aggregates quantity). */
+export const addCartItemsBodySchema = z.object({
+  items: z.array(createCartItemSchema).min(1, "At least one item is required"),
+  guest: guestCheckoutIdentitySchema.optional(),
+});
+
+/** Update quantity for a single cart line; quantity 0 removes the line. */
+export const updateCartItemQuantitySchema = z.object({
+  quantity: z.number().int().min(0),
+  guest: guestCheckoutIdentitySchema.optional(),
+});
+
+/** Replace customization + quantity for an existing line (mealId must match the line). */
+export const replaceCartItemBodySchema = createCartItemSchema.and(
+  z.object({
+    guest: guestCheckoutIdentitySchema.optional(),
+  }),
+);
+
+export const guestFulfillmentPreferenceSchema = z.object({
+  deliveryMethod: z.enum(["DELIVERY", "PICKUP"]),
+  pickupLocation: z.string().optional(),
+});
+
+export const saveGuestCartProfileSchema = guestCheckoutIdentitySchema.extend({
+  deliveryMethod: z.enum(["DELIVERY", "PICKUP"]).optional(),
+  pickupLocation: z.string().optional(),
+});
+
 export const cartCheckoutRequestSchema = z.object({
   userEmail: z.string().email("Valid email required"),
   userName: z.string().optional(),
   deliveryMethod: z.enum(["DELIVERY", "PICKUP"]).optional().default("DELIVERY"),
   pickupLocation: z.string().optional(),
   requestId: z.string().optional(),
+  guest: guestCheckoutIdentitySchema.optional(),
 });
 
 export const checkoutRequestSchema = z.object({
@@ -87,3 +117,12 @@ export type UpdateCartInput = z.infer<typeof updateCartSchema>;
 export type CartCheckoutRequest = z.infer<typeof cartCheckoutRequestSchema>;
 export type SettlementMethod = z.infer<typeof settlementMethodSchema>;
 export type CartStatus = z.infer<typeof cartStatusSchema>;
+export type AddCartItemsBody = z.infer<typeof addCartItemsBodySchema>;
+export type UpdateCartItemQuantityBody = z.infer<
+  typeof updateCartItemQuantitySchema
+>;
+export type ReplaceCartItemBody = z.infer<typeof replaceCartItemBodySchema>;
+export type GuestFulfillmentPreferenceInput = z.infer<
+  typeof guestFulfillmentPreferenceSchema
+>;
+export type SaveGuestCartProfileInput = z.infer<typeof saveGuestCartProfileSchema>;
