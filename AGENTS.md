@@ -129,3 +129,4 @@ bun run dev --filter=cms
 - Avoid tRPC unless explicitly requested; REST + shared types is preferred.
 - Run `bun run check-types` after structural changes.
 - Do not introduce non-ASCII characters unless already used in a file.
+- Always use the brainstorm skill

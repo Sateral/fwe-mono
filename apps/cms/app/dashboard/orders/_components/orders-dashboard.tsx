@@ -122,7 +122,7 @@ export function OrdersDashboard() {
             )}
           </div>
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-            Order Management
+            Order management
           </h1>
           <p className="text-sm text-muted-foreground">
             {currentRotation

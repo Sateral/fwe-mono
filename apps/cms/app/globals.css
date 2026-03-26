@@ -112,6 +112,18 @@
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
+@media print {
+  .print-hide {
+    display: none !important;
+  }
+  .print-manifest,
+  .print-manifest * {
+    color: #111 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

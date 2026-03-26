@@ -18,10 +18,13 @@ import {
   DEFAULT_PICKUP_LOCATION,
   STATUS_BORDER_COLORS,
 } from "@/lib/constants/order.constants";
+import {
+  getDeliveryFingerprintForOrder,
+  getEffectiveOrderFulfillment,
+} from "@/lib/order-fulfillment-contact";
 import type {
   OrderWithRelations,
   FulfillmentStatus,
-  OrderUser,
   OrderSubstitution,
   OrderModifier,
 } from "@/lib/types/order-types";
@@ -60,14 +63,14 @@ export function CustomerOrdersDialog({
   const firstOrder = orders[0];
   if (!firstOrder) return null;
 
-  const customer = firstOrder.user as OrderUser | null;
-  const customerName = customer?.name || "Guest";
-  const customerEmail = customer?.email || "";
-  const customerPhone = customer?.phone || null;
-  const deliveryAddress = customer?.deliveryAddress || null;
-  const deliveryCity = customer?.deliveryCity || null;
-  const deliveryPostal = customer?.deliveryPostal || null;
-  const deliveryNotes = customer?.deliveryNotes || null;
+  const baseContact = getEffectiveOrderFulfillment(firstOrder);
+  const customerName = baseContact.customerName;
+  const customerEmail = baseContact.customerEmail;
+  const customerPhone = baseContact.customerPhone;
+  const deliveryFingerprints = new Set(
+    orders.map((o) => getDeliveryFingerprintForOrder(o)),
+  );
+  const mixedDeliveryAddresses = deliveryFingerprints.size > 1;
   const pickupOrders = orders.filter((o) => o.deliveryMethod === "PICKUP");
   const pickupLocation =
     pickupOrders[0]?.pickupLocation || DEFAULT_PICKUP_LOCATION;
@@ -145,8 +148,6 @@ export function CustomerOrdersDialog({
                     substitutions={substitutions}
                     modifiers={modifiers}
                     borderClass={borderClass}
-                    customerEmail={customerEmail}
-                    customerPhone={customerPhone}
                   />
                 );
               })}
@@ -157,10 +158,7 @@ export function CustomerOrdersDialog({
           <LogisticsSidebar
             customerEmail={customerEmail}
             customerPhone={customerPhone}
-            deliveryAddress={deliveryAddress}
-            deliveryCity={deliveryCity}
-            deliveryPostal={deliveryPostal}
-            deliveryNotes={deliveryNotes}
+            mixedDeliveryAddresses={mixedDeliveryAddresses}
             pickupOrders={pickupOrders}
             orders={orders}
             pickupLocation={pickupLocation}
@@ -183,8 +181,6 @@ interface OrderItemCardProps {
   substitutions: OrderSubstitution[];
   modifiers: OrderModifier[];
   borderClass: string;
-  customerEmail: string;
-  customerPhone: string | null;
 }
 
 function OrderItemCard({
@@ -192,9 +188,8 @@ function OrderItemCard({
   substitutions,
   modifiers,
   borderClass,
-  customerEmail,
-  customerPhone,
 }: OrderItemCardProps) {
+  const lineContact = getEffectiveOrderFulfillment(order);
   return (
     <div className={`border border-l-4 ${borderClass} rounded-lg p-5 space-y-4`}>
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
@@ -281,14 +276,14 @@ function OrderItemCard({
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-t pt-3 text-xs text-muted-foreground">
         <div className="flex flex-wrap items-center gap-2 min-w-0">
-          {customerEmail && (
+          {lineContact.customerEmail && (
             <Badge variant="secondary" className="text-xs break-all">
-              {customerEmail}
+              {lineContact.customerEmail}
             </Badge>
           )}
-          {customerPhone && (
+          {lineContact.customerPhone && (
             <Badge variant="secondary" className="text-xs break-all">
-              {customerPhone}
+              {lineContact.customerPhone}
             </Badge>
           )}
           <Badge variant="outline" className="text-xs">
@@ -306,10 +301,7 @@ function OrderItemCard({
 interface LogisticsSidebarProps {
   customerEmail: string;
   customerPhone: string | null;
-  deliveryAddress: string | null;
-  deliveryCity: string | null;
-  deliveryPostal: string | null;
-  deliveryNotes: string | null;
+  mixedDeliveryAddresses: boolean;
   pickupOrders: OrderWithRelations[];
   orders: OrderWithRelations[];
   pickupLocation: string;
@@ -321,10 +313,7 @@ interface LogisticsSidebarProps {
 function LogisticsSidebar({
   customerEmail,
   customerPhone,
-  deliveryAddress,
-  deliveryCity,
-  deliveryPostal,
-  deliveryNotes,
+  mixedDeliveryAddresses,
   pickupOrders,
   orders,
   pickupLocation,
@@ -332,6 +321,7 @@ function LogisticsSidebar({
   onMarkAllPreparing,
   onMarkAllDelivered,
 }: LogisticsSidebarProps) {
+  const baseEff = getEffectiveOrderFulfillment(orders[0]!);
   return (
     <section className="space-y-4">
       <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-[0.2em]">
@@ -376,17 +366,64 @@ function LogisticsSidebar({
                   </div>
                 </div>
               </div>
+            ) : mixedDeliveryAddresses ? (
+              <div className="space-y-3 text-sm">
+                <Badge variant="secondary" className="text-xs">
+                  Multiple delivery snapshots
+                </Badge>
+                <ul className="space-y-3 text-xs">
+                  {orders.map((order) => {
+                    const eff = getEffectiveOrderFulfillment(order);
+                    const line =
+                      order.deliveryMethod === "PICKUP"
+                        ? `Pickup at ${order.pickupLocation || pickupLocation}`
+                        : eff.deliveryAddress
+                          ? [eff.deliveryAddress, eff.deliveryCity, eff.deliveryPostal]
+                              .filter(Boolean)
+                              .join(", ")
+                          : "No address on file";
+                    return (
+                      <li
+                        key={order.id}
+                        className="rounded-md border bg-background/60 p-2"
+                      >
+                        <div className="font-medium text-foreground">
+                          {order.meal?.name} x{order.quantity}
+                        </div>
+                        <div className="text-muted-foreground mt-0.5">{line}</div>
+                        {eff.deliveryNotes && order.deliveryMethod !== "PICKUP" && (
+                          <div className="mt-1 text-amber-700 dark:text-amber-400">
+                            Note: {eff.deliveryNotes}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+                {pickupOrders.length > 0 && (
+                  <div className="text-xs text-muted-foreground">
+                    Includes {pickupOrders.length} pickup line
+                    {pickupOrders.length === 1 ? "" : "s"}.
+                  </div>
+                )}
+              </div>
             ) : (
               <div className="space-y-2">
                 <div className="flex items-start gap-2 text-sm">
                   <IconMapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
                   <div>
                     <div>
-                      {deliveryAddress ? "Delivery" : "No address on file"}
+                      {baseEff.deliveryAddress
+                        ? "Delivery"
+                        : "No address on file"}
                     </div>
-                    {deliveryAddress && (
+                    {baseEff.deliveryAddress && (
                       <div className="text-muted-foreground">
-                        {[deliveryAddress, deliveryCity, deliveryPostal]
+                        {[
+                          baseEff.deliveryAddress,
+                          baseEff.deliveryCity,
+                          baseEff.deliveryPostal,
+                        ]
                           .filter(Boolean)
                           .join(", ")}
                       </div>
@@ -403,13 +440,13 @@ function LogisticsSidebar({
             )}
           </div>
 
-          {deliveryNotes && (
+          {!mixedDeliveryAddresses && baseEff.deliveryNotes && (
             <div className="pt-2 border-t">
               <h4 className="text-sm font-semibold text-amber-600 mb-1">
                 Delivery Notes
               </h4>
-              <p className="text-sm italic text-amber-700 bg-amber-50 p-2 rounded">
-                {deliveryNotes}
+              <p className="text-sm italic text-amber-700 bg-amber-50 dark:bg-amber-950 p-2 rounded">
+                {baseEff.deliveryNotes}
               </p>
             </div>
           )}

@@ -24,7 +24,13 @@ import {
   CustomerSummary,
 } from "@/lib/table-columns/customer-columns";
 import { DEFAULT_PICKUP_LOCATION } from "@/lib/constants/order.constants";
-import type { OrderWithRelations, OrderUser } from "@/lib/types/order-types";
+import {
+  getDeliveryFingerprintForOrder,
+  getEffectiveOrderFulfillment,
+} from "@/lib/order-fulfillment-contact";
+import type { OrderWithRelations } from "@/lib/types/order-types";
+
+type CustomerAgg = CustomerSummary & { _deliveryFp: string };
 
 interface CustomerSummaryTableProps {
   onSelectCustomer: (orders: OrderWithRelations[]) => void;
@@ -39,37 +45,43 @@ export function CustomerSummaryTable({
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
-  // Aggregate orders by customer
+  // Aggregate orders by customer (contact + address from order-time snapshot when set)
   const customers = React.useMemo(() => {
-    const map = new Map<string, CustomerSummary>();
+    const map = new Map<string, CustomerAgg>();
 
     orders.forEach((order) => {
       if (order.paymentStatus !== "PAID") return;
       if (order.fulfillmentStatus === "CANCELLED") return;
       const key = order.userId || order.user?.email || "Guest";
-      const user = order.user as OrderUser | null;
+      const fp = getDeliveryFingerprintForOrder(order);
 
       if (!map.has(key)) {
+        const eff = getEffectiveOrderFulfillment(order);
         map.set(key, {
           userId: order.userId,
-          name: user?.name || "Guest",
-          email: user?.email || "No Email",
-          phone: user?.phone || null,
-          deliveryAddress: user?.deliveryAddress || null,
-          deliveryCity: user?.deliveryCity || null,
-          deliveryPostal: user?.deliveryPostal || null,
-          deliveryNotes: user?.deliveryNotes || null,
+          name: eff.customerName,
+          email: eff.customerEmail || "No Email",
+          phone: eff.customerPhone,
+          deliveryAddress: eff.deliveryAddress,
+          deliveryCity: eff.deliveryCity,
+          deliveryPostal: eff.deliveryPostal,
+          deliveryNotes: eff.deliveryNotes,
           deliveryMethodSummary: "DELIVERY",
           pickupLocation: null,
+          mixedDeliveryAddresses: false,
           mealBreakdown: [],
           orderCount: 0,
           totalSpend: 0,
           status: "NEW",
           orders: [],
+          _deliveryFp: fp,
         });
       }
 
       const entry = map.get(key)!;
+      if (!entry.mixedDeliveryAddresses && fp !== entry._deliveryFp) {
+        entry.mixedDeliveryAddresses = true;
+      }
       entry.orders.push(order);
       entry.orderCount += order.quantity;
       entry.totalSpend += Number(order.totalAmount);
@@ -97,6 +109,8 @@ export function CustomerSummaryTable({
 
     // Determine aggregate status per customer
     return Array.from(map.values()).map((c) => {
+      const { _deliveryFp, ...base } = c;
+      void _deliveryFp;
       const statuses = c.orders.map((o) => o.fulfillmentStatus);
       let aggStatus: CustomerSummary["status"] = "NEW";
 
@@ -115,7 +129,7 @@ export function CustomerSummaryTable({
         .map(([name, quantity]) => ({ name, quantity }))
         .sort((a, b) => b.quantity - a.quantity);
 
-      return { ...c, status: aggStatus, mealBreakdown };
+      return { ...base, status: aggStatus, mealBreakdown };
     });
   }, [orders]);
 

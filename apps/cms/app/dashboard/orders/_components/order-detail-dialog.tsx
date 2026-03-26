@@ -33,6 +33,7 @@ import {
   DEFAULT_PICKUP_LOCATION,
   PAYMENT_STATUS_CONFIG,
 } from "@/lib/constants/order.constants";
+import { getEffectiveOrderFulfillment } from "@/lib/order-fulfillment-contact";
 import type {
   OrderWithRelations,
   FulfillmentStatus,
@@ -65,6 +66,7 @@ function OrderDetailDialogWithOrder({
 
   const substitutions =
     (order.substitutions as OrderSubstitution[] | null) || [];
+  const fulfillmentContact = getEffectiveOrderFulfillment(order);
   const paymentConfig = PAYMENT_STATUS_CONFIG[order.paymentStatus];
   const canUpdateFulfillment = order.paymentStatus === "PAID";
 
@@ -185,7 +187,7 @@ function OrderDetailDialogWithOrder({
                 <p className="truncate text-xs text-muted-foreground">
                   {order.deliveryMethod === "PICKUP"
                     ? order.pickupLocation || DEFAULT_PICKUP_LOCATION
-                    : order.user?.deliveryAddress || "No address on file"}
+                    : fulfillmentContact.deliveryAddress || "No address on file"}
                 </p>
               </div>
             </section>
@@ -284,10 +286,15 @@ function OrderDetailDialogWithOrder({
                   <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                     Customer
                   </h3>
-                  <p className="mt-3 font-medium">{order.user?.name || "Guest"}</p>
+                  <p className="mt-3 font-medium">{fulfillmentContact.customerName}</p>
                   <p className="text-sm text-muted-foreground">
-                    {order.user?.email || "No email on file"}
+                    {fulfillmentContact.customerEmail || "No email on file"}
                   </p>
+                  {fulfillmentContact.customerPhone && (
+                    <p className="text-sm text-muted-foreground">
+                      {fulfillmentContact.customerPhone}
+                    </p>
+                  )}
                 </section>
 
                 <section className="rounded-xl border bg-card p-4 text-sm">
@@ -308,15 +315,21 @@ function OrderDetailDialogWithOrder({
                       <p className="font-medium">
                         {order.deliveryMethod === "PICKUP"
                           ? order.pickupLocation || DEFAULT_PICKUP_LOCATION
-                          : order.user?.deliveryAddress
-                            ? `${order.user.deliveryAddress}, ${[
-                                order.user.deliveryCity,
-                                order.user.deliveryPostal,
+                          : fulfillmentContact.deliveryAddress
+                            ? `${fulfillmentContact.deliveryAddress}, ${[
+                                fulfillmentContact.deliveryCity,
+                                fulfillmentContact.deliveryPostal,
                               ]
                                 .filter(Boolean)
                                 .join(", ")}`
                             : "No address on file"}
                       </p>
+                      {order.deliveryMethod !== "PICKUP" &&
+                        fulfillmentContact.deliveryNotes && (
+                          <p className="text-xs text-amber-700 dark:text-amber-300">
+                            Notes: {fulfillmentContact.deliveryNotes}
+                          </p>
+                        )}
                     </div>
                     {order.paidAt && (
                       <div className="flex items-center justify-between">

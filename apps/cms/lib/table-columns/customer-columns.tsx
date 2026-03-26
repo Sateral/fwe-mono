@@ -34,6 +34,8 @@ export interface CustomerSummary {
   deliveryNotes: string | null;
   deliveryMethodSummary: "DELIVERY" | "PICKUP" | "MIXED";
   pickupLocation: string | null;
+  /** True when paid orders use different delivery fingerprints (address or pickup site). */
+  mixedDeliveryAddresses: boolean;
   mealBreakdown: Array<{ name: string; quantity: number }>;
   orderCount: number;
   totalSpend: number;
@@ -105,6 +107,19 @@ export function getCustomerColumns(
                   </div>
                 </div>
               </div>
+            </div>
+          );
+        }
+
+        if (row.original.mixedDeliveryAddresses) {
+          return (
+            <div className="max-w-[220px] py-2 text-sm">
+              <Badge variant="secondary" className="mb-1 text-xs">
+                Multiple addresses
+              </Badge>
+              <p className="text-muted-foreground text-xs">
+                Open packing list to see each order&apos;s delivery snapshot.
+              </p>
             </div>
           );
         }

@@ -3,6 +3,9 @@ import type { Prisma } from "@fwe/db";
 
 import prisma from "@/lib/prisma";
 import { requireInternalAuth } from "@/lib/api-auth";
+import { DEFAULT_PICKUP_LOCATION } from "@/lib/constants/order.constants";
+import { getEffectiveOrderFulfillment } from "@/lib/order-fulfillment-contact";
+import { aggregatePrepByMeal } from "@/lib/prep-aggregate";
 
 export async function GET(request: Request) {
   const authError = requireInternalAuth(request);
@@ -19,7 +22,6 @@ export async function GET(request: Request) {
       );
     }
 
-    // 1. Fetch Orders
     const orders = (await prisma.order.findMany({
       where: {
         rotationId: rotationId,
@@ -32,6 +34,7 @@ export async function GET(request: Request) {
           select: {
             name: true,
             email: true,
+            phone: true,
             deliveryAddress: true,
             deliveryCity: true,
             deliveryPostal: true,
@@ -51,6 +54,7 @@ export async function GET(request: Request) {
           select: {
             name: true;
             email: true;
+            phone: true;
             deliveryAddress: true;
             deliveryCity: true;
             deliveryPostal: true;
@@ -60,75 +64,19 @@ export async function GET(request: Request) {
       };
     }>[];
 
-    // 2. Aggregation Logic
-    const summary = new Map<
-      string,
-      {
-        mealId: string;
-        mealName: string;
-        totalQuantity: number;
-        assignedQuantity: number;
-        variations: {
-          key: string; // signature of mods + subs
-          substitutions: any;
-          modifiers: any;
-          count: number;
-        }[];
-      }
-    >();
+    const summary = aggregatePrepByMeal(orders);
 
-    for (const order of orders) {
-      if (!summary.has(order.mealId)) {
-        summary.set(order.mealId, {
-          mealId: order.mealId,
-          mealName: order.meal.name,
-          totalQuantity: 0,
-          assignedQuantity: 0,
-          variations: [],
-        });
-      }
-
-      const entry = summary.get(order.mealId)!;
-      entry.totalQuantity += order.quantity;
-      if (
-        order.settlementMethod === "MEAL_PLAN_CREDITS" &&
-        order.orderIntentId === null
-      ) {
-        entry.assignedQuantity += order.quantity;
-      }
-
-      // Variation Handling
-      // Create a unique key for this configuration
-      const subsStr = order.substitutions
-        ? JSON.stringify(order.substitutions)
-        : "";
-      const modsStr = order.modifiers ? JSON.stringify(order.modifiers) : "";
-      const variationKey = `${subsStr}|${modsStr}|${order.proteinBoost}`;
-
-      let variation = entry.variations.find((v) => v.key === variationKey);
-      if (!variation) {
-        variation = {
-          key: variationKey,
-          substitutions: order.substitutions,
-          modifiers: order.modifiers,
-          count: 0,
-        };
-        entry.variations.push(variation);
-      }
-      variation.count += order.quantity;
-    }
-
-    // 3. Manifest Construction
     const manifest = orders.map((order) => {
+      const effective = getEffectiveOrderFulfillment(order);
       const address =
         order.deliveryMethod === "PICKUP"
-          ? `Pickup at ${order.pickupLocation || "Xtreme Couture"}`
-          : [order.user.deliveryAddress, order.user.deliveryCity]
+          ? `Pickup at ${order.pickupLocation || DEFAULT_PICKUP_LOCATION}`
+          : [effective.deliveryAddress, effective.deliveryCity]
               .filter(Boolean)
               .join(", ");
 
       return {
-        customerName: order.user.name,
+        customerName: effective.customerName,
         address,
         deliveryMethod: order.deliveryMethod,
         pickupLocation: order.pickupLocation,
@@ -147,7 +95,7 @@ export async function GET(request: Request) {
     });
 
     return NextResponse.json({
-      summary: Array.from(summary.values()),
+      summary,
       manifest,
     });
   } catch (error) {

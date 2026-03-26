@@ -34,11 +34,11 @@ export function OrdersOverview({ orders }: OrdersOverviewProps) {
 
   return (
     <Card className="h-full">
-      <CardContent className="p-6 h-full flex flex-col gap-6">
+      <CardContent className="flex h-full flex-col gap-6 p-6">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              Workload Snapshot
+              Workload snapshot
             </p>
             <p className="text-lg font-semibold text-foreground">
               Paid orders this rotation
@@ -50,7 +50,7 @@ export function OrdersOverview({ orders }: OrdersOverviewProps) {
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-lg border bg-muted/30 p-5">
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              Paid Orders
+              Paid orders
             </p>
             <div className="mt-2 text-3xl font-semibold text-foreground">
               {paidOrders.length}
@@ -62,7 +62,7 @@ export function OrdersOverview({ orders }: OrdersOverviewProps) {
 
           <div className="rounded-lg border bg-muted/30 p-5">
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              Meals to Prep
+              Meals to prep
             </p>
             <div className="mt-2 text-3xl font-semibold text-foreground">
               {totalMeals}
@@ -86,7 +86,7 @@ export function OrdersOverview({ orders }: OrdersOverviewProps) {
 
           <div className="rounded-lg border bg-muted/30 p-5">
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              Fulfillment Mix
+              Fulfillment mix
             </p>
             <div className="mt-2 flex items-center gap-4 text-foreground">
               <div className="flex items-center gap-2">
