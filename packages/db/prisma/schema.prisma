@@ -302,6 +302,24 @@ model WeeklyRotation {
   @@index([rotationPeriodId])
 }
 
+// ============================================
+// Cart + Checkout Pipeline
+// ============================================
+//
+// Lifecycle:  Cart  →  CheckoutSession (snapshot)  →  OrderIntent (per-item)  →  Order (paid)
+//
+// Cart / CartItem         – Live, mutable shopping cart. Customers edit freely.
+// CheckoutSession / Item  – Immutable snapshot taken at checkout start. Protects
+//                           against cart edits between "pay" click and webhook.
+// OrderIntent             – One per cart item. Tracks pre-payment status through
+//                           the Stripe lifecycle (CREATED → SESSION_CREATED → PAID).
+// Order                   – Final paid record, created by the webhook handler.
+//
+// Why the redundancy? If a customer edits their cart after clicking "pay" but
+// before the payment webhook fires, the snapshot ensures the webhook creates
+// orders matching what was actually charged.
+// ============================================
+
 model Cart {
   id               String           @id @default(cuid())
   clientRequestId  String?          @unique
@@ -348,6 +366,7 @@ model CartItem {
 /// Stores failed order creation attempts for admin recovery.
 /// When a Stripe payment succeeds but order creation fails,
 /// the order data is stored here for manual or automated retry.
+/// (Separate from the checkout pipeline — this is a dead-letter queue.)
 model FailedOrder {
   id String @id @default(cuid())
 
@@ -384,6 +403,9 @@ model FailedOrder {
 // Order Intent (Pre-Payment)
 // ============================================
 
+/// Pre-payment intent for a single cart item.
+/// Created during checkout, before the Stripe session.
+/// Tracks status from CREATED → SESSION_CREATED → PAID/FAILED.
 model OrderIntent {
   id String @id @default(cuid())
 
@@ -427,6 +449,8 @@ model OrderIntent {
   @@index([rotationId])
 }
 
+/// Immutable snapshot of cart state at checkout initiation.
+/// One per checkout attempt; items mirror the cart at the moment "Pay" was clicked.
 model CheckoutSession {
   id String @id @default(cuid())
 
@@ -462,6 +486,8 @@ model CheckoutSession {
   @@index([status])
 }
 
+/// Single line item within a checkout snapshot.
+/// Points back to both the OrderIntent and the Meal for audit trail.
 model CheckoutSessionItem {
   id String @id @default(cuid())
 

@@ -1,3 +1,17 @@
+/**
+ * Weekly Rotation Service
+ *
+ * Manages the meal rotation system: fulfillment cycles (Thu-Wed),
+ * ordering windows, and bi-weekly rotation periods that share a menu.
+ *
+ * Organized into:
+ * - Helpers & Prisma includes
+ * - Private utilities (period resolution, effective-meal normalization)
+ * - Storefront queries (customer-facing: available meals, orderable rotation)
+ * - Admin CRUD (create, archive, update meals)
+ * - Period management (bi-weekly grouping of rotations)
+ */
+
 import { RotationStatus } from "@fwe/db";
 
 import prisma from "../prisma";
@@ -14,6 +28,10 @@ import {
   shiftFulfillmentCycle,
 } from "./rotation-schedule";
 
+// ============================================
+// Types
+// ============================================
+
 export interface CreateRotationInput {
   weekStart: Date;
   weekEnd: Date;
@@ -25,12 +43,18 @@ export interface UpdateRotationInput {
   status?: RotationStatus;
 }
 
+// ============================================
+// Prisma Includes
+// ============================================
+
+/** Full meal details (substitutions, modifiers, tags) for storefront display. */
 const detailedMealInclude = {
   substitutionGroups: { include: { options: true } },
   modifierGroups: { include: { options: true } },
   tags: true,
 } as const;
 
+/** Rotation with full meal details — used for storefront/menu queries. */
 const detailedRotationInclude = {
   meals: {
     include: detailedMealInclude,
@@ -44,6 +68,7 @@ const detailedRotationInclude = {
   },
 } as const;
 
+/** Rotation with meal IDs only — used for admin lists and counts. */
 const summaryRotationInclude = {
   meals: true,
   rotationPeriod: {
@@ -60,10 +85,16 @@ type RotationWithEffectiveMeals = {
   _count?: { meals: number };
 };
 
+// ============================================
+// Helpers
+// ============================================
+
+/** Wrapper for `new Date()` — allows vitest to mock time via `vi.useFakeTimers()`. */
 function getNow(): Date {
   return new Date();
 }
 
+/** Format a fulfillment cycle as "MMM d - MMM d" for display. */
 function buildFulfillmentCycleDisplay(
   cycleStart: Date,
   cycleEnd?: Date,
@@ -76,10 +107,16 @@ function buildFulfillmentCycleDisplay(
   )}`;
 }
 
+/** ARCHIVED rotations are hidden from the storefront menu. */
 function isRotationOnMenu(rotation: { status: RotationStatus }) {
   return rotation.status !== "ARCHIVED";
 }
 
+/**
+ * Normalize meal source: if the rotation belongs to a `RotationPeriod`,
+ * use the *period's* meals (shared across 2 weeks). Otherwise fall back
+ * to the rotation's own meal list (legacy / standalone rotations).
+ */
 function withEffectiveMeals<T extends RotationWithEffectiveMeals>(
   rotation: T,
 ): T {
@@ -98,6 +135,10 @@ function withEffectiveMeals<T extends RotationWithEffectiveMeals>(
       : rotation._count,
   };
 }
+
+// ============================================
+// Private Utilities — Rotation Period Resolution
+// ============================================
 
 async function getRotationPeriodByKey(key: string) {
   return prisma.rotationPeriod.findUnique({ where: { key } });
@@ -203,10 +244,21 @@ async function ensureRotationPeriodForRotation(rotationId: string) {
   };
 }
 
+// Re-exports for consumers that import from this module.
 export const getOrderCutoff = resolveOrderCutoff;
 export { getOrderingWindowForDeliveryWeek };
 
 export const weeklyRotationService = {
+  // ============================================
+  // Storefront Queries
+  // ============================================
+
+  /**
+   * The rotation for the *current calendar week* (the cycle we are inside right now).
+   * Used to show "This week's menu" on the storefront.
+   *
+   * Compare with `getOrderableRotation` (next week's cycle that customers order *into*).
+   */
   async getCurrentRotation() {
     const now = getNow();
     const currentFulfillmentStart = resolveFulfillmentCycleStart(now);
@@ -234,6 +286,13 @@ export const weeklyRotationService = {
     return currentRotation;
   },
 
+  /**
+   * The rotation customers are currently ordering *into* (n+1 cycle).
+   * Returns the rotation + delivery-week metadata + cutoff time.
+   *
+   * Compare with `getCurrentRotation` (the cycle we are in right now).
+   * Compare with `getAvailableMeals` (wraps this + filters active meals + ordering-open flag).
+   */
   async getOrderableRotation() {
     const now = getNow();
     const currentFulfillmentStart = resolveFulfillmentCycleStart(now);
@@ -288,6 +347,7 @@ export const weeklyRotationService = {
     };
   },
 
+  /** Fetch a specific rotation by its fulfillment-cycle start date. */
   async getRotationByWeek(weekStart: Date) {
     const normalized = resolveFulfillmentCycleStart(weekStart);
 
@@ -303,6 +363,11 @@ export const weeklyRotationService = {
     return rotation ? withEffectiveMeals(rotation) : null;
   },
 
+  // ============================================
+  // Admin CRUD
+  // ============================================
+
+  /** All rotations (admin list view, newest first). */
   async getAllRotations() {
     console.log(`[RotationService] Getting all rotations`);
 
@@ -314,6 +379,7 @@ export const weeklyRotationService = {
     return rotations.map((rotation) => withEffectiveMeals(rotation));
   },
 
+  /** Create a new rotation for a given week. Automatically links to a rotation period. */
   async createRotation(weekStartDate: Date) {
     const weekStart = resolveFulfillmentCycleStart(weekStartDate);
     const weekEnd = resolveFulfillmentCycleEnd(weekStart);
@@ -338,6 +404,7 @@ export const weeklyRotationService = {
     return withEffectiveMeals(rotation);
   },
 
+  /** Set the meal list for a rotation (actually updates the parent period's meals). */
   async updateRotationMeals(rotationId: string, mealIds: string[]) {
     console.log(
       `[RotationService] Updating rotation ${rotationId} with ${mealIds.length} meals`,
@@ -432,6 +499,17 @@ export const weeklyRotationService = {
     return now >= window.windowStart && now < window.windowEnd;
   },
 
+  /**
+   * Public-API endpoint for the storefront menu page.
+   *
+   * Wraps `getOrderableRotation`, then:
+   * - Filters to active meals only.
+   * - Adds the `isOrderingOpen` flag.
+   * - Adds display strings for the current / delivery week.
+   * - Falls back to computed dates if no rotation row exists yet.
+   *
+   * Compare with `getOrderableRotation` (raw rotation + metadata, no filtering).
+   */
   async getAvailableMeals() {
     console.log(`[RotationService] Getting available meals`);
 
@@ -471,6 +549,13 @@ export const weeklyRotationService = {
     };
   },
 
+  /**
+   * Ensure a `WeeklyRotation` row exists for the current orderable cycle.
+   * Used by the order service as a fallback when a rotation is referenced
+   * but doesn't exist yet (e.g. admin hasn't created next week's rotation).
+   *
+   * Compare with `getOrderableRotation` (read-only, returns null if missing).
+   */
   async getOrCreateOrderingRotation() {
     const now = getNow();
     const deliveryWeekStart = resolveOrderableFulfillmentCycleStart(now);
@@ -502,6 +587,7 @@ export const weeklyRotationService = {
     };
   },
 
+  /** All active meals (for admin meal picker, sorted by last updated). */
   async getMenuMeals() {
     return await prisma.meal.findMany({
       where: { isActive: true },
@@ -510,6 +596,7 @@ export const weeklyRotationService = {
     });
   },
 
+  /** All active meals (for rotation period editor, sorted alphabetically). */
   async getRotatingMeals() {
     return await prisma.meal.findMany({
       where: { isActive: true },
@@ -518,6 +605,14 @@ export const weeklyRotationService = {
     });
   },
 
+  // ============================================
+  // Period Management (bi-weekly grouping)
+  // ============================================
+
+  /**
+   * Get the current and next rotation periods (non-archived).
+   * Used by the admin dashboard to manage bi-weekly menu cycles.
+   */
   async getRotationPeriods() {
     console.log(`[RotationService] Getting rotation periods`);
 
@@ -695,6 +790,11 @@ export const weeklyRotationService = {
     });
   },
 
+  // ============================================
+  // Admin Warnings
+  // ============================================
+
+  /** Returns a warning if the next fulfillment cycle has no rotation or no meals. */
   async checkNextWeekWarning(): Promise<{
     needsAttention: boolean;
     message?: string;

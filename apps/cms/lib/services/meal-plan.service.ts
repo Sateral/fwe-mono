@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import {
   resolveFulfillmentCycleEnd,
-  resolveOrderableWeekStart,
+  resolveOrderableFulfillmentCycleStart,
 } from "./rotation-schedule";
 import { mealPlanLedgerService } from "./meal-plan-ledger.service";
 
@@ -31,7 +31,7 @@ function clampNonNegative(value: number) {
 }
 
 function resolveCurrentMealPlanWindow(now: Date) {
-  const windowStart = resolveOrderableWeekStart(now);
+  const windowStart = resolveOrderableFulfillmentCycleStart(now);
   const windowEnd = resolveFulfillmentCycleEnd(windowStart);
 
   return { windowStart, windowEnd };
