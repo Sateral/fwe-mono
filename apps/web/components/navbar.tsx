@@ -8,11 +8,12 @@ import { cn } from "@/lib/utils";
 import { useSession, signOut } from "@/lib/auth-client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCartNavCount } from "@/components/cart-count-provider";
+import { useCartSheet } from "@/components/cart-sheet-context";
+import { ShoppingBag } from "lucide-react";
 
 const routes = [
   { href: "/", label: "Home" },
   { href: "/menu", label: "Menu" },
-  { href: "/cart", label: "Cart" },
 ];
 
 const Navbar = () => {
@@ -21,6 +22,7 @@ const Navbar = () => {
 
   const { data: session, isPending } = useSession();
   const cartItemCount = useCartNavCount();
+  const { openCart } = useCartSheet();
 
   const handleSignOut = async () => {
     await signOut({
@@ -53,15 +55,37 @@ const Navbar = () => {
                 )}
               >
                 {route.label}
-                {route.href === "/cart" && cartItemCount > 0 ? (
-                  <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
-                    {cartItemCount > 99 ? "99+" : cartItemCount}
-                  </span>
-                ) : null}
               </Link>
             ))}
+            <button
+              type="button"
+              onClick={openCart}
+              className="transition-colors inline-flex items-center gap-1.5 text-white/80 hover:text-white cursor-pointer"
+            >
+              <ShoppingBag className="h-4 w-4" />
+              Cart
+              {cartItemCount > 0 && (
+                <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                  {cartItemCount > 99 ? "99+" : cartItemCount}
+                </span>
+              )}
+            </button>
           </div>
           <div className="flex items-center gap-2">
+            {/* Mobile cart button */}
+            <button
+              type="button"
+              onClick={openCart}
+              className="md:hidden relative p-2 text-white/80 hover:text-white transition-colors"
+              aria-label="Open cart"
+            >
+              <ShoppingBag className="h-5 w-5" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 rounded-full bg-primary px-1.5 py-0.5 text-[9px] font-semibold text-primary-foreground leading-none">
+                  {cartItemCount > 99 ? "99+" : cartItemCount}
+                </span>
+              )}
+            </button>
             {isPending ? (
               <div className="flex items-center gap-2">
                 <Skeleton className="h-8 w-[84px] rounded-md opacity-20" />
@@ -100,3 +124,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

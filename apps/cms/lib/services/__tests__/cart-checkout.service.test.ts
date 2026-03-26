@@ -30,6 +30,7 @@ const stripeMock = vi.hoisted(() => ({
     sessions: {
       create: vi.fn(),
       retrieve: vi.fn(),
+      expire: vi.fn(),
     },
   },
 }));
@@ -81,6 +82,7 @@ describe("cart-checkout.service", () => {
     prismaMock.$transaction.mockReset();
     stripeMock.checkout.sessions.create.mockReset();
     stripeMock.checkout.sessions.retrieve.mockReset();
+    stripeMock.checkout.sessions.expire.mockReset();
     orderServiceMock.createOrder.mockReset();
     mealPlanServiceMock.getPlanSummaryByUserId.mockReset();
     mealPlanServiceMock.redeemCart.mockReset();
@@ -1016,7 +1018,7 @@ describe("cart-checkout.service", () => {
 
     expect(stripeMock.checkout.sessions.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        cancel_url: "http://localhost:3000/cart",
+        cancel_url: "http://localhost:3000/menu",
         line_items: [
           expect.objectContaining({
             price_data: expect.objectContaining({
@@ -1116,6 +1118,133 @@ describe("cart-checkout.service", () => {
       expect.objectContaining({
         idempotencyKey: "checkout_session_123:retry:cs_expired_123",
       }),
+    );
+  });
+  it("expires stale open Stripe session and creates a fresh one when cart quantities change", async () => {
+    prismaMock.cart.findUnique.mockResolvedValue({
+      id: "cart_123",
+      userId: "user_123",
+      settlementMethod: "STRIPE",
+      status: "ACTIVE",
+      items: [
+        {
+          id: "item_1",
+          mealId: "meal_1",
+          quantity: 5,
+          unitPrice: 12.98,
+          substitutions: [],
+          modifiers: [],
+          proteinBoost: false,
+          notes: null,
+          meal: {
+            id: "meal_1",
+            name: "Chicken and Rice",
+            slug: "chicken-and-rice",
+            imageUrl: "https://example.com/meal-1.jpg",
+          },
+          rotationId: "rotation_123",
+        },
+      ],
+    });
+
+    // Existing snapshot was created when quantity was 1
+    prismaMock.checkoutSession.findFirst
+      .mockResolvedValueOnce({
+        id: "checkout_session_old",
+        cartId: "cart_123",
+        userId: "user_123",
+        stripeSessionId: "cs_old_123",
+        stripePaymentIntentId: null,
+        customerEmail: "customer@example.com",
+        customerName: "Customer",
+        deliveryMethod: "DELIVERY",
+        pickupLocation: null,
+        items: [
+          {
+            id: "snapshot_1",
+            orderIntentId: "intent_1",
+            mealId: "meal_1",
+            rotationId: "rotation_123",
+            quantity: 1,
+            unitPrice: 12.98,
+            totalAmount: 12.98,
+            currency: "cad",
+            substitutions: [],
+            modifiers: [],
+            proteinBoost: false,
+            notes: null,
+            deliveryMethod: "DELIVERY",
+            pickupLocation: null,
+          },
+        ],
+      })
+      // After expiration, the fresh checkout path calls findFirst again
+      .mockResolvedValueOnce(null);
+
+    // The old Stripe session is still open
+    stripeMock.checkout.sessions.retrieve.mockResolvedValue({
+      id: "cs_old_123",
+      status: "open",
+      url: "https://checkout.stripe.test/cs_old_123",
+    });
+
+    stripeMock.checkout.sessions.expire.mockResolvedValue({});
+
+    prismaMock.orderIntent.findFirst.mockResolvedValue(null);
+    prismaMock.orderIntent.create.mockResolvedValue({
+      id: "intent_new",
+      rotationId: "rotation_123",
+    });
+    prismaMock.checkoutSession.create.mockResolvedValue({
+      id: "checkout_session_new",
+      items: [{ id: "snapshot_new" }],
+    });
+    stripeMock.checkout.sessions.create.mockResolvedValue({
+      id: "cs_new_123",
+      url: "https://checkout.stripe.test/cs_new_123",
+      payment_intent: null,
+    });
+
+    const session = await createStripeCheckoutSessionForCart({
+      cartId: "cart_123",
+      userEmail: "customer@example.com",
+      userName: "Customer",
+      deliveryMethod: "DELIVERY",
+      requestId: "request_new",
+    });
+
+    // Should have expired the old session
+    expect(stripeMock.checkout.sessions.expire).toHaveBeenCalledWith("cs_old_123");
+    // Should have marked old snapshot as EXPIRED
+    expect(prismaMock.checkoutSession.update).toHaveBeenCalledWith({
+      where: { id: "checkout_session_old" },
+      data: {
+        status: "EXPIRED",
+        clientRequestId: expect.stringContaining(":expired:"),
+      },
+    });
+    // Should have vacated old OrderIntents
+    expect(prismaMock.orderIntent.updateMany).toHaveBeenCalledWith({
+      where: { id: { in: ["intent_1"] } },
+      data: {
+        status: "EXPIRED",
+        clientRequestId: null,
+      },
+    });
+    // Should have created a fresh Stripe session with the updated quantity
+    expect(session.id).toBe("cs_new_123");
+    expect(stripeMock.checkout.sessions.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        line_items: [
+          expect.objectContaining({
+            quantity: 5,
+            price_data: expect.objectContaining({
+              unit_amount: 1298,
+            }),
+          }),
+        ],
+      }),
+      expect.anything(),
     );
   });
 });

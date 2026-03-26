@@ -74,11 +74,10 @@ async function apiRequest<T>(
   });
 
   if (!response.ok) {
-    const error = await response
+    const errorBody = await response
       .json()
       .catch(() => ({ error: "Unknown error" }));
-    console.error(`[CMS API] Error:`, error);
-    throw new Error(error.error || `API request failed: ${response.status}`);
+    throw new Error(errorBody?.error || `API request failed: ${response.status}`);
   }
 
   return response.json();

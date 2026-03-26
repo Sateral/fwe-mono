@@ -62,6 +62,8 @@ type CheckoutCartItem = CheckoutCart["items"][number];
  */
 type CheckoutSnapshot = {
   id: string;
+  clientRequestId: string | null;
+  status: string;
   cartId: string;
   userId: string;
   stripeSessionId: string | null;
@@ -289,7 +291,20 @@ async function ensureOrderIntentForCartItem(
   });
 
   if (existing) {
-    return existing;
+    // Update existing intent to reflect any cart changes (e.g. quantity/mods)
+    return prisma.orderIntent.update({
+      where: { id: existing.id },
+      data: {
+        quantity: item.quantity,
+        totalAmount: toNumber(item.unitPrice) * item.quantity,
+        substitutions: item.substitutions as object[] | undefined,
+        modifiers: item.modifiers as object[] | undefined,
+        proteinBoost: item.proteinBoost,
+        notes: item.notes,
+        deliveryMethod,
+        pickupLocation: deliveryMethod === "PICKUP" ? pickupLocation : undefined,
+      },
+    });
   }
 
   try {
@@ -509,7 +524,7 @@ async function createStripeSessionFromSnapshot(
       ),
       metadata,
       success_url: `${WEB_BASE_URL}/order/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${WEB_BASE_URL}/cart`,
+      cancel_url: `${WEB_BASE_URL}/menu`,
     },
     {
       idempotencyKey: `${snapshot.id}:retry:${snapshot.stripeSessionId ?? "unknown"}`,
@@ -649,7 +664,7 @@ async function createFreshStripeSession(
       ),
       metadata,
       success_url: `${WEB_BASE_URL}/order/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${WEB_BASE_URL}/cart`,
+      cancel_url: `${WEB_BASE_URL}/menu`,
     },
     {
       idempotencyKey: snapshot.id,
@@ -682,6 +697,46 @@ async function createFreshStripeSession(
     id: session.id,
     url: session.url,
   };
+}
+
+// ============================================
+// Helpers — Snapshot Staleness Detection
+// ============================================
+
+/**
+ * Returns `true` when the snapshot line items still match the live cart.
+ *
+ * Compares by mealId, quantity, and unitPrice — if any differ the snapshot
+ * is stale and the caller should expire the old Stripe session and create
+ * a fresh one.
+ */
+function snapshotMatchesCart(
+  snapshot: CheckoutSnapshot,
+  cart: CheckoutCart,
+): boolean {
+  if (snapshot.items.length !== cart.items.length) {
+    return false;
+  }
+
+  const snapshotMap = new Map(
+    snapshot.items.map((item) => [
+      item.mealId,
+      { quantity: item.quantity, unitPrice: toNumber(item.unitPrice) },
+    ]),
+  );
+
+  for (const cartItem of cart.items) {
+    const snapshotItem = snapshotMap.get(cartItem.mealId);
+    if (
+      !snapshotItem ||
+      snapshotItem.quantity !== cartItem.quantity ||
+      snapshotItem.unitPrice !== toNumber(cartItem.unitPrice)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 // ============================================
@@ -739,9 +794,36 @@ export async function createStripeCheckoutSessionForCart(
       throw new Error("Checkout already completed");
     }
 
-    // Case 1: Still open — return directly
+    // Case 1: Still open — return directly if cart hasn't changed
     if (existingSession.status === "open" && existingSession.url) {
-      return { id: existingSession.id, url: existingSession.url };
+      if (snapshotMatchesCart(existingSnapshot, cart)) {
+        return { id: existingSession.id, url: existingSession.url };
+      }
+
+      // Cart changed since the snapshot — expire stale Stripe session
+      await stripe.checkout.sessions.expire(existingSnapshot.stripeSessionId!);
+      await prisma.checkoutSession.update({
+        where: { id: existingSnapshot.id },
+        data: { 
+          status: "EXPIRED",
+          clientRequestId: `${existingSnapshot.clientRequestId}:expired:${Date.now()}`,
+        },
+      });
+
+      // Vacate clientRequestId on old OrderIntents so new ones can be created
+      // for the fresh snapshot without violating the 1-to-1 unique mapping constraint
+      await prisma.orderIntent.updateMany({
+        where: {
+          id: { in: existingSnapshot.items.map((i) => i.orderIntentId) },
+        },
+        data: {
+          status: "EXPIRED",
+          clientRequestId: null,
+        },
+      });
+
+      // Fall through to create a fresh checkout below
+      return createFreshStripeSession(cart, input, deliveryMethod, pickupLocation);
     }
 
     // Case 2: Expired/failed — rebuild Stripe session from snapshot
