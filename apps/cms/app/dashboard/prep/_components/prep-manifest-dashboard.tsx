@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { IconArrowLeft, IconClipboardList, IconPrinter } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { RotationSelector } from "./rotation-selector";
+import { RotationSelector } from "@/app/dashboard/orders/_components/rotation-selector";
 import { ProductionSummary } from "./production-summary";
 import { useSelectedRotation } from "@/lib/context/rotation-context";
 import { useOrdersByRotation, useRotations } from "@/hooks/use-orders";

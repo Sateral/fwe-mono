@@ -1,39 +1,24 @@
-import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { getRotations } from "@/lib/actions/weekly-rotation.actions";
-import { RotationProvider } from "@/lib/context/rotation-context";
-import { PrepManifestDashboard } from "../_components/prep-manifest-dashboard";
 
 interface Props {
   searchParams: Promise<{ rotationId?: string }>;
 }
 
-export default async function PrepManifestPage({ searchParams }: Props) {
+/** @deprecated Use `/dashboard/prep` — kept for bookmarks and external links. */
+export default async function LegacyPrepManifestRedirect({ searchParams }: Props) {
   const resolvedParams = await searchParams;
 
-  if (!resolvedParams.rotationId) {
-    const rotations = await getRotations();
-    const first = rotations[0];
-    if (first) {
-      redirect(`/dashboard/orders/prep-manifest?rotationId=${first.id}`);
-    }
+  if (resolvedParams.rotationId) {
+    redirect(`/dashboard/prep?rotationId=${resolvedParams.rotationId}`);
   }
 
-  return (
-    <Suspense fallback={<PrepManifestSkeleton />}>
-      <RotationProvider initialRotationId={resolvedParams.rotationId}>
-        <PrepManifestDashboard />
-      </RotationProvider>
-    </Suspense>
-  );
-}
+  const rotations = await getRotations();
+  const first = rotations[0];
+  if (first) {
+    redirect(`/dashboard/prep?rotationId=${first.id}`);
+  }
 
-function PrepManifestSkeleton() {
-  return (
-    <div className="animate-pulse p-6 pt-4">
-      <div className="h-9 w-64 rounded bg-muted" />
-      <div className="mt-4 h-[560px] rounded-lg bg-muted" />
-    </div>
-  );
+  redirect("/dashboard/prep");
 }

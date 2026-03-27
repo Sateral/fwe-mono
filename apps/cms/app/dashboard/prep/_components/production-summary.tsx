@@ -92,7 +92,7 @@ function buildManifestFromOrders(orders: OrderWithRelations[]) {
 
 export function ProductionSummary({
   variant = "full",
-  fullManifestHref = "/dashboard/orders/prep-manifest",
+  fullManifestHref = "/dashboard/prep",
 }: ProductionSummaryProps) {
   const { selectedRotationId } = useSelectedRotation();
   const { data: orders = [], isLoading } =

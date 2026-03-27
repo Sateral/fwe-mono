@@ -6,7 +6,6 @@ import { OrdersTable } from "./orders-table";
 import { CustomerSummaryTable } from "./customer-summary-table";
 import { CustomerOrdersDialog } from "./customer-orders-dialog";
 import { RotationSelector } from "./rotation-selector";
-import { ProductionSummary } from "./production-summary";
 import { OrdersOverview } from "./orders-overview";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -179,21 +178,7 @@ export function OrdersDashboard() {
         <CustomerSummaryTable onSelectCustomer={handleCustomerSelect} />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-12 items-stretch">
-        <div className="lg:col-span-7">
-          {!ordersLoading && <OrdersOverview orders={orders} />}
-        </div>
-        <div className="lg:col-span-5">
-          <ProductionSummary
-            variant="compact"
-            fullManifestHref={
-              selectedRotationId
-                ? `/dashboard/orders/prep-manifest?rotationId=${selectedRotationId}`
-                : "/dashboard/orders/prep-manifest"
-            }
-          />
-        </div>
-      </div>
+      {!ordersLoading && <OrdersOverview orders={orders} />}
 
       <CustomerOrdersDialog
         orders={selectedCustomerOrders}

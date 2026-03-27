@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   IconCalendar,
+  IconChefHat,
   IconDashboard,
   IconFileDescription,
   IconHelp,
@@ -45,6 +46,11 @@ const navMain = [
     title: "Orders",
     url: "/dashboard/orders",
     icon: IconFileDescription,
+  },
+  {
+    title: "Prep manifest",
+    url: "/dashboard/prep",
+    icon: IconChefHat,
   },
   {
     title: "Customers",
