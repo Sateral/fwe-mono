@@ -34,7 +34,6 @@ export async function POST(request: Request) {
           quantity: data.quantity,
           substitutions: data.substitutions,
           modifiers: data.modifiers,
-          proteinBoost: data.proteinBoost,
           notes: data.notes,
         },
       ],

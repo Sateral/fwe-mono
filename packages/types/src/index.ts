@@ -91,19 +91,36 @@ export interface ApiDietaryTag {
   icon: string;
 }
 
+export interface ApiOrderSubstitution {
+  id: string;
+  groupName: string;
+  optionName: string;
+  groupId: string | null;
+  optionId: string | null;
+}
+
+export interface ApiOrderModifier {
+  id: string;
+  groupName: string;
+  optionName: string;
+  groupId: string | null;
+  optionId: string | null;
+}
+
 export interface ApiOrder {
   id: string;
   userId: string;
   mealId: string;
   settlementMethod: SettlementMethod;
   orderIntentId?: string | null;
+  checkoutSessionId?: string | null;
+  orderGroupId?: string | null;
   assignedByChef?: boolean;
   quantity: number;
   unitPrice: number;
   totalAmount: number;
-  substitutions: { groupName: string; optionName: string }[] | null;
-  modifiers: { groupName: string; optionNames: string[] }[] | null;
-  proteinBoost: boolean;
+  substitutions: ApiOrderSubstitution[];
+  modifiers: ApiOrderModifier[];
   notes: string | null;
   deliveryMethod: DeliveryMethod;
   pickupLocation: string | null;
@@ -153,19 +170,20 @@ export interface ApiCart {
   updatedAt: string;
 }
 
-/** Stored cart JSON includes ids; older rows may omit them. */
 export interface ApiCartSubstitutionLine {
-  groupId?: string;
+  id: string;
+  groupId: string | null;
   groupName: string;
-  optionId?: string;
+  optionId: string | null;
   optionName: string;
 }
 
 export interface ApiCartModifierLine {
-  groupId?: string;
+  id: string;
+  groupId: string | null;
   groupName: string;
-  optionIds: string[];
-  optionNames: string[];
+  optionId: string | null;
+  optionName: string;
 }
 
 export interface ApiCartItem {
@@ -174,9 +192,8 @@ export interface ApiCartItem {
   rotationId: string | null;
   quantity: number;
   unitPrice: number;
-  substitutions: ApiCartSubstitutionLine[] | null;
-  modifiers: ApiCartModifierLine[] | null;
-  proteinBoost: boolean;
+  substitutions: ApiCartSubstitutionLine[];
+  modifiers: ApiCartModifierLine[];
   notes: string | null;
   meal: Pick<ApiMeal, "id" | "name" | "slug" | "imageUrl">;
 }
@@ -187,11 +204,12 @@ export interface ApiFailedOrder {
   stripePaymentIntentId: string | null;
   customerEmail: string | null;
   customerName: string | null;
-  orderData: CreateOrderInput;
+  orderData: { orders: CreateOrderInput[] };
   errorMessage: string;
   errorCode: string | null;
   status: FailedOrderStatus;
   retryCount: number;
+  adminNotifiedAt: string | null;
   createdAt: string;
   updatedAt: string;
   resolvedAt: string | null;

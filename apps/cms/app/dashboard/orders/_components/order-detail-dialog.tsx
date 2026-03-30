@@ -4,7 +4,6 @@ import * as React from "react";
 import {
   IconCheck,
   IconChefHat,
-  IconFlame,
   IconNote,
   IconTruckDelivery,
   IconX,
@@ -217,21 +216,6 @@ function OrderDetailDialogWithOrder({
                     Customizations For Chef
                   </h3>
                   <div className="mt-3 space-y-3">
-                    {order.proteinBoost && (
-                      <div className="flex items-center gap-3 rounded-xl border border-orange-200 bg-orange-50 p-3 dark:border-orange-800 dark:bg-orange-950">
-                        <div className="rounded-full bg-orange-500 p-2 text-white">
-                          <IconFlame className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <p className="font-bold text-orange-700 dark:text-orange-300">
-                            PROTEIN BOOST
-                          </p>
-                          <p className="text-sm text-orange-600 dark:text-orange-400">
-                            Add extra protein to this order
-                          </p>
-                        </div>
-                      </div>
-                    )}
 
                     {substitutions.length > 0 && (
                       <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950">
@@ -270,8 +254,7 @@ function OrderDetailDialogWithOrder({
                       </div>
                     )}
 
-                    {!order.proteinBoost &&
-                      substitutions.length === 0 &&
+                    {substitutions.length === 0 &&
                       !order.notes && (
                         <p className="text-sm italic text-muted-foreground">
                           No special customizations for this order

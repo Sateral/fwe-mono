@@ -43,8 +43,8 @@ export type CartItemMinAggregateOutputType = {
   rotationId: string | null
   quantity: number | null
   unitPrice: runtime.Decimal | null
-  proteinBoost: boolean | null
   notes: string | null
+  priceSource: $Enums.PriceSource | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,8 +56,8 @@ export type CartItemMaxAggregateOutputType = {
   rotationId: string | null
   quantity: number | null
   unitPrice: runtime.Decimal | null
-  proteinBoost: boolean | null
   notes: string | null
+  priceSource: $Enums.PriceSource | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -69,10 +69,8 @@ export type CartItemCountAggregateOutputType = {
   rotationId: number
   quantity: number
   unitPrice: number
-  substitutions: number
-  modifiers: number
-  proteinBoost: number
   notes: number
+  priceSource: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -96,8 +94,8 @@ export type CartItemMinAggregateInputType = {
   rotationId?: true
   quantity?: true
   unitPrice?: true
-  proteinBoost?: true
   notes?: true
+  priceSource?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -109,8 +107,8 @@ export type CartItemMaxAggregateInputType = {
   rotationId?: true
   quantity?: true
   unitPrice?: true
-  proteinBoost?: true
   notes?: true
+  priceSource?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -122,10 +120,8 @@ export type CartItemCountAggregateInputType = {
   rotationId?: true
   quantity?: true
   unitPrice?: true
-  substitutions?: true
-  modifiers?: true
-  proteinBoost?: true
   notes?: true
+  priceSource?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -224,10 +220,8 @@ export type CartItemGroupByOutputType = {
   rotationId: string | null
   quantity: number
   unitPrice: runtime.Decimal
-  substitutions: runtime.JsonValue | null
-  modifiers: runtime.JsonValue | null
-  proteinBoost: boolean
   notes: string | null
+  priceSource: $Enums.PriceSource
   createdAt: Date
   updatedAt: Date
   _count: CartItemCountAggregateOutputType | null
@@ -262,15 +256,15 @@ export type CartItemWhereInput = {
   rotationId?: Prisma.StringNullableFilter<"CartItem"> | string | null
   quantity?: Prisma.IntFilter<"CartItem"> | number
   unitPrice?: Prisma.DecimalFilter<"CartItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.JsonNullableFilter<"CartItem">
-  modifiers?: Prisma.JsonNullableFilter<"CartItem">
-  proteinBoost?: Prisma.BoolFilter<"CartItem"> | boolean
   notes?: Prisma.StringNullableFilter<"CartItem"> | string | null
+  priceSource?: Prisma.EnumPriceSourceFilter<"CartItem"> | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
   cart?: Prisma.XOR<Prisma.CartScalarRelationFilter, Prisma.CartWhereInput>
   meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
   rotation?: Prisma.XOR<Prisma.WeeklyRotationNullableScalarRelationFilter, Prisma.WeeklyRotationWhereInput> | null
+  substitutions?: Prisma.CartItemSubstitutionListRelationFilter
+  modifiers?: Prisma.CartItemModifierListRelationFilter
 }
 
 export type CartItemOrderByWithRelationInput = {
@@ -280,15 +274,15 @@ export type CartItemOrderByWithRelationInput = {
   rotationId?: Prisma.SortOrderInput | Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
-  substitutions?: Prisma.SortOrderInput | Prisma.SortOrder
-  modifiers?: Prisma.SortOrderInput | Prisma.SortOrder
-  proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  priceSource?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   cart?: Prisma.CartOrderByWithRelationInput
   meal?: Prisma.MealOrderByWithRelationInput
   rotation?: Prisma.WeeklyRotationOrderByWithRelationInput
+  substitutions?: Prisma.CartItemSubstitutionOrderByRelationAggregateInput
+  modifiers?: Prisma.CartItemModifierOrderByRelationAggregateInput
 }
 
 export type CartItemWhereUniqueInput = Prisma.AtLeast<{
@@ -301,15 +295,15 @@ export type CartItemWhereUniqueInput = Prisma.AtLeast<{
   rotationId?: Prisma.StringNullableFilter<"CartItem"> | string | null
   quantity?: Prisma.IntFilter<"CartItem"> | number
   unitPrice?: Prisma.DecimalFilter<"CartItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.JsonNullableFilter<"CartItem">
-  modifiers?: Prisma.JsonNullableFilter<"CartItem">
-  proteinBoost?: Prisma.BoolFilter<"CartItem"> | boolean
   notes?: Prisma.StringNullableFilter<"CartItem"> | string | null
+  priceSource?: Prisma.EnumPriceSourceFilter<"CartItem"> | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
   cart?: Prisma.XOR<Prisma.CartScalarRelationFilter, Prisma.CartWhereInput>
   meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
   rotation?: Prisma.XOR<Prisma.WeeklyRotationNullableScalarRelationFilter, Prisma.WeeklyRotationWhereInput> | null
+  substitutions?: Prisma.CartItemSubstitutionListRelationFilter
+  modifiers?: Prisma.CartItemModifierListRelationFilter
 }, "id">
 
 export type CartItemOrderByWithAggregationInput = {
@@ -319,10 +313,8 @@ export type CartItemOrderByWithAggregationInput = {
   rotationId?: Prisma.SortOrderInput | Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
-  substitutions?: Prisma.SortOrderInput | Prisma.SortOrder
-  modifiers?: Prisma.SortOrderInput | Prisma.SortOrder
-  proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  priceSource?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CartItemCountOrderByAggregateInput
@@ -342,10 +334,8 @@ export type CartItemScalarWhereWithAggregatesInput = {
   rotationId?: Prisma.StringNullableWithAggregatesFilter<"CartItem"> | string | null
   quantity?: Prisma.IntWithAggregatesFilter<"CartItem"> | number
   unitPrice?: Prisma.DecimalWithAggregatesFilter<"CartItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.JsonNullableWithAggregatesFilter<"CartItem">
-  modifiers?: Prisma.JsonNullableWithAggregatesFilter<"CartItem">
-  proteinBoost?: Prisma.BoolWithAggregatesFilter<"CartItem"> | boolean
   notes?: Prisma.StringNullableWithAggregatesFilter<"CartItem"> | string | null
+  priceSource?: Prisma.EnumPriceSourceWithAggregatesFilter<"CartItem"> | $Enums.PriceSource
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CartItem"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CartItem"> | Date | string
 }
@@ -354,15 +344,15 @@ export type CartItemCreateInput = {
   id?: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
   cart: Prisma.CartCreateNestedOneWithoutItemsInput
   meal: Prisma.MealCreateNestedOneWithoutCartItemsInput
   rotation?: Prisma.WeeklyRotationCreateNestedOneWithoutCartItemsInput
+  substitutions?: Prisma.CartItemSubstitutionCreateNestedManyWithoutCartItemInput
+  modifiers?: Prisma.CartItemModifierCreateNestedManyWithoutCartItemInput
 }
 
 export type CartItemUncheckedCreateInput = {
@@ -372,27 +362,27 @@ export type CartItemUncheckedCreateInput = {
   rotationId?: string | null
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
+  substitutions?: Prisma.CartItemSubstitutionUncheckedCreateNestedManyWithoutCartItemInput
+  modifiers?: Prisma.CartItemModifierUncheckedCreateNestedManyWithoutCartItemInput
 }
 
 export type CartItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cart?: Prisma.CartUpdateOneRequiredWithoutItemsNestedInput
   meal?: Prisma.MealUpdateOneRequiredWithoutCartItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneWithoutCartItemsNestedInput
+  substitutions?: Prisma.CartItemSubstitutionUpdateManyWithoutCartItemNestedInput
+  modifiers?: Prisma.CartItemModifierUpdateManyWithoutCartItemNestedInput
 }
 
 export type CartItemUncheckedUpdateInput = {
@@ -402,12 +392,12 @@ export type CartItemUncheckedUpdateInput = {
   rotationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutions?: Prisma.CartItemSubstitutionUncheckedUpdateManyWithoutCartItemNestedInput
+  modifiers?: Prisma.CartItemModifierUncheckedUpdateManyWithoutCartItemNestedInput
 }
 
 export type CartItemCreateManyInput = {
@@ -417,10 +407,8 @@ export type CartItemCreateManyInput = {
   rotationId?: string | null
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -429,10 +417,8 @@ export type CartItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -444,10 +430,8 @@ export type CartItemUncheckedUpdateManyInput = {
   rotationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -462,6 +446,11 @@ export type CartItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type CartItemScalarRelationFilter = {
+  is?: Prisma.CartItemWhereInput
+  isNot?: Prisma.CartItemWhereInput
+}
+
 export type CartItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   cartId?: Prisma.SortOrder
@@ -469,10 +458,8 @@ export type CartItemCountOrderByAggregateInput = {
   rotationId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
-  substitutions?: Prisma.SortOrder
-  modifiers?: Prisma.SortOrder
-  proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  priceSource?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -489,8 +476,8 @@ export type CartItemMaxOrderByAggregateInput = {
   rotationId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
-  proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  priceSource?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -502,8 +489,8 @@ export type CartItemMinOrderByAggregateInput = {
   rotationId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
-  proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  priceSource?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -553,6 +540,34 @@ export type CartItemUncheckedUpdateManyWithoutMealNestedInput = {
   update?: Prisma.CartItemUpdateWithWhereUniqueWithoutMealInput | Prisma.CartItemUpdateWithWhereUniqueWithoutMealInput[]
   updateMany?: Prisma.CartItemUpdateManyWithWhereWithoutMealInput | Prisma.CartItemUpdateManyWithWhereWithoutMealInput[]
   deleteMany?: Prisma.CartItemScalarWhereInput | Prisma.CartItemScalarWhereInput[]
+}
+
+export type CartItemCreateNestedOneWithoutSubstitutionsInput = {
+  create?: Prisma.XOR<Prisma.CartItemCreateWithoutSubstitutionsInput, Prisma.CartItemUncheckedCreateWithoutSubstitutionsInput>
+  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutSubstitutionsInput
+  connect?: Prisma.CartItemWhereUniqueInput
+}
+
+export type CartItemUpdateOneRequiredWithoutSubstitutionsNestedInput = {
+  create?: Prisma.XOR<Prisma.CartItemCreateWithoutSubstitutionsInput, Prisma.CartItemUncheckedCreateWithoutSubstitutionsInput>
+  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutSubstitutionsInput
+  upsert?: Prisma.CartItemUpsertWithoutSubstitutionsInput
+  connect?: Prisma.CartItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CartItemUpdateToOneWithWhereWithoutSubstitutionsInput, Prisma.CartItemUpdateWithoutSubstitutionsInput>, Prisma.CartItemUncheckedUpdateWithoutSubstitutionsInput>
+}
+
+export type CartItemCreateNestedOneWithoutModifiersInput = {
+  create?: Prisma.XOR<Prisma.CartItemCreateWithoutModifiersInput, Prisma.CartItemUncheckedCreateWithoutModifiersInput>
+  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutModifiersInput
+  connect?: Prisma.CartItemWhereUniqueInput
+}
+
+export type CartItemUpdateOneRequiredWithoutModifiersNestedInput = {
+  create?: Prisma.XOR<Prisma.CartItemCreateWithoutModifiersInput, Prisma.CartItemUncheckedCreateWithoutModifiersInput>
+  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutModifiersInput
+  upsert?: Prisma.CartItemUpsertWithoutModifiersInput
+  connect?: Prisma.CartItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CartItemUpdateToOneWithWhereWithoutModifiersInput, Prisma.CartItemUpdateWithoutModifiersInput>, Prisma.CartItemUncheckedUpdateWithoutModifiersInput>
 }
 
 export type CartItemCreateNestedManyWithoutRotationInput = {
@@ -639,18 +654,22 @@ export type CartItemUncheckedUpdateManyWithoutCartNestedInput = {
   deleteMany?: Prisma.CartItemScalarWhereInput | Prisma.CartItemScalarWhereInput[]
 }
 
+export type EnumPriceSourceFieldUpdateOperationsInput = {
+  set?: $Enums.PriceSource
+}
+
 export type CartItemCreateWithoutMealInput = {
   id?: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
   cart: Prisma.CartCreateNestedOneWithoutItemsInput
   rotation?: Prisma.WeeklyRotationCreateNestedOneWithoutCartItemsInput
+  substitutions?: Prisma.CartItemSubstitutionCreateNestedManyWithoutCartItemInput
+  modifiers?: Prisma.CartItemModifierCreateNestedManyWithoutCartItemInput
 }
 
 export type CartItemUncheckedCreateWithoutMealInput = {
@@ -659,12 +678,12 @@ export type CartItemUncheckedCreateWithoutMealInput = {
   rotationId?: string | null
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
+  substitutions?: Prisma.CartItemSubstitutionUncheckedCreateNestedManyWithoutCartItemInput
+  modifiers?: Prisma.CartItemModifierUncheckedCreateNestedManyWithoutCartItemInput
 }
 
 export type CartItemCreateOrConnectWithoutMealInput = {
@@ -703,26 +722,168 @@ export type CartItemScalarWhereInput = {
   rotationId?: Prisma.StringNullableFilter<"CartItem"> | string | null
   quantity?: Prisma.IntFilter<"CartItem"> | number
   unitPrice?: Prisma.DecimalFilter<"CartItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.JsonNullableFilter<"CartItem">
-  modifiers?: Prisma.JsonNullableFilter<"CartItem">
-  proteinBoost?: Prisma.BoolFilter<"CartItem"> | boolean
   notes?: Prisma.StringNullableFilter<"CartItem"> | string | null
+  priceSource?: Prisma.EnumPriceSourceFilter<"CartItem"> | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
+}
+
+export type CartItemCreateWithoutSubstitutionsInput = {
+  id?: string
+  quantity: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  priceSource?: $Enums.PriceSource
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cart: Prisma.CartCreateNestedOneWithoutItemsInput
+  meal: Prisma.MealCreateNestedOneWithoutCartItemsInput
+  rotation?: Prisma.WeeklyRotationCreateNestedOneWithoutCartItemsInput
+  modifiers?: Prisma.CartItemModifierCreateNestedManyWithoutCartItemInput
+}
+
+export type CartItemUncheckedCreateWithoutSubstitutionsInput = {
+  id?: string
+  cartId: string
+  mealId: string
+  rotationId?: string | null
+  quantity: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  priceSource?: $Enums.PriceSource
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  modifiers?: Prisma.CartItemModifierUncheckedCreateNestedManyWithoutCartItemInput
+}
+
+export type CartItemCreateOrConnectWithoutSubstitutionsInput = {
+  where: Prisma.CartItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.CartItemCreateWithoutSubstitutionsInput, Prisma.CartItemUncheckedCreateWithoutSubstitutionsInput>
+}
+
+export type CartItemUpsertWithoutSubstitutionsInput = {
+  update: Prisma.XOR<Prisma.CartItemUpdateWithoutSubstitutionsInput, Prisma.CartItemUncheckedUpdateWithoutSubstitutionsInput>
+  create: Prisma.XOR<Prisma.CartItemCreateWithoutSubstitutionsInput, Prisma.CartItemUncheckedCreateWithoutSubstitutionsInput>
+  where?: Prisma.CartItemWhereInput
+}
+
+export type CartItemUpdateToOneWithWhereWithoutSubstitutionsInput = {
+  where?: Prisma.CartItemWhereInput
+  data: Prisma.XOR<Prisma.CartItemUpdateWithoutSubstitutionsInput, Prisma.CartItemUncheckedUpdateWithoutSubstitutionsInput>
+}
+
+export type CartItemUpdateWithoutSubstitutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cart?: Prisma.CartUpdateOneRequiredWithoutItemsNestedInput
+  meal?: Prisma.MealUpdateOneRequiredWithoutCartItemsNestedInput
+  rotation?: Prisma.WeeklyRotationUpdateOneWithoutCartItemsNestedInput
+  modifiers?: Prisma.CartItemModifierUpdateManyWithoutCartItemNestedInput
+}
+
+export type CartItemUncheckedUpdateWithoutSubstitutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  cartId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  rotationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  modifiers?: Prisma.CartItemModifierUncheckedUpdateManyWithoutCartItemNestedInput
+}
+
+export type CartItemCreateWithoutModifiersInput = {
+  id?: string
+  quantity: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  priceSource?: $Enums.PriceSource
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cart: Prisma.CartCreateNestedOneWithoutItemsInput
+  meal: Prisma.MealCreateNestedOneWithoutCartItemsInput
+  rotation?: Prisma.WeeklyRotationCreateNestedOneWithoutCartItemsInput
+  substitutions?: Prisma.CartItemSubstitutionCreateNestedManyWithoutCartItemInput
+}
+
+export type CartItemUncheckedCreateWithoutModifiersInput = {
+  id?: string
+  cartId: string
+  mealId: string
+  rotationId?: string | null
+  quantity: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  priceSource?: $Enums.PriceSource
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  substitutions?: Prisma.CartItemSubstitutionUncheckedCreateNestedManyWithoutCartItemInput
+}
+
+export type CartItemCreateOrConnectWithoutModifiersInput = {
+  where: Prisma.CartItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.CartItemCreateWithoutModifiersInput, Prisma.CartItemUncheckedCreateWithoutModifiersInput>
+}
+
+export type CartItemUpsertWithoutModifiersInput = {
+  update: Prisma.XOR<Prisma.CartItemUpdateWithoutModifiersInput, Prisma.CartItemUncheckedUpdateWithoutModifiersInput>
+  create: Prisma.XOR<Prisma.CartItemCreateWithoutModifiersInput, Prisma.CartItemUncheckedCreateWithoutModifiersInput>
+  where?: Prisma.CartItemWhereInput
+}
+
+export type CartItemUpdateToOneWithWhereWithoutModifiersInput = {
+  where?: Prisma.CartItemWhereInput
+  data: Prisma.XOR<Prisma.CartItemUpdateWithoutModifiersInput, Prisma.CartItemUncheckedUpdateWithoutModifiersInput>
+}
+
+export type CartItemUpdateWithoutModifiersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cart?: Prisma.CartUpdateOneRequiredWithoutItemsNestedInput
+  meal?: Prisma.MealUpdateOneRequiredWithoutCartItemsNestedInput
+  rotation?: Prisma.WeeklyRotationUpdateOneWithoutCartItemsNestedInput
+  substitutions?: Prisma.CartItemSubstitutionUpdateManyWithoutCartItemNestedInput
+}
+
+export type CartItemUncheckedUpdateWithoutModifiersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  cartId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  rotationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutions?: Prisma.CartItemSubstitutionUncheckedUpdateManyWithoutCartItemNestedInput
 }
 
 export type CartItemCreateWithoutRotationInput = {
   id?: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
   cart: Prisma.CartCreateNestedOneWithoutItemsInput
   meal: Prisma.MealCreateNestedOneWithoutCartItemsInput
+  substitutions?: Prisma.CartItemSubstitutionCreateNestedManyWithoutCartItemInput
+  modifiers?: Prisma.CartItemModifierCreateNestedManyWithoutCartItemInput
 }
 
 export type CartItemUncheckedCreateWithoutRotationInput = {
@@ -731,12 +892,12 @@ export type CartItemUncheckedCreateWithoutRotationInput = {
   mealId: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
+  substitutions?: Prisma.CartItemSubstitutionUncheckedCreateNestedManyWithoutCartItemInput
+  modifiers?: Prisma.CartItemModifierUncheckedCreateNestedManyWithoutCartItemInput
 }
 
 export type CartItemCreateOrConnectWithoutRotationInput = {
@@ -769,14 +930,14 @@ export type CartItemCreateWithoutCartInput = {
   id?: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
   meal: Prisma.MealCreateNestedOneWithoutCartItemsInput
   rotation?: Prisma.WeeklyRotationCreateNestedOneWithoutCartItemsInput
+  substitutions?: Prisma.CartItemSubstitutionCreateNestedManyWithoutCartItemInput
+  modifiers?: Prisma.CartItemModifierCreateNestedManyWithoutCartItemInput
 }
 
 export type CartItemUncheckedCreateWithoutCartInput = {
@@ -785,12 +946,12 @@ export type CartItemUncheckedCreateWithoutCartInput = {
   rotationId?: string | null
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
+  substitutions?: Prisma.CartItemSubstitutionUncheckedCreateNestedManyWithoutCartItemInput
+  modifiers?: Prisma.CartItemModifierUncheckedCreateNestedManyWithoutCartItemInput
 }
 
 export type CartItemCreateOrConnectWithoutCartInput = {
@@ -825,10 +986,8 @@ export type CartItemCreateManyMealInput = {
   rotationId?: string | null
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -837,14 +996,14 @@ export type CartItemUpdateWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cart?: Prisma.CartUpdateOneRequiredWithoutItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneWithoutCartItemsNestedInput
+  substitutions?: Prisma.CartItemSubstitutionUpdateManyWithoutCartItemNestedInput
+  modifiers?: Prisma.CartItemModifierUpdateManyWithoutCartItemNestedInput
 }
 
 export type CartItemUncheckedUpdateWithoutMealInput = {
@@ -853,12 +1012,12 @@ export type CartItemUncheckedUpdateWithoutMealInput = {
   rotationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutions?: Prisma.CartItemSubstitutionUncheckedUpdateManyWithoutCartItemNestedInput
+  modifiers?: Prisma.CartItemModifierUncheckedUpdateManyWithoutCartItemNestedInput
 }
 
 export type CartItemUncheckedUpdateManyWithoutMealInput = {
@@ -867,10 +1026,8 @@ export type CartItemUncheckedUpdateManyWithoutMealInput = {
   rotationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -881,10 +1038,8 @@ export type CartItemCreateManyRotationInput = {
   mealId: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -893,14 +1048,14 @@ export type CartItemUpdateWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cart?: Prisma.CartUpdateOneRequiredWithoutItemsNestedInput
   meal?: Prisma.MealUpdateOneRequiredWithoutCartItemsNestedInput
+  substitutions?: Prisma.CartItemSubstitutionUpdateManyWithoutCartItemNestedInput
+  modifiers?: Prisma.CartItemModifierUpdateManyWithoutCartItemNestedInput
 }
 
 export type CartItemUncheckedUpdateWithoutRotationInput = {
@@ -909,12 +1064,12 @@ export type CartItemUncheckedUpdateWithoutRotationInput = {
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutions?: Prisma.CartItemSubstitutionUncheckedUpdateManyWithoutCartItemNestedInput
+  modifiers?: Prisma.CartItemModifierUncheckedUpdateManyWithoutCartItemNestedInput
 }
 
 export type CartItemUncheckedUpdateManyWithoutRotationInput = {
@@ -923,10 +1078,8 @@ export type CartItemUncheckedUpdateManyWithoutRotationInput = {
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -937,10 +1090,8 @@ export type CartItemCreateManyCartInput = {
   rotationId?: string | null
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
+  priceSource?: $Enums.PriceSource
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -949,14 +1100,14 @@ export type CartItemUpdateWithoutCartInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   meal?: Prisma.MealUpdateOneRequiredWithoutCartItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneWithoutCartItemsNestedInput
+  substitutions?: Prisma.CartItemSubstitutionUpdateManyWithoutCartItemNestedInput
+  modifiers?: Prisma.CartItemModifierUpdateManyWithoutCartItemNestedInput
 }
 
 export type CartItemUncheckedUpdateWithoutCartInput = {
@@ -965,12 +1116,12 @@ export type CartItemUncheckedUpdateWithoutCartInput = {
   rotationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutions?: Prisma.CartItemSubstitutionUncheckedUpdateManyWithoutCartItemNestedInput
+  modifiers?: Prisma.CartItemModifierUncheckedUpdateManyWithoutCartItemNestedInput
 }
 
 export type CartItemUncheckedUpdateManyWithoutCartInput = {
@@ -979,14 +1130,50 @@ export type CartItemUncheckedUpdateManyWithoutCartInput = {
   rotationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceSource?: Prisma.EnumPriceSourceFieldUpdateOperationsInput | $Enums.PriceSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type CartItemCountOutputType
+ */
+
+export type CartItemCountOutputType = {
+  substitutions: number
+  modifiers: number
+}
+
+export type CartItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  substitutions?: boolean | CartItemCountOutputTypeCountSubstitutionsArgs
+  modifiers?: boolean | CartItemCountOutputTypeCountModifiersArgs
+}
+
+/**
+ * CartItemCountOutputType without action
+ */
+export type CartItemCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CartItemCountOutputType
+   */
+  select?: Prisma.CartItemCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CartItemCountOutputType without action
+ */
+export type CartItemCountOutputTypeCountSubstitutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CartItemSubstitutionWhereInput
+}
+
+/**
+ * CartItemCountOutputType without action
+ */
+export type CartItemCountOutputTypeCountModifiersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CartItemModifierWhereInput
+}
 
 
 export type CartItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -996,15 +1183,16 @@ export type CartItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   rotationId?: boolean
   quantity?: boolean
   unitPrice?: boolean
-  substitutions?: boolean
-  modifiers?: boolean
-  proteinBoost?: boolean
   notes?: boolean
+  priceSource?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
   rotation?: boolean | Prisma.CartItem$rotationArgs<ExtArgs>
+  substitutions?: boolean | Prisma.CartItem$substitutionsArgs<ExtArgs>
+  modifiers?: boolean | Prisma.CartItem$modifiersArgs<ExtArgs>
+  _count?: boolean | Prisma.CartItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cartItem"]>
 
 export type CartItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1014,10 +1202,8 @@ export type CartItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   rotationId?: boolean
   quantity?: boolean
   unitPrice?: boolean
-  substitutions?: boolean
-  modifiers?: boolean
-  proteinBoost?: boolean
   notes?: boolean
+  priceSource?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
@@ -1032,10 +1218,8 @@ export type CartItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   rotationId?: boolean
   quantity?: boolean
   unitPrice?: boolean
-  substitutions?: boolean
-  modifiers?: boolean
-  proteinBoost?: boolean
   notes?: boolean
+  priceSource?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
@@ -1050,19 +1234,20 @@ export type CartItemSelectScalar = {
   rotationId?: boolean
   quantity?: boolean
   unitPrice?: boolean
-  substitutions?: boolean
-  modifiers?: boolean
-  proteinBoost?: boolean
   notes?: boolean
+  priceSource?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CartItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cartId" | "mealId" | "rotationId" | "quantity" | "unitPrice" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["cartItem"]>
+export type CartItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cartId" | "mealId" | "rotationId" | "quantity" | "unitPrice" | "notes" | "priceSource" | "createdAt" | "updatedAt", ExtArgs["result"]["cartItem"]>
 export type CartItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
   rotation?: boolean | Prisma.CartItem$rotationArgs<ExtArgs>
+  substitutions?: boolean | Prisma.CartItem$substitutionsArgs<ExtArgs>
+  modifiers?: boolean | Prisma.CartItem$modifiersArgs<ExtArgs>
+  _count?: boolean | Prisma.CartItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CartItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
@@ -1081,6 +1266,8 @@ export type $CartItemPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     cart: Prisma.$CartPayload<ExtArgs>
     meal: Prisma.$MealPayload<ExtArgs>
     rotation: Prisma.$WeeklyRotationPayload<ExtArgs> | null
+    substitutions: Prisma.$CartItemSubstitutionPayload<ExtArgs>[]
+    modifiers: Prisma.$CartItemModifierPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1089,10 +1276,8 @@ export type $CartItemPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     rotationId: string | null
     quantity: number
     unitPrice: runtime.Decimal
-    substitutions: runtime.JsonValue | null
-    modifiers: runtime.JsonValue | null
-    proteinBoost: boolean
     notes: string | null
+    priceSource: $Enums.PriceSource
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["cartItem"]>
@@ -1492,6 +1677,8 @@ export interface Prisma__CartItemClient<T, Null = never, ExtArgs extends runtime
   cart<T extends Prisma.CartDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CartDefaultArgs<ExtArgs>>): Prisma.Prisma__CartClient<runtime.Types.Result.GetResult<Prisma.$CartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   meal<T extends Prisma.MealDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MealDefaultArgs<ExtArgs>>): Prisma.Prisma__MealClient<runtime.Types.Result.GetResult<Prisma.$MealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   rotation<T extends Prisma.CartItem$rotationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CartItem$rotationArgs<ExtArgs>>): Prisma.Prisma__WeeklyRotationClient<runtime.Types.Result.GetResult<Prisma.$WeeklyRotationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  substitutions<T extends Prisma.CartItem$substitutionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CartItem$substitutionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartItemSubstitutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  modifiers<T extends Prisma.CartItem$modifiersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CartItem$modifiersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartItemModifierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1527,10 +1714,8 @@ export interface CartItemFieldRefs {
   readonly rotationId: Prisma.FieldRef<"CartItem", 'String'>
   readonly quantity: Prisma.FieldRef<"CartItem", 'Int'>
   readonly unitPrice: Prisma.FieldRef<"CartItem", 'Decimal'>
-  readonly substitutions: Prisma.FieldRef<"CartItem", 'Json'>
-  readonly modifiers: Prisma.FieldRef<"CartItem", 'Json'>
-  readonly proteinBoost: Prisma.FieldRef<"CartItem", 'Boolean'>
   readonly notes: Prisma.FieldRef<"CartItem", 'String'>
+  readonly priceSource: Prisma.FieldRef<"CartItem", 'PriceSource'>
   readonly createdAt: Prisma.FieldRef<"CartItem", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CartItem", 'DateTime'>
 }
@@ -1945,6 +2130,54 @@ export type CartItem$rotationArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.WeeklyRotationInclude<ExtArgs> | null
   where?: Prisma.WeeklyRotationWhereInput
+}
+
+/**
+ * CartItem.substitutions
+ */
+export type CartItem$substitutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CartItemSubstitution
+   */
+  select?: Prisma.CartItemSubstitutionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CartItemSubstitution
+   */
+  omit?: Prisma.CartItemSubstitutionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CartItemSubstitutionInclude<ExtArgs> | null
+  where?: Prisma.CartItemSubstitutionWhereInput
+  orderBy?: Prisma.CartItemSubstitutionOrderByWithRelationInput | Prisma.CartItemSubstitutionOrderByWithRelationInput[]
+  cursor?: Prisma.CartItemSubstitutionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CartItemSubstitutionScalarFieldEnum | Prisma.CartItemSubstitutionScalarFieldEnum[]
+}
+
+/**
+ * CartItem.modifiers
+ */
+export type CartItem$modifiersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CartItemModifier
+   */
+  select?: Prisma.CartItemModifierSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CartItemModifier
+   */
+  omit?: Prisma.CartItemModifierOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CartItemModifierInclude<ExtArgs> | null
+  where?: Prisma.CartItemModifierWhereInput
+  orderBy?: Prisma.CartItemModifierOrderByWithRelationInput | Prisma.CartItemModifierOrderByWithRelationInput[]
+  cursor?: Prisma.CartItemModifierWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CartItemModifierScalarFieldEnum | Prisma.CartItemModifierScalarFieldEnum[]
 }
 
 /**

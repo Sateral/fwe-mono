@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { settlementMethodSchema } from "./checkout.schema";
+
 // ============================================
 // Order Schemas
 // ============================================
@@ -10,28 +12,36 @@ import { z } from "zod";
 export const orderSubstitutionSchema = z.object({
   groupName: z.string().min(1, "Group name is required"),
   optionName: z.string().min(1, "Option name is required"),
+  groupId: z.string().optional(),
+  optionId: z.string().optional(),
 });
 
+/** One row per selected modifier option (flat, not nested). */
 export const orderModifierSchema = z.object({
   groupName: z.string().min(1, "Group name is required"),
-  optionNames: z.array(z.string()).min(1, "At least one option is required"),
+  optionName: z.string().min(1, "Option name is required"),
+  groupId: z.string().optional(),
+  optionId: z.string().optional(),
 });
 
 /**
  * Schema for creating an order via API.
  */
-export const createOrderSchema = z.object({
-  userId: z.string().min(1, "User ID is required"),
-  mealId: z.string().min(1, "Meal ID is required"),
-  rotationId: z.string().min(1, "Rotation ID is required"),
-  quantity: z.number().int().min(1, "Quantity must be at least 1"),
-  unitPrice: z.number().positive("Unit price must be positive"),
-  totalAmount: z.number().positive("Total amount must be positive"),
-  currency: z.string().length(3).optional().default("cad"),
+export const createOrderSchema = z
+  .object({
+    userId: z.string().min(1, "User ID is required"),
+    mealId: z.string().min(1, "Meal ID is required"),
+    rotationId: z.string().min(1, "Rotation ID is required"),
+    quantity: z.number().int().min(1, "Quantity must be at least 1"),
+    unitPrice: z.number().min(0, "Unit price cannot be negative"),
+    totalAmount: z.number().min(0, "Total amount cannot be negative"),
+    settlementMethod: settlementMethodSchema.optional(),
+    currency: z.string().length(3).optional().default("cad"),
   orderIntentId: z.string().optional(),
+  checkoutSessionId: z.string().optional(),
+  orderGroupId: z.string().optional(),
   substitutions: z.array(orderSubstitutionSchema).optional(),
   modifiers: z.array(orderModifierSchema).optional(),
-  proteinBoost: z.boolean().default(false),
   notes: z.string().optional(),
   deliveryMethod: z.enum(["DELIVERY", "PICKUP"]).optional(),
   pickupLocation: z.string().optional(),
@@ -50,7 +60,17 @@ export const createOrderSchema = z.object({
     .optional(),
   stripeChargeId: z.string().optional(),
   stripeBalanceTransactionId: z.string().optional(),
-});
+  })
+  .superRefine((data, ctx) => {
+    const method = data.settlementMethod ?? "STRIPE";
+    if (method === "STRIPE" && data.totalAmount <= 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Stripe orders must have a positive total",
+        path: ["totalAmount"],
+      });
+    }
+  });
 
 export const fulfillmentStatusSchema = z.enum([
   "NEW",
@@ -72,6 +92,9 @@ export const paymentStatusSchema = z.enum([
  */
 export const updateFulfillmentStatusSchema = z.object({
   fulfillmentStatus: fulfillmentStatusSchema,
+  reason: z.string().max(5000).optional(),
+  /** For internal API callers without a browser session (optional). */
+  changedById: z.string().optional(),
 });
 
 /**

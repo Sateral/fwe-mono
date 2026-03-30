@@ -230,6 +230,7 @@ export type ModifierGroupWhereInput = {
   mealId?: Prisma.StringFilter<"ModifierGroup"> | string
   meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
   options?: Prisma.ModifierOptionListRelationFilter
+  orderModifiers?: Prisma.OrderModifierListRelationFilter
 }
 
 export type ModifierGroupOrderByWithRelationInput = {
@@ -241,6 +242,7 @@ export type ModifierGroupOrderByWithRelationInput = {
   mealId?: Prisma.SortOrder
   meal?: Prisma.MealOrderByWithRelationInput
   options?: Prisma.ModifierOptionOrderByRelationAggregateInput
+  orderModifiers?: Prisma.OrderModifierOrderByRelationAggregateInput
 }
 
 export type ModifierGroupWhereUniqueInput = Prisma.AtLeast<{
@@ -255,6 +257,7 @@ export type ModifierGroupWhereUniqueInput = Prisma.AtLeast<{
   mealId?: Prisma.StringFilter<"ModifierGroup"> | string
   meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
   options?: Prisma.ModifierOptionListRelationFilter
+  orderModifiers?: Prisma.OrderModifierListRelationFilter
 }, "id">
 
 export type ModifierGroupOrderByWithAggregationInput = {
@@ -291,6 +294,7 @@ export type ModifierGroupCreateInput = {
   maxSelection?: number | null
   meal: Prisma.MealCreateNestedOneWithoutModifierGroupsInput
   options?: Prisma.ModifierOptionCreateNestedManyWithoutModifierGroupInput
+  orderModifiers?: Prisma.OrderModifierCreateNestedManyWithoutGroupInput
 }
 
 export type ModifierGroupUncheckedCreateInput = {
@@ -301,6 +305,7 @@ export type ModifierGroupUncheckedCreateInput = {
   maxSelection?: number | null
   mealId: string
   options?: Prisma.ModifierOptionUncheckedCreateNestedManyWithoutModifierGroupInput
+  orderModifiers?: Prisma.OrderModifierUncheckedCreateNestedManyWithoutGroupInput
 }
 
 export type ModifierGroupUpdateInput = {
@@ -311,6 +316,7 @@ export type ModifierGroupUpdateInput = {
   maxSelection?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meal?: Prisma.MealUpdateOneRequiredWithoutModifierGroupsNestedInput
   options?: Prisma.ModifierOptionUpdateManyWithoutModifierGroupNestedInput
+  orderModifiers?: Prisma.OrderModifierUpdateManyWithoutGroupNestedInput
 }
 
 export type ModifierGroupUncheckedUpdateInput = {
@@ -321,6 +327,7 @@ export type ModifierGroupUncheckedUpdateInput = {
   maxSelection?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.ModifierOptionUncheckedUpdateManyWithoutModifierGroupNestedInput
+  orderModifiers?: Prisma.OrderModifierUncheckedUpdateManyWithoutGroupNestedInput
 }
 
 export type ModifierGroupCreateManyInput = {
@@ -401,6 +408,11 @@ export type ModifierGroupScalarRelationFilter = {
   isNot?: Prisma.ModifierGroupWhereInput
 }
 
+export type ModifierGroupNullableScalarRelationFilter = {
+  is?: Prisma.ModifierGroupWhereInput | null
+  isNot?: Prisma.ModifierGroupWhereInput | null
+}
+
 export type ModifierGroupCreateNestedManyWithoutMealInput = {
   create?: Prisma.XOR<Prisma.ModifierGroupCreateWithoutMealInput, Prisma.ModifierGroupUncheckedCreateWithoutMealInput> | Prisma.ModifierGroupCreateWithoutMealInput[] | Prisma.ModifierGroupUncheckedCreateWithoutMealInput[]
   connectOrCreate?: Prisma.ModifierGroupCreateOrConnectWithoutMealInput | Prisma.ModifierGroupCreateOrConnectWithoutMealInput[]
@@ -469,6 +481,22 @@ export type ModifierGroupUpdateOneRequiredWithoutOptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ModifierGroupUpdateToOneWithWhereWithoutOptionsInput, Prisma.ModifierGroupUpdateWithoutOptionsInput>, Prisma.ModifierGroupUncheckedUpdateWithoutOptionsInput>
 }
 
+export type ModifierGroupCreateNestedOneWithoutOrderModifiersInput = {
+  create?: Prisma.XOR<Prisma.ModifierGroupCreateWithoutOrderModifiersInput, Prisma.ModifierGroupUncheckedCreateWithoutOrderModifiersInput>
+  connectOrCreate?: Prisma.ModifierGroupCreateOrConnectWithoutOrderModifiersInput
+  connect?: Prisma.ModifierGroupWhereUniqueInput
+}
+
+export type ModifierGroupUpdateOneWithoutOrderModifiersNestedInput = {
+  create?: Prisma.XOR<Prisma.ModifierGroupCreateWithoutOrderModifiersInput, Prisma.ModifierGroupUncheckedCreateWithoutOrderModifiersInput>
+  connectOrCreate?: Prisma.ModifierGroupCreateOrConnectWithoutOrderModifiersInput
+  upsert?: Prisma.ModifierGroupUpsertWithoutOrderModifiersInput
+  disconnect?: Prisma.ModifierGroupWhereInput | boolean
+  delete?: Prisma.ModifierGroupWhereInput | boolean
+  connect?: Prisma.ModifierGroupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ModifierGroupUpdateToOneWithWhereWithoutOrderModifiersInput, Prisma.ModifierGroupUpdateWithoutOrderModifiersInput>, Prisma.ModifierGroupUncheckedUpdateWithoutOrderModifiersInput>
+}
+
 export type ModifierGroupCreateWithoutMealInput = {
   id?: string
   name: string
@@ -476,6 +504,7 @@ export type ModifierGroupCreateWithoutMealInput = {
   minSelection?: number
   maxSelection?: number | null
   options?: Prisma.ModifierOptionCreateNestedManyWithoutModifierGroupInput
+  orderModifiers?: Prisma.OrderModifierCreateNestedManyWithoutGroupInput
 }
 
 export type ModifierGroupUncheckedCreateWithoutMealInput = {
@@ -485,6 +514,7 @@ export type ModifierGroupUncheckedCreateWithoutMealInput = {
   minSelection?: number
   maxSelection?: number | null
   options?: Prisma.ModifierOptionUncheckedCreateNestedManyWithoutModifierGroupInput
+  orderModifiers?: Prisma.OrderModifierUncheckedCreateNestedManyWithoutGroupInput
 }
 
 export type ModifierGroupCreateOrConnectWithoutMealInput = {
@@ -532,6 +562,7 @@ export type ModifierGroupCreateWithoutOptionsInput = {
   minSelection?: number
   maxSelection?: number | null
   meal: Prisma.MealCreateNestedOneWithoutModifierGroupsInput
+  orderModifiers?: Prisma.OrderModifierCreateNestedManyWithoutGroupInput
 }
 
 export type ModifierGroupUncheckedCreateWithoutOptionsInput = {
@@ -541,6 +572,7 @@ export type ModifierGroupUncheckedCreateWithoutOptionsInput = {
   minSelection?: number
   maxSelection?: number | null
   mealId: string
+  orderModifiers?: Prisma.OrderModifierUncheckedCreateNestedManyWithoutGroupInput
 }
 
 export type ModifierGroupCreateOrConnectWithoutOptionsInput = {
@@ -566,6 +598,7 @@ export type ModifierGroupUpdateWithoutOptionsInput = {
   minSelection?: Prisma.IntFieldUpdateOperationsInput | number
   maxSelection?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meal?: Prisma.MealUpdateOneRequiredWithoutModifierGroupsNestedInput
+  orderModifiers?: Prisma.OrderModifierUpdateManyWithoutGroupNestedInput
 }
 
 export type ModifierGroupUncheckedUpdateWithoutOptionsInput = {
@@ -575,6 +608,63 @@ export type ModifierGroupUncheckedUpdateWithoutOptionsInput = {
   minSelection?: Prisma.IntFieldUpdateOperationsInput | number
   maxSelection?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderModifiers?: Prisma.OrderModifierUncheckedUpdateManyWithoutGroupNestedInput
+}
+
+export type ModifierGroupCreateWithoutOrderModifiersInput = {
+  id?: string
+  name: string
+  type: $Enums.ModifierType
+  minSelection?: number
+  maxSelection?: number | null
+  meal: Prisma.MealCreateNestedOneWithoutModifierGroupsInput
+  options?: Prisma.ModifierOptionCreateNestedManyWithoutModifierGroupInput
+}
+
+export type ModifierGroupUncheckedCreateWithoutOrderModifiersInput = {
+  id?: string
+  name: string
+  type: $Enums.ModifierType
+  minSelection?: number
+  maxSelection?: number | null
+  mealId: string
+  options?: Prisma.ModifierOptionUncheckedCreateNestedManyWithoutModifierGroupInput
+}
+
+export type ModifierGroupCreateOrConnectWithoutOrderModifiersInput = {
+  where: Prisma.ModifierGroupWhereUniqueInput
+  create: Prisma.XOR<Prisma.ModifierGroupCreateWithoutOrderModifiersInput, Prisma.ModifierGroupUncheckedCreateWithoutOrderModifiersInput>
+}
+
+export type ModifierGroupUpsertWithoutOrderModifiersInput = {
+  update: Prisma.XOR<Prisma.ModifierGroupUpdateWithoutOrderModifiersInput, Prisma.ModifierGroupUncheckedUpdateWithoutOrderModifiersInput>
+  create: Prisma.XOR<Prisma.ModifierGroupCreateWithoutOrderModifiersInput, Prisma.ModifierGroupUncheckedCreateWithoutOrderModifiersInput>
+  where?: Prisma.ModifierGroupWhereInput
+}
+
+export type ModifierGroupUpdateToOneWithWhereWithoutOrderModifiersInput = {
+  where?: Prisma.ModifierGroupWhereInput
+  data: Prisma.XOR<Prisma.ModifierGroupUpdateWithoutOrderModifiersInput, Prisma.ModifierGroupUncheckedUpdateWithoutOrderModifiersInput>
+}
+
+export type ModifierGroupUpdateWithoutOrderModifiersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumModifierTypeFieldUpdateOperationsInput | $Enums.ModifierType
+  minSelection?: Prisma.IntFieldUpdateOperationsInput | number
+  maxSelection?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meal?: Prisma.MealUpdateOneRequiredWithoutModifierGroupsNestedInput
+  options?: Prisma.ModifierOptionUpdateManyWithoutModifierGroupNestedInput
+}
+
+export type ModifierGroupUncheckedUpdateWithoutOrderModifiersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumModifierTypeFieldUpdateOperationsInput | $Enums.ModifierType
+  minSelection?: Prisma.IntFieldUpdateOperationsInput | number
+  maxSelection?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.ModifierOptionUncheckedUpdateManyWithoutModifierGroupNestedInput
 }
 
 export type ModifierGroupCreateManyMealInput = {
@@ -592,6 +682,7 @@ export type ModifierGroupUpdateWithoutMealInput = {
   minSelection?: Prisma.IntFieldUpdateOperationsInput | number
   maxSelection?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   options?: Prisma.ModifierOptionUpdateManyWithoutModifierGroupNestedInput
+  orderModifiers?: Prisma.OrderModifierUpdateManyWithoutGroupNestedInput
 }
 
 export type ModifierGroupUncheckedUpdateWithoutMealInput = {
@@ -601,6 +692,7 @@ export type ModifierGroupUncheckedUpdateWithoutMealInput = {
   minSelection?: Prisma.IntFieldUpdateOperationsInput | number
   maxSelection?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   options?: Prisma.ModifierOptionUncheckedUpdateManyWithoutModifierGroupNestedInput
+  orderModifiers?: Prisma.OrderModifierUncheckedUpdateManyWithoutGroupNestedInput
 }
 
 export type ModifierGroupUncheckedUpdateManyWithoutMealInput = {
@@ -618,10 +710,12 @@ export type ModifierGroupUncheckedUpdateManyWithoutMealInput = {
 
 export type ModifierGroupCountOutputType = {
   options: number
+  orderModifiers: number
 }
 
 export type ModifierGroupCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   options?: boolean | ModifierGroupCountOutputTypeCountOptionsArgs
+  orderModifiers?: boolean | ModifierGroupCountOutputTypeCountOrderModifiersArgs
 }
 
 /**
@@ -641,6 +735,13 @@ export type ModifierGroupCountOutputTypeCountOptionsArgs<ExtArgs extends runtime
   where?: Prisma.ModifierOptionWhereInput
 }
 
+/**
+ * ModifierGroupCountOutputType without action
+ */
+export type ModifierGroupCountOutputTypeCountOrderModifiersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderModifierWhereInput
+}
+
 
 export type ModifierGroupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -651,6 +752,7 @@ export type ModifierGroupSelect<ExtArgs extends runtime.Types.Extensions.Interna
   mealId?: boolean
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
   options?: boolean | Prisma.ModifierGroup$optionsArgs<ExtArgs>
+  orderModifiers?: boolean | Prisma.ModifierGroup$orderModifiersArgs<ExtArgs>
   _count?: boolean | Prisma.ModifierGroupCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["modifierGroup"]>
 
@@ -687,6 +789,7 @@ export type ModifierGroupOmit<ExtArgs extends runtime.Types.Extensions.InternalA
 export type ModifierGroupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
   options?: boolean | Prisma.ModifierGroup$optionsArgs<ExtArgs>
+  orderModifiers?: boolean | Prisma.ModifierGroup$orderModifiersArgs<ExtArgs>
   _count?: boolean | Prisma.ModifierGroupCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ModifierGroupIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -701,6 +804,7 @@ export type $ModifierGroupPayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     meal: Prisma.$MealPayload<ExtArgs>
     options: Prisma.$ModifierOptionPayload<ExtArgs>[]
+    orderModifiers: Prisma.$OrderModifierPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1105,6 +1209,7 @@ export interface Prisma__ModifierGroupClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   meal<T extends Prisma.MealDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MealDefaultArgs<ExtArgs>>): Prisma.Prisma__MealClient<runtime.Types.Result.GetResult<Prisma.$MealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   options<T extends Prisma.ModifierGroup$optionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ModifierGroup$optionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ModifierOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orderModifiers<T extends Prisma.ModifierGroup$orderModifiersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ModifierGroup$orderModifiersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderModifierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1557,6 +1662,30 @@ export type ModifierGroup$optionsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.ModifierOptionScalarFieldEnum | Prisma.ModifierOptionScalarFieldEnum[]
+}
+
+/**
+ * ModifierGroup.orderModifiers
+ */
+export type ModifierGroup$orderModifiersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderModifier
+   */
+  select?: Prisma.OrderModifierSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderModifier
+   */
+  omit?: Prisma.OrderModifierOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderModifierInclude<ExtArgs> | null
+  where?: Prisma.OrderModifierWhereInput
+  orderBy?: Prisma.OrderModifierOrderByWithRelationInput | Prisma.OrderModifierOrderByWithRelationInput[]
+  cursor?: Prisma.OrderModifierWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderModifierScalarFieldEnum | Prisma.OrderModifierScalarFieldEnum[]
 }
 
 /**

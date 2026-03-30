@@ -52,7 +52,6 @@ export type OrderIntentStatus = (typeof OrderIntentStatus)[keyof typeof OrderInt
 
 export const RotationStatus = {
   DRAFT: 'DRAFT',
-  PUBLISHED: 'PUBLISHED',
   ARCHIVED: 'ARCHIVED'
 } as const
 
@@ -142,6 +141,16 @@ export const ReferralCodeStatus = {
 } as const
 
 export type ReferralCodeStatus = (typeof ReferralCodeStatus)[keyof typeof ReferralCodeStatus]
+
+
+export const PriceSource = {
+  STANDARD: 'STANDARD',
+  MEAL_PLAN: 'MEAL_PLAN',
+  DISCOUNT: 'DISCOUNT',
+  MANUAL_OVERRIDE: 'MANUAL_OVERRIDE'
+} as const
+
+export type PriceSource = (typeof PriceSource)[keyof typeof PriceSource]
 
 
 export const FailedOrderStatus = {

@@ -21,7 +21,6 @@ export type OrderBuilderInitialFromCart = {
   quantity: number;
   selectedSubstitutions: Record<string, string>;
   selectedModifiers: Record<string, string[]>;
-  proteinBoost: boolean;
   notes: string;
 };
 
@@ -93,9 +92,6 @@ const OrderPageClient = ({
       initialEditBuilder?.selectedModifiers ?? defaultModifiersFromMeal(meal),
   );
   const [notes, setNotes] = useState(() => initialEditBuilder?.notes ?? "");
-  const [proteinBoost, setProteinBoost] = useState(
-    () => initialEditBuilder?.proteinBoost ?? false,
-  );
 
   const { deliveryMethod, pickupLocation } = useMemo(() => {
     const method = initialFulfillment?.deliveryMethod ?? "DELIVERY";
@@ -173,7 +169,6 @@ const OrderPageClient = ({
             mealId: meal.id,
             quantity,
             substitutions,
-            proteinBoost,
             notes: notes || undefined,
             modifiers,
           }),
@@ -207,7 +202,6 @@ const OrderPageClient = ({
           mealId: meal.id,
           quantity,
           substitutions,
-          proteinBoost,
           notes: notes || undefined,
           modifiers,
         },
@@ -336,8 +330,6 @@ const OrderPageClient = ({
               onModifierChange={handleModifierChange}
               selectedSubstitutions={selectedSubstitutions}
               onSubstitutionChange={handleSubstitutionChange}
-              proteinBoost={proteinBoost}
-              onProteinBoostChange={setProteinBoost}
               notes={notes}
               onNotesChange={setNotes}
             />
@@ -362,7 +354,6 @@ const OrderPageClient = ({
               quantity={quantity}
               selectedModifiers={selectedModifiers}
               selectedSubstitutions={selectedSubstitutions}
-              proteinBoost={proteinBoost}
               deliveryMethod={deliveryMethod}
               pickupLocation={pickupLocation}
               onCheckout={handleAddToCart}

@@ -58,6 +58,16 @@ export const ModelName = {
   ModifierOption: 'ModifierOption',
   DietaryTag: 'DietaryTag',
   Order: 'Order',
+  OrderSubstitution: 'OrderSubstitution',
+  OrderModifier: 'OrderModifier',
+  CartItemSubstitution: 'CartItemSubstitution',
+  CartItemModifier: 'CartItemModifier',
+  IntentSubstitution: 'IntentSubstitution',
+  IntentModifier: 'IntentModifier',
+  CheckoutItemSubstitution: 'CheckoutItemSubstitution',
+  CheckoutItemModifier: 'CheckoutItemModifier',
+  OrderGroup: 'OrderGroup',
+  FulfillmentStatusChange: 'FulfillmentStatusChange',
   RotationPeriod: 'RotationPeriod',
   WeeklyRotation: 'WeeklyRotation',
   Cart: 'Cart',
@@ -189,9 +199,6 @@ export const OrderScalarFieldEnum = {
   quantity: 'quantity',
   unitPrice: 'unitPrice',
   totalAmount: 'totalAmount',
-  substitutions: 'substitutions',
-  modifiers: 'modifiers',
-  proteinBoost: 'proteinBoost',
   notes: 'notes',
   deliveryMethod: 'deliveryMethod',
   pickupLocation: 'pickupLocation',
@@ -207,12 +214,138 @@ export const OrderScalarFieldEnum = {
   stripeRefundId: 'stripeRefundId',
   stripeBalanceTransactionId: 'stripeBalanceTransactionId',
   orderIntentId: 'orderIntentId',
+  checkoutSessionId: 'checkoutSessionId',
+  orderGroupId: 'orderGroupId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   rotationId: 'rotationId'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
+
+
+export const OrderSubstitutionScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  groupName: 'groupName',
+  optionName: 'optionName',
+  groupId: 'groupId',
+  optionId: 'optionId'
+} as const
+
+export type OrderSubstitutionScalarFieldEnum = (typeof OrderSubstitutionScalarFieldEnum)[keyof typeof OrderSubstitutionScalarFieldEnum]
+
+
+export const OrderModifierScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  groupName: 'groupName',
+  optionName: 'optionName',
+  groupId: 'groupId',
+  optionId: 'optionId'
+} as const
+
+export type OrderModifierScalarFieldEnum = (typeof OrderModifierScalarFieldEnum)[keyof typeof OrderModifierScalarFieldEnum]
+
+
+export const CartItemSubstitutionScalarFieldEnum = {
+  id: 'id',
+  cartItemId: 'cartItemId',
+  groupName: 'groupName',
+  optionName: 'optionName',
+  groupId: 'groupId',
+  optionId: 'optionId'
+} as const
+
+export type CartItemSubstitutionScalarFieldEnum = (typeof CartItemSubstitutionScalarFieldEnum)[keyof typeof CartItemSubstitutionScalarFieldEnum]
+
+
+export const CartItemModifierScalarFieldEnum = {
+  id: 'id',
+  cartItemId: 'cartItemId',
+  groupName: 'groupName',
+  optionName: 'optionName',
+  groupId: 'groupId',
+  optionId: 'optionId'
+} as const
+
+export type CartItemModifierScalarFieldEnum = (typeof CartItemModifierScalarFieldEnum)[keyof typeof CartItemModifierScalarFieldEnum]
+
+
+export const IntentSubstitutionScalarFieldEnum = {
+  id: 'id',
+  orderIntentId: 'orderIntentId',
+  groupName: 'groupName',
+  optionName: 'optionName',
+  groupId: 'groupId',
+  optionId: 'optionId'
+} as const
+
+export type IntentSubstitutionScalarFieldEnum = (typeof IntentSubstitutionScalarFieldEnum)[keyof typeof IntentSubstitutionScalarFieldEnum]
+
+
+export const IntentModifierScalarFieldEnum = {
+  id: 'id',
+  orderIntentId: 'orderIntentId',
+  groupName: 'groupName',
+  optionName: 'optionName',
+  groupId: 'groupId',
+  optionId: 'optionId'
+} as const
+
+export type IntentModifierScalarFieldEnum = (typeof IntentModifierScalarFieldEnum)[keyof typeof IntentModifierScalarFieldEnum]
+
+
+export const CheckoutItemSubstitutionScalarFieldEnum = {
+  id: 'id',
+  checkoutSessionItemId: 'checkoutSessionItemId',
+  groupName: 'groupName',
+  optionName: 'optionName',
+  groupId: 'groupId',
+  optionId: 'optionId'
+} as const
+
+export type CheckoutItemSubstitutionScalarFieldEnum = (typeof CheckoutItemSubstitutionScalarFieldEnum)[keyof typeof CheckoutItemSubstitutionScalarFieldEnum]
+
+
+export const CheckoutItemModifierScalarFieldEnum = {
+  id: 'id',
+  checkoutSessionItemId: 'checkoutSessionItemId',
+  groupName: 'groupName',
+  optionName: 'optionName',
+  groupId: 'groupId',
+  optionId: 'optionId'
+} as const
+
+export type CheckoutItemModifierScalarFieldEnum = (typeof CheckoutItemModifierScalarFieldEnum)[keyof typeof CheckoutItemModifierScalarFieldEnum]
+
+
+export const OrderGroupScalarFieldEnum = {
+  id: 'id',
+  checkoutSessionId: 'checkoutSessionId',
+  stripeSessionId: 'stripeSessionId',
+  stripePaymentIntentId: 'stripePaymentIntentId',
+  stripeChargeId: 'stripeChargeId',
+  totalAmount: 'totalAmount',
+  currency: 'currency',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrderGroupScalarFieldEnum = (typeof OrderGroupScalarFieldEnum)[keyof typeof OrderGroupScalarFieldEnum]
+
+
+export const FulfillmentStatusChangeScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  fromStatus: 'fromStatus',
+  toStatus: 'toStatus',
+  changedById: 'changedById',
+  reason: 'reason',
+  createdAt: 'createdAt'
+} as const
+
+export type FulfillmentStatusChangeScalarFieldEnum = (typeof FulfillmentStatusChangeScalarFieldEnum)[keyof typeof FulfillmentStatusChangeScalarFieldEnum]
 
 
 export const RotationPeriodScalarFieldEnum = {
@@ -261,10 +394,8 @@ export const CartItemScalarFieldEnum = {
   rotationId: 'rotationId',
   quantity: 'quantity',
   unitPrice: 'unitPrice',
-  substitutions: 'substitutions',
-  modifiers: 'modifiers',
-  proteinBoost: 'proteinBoost',
   notes: 'notes',
+  priceSource: 'priceSource',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -283,6 +414,7 @@ export const FailedOrderScalarFieldEnum = {
   errorCode: 'errorCode',
   status: 'status',
   retryCount: 'retryCount',
+  adminNotifiedAt: 'adminNotifiedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   resolvedAt: 'resolvedAt',
@@ -303,9 +435,6 @@ export const OrderIntentScalarFieldEnum = {
   totalAmount: 'totalAmount',
   currency: 'currency',
   settlementMethod: 'settlementMethod',
-  substitutions: 'substitutions',
-  modifiers: 'modifiers',
-  proteinBoost: 'proteinBoost',
   notes: 'notes',
   deliveryMethod: 'deliveryMethod',
   pickupLocation: 'pickupLocation',
@@ -352,9 +481,6 @@ export const CheckoutSessionItemScalarFieldEnum = {
   unitPrice: 'unitPrice',
   totalAmount: 'totalAmount',
   currency: 'currency',
-  substitutions: 'substitutions',
-  modifiers: 'modifiers',
-  proteinBoost: 'proteinBoost',
   notes: 'notes',
   deliveryMethod: 'deliveryMethod',
   pickupLocation: 'pickupLocation',
@@ -421,6 +547,9 @@ export const MealPlanScalarFieldEnum = {
   startsAt: 'startsAt',
   endsAt: 'endsAt',
   autoRenew: 'autoRenew',
+  priceAtPurchase: 'priceAtPurchase',
+  billingInterval: 'billingInterval',
+  billingCurrency: 'billingCurrency',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -547,19 +676,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

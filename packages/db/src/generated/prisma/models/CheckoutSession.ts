@@ -14,7 +14,8 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model CheckoutSession
- * 
+ * Immutable snapshot of cart state at checkout initiation.
+ * One per checkout attempt; items mirror the cart at the moment "Pay" was clicked.
  */
 export type CheckoutSessionModel = runtime.Types.Result.DefaultSelection<Prisma.$CheckoutSessionPayload>
 
@@ -273,6 +274,8 @@ export type CheckoutSessionWhereInput = {
   cart?: Prisma.XOR<Prisma.CartScalarRelationFilter, Prisma.CartWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   items?: Prisma.CheckoutSessionItemListRelationFilter
+  orders?: Prisma.OrderListRelationFilter
+  orderGroup?: Prisma.XOR<Prisma.OrderGroupNullableScalarRelationFilter, Prisma.OrderGroupWhereInput> | null
 }
 
 export type CheckoutSessionOrderByWithRelationInput = {
@@ -295,6 +298,8 @@ export type CheckoutSessionOrderByWithRelationInput = {
   cart?: Prisma.CartOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   items?: Prisma.CheckoutSessionItemOrderByRelationAggregateInput
+  orders?: Prisma.OrderOrderByRelationAggregateInput
+  orderGroup?: Prisma.OrderGroupOrderByWithRelationInput
 }
 
 export type CheckoutSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -320,6 +325,8 @@ export type CheckoutSessionWhereUniqueInput = Prisma.AtLeast<{
   cart?: Prisma.XOR<Prisma.CartScalarRelationFilter, Prisma.CartWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   items?: Prisma.CheckoutSessionItemListRelationFilter
+  orders?: Prisma.OrderListRelationFilter
+  orderGroup?: Prisma.XOR<Prisma.OrderGroupNullableScalarRelationFilter, Prisma.OrderGroupWhereInput> | null
 }, "id" | "clientRequestId" | "stripeSessionId" | "stripePaymentIntentId">
 
 export type CheckoutSessionOrderByWithAggregationInput = {
@@ -384,6 +391,8 @@ export type CheckoutSessionCreateInput = {
   cart: Prisma.CartCreateNestedOneWithoutCheckoutSessionsInput
   user: Prisma.UserCreateNestedOneWithoutCheckoutSessionsInput
   items?: Prisma.CheckoutSessionItemCreateNestedManyWithoutCheckoutSessionInput
+  orders?: Prisma.OrderCreateNestedManyWithoutCheckoutSessionInput
+  orderGroup?: Prisma.OrderGroupCreateNestedOneWithoutCheckoutSessionInput
 }
 
 export type CheckoutSessionUncheckedCreateInput = {
@@ -404,6 +413,8 @@ export type CheckoutSessionUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutCheckoutSessionInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCheckoutSessionInput
+  orderGroup?: Prisma.OrderGroupUncheckedCreateNestedOneWithoutCheckoutSessionInput
 }
 
 export type CheckoutSessionUpdateInput = {
@@ -424,6 +435,8 @@ export type CheckoutSessionUpdateInput = {
   cart?: Prisma.CartUpdateOneRequiredWithoutCheckoutSessionsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCheckoutSessionsNestedInput
   items?: Prisma.CheckoutSessionItemUpdateManyWithoutCheckoutSessionNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutCheckoutSessionNestedInput
+  orderGroup?: Prisma.OrderGroupUpdateOneWithoutCheckoutSessionNestedInput
 }
 
 export type CheckoutSessionUncheckedUpdateInput = {
@@ -444,6 +457,8 @@ export type CheckoutSessionUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutCheckoutSessionNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutCheckoutSessionNestedInput
+  orderGroup?: Prisma.OrderGroupUncheckedUpdateOneWithoutCheckoutSessionNestedInput
 }
 
 export type CheckoutSessionCreateManyInput = {
@@ -499,6 +514,16 @@ export type CheckoutSessionUncheckedUpdateManyInput = {
   stripeBalanceTransactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CheckoutSessionNullableScalarRelationFilter = {
+  is?: Prisma.CheckoutSessionWhereInput | null
+  isNot?: Prisma.CheckoutSessionWhereInput | null
+}
+
+export type CheckoutSessionScalarRelationFilter = {
+  is?: Prisma.CheckoutSessionWhereInput
+  isNot?: Prisma.CheckoutSessionWhereInput
 }
 
 export type CheckoutSessionListRelationFilter = {
@@ -568,9 +593,34 @@ export type CheckoutSessionMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type CheckoutSessionScalarRelationFilter = {
-  is?: Prisma.CheckoutSessionWhereInput
-  isNot?: Prisma.CheckoutSessionWhereInput
+export type CheckoutSessionCreateNestedOneWithoutOrdersInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutOrdersInput, Prisma.CheckoutSessionUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutOrdersInput
+  connect?: Prisma.CheckoutSessionWhereUniqueInput
+}
+
+export type CheckoutSessionUpdateOneWithoutOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutOrdersInput, Prisma.CheckoutSessionUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutOrdersInput
+  upsert?: Prisma.CheckoutSessionUpsertWithoutOrdersInput
+  disconnect?: Prisma.CheckoutSessionWhereInput | boolean
+  delete?: Prisma.CheckoutSessionWhereInput | boolean
+  connect?: Prisma.CheckoutSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CheckoutSessionUpdateToOneWithWhereWithoutOrdersInput, Prisma.CheckoutSessionUpdateWithoutOrdersInput>, Prisma.CheckoutSessionUncheckedUpdateWithoutOrdersInput>
+}
+
+export type CheckoutSessionCreateNestedOneWithoutOrderGroupInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutOrderGroupInput, Prisma.CheckoutSessionUncheckedCreateWithoutOrderGroupInput>
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutOrderGroupInput
+  connect?: Prisma.CheckoutSessionWhereUniqueInput
+}
+
+export type CheckoutSessionUpdateOneRequiredWithoutOrderGroupNestedInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutOrderGroupInput, Prisma.CheckoutSessionUncheckedCreateWithoutOrderGroupInput>
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutOrderGroupInput
+  upsert?: Prisma.CheckoutSessionUpsertWithoutOrderGroupInput
+  connect?: Prisma.CheckoutSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CheckoutSessionUpdateToOneWithWhereWithoutOrderGroupInput, Prisma.CheckoutSessionUpdateWithoutOrderGroupInput>, Prisma.CheckoutSessionUncheckedUpdateWithoutOrderGroupInput>
 }
 
 export type CheckoutSessionCreateNestedManyWithoutCartInput = {
@@ -671,6 +721,206 @@ export type CheckoutSessionUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.CheckoutSessionScalarWhereInput | Prisma.CheckoutSessionScalarWhereInput[]
 }
 
+export type CheckoutSessionCreateWithoutOrdersInput = {
+  id?: string
+  clientRequestId?: string | null
+  settlementMethod?: $Enums.SettlementMethod
+  status?: $Enums.OrderIntentStatus
+  customerEmail: string
+  customerName?: string | null
+  deliveryMethod?: $Enums.DeliveryMethod
+  pickupLocation?: string | null
+  stripeSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  stripeChargeId?: string | null
+  stripeBalanceTransactionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cart: Prisma.CartCreateNestedOneWithoutCheckoutSessionsInput
+  user: Prisma.UserCreateNestedOneWithoutCheckoutSessionsInput
+  items?: Prisma.CheckoutSessionItemCreateNestedManyWithoutCheckoutSessionInput
+  orderGroup?: Prisma.OrderGroupCreateNestedOneWithoutCheckoutSessionInput
+}
+
+export type CheckoutSessionUncheckedCreateWithoutOrdersInput = {
+  id?: string
+  clientRequestId?: string | null
+  cartId: string
+  userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  status?: $Enums.OrderIntentStatus
+  customerEmail: string
+  customerName?: string | null
+  deliveryMethod?: $Enums.DeliveryMethod
+  pickupLocation?: string | null
+  stripeSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  stripeChargeId?: string | null
+  stripeBalanceTransactionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutCheckoutSessionInput
+  orderGroup?: Prisma.OrderGroupUncheckedCreateNestedOneWithoutCheckoutSessionInput
+}
+
+export type CheckoutSessionCreateOrConnectWithoutOrdersInput = {
+  where: Prisma.CheckoutSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutOrdersInput, Prisma.CheckoutSessionUncheckedCreateWithoutOrdersInput>
+}
+
+export type CheckoutSessionUpsertWithoutOrdersInput = {
+  update: Prisma.XOR<Prisma.CheckoutSessionUpdateWithoutOrdersInput, Prisma.CheckoutSessionUncheckedUpdateWithoutOrdersInput>
+  create: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutOrdersInput, Prisma.CheckoutSessionUncheckedCreateWithoutOrdersInput>
+  where?: Prisma.CheckoutSessionWhereInput
+}
+
+export type CheckoutSessionUpdateToOneWithWhereWithoutOrdersInput = {
+  where?: Prisma.CheckoutSessionWhereInput
+  data: Prisma.XOR<Prisma.CheckoutSessionUpdateWithoutOrdersInput, Prisma.CheckoutSessionUncheckedUpdateWithoutOrdersInput>
+}
+
+export type CheckoutSessionUpdateWithoutOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  status?: Prisma.EnumOrderIntentStatusFieldUpdateOperationsInput | $Enums.OrderIntentStatus
+  customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+  pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeBalanceTransactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cart?: Prisma.CartUpdateOneRequiredWithoutCheckoutSessionsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutCheckoutSessionsNestedInput
+  items?: Prisma.CheckoutSessionItemUpdateManyWithoutCheckoutSessionNestedInput
+  orderGroup?: Prisma.OrderGroupUpdateOneWithoutCheckoutSessionNestedInput
+}
+
+export type CheckoutSessionUncheckedUpdateWithoutOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cartId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  status?: Prisma.EnumOrderIntentStatusFieldUpdateOperationsInput | $Enums.OrderIntentStatus
+  customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+  pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeBalanceTransactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutCheckoutSessionNestedInput
+  orderGroup?: Prisma.OrderGroupUncheckedUpdateOneWithoutCheckoutSessionNestedInput
+}
+
+export type CheckoutSessionCreateWithoutOrderGroupInput = {
+  id?: string
+  clientRequestId?: string | null
+  settlementMethod?: $Enums.SettlementMethod
+  status?: $Enums.OrderIntentStatus
+  customerEmail: string
+  customerName?: string | null
+  deliveryMethod?: $Enums.DeliveryMethod
+  pickupLocation?: string | null
+  stripeSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  stripeChargeId?: string | null
+  stripeBalanceTransactionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cart: Prisma.CartCreateNestedOneWithoutCheckoutSessionsInput
+  user: Prisma.UserCreateNestedOneWithoutCheckoutSessionsInput
+  items?: Prisma.CheckoutSessionItemCreateNestedManyWithoutCheckoutSessionInput
+  orders?: Prisma.OrderCreateNestedManyWithoutCheckoutSessionInput
+}
+
+export type CheckoutSessionUncheckedCreateWithoutOrderGroupInput = {
+  id?: string
+  clientRequestId?: string | null
+  cartId: string
+  userId: string
+  settlementMethod?: $Enums.SettlementMethod
+  status?: $Enums.OrderIntentStatus
+  customerEmail: string
+  customerName?: string | null
+  deliveryMethod?: $Enums.DeliveryMethod
+  pickupLocation?: string | null
+  stripeSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  stripeChargeId?: string | null
+  stripeBalanceTransactionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutCheckoutSessionInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCheckoutSessionInput
+}
+
+export type CheckoutSessionCreateOrConnectWithoutOrderGroupInput = {
+  where: Prisma.CheckoutSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutOrderGroupInput, Prisma.CheckoutSessionUncheckedCreateWithoutOrderGroupInput>
+}
+
+export type CheckoutSessionUpsertWithoutOrderGroupInput = {
+  update: Prisma.XOR<Prisma.CheckoutSessionUpdateWithoutOrderGroupInput, Prisma.CheckoutSessionUncheckedUpdateWithoutOrderGroupInput>
+  create: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutOrderGroupInput, Prisma.CheckoutSessionUncheckedCreateWithoutOrderGroupInput>
+  where?: Prisma.CheckoutSessionWhereInput
+}
+
+export type CheckoutSessionUpdateToOneWithWhereWithoutOrderGroupInput = {
+  where?: Prisma.CheckoutSessionWhereInput
+  data: Prisma.XOR<Prisma.CheckoutSessionUpdateWithoutOrderGroupInput, Prisma.CheckoutSessionUncheckedUpdateWithoutOrderGroupInput>
+}
+
+export type CheckoutSessionUpdateWithoutOrderGroupInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  status?: Prisma.EnumOrderIntentStatusFieldUpdateOperationsInput | $Enums.OrderIntentStatus
+  customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+  pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeBalanceTransactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cart?: Prisma.CartUpdateOneRequiredWithoutCheckoutSessionsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutCheckoutSessionsNestedInput
+  items?: Prisma.CheckoutSessionItemUpdateManyWithoutCheckoutSessionNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutCheckoutSessionNestedInput
+}
+
+export type CheckoutSessionUncheckedUpdateWithoutOrderGroupInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cartId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  settlementMethod?: Prisma.EnumSettlementMethodFieldUpdateOperationsInput | $Enums.SettlementMethod
+  status?: Prisma.EnumOrderIntentStatusFieldUpdateOperationsInput | $Enums.OrderIntentStatus
+  customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+  pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeBalanceTransactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutCheckoutSessionNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutCheckoutSessionNestedInput
+}
+
 export type CheckoutSessionCreateWithoutCartInput = {
   id?: string
   clientRequestId?: string | null
@@ -688,6 +938,8 @@ export type CheckoutSessionCreateWithoutCartInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCheckoutSessionsInput
   items?: Prisma.CheckoutSessionItemCreateNestedManyWithoutCheckoutSessionInput
+  orders?: Prisma.OrderCreateNestedManyWithoutCheckoutSessionInput
+  orderGroup?: Prisma.OrderGroupCreateNestedOneWithoutCheckoutSessionInput
 }
 
 export type CheckoutSessionUncheckedCreateWithoutCartInput = {
@@ -707,6 +959,8 @@ export type CheckoutSessionUncheckedCreateWithoutCartInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutCheckoutSessionInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCheckoutSessionInput
+  orderGroup?: Prisma.OrderGroupUncheckedCreateNestedOneWithoutCheckoutSessionInput
 }
 
 export type CheckoutSessionCreateOrConnectWithoutCartInput = {
@@ -774,6 +1028,8 @@ export type CheckoutSessionCreateWithoutItemsInput = {
   updatedAt?: Date | string
   cart: Prisma.CartCreateNestedOneWithoutCheckoutSessionsInput
   user: Prisma.UserCreateNestedOneWithoutCheckoutSessionsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutCheckoutSessionInput
+  orderGroup?: Prisma.OrderGroupCreateNestedOneWithoutCheckoutSessionInput
 }
 
 export type CheckoutSessionUncheckedCreateWithoutItemsInput = {
@@ -793,6 +1049,8 @@ export type CheckoutSessionUncheckedCreateWithoutItemsInput = {
   stripeBalanceTransactionId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCheckoutSessionInput
+  orderGroup?: Prisma.OrderGroupUncheckedCreateNestedOneWithoutCheckoutSessionInput
 }
 
 export type CheckoutSessionCreateOrConnectWithoutItemsInput = {
@@ -828,6 +1086,8 @@ export type CheckoutSessionUpdateWithoutItemsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cart?: Prisma.CartUpdateOneRequiredWithoutCheckoutSessionsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCheckoutSessionsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutCheckoutSessionNestedInput
+  orderGroup?: Prisma.OrderGroupUpdateOneWithoutCheckoutSessionNestedInput
 }
 
 export type CheckoutSessionUncheckedUpdateWithoutItemsInput = {
@@ -847,6 +1107,8 @@ export type CheckoutSessionUncheckedUpdateWithoutItemsInput = {
   stripeBalanceTransactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutCheckoutSessionNestedInput
+  orderGroup?: Prisma.OrderGroupUncheckedUpdateOneWithoutCheckoutSessionNestedInput
 }
 
 export type CheckoutSessionCreateWithoutUserInput = {
@@ -866,6 +1128,8 @@ export type CheckoutSessionCreateWithoutUserInput = {
   updatedAt?: Date | string
   cart: Prisma.CartCreateNestedOneWithoutCheckoutSessionsInput
   items?: Prisma.CheckoutSessionItemCreateNestedManyWithoutCheckoutSessionInput
+  orders?: Prisma.OrderCreateNestedManyWithoutCheckoutSessionInput
+  orderGroup?: Prisma.OrderGroupCreateNestedOneWithoutCheckoutSessionInput
 }
 
 export type CheckoutSessionUncheckedCreateWithoutUserInput = {
@@ -885,6 +1149,8 @@ export type CheckoutSessionUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.CheckoutSessionItemUncheckedCreateNestedManyWithoutCheckoutSessionInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCheckoutSessionInput
+  orderGroup?: Prisma.OrderGroupUncheckedCreateNestedOneWithoutCheckoutSessionInput
 }
 
 export type CheckoutSessionCreateOrConnectWithoutUserInput = {
@@ -948,6 +1214,8 @@ export type CheckoutSessionUpdateWithoutCartInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCheckoutSessionsNestedInput
   items?: Prisma.CheckoutSessionItemUpdateManyWithoutCheckoutSessionNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutCheckoutSessionNestedInput
+  orderGroup?: Prisma.OrderGroupUpdateOneWithoutCheckoutSessionNestedInput
 }
 
 export type CheckoutSessionUncheckedUpdateWithoutCartInput = {
@@ -967,6 +1235,8 @@ export type CheckoutSessionUncheckedUpdateWithoutCartInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutCheckoutSessionNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutCheckoutSessionNestedInput
+  orderGroup?: Prisma.OrderGroupUncheckedUpdateOneWithoutCheckoutSessionNestedInput
 }
 
 export type CheckoutSessionUncheckedUpdateManyWithoutCartInput = {
@@ -1022,6 +1292,8 @@ export type CheckoutSessionUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cart?: Prisma.CartUpdateOneRequiredWithoutCheckoutSessionsNestedInput
   items?: Prisma.CheckoutSessionItemUpdateManyWithoutCheckoutSessionNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutCheckoutSessionNestedInput
+  orderGroup?: Prisma.OrderGroupUpdateOneWithoutCheckoutSessionNestedInput
 }
 
 export type CheckoutSessionUncheckedUpdateWithoutUserInput = {
@@ -1041,6 +1313,8 @@ export type CheckoutSessionUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.CheckoutSessionItemUncheckedUpdateManyWithoutCheckoutSessionNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutCheckoutSessionNestedInput
+  orderGroup?: Prisma.OrderGroupUncheckedUpdateOneWithoutCheckoutSessionNestedInput
 }
 
 export type CheckoutSessionUncheckedUpdateManyWithoutUserInput = {
@@ -1068,10 +1342,12 @@ export type CheckoutSessionUncheckedUpdateManyWithoutUserInput = {
 
 export type CheckoutSessionCountOutputType = {
   items: number
+  orders: number
 }
 
 export type CheckoutSessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | CheckoutSessionCountOutputTypeCountItemsArgs
+  orders?: boolean | CheckoutSessionCountOutputTypeCountOrdersArgs
 }
 
 /**
@@ -1089,6 +1365,13 @@ export type CheckoutSessionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Ty
  */
 export type CheckoutSessionCountOutputTypeCountItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CheckoutSessionItemWhereInput
+}
+
+/**
+ * CheckoutSessionCountOutputType without action
+ */
+export type CheckoutSessionCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
 }
 
 
@@ -1112,6 +1395,8 @@ export type CheckoutSessionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.CheckoutSession$itemsArgs<ExtArgs>
+  orders?: boolean | Prisma.CheckoutSession$ordersArgs<ExtArgs>
+  orderGroup?: boolean | Prisma.CheckoutSession$orderGroupArgs<ExtArgs>
   _count?: boolean | Prisma.CheckoutSessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["checkoutSession"]>
 
@@ -1181,6 +1466,8 @@ export type CheckoutSessionInclude<ExtArgs extends runtime.Types.Extensions.Inte
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.CheckoutSession$itemsArgs<ExtArgs>
+  orders?: boolean | Prisma.CheckoutSession$ordersArgs<ExtArgs>
+  orderGroup?: boolean | Prisma.CheckoutSession$orderGroupArgs<ExtArgs>
   _count?: boolean | Prisma.CheckoutSessionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CheckoutSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1198,6 +1485,8 @@ export type $CheckoutSessionPayload<ExtArgs extends runtime.Types.Extensions.Int
     cart: Prisma.$CartPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
     items: Prisma.$CheckoutSessionItemPayload<ExtArgs>[]
+    orders: Prisma.$OrderPayload<ExtArgs>[]
+    orderGroup: Prisma.$OrderGroupPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1613,6 +1902,8 @@ export interface Prisma__CheckoutSessionClient<T, Null = never, ExtArgs extends 
   cart<T extends Prisma.CartDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CartDefaultArgs<ExtArgs>>): Prisma.Prisma__CartClient<runtime.Types.Result.GetResult<Prisma.$CartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.CheckoutSession$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CheckoutSession$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheckoutSessionItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orders<T extends Prisma.CheckoutSession$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CheckoutSession$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orderGroup<T extends Prisma.CheckoutSession$orderGroupArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CheckoutSession$orderGroupArgs<ExtArgs>>): Prisma.Prisma__OrderGroupClient<runtime.Types.Result.GetResult<Prisma.$OrderGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2075,6 +2366,49 @@ export type CheckoutSession$itemsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.CheckoutSessionItemScalarFieldEnum | Prisma.CheckoutSessionItemScalarFieldEnum[]
+}
+
+/**
+ * CheckoutSession.orders
+ */
+export type CheckoutSession$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * CheckoutSession.orderGroup
+ */
+export type CheckoutSession$orderGroupArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderGroup
+   */
+  select?: Prisma.OrderGroupSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderGroup
+   */
+  omit?: Prisma.OrderGroupOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderGroupInclude<ExtArgs> | null
+  where?: Prisma.OrderGroupWhereInput
 }
 
 /**

@@ -31,22 +31,17 @@ function buildManifestFromOrders(orders: OrderWithRelations[]) {
     const standardQty = s.variations
       .filter((v) => v.label === "Standard")
       .reduce((acc, v) => acc + v.count, 0);
-    const boostQty = s.variations
-      .filter((v) => v.proteinBoost)
-      .reduce((acc, v) => acc + v.count, 0);
     return {
       mealId: s.mealId,
       mealName: s.mealName,
       totalQty: s.totalQuantity,
       standardQty,
-      boostQty,
     };
   });
 
   const totalPortions = summaries.reduce((acc, s) => acc + s.totalQuantity, 0);
   const standardPortions = meals.reduce((acc, m) => acc + m.standardQty, 0);
   const customizedPortions = totalPortions - standardPortions;
-  const boostPortions = meals.reduce((acc, m) => acc + m.boostQty, 0);
   const noteCount = activeOrders.filter((o) => Boolean(o.notes?.trim())).length;
 
   const grocerySignals = buildGrocerySignalsFromOrders(activeOrders);
@@ -81,7 +76,6 @@ function buildManifestFromOrders(orders: OrderWithRelations[]) {
     totalPortions,
     standardPortions,
     customizedPortions,
-    boostPortions,
     noteCount,
     exceptionRows,
     grocerySignals,
@@ -246,7 +240,6 @@ export function ProductionSummary({
           <Badge variant="outline">
             {manifest.customizedPortions} customized portions
           </Badge>
-          <Badge variant="outline">{manifest.boostPortions} protein boosts</Badge>
           <Badge variant={manifest.noteCount > 0 ? "destructive" : "outline"}>
             {manifest.noteCount} special notes
           </Badge>

@@ -73,19 +73,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
   },
-  proteinBoost: {
-    backgroundColor: "#FFF3E0",
-    border: "2px solid #FF9800",
-    padding: 15,
-    marginBottom: 15,
-    borderRadius: 5,
-  },
-  proteinBoostText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#E65100",
-    textAlign: "center",
-  },
   substitution: {
     backgroundColor: "#E3F2FD",
     padding: 10,
@@ -169,15 +156,6 @@ function OrderPDFDocument({ order }: { order: OrderWithRelations }) {
           <Text style={styles.mealName}>{order.meal?.name}</Text>
           <Text style={styles.quantity}>Quantity: {order.quantity}</Text>
         </View>
-
-        {/* Protein Boost - Prominent */}
-        {order.proteinBoost && (
-          <View style={styles.proteinBoost}>
-            <Text style={styles.proteinBoostText}>
-              🔥 PROTEIN BOOST - ADD EXTRA PROTEIN
-            </Text>
-          </View>
-        )}
 
         {/* Substitutions */}
         {substitutions.length > 0 && (

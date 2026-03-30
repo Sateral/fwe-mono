@@ -1,6 +1,7 @@
-import type { CreateOrderInput } from "@fwe/validators";
+import type { CreateFailedOrderInput, CreateOrderInput } from "@fwe/validators";
 
-import prisma from "@/lib/prisma";
+import prisma from "../prisma";
+import { sendFailedOrderAlertWebhook } from "./failed-order-alert.service";
 import { orderService } from "./order.service";
 
 // ============================================
@@ -13,14 +14,45 @@ export type FailedOrderStatus =
   | "RESOLVED"
   | "ABANDONED";
 
-export interface CreateFailedOrderInput {
-  stripeSessionId: string;
-  stripePaymentIntentId?: string;
-  customerEmail?: string;
-  customerName?: string;
-  orderData: CreateOrderInput;
-  errorMessage: string;
-  errorCode?: string;
+function parseFailedOrderPayload(
+  raw: unknown,
+): { orders: CreateOrderInput[] } {
+  const data = raw as { orders?: CreateOrderInput[] } | CreateOrderInput;
+  if (data && typeof data === "object" && "orders" in data && Array.isArray(data.orders)) {
+    return { orders: data.orders };
+  }
+  return { orders: [data as CreateOrderInput] };
+}
+
+async function notifyIfNeeded(
+  row: {
+    id: string;
+    adminNotifiedAt: Date | null;
+    stripeSessionId: string;
+    stripePaymentIntentId: string | null;
+    customerEmail: string | null;
+    customerName: string | null;
+    errorMessage: string;
+  },
+) {
+  if (row.adminNotifiedAt) {
+    return row;
+  }
+  const ok = await sendFailedOrderAlertWebhook({
+    failedOrderId: row.id,
+    stripeSessionId: row.stripeSessionId,
+    stripePaymentIntentId: row.stripePaymentIntentId,
+    customerEmail: row.customerEmail,
+    customerName: row.customerName,
+    errorMessage: row.errorMessage,
+  });
+  if (!ok) {
+    return row;
+  }
+  return prisma.failedOrder.update({
+    where: { id: row.id },
+    data: { adminNotifiedAt: new Date() },
+  });
 }
 
 // ============================================
@@ -37,7 +69,6 @@ export const failedOrderService = {
       `[FailedOrderService] 🚨 Recording failed order for session ${input.stripeSessionId}`,
     );
 
-    // Check if already exists (idempotency)
     const existing = await prisma.failedOrder.findUnique({
       where: { stripeSessionId: input.stripeSessionId },
     });
@@ -46,17 +77,19 @@ export const failedOrderService = {
       console.log(
         `[FailedOrderService] Failed order already exists, updating retry count`,
       );
-      return await prisma.failedOrder.update({
+      const updated = await prisma.failedOrder.update({
         where: { stripeSessionId: input.stripeSessionId },
         data: {
           retryCount: { increment: 1 },
           errorMessage: input.errorMessage,
           errorCode: input.errorCode,
+          orderData: input.orderData as object,
         },
       });
+      return notifyIfNeeded(updated);
     }
 
-    return await prisma.failedOrder.create({
+    const created = await prisma.failedOrder.create({
       data: {
         stripeSessionId: input.stripeSessionId,
         stripePaymentIntentId: input.stripePaymentIntentId,
@@ -68,6 +101,30 @@ export const failedOrderService = {
         status: "PENDING",
       },
     });
+    return notifyIfNeeded(created);
+  },
+
+  /**
+   * Retry webhook delivery for rows that were persisted but not acknowledged by ops.
+   */
+  async retryPendingAdminNotifications(limit = 25) {
+    const rows = await prisma.failedOrder.findMany({
+      where: {
+        status: "PENDING",
+        adminNotifiedAt: null,
+      },
+      orderBy: { createdAt: "asc" },
+      take: limit,
+    });
+
+    let notified = 0;
+    for (const row of rows) {
+      const next = await notifyIfNeeded(row);
+      if (next.adminNotifiedAt) {
+        notified += 1;
+      }
+    }
+    return { processed: rows.length, notified };
   },
 
   /**
@@ -115,8 +172,7 @@ export const failedOrderService = {
   },
 
   /**
-   * Attempts to retry creating an order from a failed order record.
-   * Returns the created order if successful.
+   * Attempts to retry creating orders from a failed order record.
    */
   async retryFailedOrder(id: string, adminUserId?: string) {
     console.log(`[FailedOrderService] Attempting retry for failed order ${id}`);
@@ -133,18 +189,23 @@ export const failedOrderService = {
       throw new Error("Failed order already resolved");
     }
 
-    // Mark as retrying
+    const { orders } = parseFailedOrderPayload(failedOrder.orderData);
+    if (orders.length === 0) {
+      throw new Error("No order payloads to retry; snapshot may be missing.");
+    }
+
     await prisma.failedOrder.update({
       where: { id },
       data: { status: "RETRYING", retryCount: { increment: 1 } },
     });
 
     try {
-      // Attempt to create the order
-      const orderData = failedOrder.orderData as unknown as CreateOrderInput;
-      const order = await orderService.createOrder(orderData);
+      const created: Awaited<ReturnType<typeof orderService.createOrder>>[] = [];
+      for (const payload of orders) {
+        const order = await orderService.createOrder(payload);
+        created.push(order);
+      }
 
-      // Mark as resolved
       await prisma.failedOrder.update({
         where: { id },
         data: {
@@ -154,19 +215,19 @@ export const failedOrderService = {
         },
       });
 
+      const last = created[created.length - 1]!;
       console.log(
-        `[FailedOrderService] ✅ Successfully recovered order ${order.id}`,
+        `[FailedOrderService] ✅ Successfully recovered ${created.length} order(s); last id ${last.id}`,
       );
-      return order;
+      return last;
     } catch (error) {
-      // Revert to pending with updated error
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error";
       await prisma.failedOrder.update({
         where: { id },
         data: {
           status: "PENDING",
-          errorMessage: errorMessage,
+          errorMessage,
         },
       });
       throw error;

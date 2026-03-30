@@ -68,7 +68,7 @@ function renderOrderCard(order: Order) {
           </span>
         </div>
 
-        {(substitutions?.length || order.proteinBoost || order.notes) && (
+        {(substitutions?.length || order.notes) && (
           <>
             <hr className="border-gray-100" />
             <div className="space-y-2">
@@ -83,13 +83,6 @@ function renderOrderCard(order: Order) {
                   <span className="text-gray-900">{sub.optionName}</span>
                 </div>
               ))}
-
-              {order.proteinBoost && (
-                <div className="flex justify-between text-sm pl-6">
-                  <span className="text-gray-500">Protein Boost</span>
-                  <span className="text-gray-900">+30%</span>
-                </div>
-              )}
 
               {order.notes && (
                 <div className="text-sm pl-6">

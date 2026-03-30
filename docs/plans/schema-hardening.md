@@ -10,7 +10,7 @@ Implement the changes below in priority order. After all changes, run `prisma va
 
 ## CRITICAL
 
-**1. Customization data (substitutions, modifiers) is stored as unvalidated JSON blobs across multiple models.**
+**1. COMPLETED: Customization data (substitutions, modifiers) is stored as unvalidated JSON blobs across multiple models.**
 This makes it impossible to query reliably (e.g. "how many chimichurri orders this week?"), causes prep manifest data to be unparseable if malformed, and provides no referential integrity. Find the right relational solution by reading how these fields are written and read across the codebase, then replace the JSON columns with a proper structure.
 
 **2. There are no database-level constraints protecting money fields.**
@@ -39,8 +39,8 @@ A Stripe payment can succeed while order creation fails. The FailedOrder model e
 **7. Two substitution options in the same group can both be marked as the default.**
 This creates an ambiguous "standard build" in the prep manifest — the chef wouldn't know which configuration to use as the baseline. The database should enforce that only one default is possible per group.
 
-**8. `proteinBoost` is a hardcoded boolean across multiple models.**
-This bakes a specific product concept into the schema at multiple levels. If the business ever wants a second boost type or to make boost pricing configurable per meal, it requires changes across many tables. Find a more extensible way to model this that is consistent with how modifiers are already structured.
+**8. COMPLETED `proteinBoost` is a hardcoded boolean across multiple models.**
+This bakes a specific product concept into the schema at multiple levels. In fact, remove protein boost altogether.
 
 **9. MealPlan has no record of what a subscriber actually paid.**
 You can see a subscriber's credit cap but not the price they agreed to. If pricing changes, historical plan records become unauditable. The plan's price and billing terms at the time of purchase should be stored.

@@ -34,7 +34,6 @@ import {
   IconPhone,
   IconMail,
   IconClipboardList,
-  IconFlame,
   IconNote,
 } from "@tabler/icons-react";
 
@@ -207,17 +206,10 @@ function OrderItemCard({
         </div>
       </div>
 
-      {(order.proteinBoost ||
-        order.notes ||
+      {(order.notes ||
         substitutions.length > 0 ||
         modifiers.length > 0) && (
         <div className="space-y-2">
-          {order.proteinBoost && (
-            <div className="flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-3 py-2 text-sm text-orange-700">
-              <IconFlame className="h-4 w-4" />
-              <span className="font-semibold">Protein Boost</span>
-            </div>
-          )}
 
           {substitutions.length > 0 && (
             <div className="rounded-lg border bg-muted/40 p-3 text-sm space-y-1">
@@ -242,7 +234,7 @@ function OrderItemCard({
                 <div key={index} className="text-muted-foreground">
                   {mod.groupName}:{" "}
                   <span className="text-foreground">
-                    {(mod.optionNames || []).join(", ")}
+                    {mod.optionName}
                   </span>
                 </div>
               ))}
@@ -265,8 +257,7 @@ function OrderItemCard({
         </div>
       )}
 
-      {!order.proteinBoost &&
-        !order.notes &&
+      {!order.notes &&
         substitutions.length === 0 &&
         modifiers.length === 0 && (
           <p className="text-xs text-muted-foreground italic">

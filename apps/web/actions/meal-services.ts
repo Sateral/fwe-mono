@@ -54,8 +54,7 @@ export async function getMealsByTag(tag: string): Promise<ApiMeal[]> {
 }
 
 /**
- * Get available meals for ordering (cached, 1 min TTL).
- * Returns the current orderable rotation meals.
+ * Get available meals for ordering (revalidates every request; rotation-driven menu).
  */
 export async function getAvailableMeals() {
   return getCachedAvailableMeals();

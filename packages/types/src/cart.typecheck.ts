@@ -23,9 +23,8 @@ const apiCart: ApiCart = {
       rotationId: "rotation_test",
       quantity: 2,
       unitPrice: 14.5,
-      substitutions: null,
-      modifiers: null,
-      proteinBoost: false,
+      substitutions: [],
+      modifiers: [],
       notes: null,
       meal: {
         id: "meal_test",

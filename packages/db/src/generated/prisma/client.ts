@@ -75,6 +75,56 @@ export type DietaryTag = Prisma.DietaryTagModel
  */
 export type Order = Prisma.OrderModel
 /**
+ * Model OrderSubstitution
+ * 
+ */
+export type OrderSubstitution = Prisma.OrderSubstitutionModel
+/**
+ * Model OrderModifier
+ * 
+ */
+export type OrderModifier = Prisma.OrderModifierModel
+/**
+ * Model CartItemSubstitution
+ * 
+ */
+export type CartItemSubstitution = Prisma.CartItemSubstitutionModel
+/**
+ * Model CartItemModifier
+ * 
+ */
+export type CartItemModifier = Prisma.CartItemModifierModel
+/**
+ * Model IntentSubstitution
+ * 
+ */
+export type IntentSubstitution = Prisma.IntentSubstitutionModel
+/**
+ * Model IntentModifier
+ * 
+ */
+export type IntentModifier = Prisma.IntentModifierModel
+/**
+ * Model CheckoutItemSubstitution
+ * 
+ */
+export type CheckoutItemSubstitution = Prisma.CheckoutItemSubstitutionModel
+/**
+ * Model CheckoutItemModifier
+ * 
+ */
+export type CheckoutItemModifier = Prisma.CheckoutItemModifierModel
+/**
+ * Model OrderGroup
+ * 
+ */
+export type OrderGroup = Prisma.OrderGroupModel
+/**
+ * Model FulfillmentStatusChange
+ * 
+ */
+export type FulfillmentStatusChange = Prisma.FulfillmentStatusChangeModel
+/**
  * Model RotationPeriod
  * 
  */
@@ -99,21 +149,26 @@ export type CartItem = Prisma.CartItemModel
  * Stores failed order creation attempts for admin recovery.
  * When a Stripe payment succeeds but order creation fails,
  * the order data is stored here for manual or automated retry.
+ * (Separate from the checkout pipeline -- this is a dead-letter queue.)
  */
 export type FailedOrder = Prisma.FailedOrderModel
 /**
  * Model OrderIntent
- * 
+ * Pre-payment intent for a single cart item.
+ * Created during checkout, before the Stripe session.
+ * Tracks status from CREATED -> SESSION_CREATED -> PAID/FAILED.
  */
 export type OrderIntent = Prisma.OrderIntentModel
 /**
  * Model CheckoutSession
- * 
+ * Immutable snapshot of cart state at checkout initiation.
+ * One per checkout attempt; items mirror the cart at the moment "Pay" was clicked.
  */
 export type CheckoutSession = Prisma.CheckoutSessionModel
 /**
  * Model CheckoutSessionItem
- * 
+ * Single line item within a checkout snapshot.
+ * Points back to both the OrderIntent and the Meal for audit trail.
  */
 export type CheckoutSessionItem = Prisma.CheckoutSessionItemModel
 /**

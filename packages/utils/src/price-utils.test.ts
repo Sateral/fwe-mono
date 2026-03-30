@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { calculateMealUnitPrice } from "./price-utils";
 
 describe("calculateMealUnitPrice", () => {
-  it("adds substitutions, modifiers, and protein boost", () => {
+  it("adds substitutions and modifiers", () => {
     expect(
       calculateMealUnitPrice(
         {
@@ -20,8 +20,7 @@ describe("calculateMealUnitPrice", () => {
         },
         { mods: ["avocado"] },
         { subs: "quinoa" },
-        true,
       ),
-    ).toBe(19.5);
+    ).toBe(17.5);
   });
 });

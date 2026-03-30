@@ -33,7 +33,6 @@ export const createCartItemSchema = z.object({
   quantity: z.number().int().min(1, "Quantity must be at least 1"),
   substitutions: z.array(substitutionItemSchema).optional(),
   modifiers: z.array(modifierItemSchema).optional(),
-  proteinBoost: z.boolean().default(false),
   notes: z.string().optional(),
 });
 
@@ -93,7 +92,6 @@ export const checkoutRequestSchema = z.object({
   settlementMethod: settlementMethodSchema.optional().default("STRIPE"),
   substitutions: z.array(substitutionItemSchema).optional(),
   modifiers: z.array(modifierItemSchema).optional(),
-  proteinBoost: z.boolean().default(false),
   deliveryMethod: z.enum(["DELIVERY", "PICKUP"]).optional().default("DELIVERY"),
   pickupLocation: z.string().optional(),
   notes: z.string().optional(),

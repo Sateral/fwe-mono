@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import type { Prisma } from "@fwe/db";
 
 import prisma from "@/lib/prisma";
 import { requireInternalAuth } from "@/lib/api-auth";
@@ -22,7 +21,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const orders = (await prisma.order.findMany({
+    const orders = await prisma.order.findMany({
       where: {
         rotationId: rotationId,
         paymentStatus: "PAID",
@@ -30,6 +29,8 @@ export async function GET(request: Request) {
       },
       include: {
         meal: true,
+        substitutions: true,
+        modifiers: true,
         user: {
           select: {
             name: true,
@@ -47,22 +48,7 @@ export async function GET(request: Request) {
           name: "asc",
         },
       },
-    })) as Prisma.OrderGetPayload<{
-      include: {
-        meal: true;
-        user: {
-          select: {
-            name: true;
-            email: true;
-            phone: true;
-            deliveryAddress: true;
-            deliveryCity: true;
-            deliveryPostal: true;
-            deliveryNotes: true;
-          };
-        };
-      };
-    }>[];
+    });
 
     const summary = aggregatePrepByMeal(orders);
 
@@ -88,7 +74,6 @@ export async function GET(request: Request) {
             order.orderIntentId === null,
           substitutions: order.substitutions,
           modifiers: order.modifiers,
-          proteinBoost: order.proteinBoost,
           notes: order.notes,
         },
       };

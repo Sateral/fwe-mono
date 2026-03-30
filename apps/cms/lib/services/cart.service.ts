@@ -1,4 +1,4 @@
-import { Prisma } from "@fwe/db";
+import { Prisma, PriceSource } from "@fwe/db";
 import type {
   CreateCartInput,
   CreateCartItemInput,
@@ -31,6 +31,8 @@ const cartInclude = {
         },
       },
       rotation: true,
+      substitutions: true,
+      modifiers: true,
     },
   },
 };
@@ -59,16 +61,31 @@ function toSelectedSubstitutions(
   return selected;
 }
 
-function fingerprintFromBuiltRow(row: {
+/** Shape returned by buildCartItemsData for a single line. */
+interface BuiltCartRow {
   mealId: string;
-  proteinBoost: boolean;
-  notes: string | null | undefined;
-  substitutions: unknown;
-  modifiers: unknown;
-}) {
+  rotationId: string;
+  quantity: number;
+  unitPrice: number;
+  priceSource: PriceSource;
+  notes: string | undefined;
+  substitutions: Array<{
+    groupId: string;
+    groupName: string;
+    optionId: string;
+    optionName: string;
+  }>;
+  modifiers: Array<{
+    groupId: string;
+    groupName: string;
+    optionId: string;
+    optionName: string;
+  }>;
+}
+
+function fingerprintFromBuiltRow(row: BuiltCartRow) {
   return cartLineFingerprint({
     mealId: row.mealId,
-    proteinBoost: row.proteinBoost,
     notes: row.notes,
     substitutions: row.substitutions,
     modifiers: row.modifiers,
@@ -77,21 +94,24 @@ function fingerprintFromBuiltRow(row: {
 
 function fingerprintFromCartItem(item: {
   mealId: string;
-  proteinBoost: boolean;
   notes: string | null;
-  substitutions: unknown;
-  modifiers: unknown;
+  substitutions: Array<{ groupId: string | null; optionId: string | null }>;
+  modifiers: Array<{ groupId: string | null; optionId: string | null }>;
 }) {
   return cartLineFingerprint({
     mealId: item.mealId,
-    proteinBoost: item.proteinBoost,
     notes: item.notes,
     substitutions: item.substitutions,
     modifiers: item.modifiers,
   });
 }
 
-async function buildCartItemsData(input: CreateCartInput) {
+async function buildCartItemsData(input: CreateCartInput): Promise<BuiltCartRow[]> {
+  const priceSource: PriceSource =
+    input.settlementMethod === "MEAL_PLAN_CREDITS"
+      ? PriceSource.MEAL_PLAN
+      : PriceSource.STANDARD;
+
   const meals = await prisma.meal.findMany({
     where: {
       id: {
@@ -132,18 +152,44 @@ async function buildCartItemsData(input: CreateCartInput) {
       },
       toSelectedModifiers(item.modifiers),
       toSelectedSubstitutions(item.substitutions),
-      item.proteinBoost,
     );
+
+    // Resolve substitution snapshot strings
+    const substitutions = (item.substitutions ?? []).map((sub) => {
+      const group = meal.substitutionGroups.find((g) => g.id === sub.groupId);
+      const option = group?.options.find((o) => o.id === sub.optionId);
+      return {
+        groupId: sub.groupId,
+        groupName: sub.groupName ?? group?.name ?? sub.groupId,
+        optionId: sub.optionId,
+        optionName: sub.optionName ?? option?.name ?? sub.optionId,
+      };
+    });
+
+    // Resolve modifier snapshot strings — one row per selected option
+    const modifiers: BuiltCartRow["modifiers"] = [];
+    for (const mod of item.modifiers ?? []) {
+      const group = meal.modifierGroups.find((g) => g.id === mod.groupId);
+      for (const optId of mod.optionIds) {
+        const option = group?.options.find((o) => o.id === optId);
+        modifiers.push({
+          groupId: mod.groupId,
+          groupName: mod.groupName ?? group?.name ?? mod.groupId,
+          optionId: optId,
+          optionName: option?.name ?? optId,
+        });
+      }
+    }
 
     return {
       mealId: item.mealId,
       rotationId: input.rotationId,
       quantity: item.quantity,
       unitPrice,
-      substitutions: item.substitutions as unknown as object[] | undefined,
-      modifiers: item.modifiers as unknown as object[] | undefined,
-      proteinBoost: item.proteinBoost,
+      priceSource,
       notes: item.notes,
+      substitutions,
+      modifiers,
     };
   });
 }
@@ -195,7 +241,20 @@ export const cartService = {
           userId,
           settlementMethod: input.settlementMethod,
           items: {
-            create: items,
+            create: items.map((row) => ({
+              mealId: row.mealId,
+              rotationId: row.rotationId,
+              quantity: row.quantity,
+              unitPrice: row.unitPrice,
+              priceSource: row.priceSource,
+              notes: row.notes,
+              substitutions: {
+                create: row.substitutions,
+              },
+              modifiers: {
+                create: row.modifiers,
+              },
+            })),
           },
         },
         include: cartInclude,
@@ -241,6 +300,11 @@ export const cartService = {
         })
       : null;
 
+    if (nextItems) {
+      // Delete existing cart items (and their junction rows cascade)
+      await prisma.cartItem.deleteMany({ where: { cartId } });
+    }
+
     return prisma.cart.update({
       where: { id: cartId },
       data: {
@@ -249,8 +313,16 @@ export const cartService = {
         ...(nextItems
           ? {
               items: {
-                deleteMany: {},
-                create: nextItems,
+                create: nextItems.map((row) => ({
+                  mealId: row.mealId,
+                  rotationId: row.rotationId,
+                  quantity: row.quantity,
+                  unitPrice: row.unitPrice,
+                  priceSource: row.priceSource,
+                  notes: row.notes,
+                  substitutions: { create: row.substitutions },
+                  modifiers: { create: row.modifiers },
+                })),
               },
             }
           : {}),
@@ -300,16 +372,6 @@ export const cartService = {
     rotationId: string,
     items: CreateCartItemInput[],
   ) {
-    type FpLine = {
-      id: string;
-      mealId: string;
-      quantity: number;
-      proteinBoost: boolean;
-      notes: string | null;
-      substitutions: unknown;
-      modifiers: unknown;
-    };
-
     return prisma.$transaction(async (tx) => {
       const cart = await tx.cart.findUnique({
         where: { id: cartId },
@@ -337,27 +399,17 @@ export const cartService = {
         items,
       });
 
-      const byFp = new Map<string, FpLine>();
+      // Build fingerprint map of existing items
+      const byFp = new Map<string, { id: string; quantity: number }>();
       for (const e of cart.items) {
         byFp.set(fingerprintFromCartItem(e), {
           id: e.id,
-          mealId: e.mealId,
           quantity: e.quantity,
-          proteinBoost: e.proteinBoost,
-          notes: e.notes,
-          substitutions: e.substitutions,
-          modifiers: e.modifiers,
         });
       }
 
       for (const row of newRows) {
-        const fp = fingerprintFromBuiltRow({
-          mealId: row.mealId,
-          proteinBoost: row.proteinBoost,
-          notes: row.notes,
-          substitutions: row.substitutions,
-          modifiers: row.modifiers,
-        });
+        const fp = fingerprintFromBuiltRow(row);
         const match = byFp.get(fp);
         if (match) {
           const nextQty = match.quantity + row.quantity;
@@ -366,6 +418,7 @@ export const cartService = {
             data: {
               quantity: nextQty,
               unitPrice: new Prisma.Decimal(row.unitPrice),
+              priceSource: row.priceSource,
             },
           });
           byFp.set(fp, { ...match, quantity: nextQty });
@@ -377,20 +430,15 @@ export const cartService = {
               rotationId: row.rotationId,
               quantity: row.quantity,
               unitPrice: new Prisma.Decimal(row.unitPrice),
-              substitutions: row.substitutions as Prisma.InputJsonValue | undefined,
-              modifiers: row.modifiers as Prisma.InputJsonValue | undefined,
-              proteinBoost: row.proteinBoost,
+              priceSource: row.priceSource,
               notes: row.notes,
+              substitutions: { create: row.substitutions },
+              modifiers: { create: row.modifiers },
             },
           });
           byFp.set(fp, {
             id: created.id,
-            mealId: created.mealId,
             quantity: created.quantity,
-            proteinBoost: created.proteinBoost,
-            notes: created.notes,
-            substitutions: created.substitutions,
-            modifiers: created.modifiers,
           });
         }
       }
@@ -458,7 +506,11 @@ export const cartService = {
     return prisma.$transaction(async (tx) => {
       const existing = await tx.cartItem.findFirst({
         where: { id: itemId, cartId },
-        include: { cart: true },
+        include: {
+          cart: true,
+          substitutions: true,
+          modifiers: true,
+        },
       });
 
       if (!existing || existing.cart.userId !== ownerUserId) {
@@ -488,16 +540,11 @@ export const cartService = {
         throw new Error("Failed to build cart line");
       }
 
-      const newFp = fingerprintFromBuiltRow({
-        mealId: row.mealId,
-        proteinBoost: row.proteinBoost,
-        notes: row.notes,
-        substitutions: row.substitutions,
-        modifiers: row.modifiers,
-      });
+      const newFp = fingerprintFromBuiltRow(row);
 
       const siblings = await tx.cartItem.findMany({
         where: { cartId },
+        include: { substitutions: true, modifiers: true },
       });
 
       const mergeTarget = siblings.find(
@@ -513,19 +560,24 @@ export const cartService = {
           data: {
             quantity: nextQty,
             unitPrice: new Prisma.Decimal(row.unitPrice),
+            priceSource: row.priceSource,
           },
         });
         await tx.cartItem.delete({ where: { id: itemId } });
       } else {
+        // Delete old junction rows and replace with new ones
+        await tx.cartItemSubstitution.deleteMany({ where: { cartItemId: itemId } });
+        await tx.cartItemModifier.deleteMany({ where: { cartItemId: itemId } });
+
         await tx.cartItem.update({
           where: { id: itemId },
           data: {
             quantity: row.quantity,
             unitPrice: new Prisma.Decimal(row.unitPrice),
-            substitutions: row.substitutions as Prisma.InputJsonValue | undefined,
-            modifiers: row.modifiers as Prisma.InputJsonValue | undefined,
-            proteinBoost: row.proteinBoost,
+            priceSource: row.priceSource,
             notes: row.notes,
+            substitutions: { create: row.substitutions },
+            modifiers: { create: row.modifiers },
           },
         });
       }

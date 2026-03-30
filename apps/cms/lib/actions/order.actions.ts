@@ -1,10 +1,23 @@
 "use server";
 
+import { Role } from "@fwe/db";
 import type { FulfillmentStatus } from "@fwe/validators";
+import { headers } from "next/headers";
 
 import type { OrderFilters } from "@/lib/types/order-types";
+import { auth } from "@/lib/auth";
 import { orderService } from "@/lib/services/order.service";
 import { toPlainObject } from "@/lib/utils";
+
+async function requireAdminSession() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session || session.user.role !== Role.ADMIN) {
+    throw new Error("Unauthorized: Admin access required");
+  }
+  return session;
+}
 
 // ============================================
 // Server Actions
@@ -30,9 +43,16 @@ export async function getOrder(id: string) {
 export async function updateFulfillmentStatus(
   orderId: string,
   fulfillmentStatus: FulfillmentStatus,
+  reason?: string,
 ) {
+  const session = await requireAdminSession();
   return toPlainObject(
-    await orderService.updateFulfillmentStatus(orderId, fulfillmentStatus),
+    await orderService.updateFulfillmentStatus(
+      orderId,
+      fulfillmentStatus,
+      session.user.id,
+      reason,
+    ),
   );
 }
 

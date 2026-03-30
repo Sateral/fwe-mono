@@ -14,7 +14,8 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model CheckoutSessionItem
- * 
+ * Single line item within a checkout snapshot.
+ * Points back to both the OrderIntent and the Meal for audit trail.
  */
 export type CheckoutSessionItemModel = runtime.Types.Result.DefaultSelection<Prisma.$CheckoutSessionItemPayload>
 
@@ -51,7 +52,6 @@ export type CheckoutSessionItemMinAggregateOutputType = {
   unitPrice: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
   currency: string | null
-  proteinBoost: boolean | null
   notes: string | null
   deliveryMethod: $Enums.DeliveryMethod | null
   pickupLocation: string | null
@@ -72,7 +72,6 @@ export type CheckoutSessionItemMaxAggregateOutputType = {
   unitPrice: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
   currency: string | null
-  proteinBoost: boolean | null
   notes: string | null
   deliveryMethod: $Enums.DeliveryMethod | null
   pickupLocation: string | null
@@ -93,9 +92,6 @@ export type CheckoutSessionItemCountAggregateOutputType = {
   unitPrice: number
   totalAmount: number
   currency: number
-  substitutions: number
-  modifiers: number
-  proteinBoost: number
   notes: number
   deliveryMethod: number
   pickupLocation: number
@@ -130,7 +126,6 @@ export type CheckoutSessionItemMinAggregateInputType = {
   unitPrice?: true
   totalAmount?: true
   currency?: true
-  proteinBoost?: true
   notes?: true
   deliveryMethod?: true
   pickupLocation?: true
@@ -151,7 +146,6 @@ export type CheckoutSessionItemMaxAggregateInputType = {
   unitPrice?: true
   totalAmount?: true
   currency?: true
-  proteinBoost?: true
   notes?: true
   deliveryMethod?: true
   pickupLocation?: true
@@ -172,9 +166,6 @@ export type CheckoutSessionItemCountAggregateInputType = {
   unitPrice?: true
   totalAmount?: true
   currency?: true
-  substitutions?: true
-  modifiers?: true
-  proteinBoost?: true
   notes?: true
   deliveryMethod?: true
   pickupLocation?: true
@@ -282,9 +273,6 @@ export type CheckoutSessionItemGroupByOutputType = {
   unitPrice: runtime.Decimal
   totalAmount: runtime.Decimal
   currency: string
-  substitutions: runtime.JsonValue | null
-  modifiers: runtime.JsonValue | null
-  proteinBoost: boolean
   notes: string | null
   deliveryMethod: $Enums.DeliveryMethod
   pickupLocation: string | null
@@ -328,9 +316,6 @@ export type CheckoutSessionItemWhereInput = {
   unitPrice?: Prisma.DecimalFilter<"CheckoutSessionItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"CheckoutSessionItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"CheckoutSessionItem"> | string
-  substitutions?: Prisma.JsonNullableFilter<"CheckoutSessionItem">
-  modifiers?: Prisma.JsonNullableFilter<"CheckoutSessionItem">
-  proteinBoost?: Prisma.BoolFilter<"CheckoutSessionItem"> | boolean
   notes?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFilter<"CheckoutSessionItem"> | $Enums.DeliveryMethod
   pickupLocation?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
@@ -340,6 +325,8 @@ export type CheckoutSessionItemWhereInput = {
   orderIntent?: Prisma.XOR<Prisma.OrderIntentScalarRelationFilter, Prisma.OrderIntentWhereInput>
   meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
   rotation?: Prisma.XOR<Prisma.WeeklyRotationScalarRelationFilter, Prisma.WeeklyRotationWhereInput>
+  substitutions?: Prisma.CheckoutItemSubstitutionListRelationFilter
+  modifiers?: Prisma.CheckoutItemModifierListRelationFilter
 }
 
 export type CheckoutSessionItemOrderByWithRelationInput = {
@@ -355,9 +342,6 @@ export type CheckoutSessionItemOrderByWithRelationInput = {
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
-  substitutions?: Prisma.SortOrderInput | Prisma.SortOrder
-  modifiers?: Prisma.SortOrderInput | Prisma.SortOrder
-  proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
   pickupLocation?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -367,6 +351,8 @@ export type CheckoutSessionItemOrderByWithRelationInput = {
   orderIntent?: Prisma.OrderIntentOrderByWithRelationInput
   meal?: Prisma.MealOrderByWithRelationInput
   rotation?: Prisma.WeeklyRotationOrderByWithRelationInput
+  substitutions?: Prisma.CheckoutItemSubstitutionOrderByRelationAggregateInput
+  modifiers?: Prisma.CheckoutItemModifierOrderByRelationAggregateInput
 }
 
 export type CheckoutSessionItemWhereUniqueInput = Prisma.AtLeast<{
@@ -385,9 +371,6 @@ export type CheckoutSessionItemWhereUniqueInput = Prisma.AtLeast<{
   unitPrice?: Prisma.DecimalFilter<"CheckoutSessionItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"CheckoutSessionItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"CheckoutSessionItem"> | string
-  substitutions?: Prisma.JsonNullableFilter<"CheckoutSessionItem">
-  modifiers?: Prisma.JsonNullableFilter<"CheckoutSessionItem">
-  proteinBoost?: Prisma.BoolFilter<"CheckoutSessionItem"> | boolean
   notes?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFilter<"CheckoutSessionItem"> | $Enums.DeliveryMethod
   pickupLocation?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
@@ -397,6 +380,8 @@ export type CheckoutSessionItemWhereUniqueInput = Prisma.AtLeast<{
   orderIntent?: Prisma.XOR<Prisma.OrderIntentScalarRelationFilter, Prisma.OrderIntentWhereInput>
   meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
   rotation?: Prisma.XOR<Prisma.WeeklyRotationScalarRelationFilter, Prisma.WeeklyRotationWhereInput>
+  substitutions?: Prisma.CheckoutItemSubstitutionListRelationFilter
+  modifiers?: Prisma.CheckoutItemModifierListRelationFilter
 }, "id" | "orderIntentId">
 
 export type CheckoutSessionItemOrderByWithAggregationInput = {
@@ -412,9 +397,6 @@ export type CheckoutSessionItemOrderByWithAggregationInput = {
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
-  substitutions?: Prisma.SortOrderInput | Prisma.SortOrder
-  modifiers?: Prisma.SortOrderInput | Prisma.SortOrder
-  proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
   pickupLocation?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -443,9 +425,6 @@ export type CheckoutSessionItemScalarWhereWithAggregatesInput = {
   unitPrice?: Prisma.DecimalWithAggregatesFilter<"CheckoutSessionItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalWithAggregatesFilter<"CheckoutSessionItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringWithAggregatesFilter<"CheckoutSessionItem"> | string
-  substitutions?: Prisma.JsonNullableWithAggregatesFilter<"CheckoutSessionItem">
-  modifiers?: Prisma.JsonNullableWithAggregatesFilter<"CheckoutSessionItem">
-  proteinBoost?: Prisma.BoolWithAggregatesFilter<"CheckoutSessionItem"> | boolean
   notes?: Prisma.StringNullableWithAggregatesFilter<"CheckoutSessionItem"> | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodWithAggregatesFilter<"CheckoutSessionItem"> | $Enums.DeliveryMethod
   pickupLocation?: Prisma.StringNullableWithAggregatesFilter<"CheckoutSessionItem"> | string | null
@@ -462,9 +441,6 @@ export type CheckoutSessionItemCreateInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
@@ -474,6 +450,8 @@ export type CheckoutSessionItemCreateInput = {
   orderIntent: Prisma.OrderIntentCreateNestedOneWithoutCheckoutSessionItemsInput
   meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput
+  substitutions?: Prisma.CheckoutItemSubstitutionCreateNestedManyWithoutCheckoutSessionItemInput
+  modifiers?: Prisma.CheckoutItemModifierCreateNestedManyWithoutCheckoutSessionItemInput
 }
 
 export type CheckoutSessionItemUncheckedCreateInput = {
@@ -489,14 +467,13 @@ export type CheckoutSessionItemUncheckedCreateInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
+  modifiers?: Prisma.CheckoutItemModifierUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
 }
 
 export type CheckoutSessionItemUpdateInput = {
@@ -508,9 +485,6 @@ export type CheckoutSessionItemUpdateInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -520,6 +494,8 @@ export type CheckoutSessionItemUpdateInput = {
   orderIntent?: Prisma.OrderIntentUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  substitutions?: Prisma.CheckoutItemSubstitutionUpdateManyWithoutCheckoutSessionItemNestedInput
+  modifiers?: Prisma.CheckoutItemModifierUpdateManyWithoutCheckoutSessionItemNestedInput
 }
 
 export type CheckoutSessionItemUncheckedUpdateInput = {
@@ -535,14 +511,13 @@ export type CheckoutSessionItemUncheckedUpdateInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
+  modifiers?: Prisma.CheckoutItemModifierUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
 }
 
 export type CheckoutSessionItemCreateManyInput = {
@@ -558,9 +533,6 @@ export type CheckoutSessionItemCreateManyInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
@@ -577,9 +549,6 @@ export type CheckoutSessionItemUpdateManyMutationInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -600,9 +569,6 @@ export type CheckoutSessionItemUncheckedUpdateManyInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -620,6 +586,11 @@ export type CheckoutSessionItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type CheckoutSessionItemScalarRelationFilter = {
+  is?: Prisma.CheckoutSessionItemWhereInput
+  isNot?: Prisma.CheckoutSessionItemWhereInput
+}
+
 export type CheckoutSessionItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   checkoutSessionId?: Prisma.SortOrder
@@ -633,9 +604,6 @@ export type CheckoutSessionItemCountOrderByAggregateInput = {
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
-  substitutions?: Prisma.SortOrder
-  modifiers?: Prisma.SortOrder
-  proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
   pickupLocation?: Prisma.SortOrder
@@ -662,7 +630,6 @@ export type CheckoutSessionItemMaxOrderByAggregateInput = {
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
-  proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
   pickupLocation?: Prisma.SortOrder
@@ -683,7 +650,6 @@ export type CheckoutSessionItemMinOrderByAggregateInput = {
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
-  proteinBoost?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   deliveryMethod?: Prisma.SortOrder
   pickupLocation?: Prisma.SortOrder
@@ -737,6 +703,34 @@ export type CheckoutSessionItemUncheckedUpdateManyWithoutMealNestedInput = {
   update?: Prisma.CheckoutSessionItemUpdateWithWhereUniqueWithoutMealInput | Prisma.CheckoutSessionItemUpdateWithWhereUniqueWithoutMealInput[]
   updateMany?: Prisma.CheckoutSessionItemUpdateManyWithWhereWithoutMealInput | Prisma.CheckoutSessionItemUpdateManyWithWhereWithoutMealInput[]
   deleteMany?: Prisma.CheckoutSessionItemScalarWhereInput | Prisma.CheckoutSessionItemScalarWhereInput[]
+}
+
+export type CheckoutSessionItemCreateNestedOneWithoutSubstitutionsInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionItemCreateWithoutSubstitutionsInput, Prisma.CheckoutSessionItemUncheckedCreateWithoutSubstitutionsInput>
+  connectOrCreate?: Prisma.CheckoutSessionItemCreateOrConnectWithoutSubstitutionsInput
+  connect?: Prisma.CheckoutSessionItemWhereUniqueInput
+}
+
+export type CheckoutSessionItemUpdateOneRequiredWithoutSubstitutionsNestedInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionItemCreateWithoutSubstitutionsInput, Prisma.CheckoutSessionItemUncheckedCreateWithoutSubstitutionsInput>
+  connectOrCreate?: Prisma.CheckoutSessionItemCreateOrConnectWithoutSubstitutionsInput
+  upsert?: Prisma.CheckoutSessionItemUpsertWithoutSubstitutionsInput
+  connect?: Prisma.CheckoutSessionItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CheckoutSessionItemUpdateToOneWithWhereWithoutSubstitutionsInput, Prisma.CheckoutSessionItemUpdateWithoutSubstitutionsInput>, Prisma.CheckoutSessionItemUncheckedUpdateWithoutSubstitutionsInput>
+}
+
+export type CheckoutSessionItemCreateNestedOneWithoutModifiersInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionItemCreateWithoutModifiersInput, Prisma.CheckoutSessionItemUncheckedCreateWithoutModifiersInput>
+  connectOrCreate?: Prisma.CheckoutSessionItemCreateOrConnectWithoutModifiersInput
+  connect?: Prisma.CheckoutSessionItemWhereUniqueInput
+}
+
+export type CheckoutSessionItemUpdateOneRequiredWithoutModifiersNestedInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionItemCreateWithoutModifiersInput, Prisma.CheckoutSessionItemUncheckedCreateWithoutModifiersInput>
+  connectOrCreate?: Prisma.CheckoutSessionItemCreateOrConnectWithoutModifiersInput
+  upsert?: Prisma.CheckoutSessionItemUpsertWithoutModifiersInput
+  connect?: Prisma.CheckoutSessionItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CheckoutSessionItemUpdateToOneWithWhereWithoutModifiersInput, Prisma.CheckoutSessionItemUpdateWithoutModifiersInput>, Prisma.CheckoutSessionItemUncheckedUpdateWithoutModifiersInput>
 }
 
 export type CheckoutSessionItemCreateNestedManyWithoutRotationInput = {
@@ -874,9 +868,6 @@ export type CheckoutSessionItemCreateWithoutMealInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
@@ -885,6 +876,8 @@ export type CheckoutSessionItemCreateWithoutMealInput = {
   checkoutSession: Prisma.CheckoutSessionCreateNestedOneWithoutItemsInput
   orderIntent: Prisma.OrderIntentCreateNestedOneWithoutCheckoutSessionItemsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput
+  substitutions?: Prisma.CheckoutItemSubstitutionCreateNestedManyWithoutCheckoutSessionItemInput
+  modifiers?: Prisma.CheckoutItemModifierCreateNestedManyWithoutCheckoutSessionItemInput
 }
 
 export type CheckoutSessionItemUncheckedCreateWithoutMealInput = {
@@ -899,14 +892,13 @@ export type CheckoutSessionItemUncheckedCreateWithoutMealInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
+  modifiers?: Prisma.CheckoutItemModifierUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
 }
 
 export type CheckoutSessionItemCreateOrConnectWithoutMealInput = {
@@ -951,14 +943,211 @@ export type CheckoutSessionItemScalarWhereInput = {
   unitPrice?: Prisma.DecimalFilter<"CheckoutSessionItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"CheckoutSessionItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"CheckoutSessionItem"> | string
-  substitutions?: Prisma.JsonNullableFilter<"CheckoutSessionItem">
-  modifiers?: Prisma.JsonNullableFilter<"CheckoutSessionItem">
-  proteinBoost?: Prisma.BoolFilter<"CheckoutSessionItem"> | boolean
   notes?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFilter<"CheckoutSessionItem"> | $Enums.DeliveryMethod
   pickupLocation?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CheckoutSessionItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CheckoutSessionItem"> | Date | string
+}
+
+export type CheckoutSessionItemCreateWithoutSubstitutionsInput = {
+  id?: string
+  mealName: string
+  mealSlug: string
+  mealImageUrl?: string | null
+  quantity: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  notes?: string | null
+  deliveryMethod?: $Enums.DeliveryMethod
+  pickupLocation?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  checkoutSession: Prisma.CheckoutSessionCreateNestedOneWithoutItemsInput
+  orderIntent: Prisma.OrderIntentCreateNestedOneWithoutCheckoutSessionItemsInput
+  meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
+  rotation: Prisma.WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput
+  modifiers?: Prisma.CheckoutItemModifierCreateNestedManyWithoutCheckoutSessionItemInput
+}
+
+export type CheckoutSessionItemUncheckedCreateWithoutSubstitutionsInput = {
+  id?: string
+  checkoutSessionId: string
+  orderIntentId: string
+  mealId: string
+  mealName: string
+  mealSlug: string
+  mealImageUrl?: string | null
+  rotationId: string
+  quantity: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  notes?: string | null
+  deliveryMethod?: $Enums.DeliveryMethod
+  pickupLocation?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  modifiers?: Prisma.CheckoutItemModifierUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
+}
+
+export type CheckoutSessionItemCreateOrConnectWithoutSubstitutionsInput = {
+  where: Prisma.CheckoutSessionItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.CheckoutSessionItemCreateWithoutSubstitutionsInput, Prisma.CheckoutSessionItemUncheckedCreateWithoutSubstitutionsInput>
+}
+
+export type CheckoutSessionItemUpsertWithoutSubstitutionsInput = {
+  update: Prisma.XOR<Prisma.CheckoutSessionItemUpdateWithoutSubstitutionsInput, Prisma.CheckoutSessionItemUncheckedUpdateWithoutSubstitutionsInput>
+  create: Prisma.XOR<Prisma.CheckoutSessionItemCreateWithoutSubstitutionsInput, Prisma.CheckoutSessionItemUncheckedCreateWithoutSubstitutionsInput>
+  where?: Prisma.CheckoutSessionItemWhereInput
+}
+
+export type CheckoutSessionItemUpdateToOneWithWhereWithoutSubstitutionsInput = {
+  where?: Prisma.CheckoutSessionItemWhereInput
+  data: Prisma.XOR<Prisma.CheckoutSessionItemUpdateWithoutSubstitutionsInput, Prisma.CheckoutSessionItemUncheckedUpdateWithoutSubstitutionsInput>
+}
+
+export type CheckoutSessionItemUpdateWithoutSubstitutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mealName?: Prisma.StringFieldUpdateOperationsInput | string
+  mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+  pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  checkoutSession?: Prisma.CheckoutSessionUpdateOneRequiredWithoutItemsNestedInput
+  orderIntent?: Prisma.OrderIntentUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  modifiers?: Prisma.CheckoutItemModifierUpdateManyWithoutCheckoutSessionItemNestedInput
+}
+
+export type CheckoutSessionItemUncheckedUpdateWithoutSubstitutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  checkoutSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderIntentId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealName?: Prisma.StringFieldUpdateOperationsInput | string
+  mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rotationId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+  pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  modifiers?: Prisma.CheckoutItemModifierUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
+}
+
+export type CheckoutSessionItemCreateWithoutModifiersInput = {
+  id?: string
+  mealName: string
+  mealSlug: string
+  mealImageUrl?: string | null
+  quantity: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  notes?: string | null
+  deliveryMethod?: $Enums.DeliveryMethod
+  pickupLocation?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  checkoutSession: Prisma.CheckoutSessionCreateNestedOneWithoutItemsInput
+  orderIntent: Prisma.OrderIntentCreateNestedOneWithoutCheckoutSessionItemsInput
+  meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
+  rotation: Prisma.WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput
+  substitutions?: Prisma.CheckoutItemSubstitutionCreateNestedManyWithoutCheckoutSessionItemInput
+}
+
+export type CheckoutSessionItemUncheckedCreateWithoutModifiersInput = {
+  id?: string
+  checkoutSessionId: string
+  orderIntentId: string
+  mealId: string
+  mealName: string
+  mealSlug: string
+  mealImageUrl?: string | null
+  rotationId: string
+  quantity: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  notes?: string | null
+  deliveryMethod?: $Enums.DeliveryMethod
+  pickupLocation?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
+}
+
+export type CheckoutSessionItemCreateOrConnectWithoutModifiersInput = {
+  where: Prisma.CheckoutSessionItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.CheckoutSessionItemCreateWithoutModifiersInput, Prisma.CheckoutSessionItemUncheckedCreateWithoutModifiersInput>
+}
+
+export type CheckoutSessionItemUpsertWithoutModifiersInput = {
+  update: Prisma.XOR<Prisma.CheckoutSessionItemUpdateWithoutModifiersInput, Prisma.CheckoutSessionItemUncheckedUpdateWithoutModifiersInput>
+  create: Prisma.XOR<Prisma.CheckoutSessionItemCreateWithoutModifiersInput, Prisma.CheckoutSessionItemUncheckedCreateWithoutModifiersInput>
+  where?: Prisma.CheckoutSessionItemWhereInput
+}
+
+export type CheckoutSessionItemUpdateToOneWithWhereWithoutModifiersInput = {
+  where?: Prisma.CheckoutSessionItemWhereInput
+  data: Prisma.XOR<Prisma.CheckoutSessionItemUpdateWithoutModifiersInput, Prisma.CheckoutSessionItemUncheckedUpdateWithoutModifiersInput>
+}
+
+export type CheckoutSessionItemUpdateWithoutModifiersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mealName?: Prisma.StringFieldUpdateOperationsInput | string
+  mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+  pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  checkoutSession?: Prisma.CheckoutSessionUpdateOneRequiredWithoutItemsNestedInput
+  orderIntent?: Prisma.OrderIntentUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  substitutions?: Prisma.CheckoutItemSubstitutionUpdateManyWithoutCheckoutSessionItemNestedInput
+}
+
+export type CheckoutSessionItemUncheckedUpdateWithoutModifiersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  checkoutSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderIntentId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealName?: Prisma.StringFieldUpdateOperationsInput | string
+  mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rotationId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+  pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
 }
 
 export type CheckoutSessionItemCreateWithoutRotationInput = {
@@ -970,9 +1159,6 @@ export type CheckoutSessionItemCreateWithoutRotationInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
@@ -981,6 +1167,8 @@ export type CheckoutSessionItemCreateWithoutRotationInput = {
   checkoutSession: Prisma.CheckoutSessionCreateNestedOneWithoutItemsInput
   orderIntent: Prisma.OrderIntentCreateNestedOneWithoutCheckoutSessionItemsInput
   meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
+  substitutions?: Prisma.CheckoutItemSubstitutionCreateNestedManyWithoutCheckoutSessionItemInput
+  modifiers?: Prisma.CheckoutItemModifierCreateNestedManyWithoutCheckoutSessionItemInput
 }
 
 export type CheckoutSessionItemUncheckedCreateWithoutRotationInput = {
@@ -995,14 +1183,13 @@ export type CheckoutSessionItemUncheckedCreateWithoutRotationInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
+  modifiers?: Prisma.CheckoutItemModifierUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
 }
 
 export type CheckoutSessionItemCreateOrConnectWithoutRotationInput = {
@@ -1040,9 +1227,6 @@ export type CheckoutSessionItemCreateWithoutOrderIntentInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
@@ -1051,6 +1235,8 @@ export type CheckoutSessionItemCreateWithoutOrderIntentInput = {
   checkoutSession: Prisma.CheckoutSessionCreateNestedOneWithoutItemsInput
   meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput
+  substitutions?: Prisma.CheckoutItemSubstitutionCreateNestedManyWithoutCheckoutSessionItemInput
+  modifiers?: Prisma.CheckoutItemModifierCreateNestedManyWithoutCheckoutSessionItemInput
 }
 
 export type CheckoutSessionItemUncheckedCreateWithoutOrderIntentInput = {
@@ -1065,14 +1251,13 @@ export type CheckoutSessionItemUncheckedCreateWithoutOrderIntentInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
+  modifiers?: Prisma.CheckoutItemModifierUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
 }
 
 export type CheckoutSessionItemCreateOrConnectWithoutOrderIntentInput = {
@@ -1110,9 +1295,6 @@ export type CheckoutSessionItemCreateWithoutCheckoutSessionInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
@@ -1121,6 +1303,8 @@ export type CheckoutSessionItemCreateWithoutCheckoutSessionInput = {
   orderIntent: Prisma.OrderIntentCreateNestedOneWithoutCheckoutSessionItemsInput
   meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput
+  substitutions?: Prisma.CheckoutItemSubstitutionCreateNestedManyWithoutCheckoutSessionItemInput
+  modifiers?: Prisma.CheckoutItemModifierCreateNestedManyWithoutCheckoutSessionItemInput
 }
 
 export type CheckoutSessionItemUncheckedCreateWithoutCheckoutSessionInput = {
@@ -1135,14 +1319,13 @@ export type CheckoutSessionItemUncheckedCreateWithoutCheckoutSessionInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
+  modifiers?: Prisma.CheckoutItemModifierUncheckedCreateNestedManyWithoutCheckoutSessionItemInput
 }
 
 export type CheckoutSessionItemCreateOrConnectWithoutCheckoutSessionInput = {
@@ -1183,9 +1366,6 @@ export type CheckoutSessionItemCreateManyMealInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
@@ -1202,9 +1382,6 @@ export type CheckoutSessionItemUpdateWithoutMealInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1213,6 +1390,8 @@ export type CheckoutSessionItemUpdateWithoutMealInput = {
   checkoutSession?: Prisma.CheckoutSessionUpdateOneRequiredWithoutItemsNestedInput
   orderIntent?: Prisma.OrderIntentUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  substitutions?: Prisma.CheckoutItemSubstitutionUpdateManyWithoutCheckoutSessionItemNestedInput
+  modifiers?: Prisma.CheckoutItemModifierUpdateManyWithoutCheckoutSessionItemNestedInput
 }
 
 export type CheckoutSessionItemUncheckedUpdateWithoutMealInput = {
@@ -1227,14 +1406,13 @@ export type CheckoutSessionItemUncheckedUpdateWithoutMealInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
+  modifiers?: Prisma.CheckoutItemModifierUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
 }
 
 export type CheckoutSessionItemUncheckedUpdateManyWithoutMealInput = {
@@ -1249,9 +1427,6 @@ export type CheckoutSessionItemUncheckedUpdateManyWithoutMealInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1271,9 +1446,6 @@ export type CheckoutSessionItemCreateManyRotationInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
@@ -1290,9 +1462,6 @@ export type CheckoutSessionItemUpdateWithoutRotationInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1301,6 +1470,8 @@ export type CheckoutSessionItemUpdateWithoutRotationInput = {
   checkoutSession?: Prisma.CheckoutSessionUpdateOneRequiredWithoutItemsNestedInput
   orderIntent?: Prisma.OrderIntentUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  substitutions?: Prisma.CheckoutItemSubstitutionUpdateManyWithoutCheckoutSessionItemNestedInput
+  modifiers?: Prisma.CheckoutItemModifierUpdateManyWithoutCheckoutSessionItemNestedInput
 }
 
 export type CheckoutSessionItemUncheckedUpdateWithoutRotationInput = {
@@ -1315,14 +1486,13 @@ export type CheckoutSessionItemUncheckedUpdateWithoutRotationInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
+  modifiers?: Prisma.CheckoutItemModifierUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
 }
 
 export type CheckoutSessionItemUncheckedUpdateManyWithoutRotationInput = {
@@ -1337,9 +1507,6 @@ export type CheckoutSessionItemUncheckedUpdateManyWithoutRotationInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1359,9 +1526,6 @@ export type CheckoutSessionItemCreateManyOrderIntentInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
@@ -1378,9 +1542,6 @@ export type CheckoutSessionItemUpdateWithoutOrderIntentInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1389,6 +1550,8 @@ export type CheckoutSessionItemUpdateWithoutOrderIntentInput = {
   checkoutSession?: Prisma.CheckoutSessionUpdateOneRequiredWithoutItemsNestedInput
   meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  substitutions?: Prisma.CheckoutItemSubstitutionUpdateManyWithoutCheckoutSessionItemNestedInput
+  modifiers?: Prisma.CheckoutItemModifierUpdateManyWithoutCheckoutSessionItemNestedInput
 }
 
 export type CheckoutSessionItemUncheckedUpdateWithoutOrderIntentInput = {
@@ -1403,14 +1566,13 @@ export type CheckoutSessionItemUncheckedUpdateWithoutOrderIntentInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
+  modifiers?: Prisma.CheckoutItemModifierUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
 }
 
 export type CheckoutSessionItemUncheckedUpdateManyWithoutOrderIntentInput = {
@@ -1425,9 +1587,6 @@ export type CheckoutSessionItemUncheckedUpdateManyWithoutOrderIntentInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1447,9 +1606,6 @@ export type CheckoutSessionItemCreateManyCheckoutSessionInput = {
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: boolean
   notes?: string | null
   deliveryMethod?: $Enums.DeliveryMethod
   pickupLocation?: string | null
@@ -1466,9 +1622,6 @@ export type CheckoutSessionItemUpdateWithoutCheckoutSessionInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1477,6 +1630,8 @@ export type CheckoutSessionItemUpdateWithoutCheckoutSessionInput = {
   orderIntent?: Prisma.OrderIntentUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  substitutions?: Prisma.CheckoutItemSubstitutionUpdateManyWithoutCheckoutSessionItemNestedInput
+  modifiers?: Prisma.CheckoutItemModifierUpdateManyWithoutCheckoutSessionItemNestedInput
 }
 
 export type CheckoutSessionItemUncheckedUpdateWithoutCheckoutSessionInput = {
@@ -1491,14 +1646,13 @@ export type CheckoutSessionItemUncheckedUpdateWithoutCheckoutSessionInput = {
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  substitutions?: Prisma.CheckoutItemSubstitutionUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
+  modifiers?: Prisma.CheckoutItemModifierUncheckedUpdateManyWithoutCheckoutSessionItemNestedInput
 }
 
 export type CheckoutSessionItemUncheckedUpdateManyWithoutCheckoutSessionInput = {
@@ -1513,9 +1667,6 @@ export type CheckoutSessionItemUncheckedUpdateManyWithoutCheckoutSessionInput = 
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  substitutions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  modifiers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  proteinBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryMethod?: Prisma.EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
   pickupLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1523,6 +1674,44 @@ export type CheckoutSessionItemUncheckedUpdateManyWithoutCheckoutSessionInput = 
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type CheckoutSessionItemCountOutputType
+ */
+
+export type CheckoutSessionItemCountOutputType = {
+  substitutions: number
+  modifiers: number
+}
+
+export type CheckoutSessionItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  substitutions?: boolean | CheckoutSessionItemCountOutputTypeCountSubstitutionsArgs
+  modifiers?: boolean | CheckoutSessionItemCountOutputTypeCountModifiersArgs
+}
+
+/**
+ * CheckoutSessionItemCountOutputType without action
+ */
+export type CheckoutSessionItemCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CheckoutSessionItemCountOutputType
+   */
+  select?: Prisma.CheckoutSessionItemCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CheckoutSessionItemCountOutputType without action
+ */
+export type CheckoutSessionItemCountOutputTypeCountSubstitutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CheckoutItemSubstitutionWhereInput
+}
+
+/**
+ * CheckoutSessionItemCountOutputType without action
+ */
+export type CheckoutSessionItemCountOutputTypeCountModifiersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CheckoutItemModifierWhereInput
+}
 
 
 export type CheckoutSessionItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1538,9 +1727,6 @@ export type CheckoutSessionItemSelect<ExtArgs extends runtime.Types.Extensions.I
   unitPrice?: boolean
   totalAmount?: boolean
   currency?: boolean
-  substitutions?: boolean
-  modifiers?: boolean
-  proteinBoost?: boolean
   notes?: boolean
   deliveryMethod?: boolean
   pickupLocation?: boolean
@@ -1550,6 +1736,9 @@ export type CheckoutSessionItemSelect<ExtArgs extends runtime.Types.Extensions.I
   orderIntent?: boolean | Prisma.OrderIntentDefaultArgs<ExtArgs>
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
+  substitutions?: boolean | Prisma.CheckoutSessionItem$substitutionsArgs<ExtArgs>
+  modifiers?: boolean | Prisma.CheckoutSessionItem$modifiersArgs<ExtArgs>
+  _count?: boolean | Prisma.CheckoutSessionItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["checkoutSessionItem"]>
 
 export type CheckoutSessionItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1565,9 +1754,6 @@ export type CheckoutSessionItemSelectCreateManyAndReturn<ExtArgs extends runtime
   unitPrice?: boolean
   totalAmount?: boolean
   currency?: boolean
-  substitutions?: boolean
-  modifiers?: boolean
-  proteinBoost?: boolean
   notes?: boolean
   deliveryMethod?: boolean
   pickupLocation?: boolean
@@ -1592,9 +1778,6 @@ export type CheckoutSessionItemSelectUpdateManyAndReturn<ExtArgs extends runtime
   unitPrice?: boolean
   totalAmount?: boolean
   currency?: boolean
-  substitutions?: boolean
-  modifiers?: boolean
-  proteinBoost?: boolean
   notes?: boolean
   deliveryMethod?: boolean
   pickupLocation?: boolean
@@ -1619,9 +1802,6 @@ export type CheckoutSessionItemSelectScalar = {
   unitPrice?: boolean
   totalAmount?: boolean
   currency?: boolean
-  substitutions?: boolean
-  modifiers?: boolean
-  proteinBoost?: boolean
   notes?: boolean
   deliveryMethod?: boolean
   pickupLocation?: boolean
@@ -1629,12 +1809,15 @@ export type CheckoutSessionItemSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CheckoutSessionItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "checkoutSessionId" | "orderIntentId" | "mealId" | "mealName" | "mealSlug" | "mealImageUrl" | "rotationId" | "quantity" | "unitPrice" | "totalAmount" | "currency" | "substitutions" | "modifiers" | "proteinBoost" | "notes" | "deliveryMethod" | "pickupLocation" | "createdAt" | "updatedAt", ExtArgs["result"]["checkoutSessionItem"]>
+export type CheckoutSessionItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "checkoutSessionId" | "orderIntentId" | "mealId" | "mealName" | "mealSlug" | "mealImageUrl" | "rotationId" | "quantity" | "unitPrice" | "totalAmount" | "currency" | "notes" | "deliveryMethod" | "pickupLocation" | "createdAt" | "updatedAt", ExtArgs["result"]["checkoutSessionItem"]>
 export type CheckoutSessionItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   checkoutSession?: boolean | Prisma.CheckoutSessionDefaultArgs<ExtArgs>
   orderIntent?: boolean | Prisma.OrderIntentDefaultArgs<ExtArgs>
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
+  substitutions?: boolean | Prisma.CheckoutSessionItem$substitutionsArgs<ExtArgs>
+  modifiers?: boolean | Prisma.CheckoutSessionItem$modifiersArgs<ExtArgs>
+  _count?: boolean | Prisma.CheckoutSessionItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CheckoutSessionItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   checkoutSession?: boolean | Prisma.CheckoutSessionDefaultArgs<ExtArgs>
@@ -1656,6 +1839,8 @@ export type $CheckoutSessionItemPayload<ExtArgs extends runtime.Types.Extensions
     orderIntent: Prisma.$OrderIntentPayload<ExtArgs>
     meal: Prisma.$MealPayload<ExtArgs>
     rotation: Prisma.$WeeklyRotationPayload<ExtArgs>
+    substitutions: Prisma.$CheckoutItemSubstitutionPayload<ExtArgs>[]
+    modifiers: Prisma.$CheckoutItemModifierPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1670,9 +1855,6 @@ export type $CheckoutSessionItemPayload<ExtArgs extends runtime.Types.Extensions
     unitPrice: runtime.Decimal
     totalAmount: runtime.Decimal
     currency: string
-    substitutions: runtime.JsonValue | null
-    modifiers: runtime.JsonValue | null
-    proteinBoost: boolean
     notes: string | null
     deliveryMethod: $Enums.DeliveryMethod
     pickupLocation: string | null
@@ -2076,6 +2258,8 @@ export interface Prisma__CheckoutSessionItemClient<T, Null = never, ExtArgs exte
   orderIntent<T extends Prisma.OrderIntentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderIntentDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderIntentClient<runtime.Types.Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   meal<T extends Prisma.MealDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MealDefaultArgs<ExtArgs>>): Prisma.Prisma__MealClient<runtime.Types.Result.GetResult<Prisma.$MealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   rotation<T extends Prisma.WeeklyRotationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WeeklyRotationDefaultArgs<ExtArgs>>): Prisma.Prisma__WeeklyRotationClient<runtime.Types.Result.GetResult<Prisma.$WeeklyRotationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  substitutions<T extends Prisma.CheckoutSessionItem$substitutionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CheckoutSessionItem$substitutionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheckoutItemSubstitutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  modifiers<T extends Prisma.CheckoutSessionItem$modifiersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CheckoutSessionItem$modifiersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheckoutItemModifierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2117,9 +2301,6 @@ export interface CheckoutSessionItemFieldRefs {
   readonly unitPrice: Prisma.FieldRef<"CheckoutSessionItem", 'Decimal'>
   readonly totalAmount: Prisma.FieldRef<"CheckoutSessionItem", 'Decimal'>
   readonly currency: Prisma.FieldRef<"CheckoutSessionItem", 'String'>
-  readonly substitutions: Prisma.FieldRef<"CheckoutSessionItem", 'Json'>
-  readonly modifiers: Prisma.FieldRef<"CheckoutSessionItem", 'Json'>
-  readonly proteinBoost: Prisma.FieldRef<"CheckoutSessionItem", 'Boolean'>
   readonly notes: Prisma.FieldRef<"CheckoutSessionItem", 'String'>
   readonly deliveryMethod: Prisma.FieldRef<"CheckoutSessionItem", 'DeliveryMethod'>
   readonly pickupLocation: Prisma.FieldRef<"CheckoutSessionItem", 'String'>
@@ -2518,6 +2699,54 @@ export type CheckoutSessionItemDeleteManyArgs<ExtArgs extends runtime.Types.Exte
    * Limit how many CheckoutSessionItems to delete.
    */
   limit?: number
+}
+
+/**
+ * CheckoutSessionItem.substitutions
+ */
+export type CheckoutSessionItem$substitutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CheckoutItemSubstitution
+   */
+  select?: Prisma.CheckoutItemSubstitutionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CheckoutItemSubstitution
+   */
+  omit?: Prisma.CheckoutItemSubstitutionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutItemSubstitutionInclude<ExtArgs> | null
+  where?: Prisma.CheckoutItemSubstitutionWhereInput
+  orderBy?: Prisma.CheckoutItemSubstitutionOrderByWithRelationInput | Prisma.CheckoutItemSubstitutionOrderByWithRelationInput[]
+  cursor?: Prisma.CheckoutItemSubstitutionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CheckoutItemSubstitutionScalarFieldEnum | Prisma.CheckoutItemSubstitutionScalarFieldEnum[]
+}
+
+/**
+ * CheckoutSessionItem.modifiers
+ */
+export type CheckoutSessionItem$modifiersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CheckoutItemModifier
+   */
+  select?: Prisma.CheckoutItemModifierSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CheckoutItemModifier
+   */
+  omit?: Prisma.CheckoutItemModifierOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutItemModifierInclude<ExtArgs> | null
+  where?: Prisma.CheckoutItemModifierWhereInput
+  orderBy?: Prisma.CheckoutItemModifierOrderByWithRelationInput | Prisma.CheckoutItemModifierOrderByWithRelationInput[]
+  cursor?: Prisma.CheckoutItemModifierWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CheckoutItemModifierScalarFieldEnum | Prisma.CheckoutItemModifierScalarFieldEnum[]
 }
 
 /**

@@ -25,7 +25,6 @@ export function hydrateOrderBuilderFromCartLine(
   quantity: number;
   selectedSubstitutions: Record<string, string>;
   selectedModifiers: Record<string, string[]>;
-  proteinBoost: boolean;
   notes: string;
 } {
   const baseSubs = defaultSubstitutionSelection(meal);
@@ -34,13 +33,13 @@ export function hydrateOrderBuilderFromCartLine(
     let groupId = s.groupId;
     if (!groupId) {
       const g = meal.substitutionGroups.find((x) => x.name === s.groupName);
-      groupId = g?.id;
+      groupId = g?.id ?? null;
     }
     let optionId = s.optionId;
     if (groupId && !optionId) {
       const g = meal.substitutionGroups.find((x) => x.id === groupId);
       const o = g?.options.find((x) => x.name === s.optionName);
-      optionId = o?.id;
+      optionId = o?.id ?? null;
     }
     if (groupId && optionId) {
       baseSubs[groupId] = optionId;
@@ -52,7 +51,7 @@ export function hydrateOrderBuilderFromCartLine(
     let groupId = m.groupId;
     if (!groupId) {
       const g = meal.modifierGroups.find((x) => x.name === m.groupName);
-      groupId = g?.id;
+      groupId = g?.id ?? null;
     }
     if (!groupId) {
       continue;
@@ -62,14 +61,15 @@ export function hydrateOrderBuilderFromCartLine(
       continue;
     }
 
-    let optionIds = m.optionIds?.length ? [...m.optionIds] : [];
-    if (optionIds.length === 0 && m.optionNames?.length) {
-      optionIds = m.optionNames
-        .map((name) => group.options.find((o) => o.name === name)?.id)
-        .filter(Boolean) as string[];
+    // Flat structure: each row has one optionId/optionName
+    let optionId = m.optionId;
+    if (!optionId && m.optionName) {
+      optionId = group.options.find((o) => o.name === m.optionName)?.id ?? null;
     }
-    if (optionIds.length > 0) {
-      selectedModifiers[groupId] = optionIds;
+    if (optionId) {
+      const existing = selectedModifiers[groupId] ?? [];
+      existing.push(optionId);
+      selectedModifiers[groupId] = existing;
     }
   }
 
@@ -77,7 +77,6 @@ export function hydrateOrderBuilderFromCartLine(
     quantity: line.quantity,
     selectedSubstitutions: baseSubs,
     selectedModifiers,
-    proteinBoost: line.proteinBoost,
     notes: line.notes?.trim() ?? "",
   };
 }

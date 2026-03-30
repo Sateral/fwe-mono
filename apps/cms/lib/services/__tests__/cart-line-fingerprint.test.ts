@@ -6,47 +6,48 @@ describe("cartLineFingerprint", () => {
   it("matches when substitution and modifier order differs", () => {
     const a = cartLineFingerprint({
       mealId: "m1",
-      proteinBoost: false,
       notes: "",
       substitutions: [
         { groupId: "b", optionId: "2" },
         { groupId: "a", optionId: "1" },
       ],
       modifiers: [
-        { groupId: "z", optionIds: ["c", "a"] },
-        { groupId: "y", optionIds: ["x"] },
+        { groupId: "z", optionId: "c" },
+        { groupId: "z", optionId: "a" },
+        { groupId: "y", optionId: "x" },
       ],
     });
     const b = cartLineFingerprint({
       mealId: "m1",
-      proteinBoost: false,
       notes: "",
       substitutions: [
         { groupId: "a", optionId: "1" },
         { groupId: "b", optionId: "2" },
       ],
       modifiers: [
-        { groupId: "y", optionIds: ["x"] },
-        { groupId: "z", optionIds: ["a", "c"] },
+        { groupId: "y", optionId: "x" },
+        { groupId: "z", optionId: "a" },
+        { groupId: "z", optionId: "c" },
       ],
     });
     expect(a).toBe(b);
   });
 
-  it("differs when optionIds differ", () => {
+  it("differs when optionId differs", () => {
     const a = cartLineFingerprint({
       mealId: "m1",
-      proteinBoost: false,
       notes: null,
       substitutions: [],
-      modifiers: [{ groupId: "g", optionIds: ["1", "2"] }],
+      modifiers: [
+        { groupId: "g", optionId: "1" },
+        { groupId: "g", optionId: "2" },
+      ],
     });
     const b = cartLineFingerprint({
       mealId: "m1",
-      proteinBoost: false,
       notes: null,
       substitutions: [],
-      modifiers: [{ groupId: "g", optionIds: ["1"] }],
+      modifiers: [{ groupId: "g", optionId: "1" }],
     });
     expect(a).not.toBe(b);
   });
@@ -54,14 +55,12 @@ describe("cartLineFingerprint", () => {
   it("trims notes", () => {
     const a = cartLineFingerprint({
       mealId: "m1",
-      proteinBoost: true,
       notes: "  hi  ",
       substitutions: [],
       modifiers: [],
     });
     const b = cartLineFingerprint({
       mealId: "m1",
-      proteinBoost: true,
       notes: "hi",
       substitutions: [],
       modifiers: [],

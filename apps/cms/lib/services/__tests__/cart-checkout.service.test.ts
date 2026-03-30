@@ -22,6 +22,12 @@ const prismaMock = vi.hoisted(() => ({
     create: vi.fn(),
     updateMany: vi.fn(),
   },
+  orderGroup: {
+    upsert: vi.fn(),
+  },
+  weeklyRotation: {
+    findUnique: vi.fn(),
+  },
   $transaction: vi.fn(),
 }));
 
@@ -79,7 +85,16 @@ describe("cart-checkout.service", () => {
     prismaMock.orderIntent.findFirst.mockReset();
     prismaMock.orderIntent.create.mockReset();
     prismaMock.orderIntent.updateMany.mockReset();
+    prismaMock.orderGroup.upsert.mockReset();
+    prismaMock.weeklyRotation.findUnique.mockReset();
     prismaMock.$transaction.mockReset();
+    prismaMock.$transaction.mockImplementation(async (fn: (db: typeof prismaMock) => unknown) =>
+      fn(prismaMock),
+    );
+    prismaMock.orderGroup.upsert.mockResolvedValue({
+      id: "order_group_1",
+      checkoutSessionId: "checkout_session_123",
+    });
     stripeMock.checkout.sessions.create.mockReset();
     stripeMock.checkout.sessions.retrieve.mockReset();
     stripeMock.checkout.sessions.expire.mockReset();
@@ -102,7 +117,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 12.5,
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           meal: {
             id: "meal_1",
@@ -166,7 +180,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 12.5,
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           meal: {
             id: "meal_1",
@@ -211,8 +224,7 @@ describe("cart-checkout.service", () => {
           quantity: 2,
           unitPrice: 12.5,
           substitutions: [{ groupName: "Base", optionName: "Rice" }],
-          modifiers: [{ groupName: "Sauce", optionNames: ["Hot"] }],
-          proteinBoost: false,
+          modifiers: [{ groupName: "Sauce", optionName: "Hot" }],
           notes: "No onions",
           deliveryMethod: "DELIVERY",
           pickupLocation: null,
@@ -231,7 +243,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 15,
           substitutions: [],
           modifiers: [],
-          proteinBoost: true,
           notes: null,
           deliveryMethod: "PICKUP",
           pickupLocation: "Xtreme Couture",
@@ -312,6 +323,7 @@ describe("cart-checkout.service", () => {
     prismaMock.checkoutSession.findUnique.mockResolvedValue({
       id: "checkout_session_123",
       cartId: "cart_123",
+      userId: "user_123",
       stripeSessionId: "cs_cart_123",
       stripePaymentIntentId: null,
       customerEmail: "customer@example.com",
@@ -329,8 +341,7 @@ describe("cart-checkout.service", () => {
           totalAmount: 25,
           currency: "cad",
           substitutions: [{ groupName: "Base", optionName: "Rice" }],
-          modifiers: [{ groupName: "Sauce", optionNames: ["Hot"] }],
-          proteinBoost: false,
+          modifiers: [{ groupName: "Sauce", optionName: "Hot" }],
           notes: "No onions",
           deliveryMethod: "DELIVERY",
           pickupLocation: null,
@@ -346,7 +357,6 @@ describe("cart-checkout.service", () => {
           currency: "cad",
           substitutions: [],
           modifiers: [],
-          proteinBoost: true,
           notes: null,
           deliveryMethod: "PICKUP",
           pickupLocation: "Xtreme Couture",
@@ -367,7 +377,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 12.5,
           substitutions: [{ groupName: "Base", optionName: "Potatoes" }],
           modifiers: [{ groupName: "Sauce", optionNames: ["Mild"] }],
-          proteinBoost: false,
           notes: "Changed after checkout",
           meal: {
             id: "meal_1",
@@ -384,7 +393,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 15,
           substitutions: [],
           modifiers: [],
-          proteinBoost: true,
           notes: null,
           meal: {
             id: "meal_2",
@@ -400,6 +408,8 @@ describe("cart-checkout.service", () => {
     stripeMock.checkout.sessions.retrieve.mockResolvedValue({
       id: "cs_cart_123",
       payment_status: "paid",
+      amount_total: 4000,
+      currency: "cad",
       payment_intent: {
         id: "pi_cart_123",
         latest_charge: {
@@ -419,30 +429,35 @@ describe("cart-checkout.service", () => {
     const createdOrders = await finalizeCartCheckoutSession("cs_cart_123");
 
     expect(createdOrders).toHaveLength(2);
+    expect(prismaMock.orderGroup.upsert).toHaveBeenCalledTimes(1);
     expect(orderServiceMock.createOrder).toHaveBeenCalledTimes(2);
     expect(prismaMock.cart.findUnique).not.toHaveBeenCalled();
     expect(orderServiceMock.createOrder).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({
         orderIntentId: "intent_1",
+        orderGroupId: "order_group_1",
         substitutions: [{ groupName: "Base", optionName: "Rice" }],
-        modifiers: [{ groupName: "Sauce", optionNames: ["Hot"] }],
+        modifiers: [{ groupName: "Sauce", optionName: "Hot" }],
         notes: "No onions",
         deliveryMethod: "DELIVERY",
         pickupLocation: undefined,
         stripeSessionId: "cs_cart_123",
         stripePaymentIntentId: "pi_cart_123",
       }),
+      expect.anything(),
     );
     expect(orderServiceMock.createOrder).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({
         orderIntentId: "intent_2",
+        orderGroupId: "order_group_1",
         deliveryMethod: "PICKUP",
         pickupLocation: "Xtreme Couture",
         stripeSessionId: "cs_cart_123",
         stripePaymentIntentId: "pi_cart_123",
       }),
+      expect.anything(),
     );
   });
 
@@ -475,8 +490,7 @@ describe("cart-checkout.service", () => {
           totalAmount: 25,
           currency: "cad",
           substitutions: [{ groupName: "Base", optionName: "Rice" }],
-          modifiers: [{ groupName: "Sauce", optionNames: ["Hot"] }],
-          proteinBoost: false,
+          modifiers: [{ groupName: "Sauce", optionName: "Hot" }],
           notes: "No onions",
           deliveryMethod: "DELIVERY",
           pickupLocation: null,
@@ -492,7 +506,6 @@ describe("cart-checkout.service", () => {
           currency: "cad",
           substitutions: [],
           modifiers: [],
-          proteinBoost: true,
           notes: null,
           deliveryMethod: "PICKUP",
           pickupLocation: "Xtreme Couture",
@@ -503,6 +516,8 @@ describe("cart-checkout.service", () => {
     stripeMock.checkout.sessions.retrieve.mockResolvedValue({
       id: "cs_cart_123",
       payment_status: "paid",
+      amount_total: 4000,
+      currency: "cad",
       payment_intent: {
         id: "pi_cart_123",
         latest_charge: {
@@ -526,9 +541,11 @@ describe("cart-checkout.service", () => {
     expect(orderServiceMock.createOrder).toHaveBeenCalledWith(
       expect.objectContaining({
         orderIntentId: "intent_2",
+        orderGroupId: "order_group_1",
         stripeSessionId: "cs_cart_123",
         stripePaymentIntentId: "pi_cart_123",
       }),
+      expect.anything(),
     );
     expect(createdOrders).toEqual([
       { id: "order_1", orderIntentId: "intent_1" },
@@ -563,7 +580,6 @@ describe("cart-checkout.service", () => {
           currency: "cad",
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           deliveryMethod: "DELIVERY",
           pickupLocation: null,
@@ -574,6 +590,8 @@ describe("cart-checkout.service", () => {
     stripeMock.checkout.sessions.retrieve.mockResolvedValue({
       id: "cs_cart_123",
       payment_status: "paid",
+      amount_total: 2500,
+      currency: "cad",
       payment_intent: null,
       metadata: {
         checkoutSessionId: "checkout_session_123",
@@ -590,8 +608,10 @@ describe("cart-checkout.service", () => {
     expect(orderServiceMock.createOrder).toHaveBeenCalledWith(
       expect.objectContaining({
         stripeSessionId: "cs_cart_123",
+        orderGroupId: "order_group_1",
         stripePaymentIntentId: undefined,
       }),
+      expect.anything(),
     );
   });
 
@@ -609,7 +629,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 19.5,
           substitutions: [{ groupName: "Base", optionName: "Potatoes" }],
           modifiers: [{ groupName: "Sauce", optionNames: ["Mild"] }],
-          proteinBoost: true,
           notes: "Changed after snapshot",
           meal: {
             id: "meal_1",
@@ -643,8 +662,7 @@ describe("cart-checkout.service", () => {
           totalAmount: 25,
           currency: "cad",
           substitutions: [{ groupName: "Base", optionName: "Rice" }],
-          modifiers: [{ groupName: "Sauce", optionNames: ["Hot"] }],
-          proteinBoost: false,
+          modifiers: [{ groupName: "Sauce", optionName: "Hot" }],
           notes: "Original snapshot",
           deliveryMethod: "DELIVERY",
           pickupLocation: null,
@@ -712,7 +730,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 12.5,
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           meal: {
             id: "meal_1",
@@ -776,7 +793,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 12.5,
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           meal: {
             id: "meal_1",
@@ -811,7 +827,6 @@ describe("cart-checkout.service", () => {
           currency: "cad",
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           deliveryMethod: "DELIVERY",
           pickupLocation: null,
@@ -853,7 +868,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 12.5,
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           meal: {
             id: "meal_1",
@@ -890,7 +904,6 @@ describe("cart-checkout.service", () => {
             currency: "cad",
             substitutions: [],
             modifiers: [],
-            proteinBoost: false,
             notes: null,
             deliveryMethod: "DELIVERY",
             pickupLocation: null,
@@ -951,7 +964,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 99,
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           meal: {
             id: "meal_changed",
@@ -989,7 +1001,6 @@ describe("cart-checkout.service", () => {
           currency: "cad",
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           deliveryMethod: "DELIVERY",
           pickupLocation: null,
@@ -1048,7 +1059,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 12.5,
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           meal: {
             id: "meal_1",
@@ -1086,7 +1096,6 @@ describe("cart-checkout.service", () => {
           currency: "cad",
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           deliveryMethod: "DELIVERY",
           pickupLocation: null,
@@ -1134,7 +1143,6 @@ describe("cart-checkout.service", () => {
           unitPrice: 12.98,
           substitutions: [],
           modifiers: [],
-          proteinBoost: false,
           notes: null,
           meal: {
             id: "meal_1",
@@ -1171,7 +1179,6 @@ describe("cart-checkout.service", () => {
             currency: "cad",
             substitutions: [],
             modifiers: [],
-            proteinBoost: false,
             notes: null,
             deliveryMethod: "DELIVERY",
             pickupLocation: null,

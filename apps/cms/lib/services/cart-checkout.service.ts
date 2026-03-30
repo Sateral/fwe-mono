@@ -22,8 +22,17 @@ const WEB_BASE_URL = process.env.WEB_BASE_URL || "http://localhost:3000";
 // Types
 // ============================================
 
+/** Substitution / modifier row shape from junction tables. */
+interface CustomizationRow {
+  id: string;
+  groupId: string | null;
+  groupName: string;
+  optionId: string | null;
+  optionName: string;
+}
+
 /**
- * Cart shape after Prisma includes (items → meal, rotation).
+ * Cart shape after Prisma includes (items → meal, rotation, substitutions, modifiers).
  * Used internally by all checkout helpers.
  */
 type CheckoutCart = {
@@ -37,9 +46,8 @@ type CheckoutCart = {
     rotationId: string | null;
     quantity: number;
     unitPrice: Prisma.Decimal | number;
-    substitutions: unknown;
-    modifiers: unknown;
-    proteinBoost: boolean;
+    substitutions: CustomizationRow[];
+    modifiers: CustomizationRow[];
     notes: string | null;
     meal: {
       id: string;
@@ -65,6 +73,7 @@ type CheckoutSnapshot = {
   clientRequestId: string | null;
   status: string;
   cartId: string;
+  /** Present on real `CheckoutSession` rows; required for order creation. */
   userId: string;
   stripeSessionId: string | null;
   stripePaymentIntentId: string | null;
@@ -84,9 +93,8 @@ type CheckoutSnapshot = {
     unitPrice: Prisma.Decimal | number;
     totalAmount: Prisma.Decimal | number;
     currency: string;
-    substitutions: unknown;
-    modifiers: unknown;
-    proteinBoost: boolean;
+    substitutions: CustomizationRow[];
+    modifiers: CustomizationRow[];
     notes: string | null;
     deliveryMethod: "DELIVERY" | "PICKUP";
     pickupLocation: string | null;
@@ -110,6 +118,17 @@ const checkoutCartInclude = {
         },
       },
       rotation: true,
+      substitutions: true,
+      modifiers: true,
+    },
+  },
+};
+
+const checkoutSnapshotInclude = {
+  items: {
+    include: {
+      substitutions: true,
+      modifiers: true,
     },
   },
 };
@@ -172,14 +191,10 @@ function buildLineItem(
   deliveryMethod: "DELIVERY" | "PICKUP",
   pickupLocation?: string,
 ) {
-  const substitutions = (item.substitutions ?? []) as CreateOrderInput["substitutions"];
-  const modifiers = (item.modifiers ?? []) as CreateOrderInput["modifiers"];
-
   const description = formatLineItemDescription(
     item.meal,
-    substitutions,
-    modifiers,
-    item.proteinBoost,
+    item.substitutions,
+    item.modifiers,
     item.notes ?? undefined,
     deliveryMethod,
     pickupLocation,
@@ -213,7 +228,6 @@ function buildLineItemFromSnapshot(item: CheckoutSnapshotItem) {
       unitPrice: item.unitPrice,
       substitutions: item.substitutions,
       modifiers: item.modifiers,
-      proteinBoost: item.proteinBoost,
       notes: item.notes,
       meal: {
         id: item.mealId,
@@ -231,24 +245,15 @@ function buildLineItemFromSnapshot(item: CheckoutSnapshotItem) {
 function buildStripeMetadata(
   cart: CheckoutCart,
   snapshot: CheckoutSnapshot,
-  items: Array<{ substitutions: unknown; modifiers: unknown }>,
+  items: Array<{ substitutions: CustomizationRow[]; modifiers: CustomizationRow[] }>,
   deliveryMethod: "DELIVERY" | "PICKUP",
   pickupLocation?: string,
 ) {
   const substitutionsSummary = formatSubstitutionsSummary(
-    items
-      .flatMap(
-        (item) =>
-          ((item.substitutions as CreateOrderInput["substitutions"]) ?? []),
-      )
-      .slice(0, 10),
+    items.flatMap((item) => item.substitutions).slice(0, 10),
   ).slice(0, 200);
   const modifiersSummary = formatModifiersSummary(
-    items
-      .flatMap(
-        (item) => ((item.modifiers as CreateOrderInput["modifiers"]) ?? []),
-      )
-      .slice(0, 10),
+    items.flatMap((item) => item.modifiers).slice(0, 10),
   ).slice(0, 200);
 
   return {
@@ -297,12 +302,10 @@ async function ensureOrderIntentForCartItem(
       data: {
         quantity: item.quantity,
         totalAmount: toNumber(item.unitPrice) * item.quantity,
-        substitutions: item.substitutions as object[] | undefined,
-        modifiers: item.modifiers as object[] | undefined,
-        proteinBoost: item.proteinBoost,
         notes: item.notes,
         deliveryMethod,
         pickupLocation: deliveryMethod === "PICKUP" ? pickupLocation : undefined,
+        // Junction tables for OrderIntent are handled separately if needed
       },
     });
   }
@@ -319,13 +322,26 @@ async function ensureOrderIntentForCartItem(
         totalAmount: toNumber(item.unitPrice) * item.quantity,
         currency: "cad",
         settlementMethod: cart.settlementMethod,
-        substitutions: item.substitutions as object[] | undefined,
-        modifiers: item.modifiers as object[] | undefined,
-        proteinBoost: item.proteinBoost,
         notes: item.notes,
         deliveryMethod,
         pickupLocation: deliveryMethod === "PICKUP" ? pickupLocation : undefined,
         status: "CREATED",
+        substitutions: {
+          create: item.substitutions.map((s) => ({
+            groupName: s.groupName,
+            optionName: s.optionName,
+            groupId: s.groupId,
+            optionId: s.optionId,
+          })),
+        },
+        modifiers: {
+          create: item.modifiers.map((m) => ({
+            groupName: m.groupName,
+            optionName: m.optionName,
+            groupId: m.groupId,
+            optionId: m.optionId,
+          })),
+        },
       },
     });
   } catch (error) {
@@ -370,17 +386,76 @@ async function getExistingCheckoutSnapshot(
         { cartId, status: "SESSION_CREATED" },
       ],
     },
-    include: {
-      items: true,
-    },
+    include: checkoutSnapshotInclude,
   }) as Promise<CheckoutSnapshot | null>;
 }
 
 async function getCheckoutSnapshotByStripeSessionId(stripeSessionId: string) {
   return prisma.checkoutSession.findUnique({
     where: { stripeSessionId },
-    include: { items: true },
+    include: checkoutSnapshotInclude,
   }) as Promise<CheckoutSnapshot | null>;
+}
+
+/** Resolve immutable checkout snapshot for a Stripe Checkout session (metadata or Stripe session id). */
+export async function loadCheckoutSnapshotForStripeSession(
+  session: Stripe.Checkout.Session,
+): Promise<CheckoutSnapshot | null> {
+  const checkoutSessionId = getCheckoutSessionIdFromSession(session);
+  if (checkoutSessionId) {
+    const row = await prisma.checkoutSession.findUnique({
+      where: { id: checkoutSessionId },
+      include: checkoutSnapshotInclude,
+    });
+    return row as CheckoutSnapshot | null;
+  }
+  return getCheckoutSnapshotByStripeSessionId(session.id);
+}
+
+/** Build per-line `CreateOrderInput` from snapshot + Stripe payment ids (no `orderGroupId`). */
+export function buildCreateOrderInputsFromCheckoutSnapshot(
+  snapshot: CheckoutSnapshot,
+  session: Stripe.Checkout.Session,
+  paymentIntentId: string | undefined,
+  stripeChargeId: string | undefined,
+  stripeBalanceTransactionId: string | undefined,
+): CreateOrderInput[] {
+  return snapshot.items.map((item) => {
+    const substitutions = item.substitutions.map((s) => ({
+      groupName: s.groupName,
+      optionName: s.optionName,
+      groupId: s.groupId ?? undefined,
+      optionId: s.optionId ?? undefined,
+    }));
+    const modifiers = item.modifiers.map((m) => ({
+      groupName: m.groupName,
+      optionName: m.optionName,
+      groupId: m.groupId ?? undefined,
+      optionId: m.optionId ?? undefined,
+    }));
+    return {
+      userId: snapshot.userId,
+      mealId: item.mealId,
+      rotationId: item.rotationId,
+      quantity: item.quantity,
+      unitPrice: toNumber(item.unitPrice),
+      totalAmount: toNumber(item.totalAmount),
+      currency: item.currency,
+      orderIntentId: item.orderIntentId,
+      checkoutSessionId: snapshot.id,
+      substitutions,
+      modifiers,
+      notes: item.notes ?? undefined,
+      deliveryMethod: item.deliveryMethod,
+      pickupLocation: item.pickupLocation ?? undefined,
+      customerEmail: snapshot.customerEmail,
+      customerName: snapshot.customerName ?? undefined,
+      stripeSessionId: session.id,
+      stripePaymentIntentId: paymentIntentId ?? undefined,
+      stripeChargeId,
+      stripeBalanceTransactionId,
+    };
+  });
 }
 
 // ============================================
@@ -448,10 +523,23 @@ async function finalizeMealPlanCart(
             quantity: item.quantity,
             unitPrice: toNumber(item.unitPrice),
             totalAmount: toNumber(item.unitPrice) * item.quantity,
-            substitutions: item.substitutions as object[] | undefined,
-            modifiers: item.modifiers as object[] | undefined,
             orderIntentId: orderIntents[index]!.id,
-            proteinBoost: item.proteinBoost,
+            substitutions: {
+              create: item.substitutions.map((s) => ({
+                groupName: s.groupName,
+                optionName: s.optionName,
+                groupId: s.groupId,
+                optionId: s.optionId,
+              })),
+            },
+            modifiers: {
+              create: item.modifiers.map((m) => ({
+                groupName: m.groupName,
+                optionName: m.optionName,
+                groupId: m.groupId,
+                optionId: m.optionId,
+              })),
+            },
             notes: item.notes,
             deliveryMethod,
             pickupLocation,
@@ -596,7 +684,7 @@ async function createFreshStripeSession(
   let snapshot: CheckoutSnapshot | null = null;
 
   try {
-    snapshot = await prisma.checkoutSession.create({
+    snapshot = (await prisma.checkoutSession.create({
       data: {
         clientRequestId: checkoutClientRequestId,
         cartId: cart.id,
@@ -619,19 +707,30 @@ async function createFreshStripeSession(
             unitPrice: toNumber(item.unitPrice),
             totalAmount: toNumber(item.unitPrice) * item.quantity,
             currency: "cad",
-            substitutions: item.substitutions as object[] | undefined,
-            modifiers: item.modifiers as object[] | undefined,
-            proteinBoost: item.proteinBoost,
             notes: item.notes,
             deliveryMethod,
             pickupLocation,
+            substitutions: {
+              create: item.substitutions.map((s) => ({
+                groupName: s.groupName,
+                optionName: s.optionName,
+                groupId: s.groupId,
+                optionId: s.optionId,
+              })),
+            },
+            modifiers: {
+              create: item.modifiers.map((m) => ({
+                groupName: m.groupName,
+                optionName: m.optionName,
+                groupId: m.groupId,
+                optionId: m.optionId,
+              })),
+            },
           })),
         },
       },
-      include: {
-        items: true,
-      },
-    });
+      include: checkoutSnapshotInclude,
+    })) as CheckoutSnapshot;
   } catch (error) {
     if (isUniqueConstraintError(error)) {
       snapshot = await getExistingCheckoutSnapshot(cart.id, input.requestId);
@@ -856,14 +955,7 @@ export async function finalizeCartCheckoutSession(sessionId: string) {
     return [];
   }
 
-  // --- Locate the immutable snapshot ---
-  const checkoutSessionId = getCheckoutSessionIdFromSession(session);
-  const snapshot = checkoutSessionId
-    ? ((await prisma.checkoutSession.findUnique({
-        where: { id: checkoutSessionId },
-        include: { items: true },
-      })) as CheckoutSnapshot | null)
-    : await getCheckoutSnapshotByStripeSessionId(session.id);
+  const snapshot = await loadCheckoutSnapshotForStripeSession(session);
 
   if (!snapshot) {
     throw new Error(`Checkout session snapshot not found for ${sessionId}`);
@@ -892,62 +984,90 @@ export async function finalizeCartCheckoutSession(sessionId: string) {
       .map((order) => [order.orderIntentId as string, order]),
   );
 
-  for (const item of snapshot.items) {
-    if (existingOrderByIntentId.has(item.orderIntentId)) {
-      continue;
+  const lineTotal = snapshot.items.reduce((sum, item) => sum + toNumber(item.totalAmount), 0);
+  const stripeTotalMajor =
+    session.amount_total != null && session.amount_total > 0
+      ? session.amount_total / 100
+      : null;
+  const orderGroupTotal = stripeTotalMajor ?? lineTotal;
+  if (orderGroupTotal <= 0) {
+    throw new Error(`Invalid checkout total for session ${sessionId}`);
+  }
+  const orderGroupCurrency =
+    (typeof session.currency === "string" ? session.currency : null)?.toLowerCase() ??
+    snapshot.items[0]?.currency?.toLowerCase() ??
+    "cad";
+
+  const baseOrderInputs = buildCreateOrderInputsFromCheckoutSnapshot(
+    snapshot,
+    session,
+    paymentIntentId,
+    stripeChargeId,
+    stripeBalanceTransactionId,
+  );
+
+  await prisma.$transaction(async (tx) => {
+    const orderGroup = await tx.orderGroup.upsert({
+      where: { checkoutSessionId: snapshot.id },
+      create: {
+        checkoutSessionId: snapshot.id,
+        totalAmount: orderGroupTotal,
+        currency: orderGroupCurrency,
+        stripeSessionId: session.id,
+        stripePaymentIntentId: paymentIntentId ?? null,
+        stripeChargeId: stripeChargeId ?? null,
+      },
+      update: {
+        totalAmount: orderGroupTotal,
+        currency: orderGroupCurrency,
+        stripeSessionId: session.id,
+        stripePaymentIntentId: paymentIntentId ?? null,
+        stripeChargeId: stripeChargeId ?? null,
+      },
+    });
+
+    for (let i = 0; i < snapshot.items.length; i++) {
+      const item = snapshot.items[i]!;
+      if (existingOrderByIntentId.has(item.orderIntentId)) {
+        continue;
+      }
+
+      const base = baseOrderInputs[i];
+      if (!base) continue;
+
+      const orderInput: CreateOrderInput = {
+        ...base,
+        orderGroupId: orderGroup.id,
+      };
+
+      const order = await orderService.createOrder(orderInput, tx);
+      existingOrderByIntentId.set(item.orderIntentId, order);
     }
 
-    const orderInput: CreateOrderInput = {
-      userId: snapshot.userId,
-      mealId: item.mealId,
-      rotationId: item.rotationId,
-      quantity: item.quantity,
-      unitPrice: toNumber(item.unitPrice),
-      totalAmount: toNumber(item.totalAmount),
-      currency: item.currency,
-      orderIntentId: item.orderIntentId,
-      substitutions: (item.substitutions ?? undefined) as CreateOrderInput["substitutions"],
-      modifiers: (item.modifiers ?? undefined) as CreateOrderInput["modifiers"],
-      proteinBoost: item.proteinBoost,
-      notes: item.notes ?? undefined,
-      deliveryMethod: item.deliveryMethod,
-      pickupLocation: item.pickupLocation ?? undefined,
-      customerEmail: snapshot.customerEmail,
-      customerName: snapshot.customerName ?? undefined,
-      stripeSessionId: session.id,
-      stripePaymentIntentId: paymentIntentId ?? undefined,
-      stripeChargeId,
-      stripeBalanceTransactionId,
-    };
+    await tx.checkoutSession.update({
+      where: { id: snapshot.id },
+      data: {
+        status: "PAID",
+        stripeSessionId: session.id,
+        stripePaymentIntentId: paymentIntentId ?? null,
+        stripeChargeId,
+        stripeBalanceTransactionId,
+      },
+    });
 
-    const order = await orderService.createOrder(orderInput);
-    existingOrderByIntentId.set(item.orderIntentId, order);
-  }
+    await tx.orderIntent.updateMany({
+      where: {
+        id: { in: snapshot.items.map((item) => item.orderIntentId) },
+      },
+      data: {
+        status: "PAID",
+      },
+    });
 
-  // --- Mark everything as paid ---
-  await prisma.checkoutSession.update({
-    where: { id: snapshot.id },
-    data: {
-      status: "PAID",
-      stripeSessionId: session.id,
-      stripePaymentIntentId: paymentIntentId ?? null,
-      stripeChargeId,
-      stripeBalanceTransactionId,
-    },
-  });
-
-  await prisma.orderIntent.updateMany({
-    where: {
-      id: { in: snapshot.items.map((item) => item.orderIntentId) },
-    },
-    data: {
-      status: "PAID",
-    },
-  });
-
-  await prisma.cart.update({
-    where: { id: snapshot.cartId },
-    data: { status: "CHECKED_OUT" },
+    await tx.cart.update({
+      where: { id: snapshot.cartId },
+      data: { status: "CHECKED_OUT" },
+    });
   });
 
   return prisma.order.findMany({
@@ -973,7 +1093,7 @@ export async function updateCartCheckoutStatus(
   const snapshot = checkoutSessionId
     ? ((await prisma.checkoutSession.findUnique({
         where: { id: checkoutSessionId },
-        include: { items: true },
+        include: checkoutSnapshotInclude,
       })) as CheckoutSnapshot | null)
     : await getCheckoutSnapshotByStripeSessionId(session.id);
 

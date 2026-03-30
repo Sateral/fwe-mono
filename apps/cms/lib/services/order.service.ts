@@ -4,6 +4,9 @@ import type {
   PaymentStatus,
 } from "@fwe/validators";
 import prisma from "../prisma";
+
+/** Subset of Prisma client used by `createOrder` (supports transaction delegates). */
+type OrderCreateDb = Pick<typeof prisma, "order" | "weeklyRotation">;
 import {
   getOrderingWindowForDeliveryWeek,
   weeklyRotationService,
@@ -33,6 +36,8 @@ export const orderService = {
         tags: true,
       },
     },
+    substitutions: true,
+    modifiers: true,
     orderIntent: {
       select: {
         clientRequestId: true,
@@ -44,10 +49,10 @@ export const orderService = {
    * Creates a new order after successful payment.
    * Called by the Stripe webhook handler.
    */
-  async createOrder(input: CreateOrderInput) {
+  async createOrder(input: CreateOrderInput, db: OrderCreateDb = prisma) {
     console.log(`[OrderService] Creating order for user ${input.userId}`);
 
-    const existingOrder = await prisma.order.findFirst({
+    const existingOrder = await db.order.findFirst({
       where: {
         OR: [
           ...(input.orderIntentId ? [{ orderIntentId: input.orderIntentId }] : []),
@@ -63,7 +68,7 @@ export const orderService = {
       return existingOrder;
     }
 
-    const rotationExists = await prisma.weeklyRotation.findUnique({
+    const rotationExists = await db.weeklyRotation.findUnique({
       where: { id: input.rotationId },
       select: { id: true },
     });
@@ -80,11 +85,12 @@ export const orderService = {
 
     try {
       const paidAt = new Date();
-      const order = await prisma.order.create({
+      const order = await db.order.create({
         data: {
           userId: input.userId,
           mealId: input.mealId,
           rotationId,
+          settlementMethod: input.settlementMethod ?? "STRIPE",
           customerName: input.customerName,
           customerEmail: input.customerEmail,
           customerPhone: input.customerPhone,
@@ -96,10 +102,29 @@ export const orderService = {
           quantity: input.quantity,
           unitPrice: input.unitPrice,
           totalAmount: input.totalAmount,
-          substitutions: input.substitutions as unknown as object[] | undefined,
-          modifiers: input.modifiers as unknown as object[] | undefined,
           orderIntentId: input.orderIntentId,
-          proteinBoost: input.proteinBoost ?? false,
+          checkoutSessionId: input.checkoutSessionId,
+          orderGroupId: input.orderGroupId,
+          substitutions: input.substitutions?.length
+            ? {
+                create: input.substitutions.map((s) => ({
+                  groupName: s.groupName,
+                  optionName: s.optionName,
+                  groupId: s.groupId,
+                  optionId: s.optionId,
+                })),
+              }
+            : undefined,
+          modifiers: input.modifiers?.length
+            ? {
+                create: input.modifiers.map((m) => ({
+                  groupName: m.groupName,
+                  optionName: m.optionName,
+                  groupId: m.groupId,
+                  optionId: m.optionId,
+                })),
+              }
+            : undefined,
           notes: input.notes,
           deliveryMethod: input.deliveryMethod ?? "DELIVERY",
           pickupLocation: input.pickupLocation,
@@ -118,7 +143,7 @@ export const orderService = {
       console.log(`[OrderService] Order ${order.id} created successfully`);
       return order;
     } catch (error) {
-      const recoveredOrder = await prisma.order.findFirst({
+      const recoveredOrder = await db.order.findFirst({
         where: {
           OR: [
             ...(input.orderIntentId ? [{ orderIntentId: input.orderIntentId }] : []),
@@ -195,15 +220,37 @@ export const orderService = {
   async updateFulfillmentStatus(
     orderId: string,
     fulfillmentStatus: FulfillmentStatus,
+    changedById?: string,
+    reason?: string,
   ) {
     console.log(
       `[OrderService] Updating order ${orderId} to fulfillment status ${fulfillmentStatus}`,
     );
 
-    return await prisma.order.update({
-      where: { id: orderId },
-      data: { fulfillmentStatus },
-      include: this.orderInclude,
+    return await prisma.$transaction(async (tx) => {
+      // Fetch current status for audit log
+      const current = await tx.order.findUniqueOrThrow({
+        where: { id: orderId },
+        select: { fulfillmentStatus: true },
+      });
+
+      // Create audit log entry
+      await tx.fulfillmentStatusChange.create({
+        data: {
+          orderId,
+          fromStatus: current.fulfillmentStatus,
+          toStatus: fulfillmentStatus,
+          changedById,
+          reason,
+        },
+      });
+
+      // Update the order
+      return await tx.order.update({
+        where: { id: orderId },
+        data: { fulfillmentStatus },
+        include: this.orderInclude,
+      });
     });
   },
 
@@ -359,6 +406,8 @@ export const orderService = {
             },
           },
         },
+        substitutions: true,
+        modifiers: true,
         orderIntent: {
           select: {
             clientRequestId: true,

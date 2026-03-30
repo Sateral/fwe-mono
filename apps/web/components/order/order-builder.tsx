@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Minus,
   Plus,
-  Dumbbell,
   ChevronDown,
   Sparkles,
   Droplet,
@@ -22,8 +21,6 @@ interface OrderBuilderProps {
   onModifierChange: (groupId: string, optionIds: string[]) => void;
   selectedSubstitutions: Record<string, string>;
   onSubstitutionChange: (groupId: string, optionId: string) => void;
-  proteinBoost: boolean;
-  onProteinBoostChange: (value: boolean) => void;
   notes: string;
   onNotesChange: (notes: string) => void;
 }
@@ -36,8 +33,6 @@ const OrderBuilder = ({
   onModifierChange,
   selectedSubstitutions,
   onSubstitutionChange,
-  proteinBoost,
-  onProteinBoostChange,
   notes,
   onNotesChange,
 }: OrderBuilderProps) => {
@@ -48,16 +43,29 @@ const OrderBuilder = ({
     (g) => g.type === "MULTI_SELECT",
   );
 
-  const handleMultiSelect = (groupId: string, optionId: string) => {
+  const handleMultiSelect = (group: ModifierGroup, optionId: string) => {
+    const groupId = group.id;
     const current = selectedModifiers[groupId] || [];
+
     if (current.includes(optionId)) {
-      onModifierChange(
-        groupId,
-        current.filter((id) => id !== optionId)
-      );
-    } else {
-      onModifierChange(groupId, [...current, optionId]);
+      const next = current.filter((id) => id !== optionId);
+      if (group.minSelection > 0 && next.length < group.minSelection) {
+        return;
+      }
+      onModifierChange(groupId, next);
+      return;
     }
+
+    if (group.maxSelection === 1) {
+      onModifierChange(groupId, [optionId]);
+      return;
+    }
+
+    const next = [...current, optionId];
+    if (group.maxSelection != null && next.length > group.maxSelection) {
+      return;
+    }
+    onModifierChange(groupId, next);
   };
 
   const getAddOnIcon = (name: string) => {
@@ -105,42 +113,6 @@ const OrderBuilder = ({
         </div>
       </div>
 
-      {/* Protein Boost Toggle */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Protein boost
-        </label>
-        <div
-          className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-colors ${
-            proteinBoost
-              ? "border-emerald-500 bg-emerald-50"
-              : "border-gray-200 bg-white"
-          }`}
-          onClick={() => onProteinBoostChange(!proteinBoost)}
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-              <Dumbbell className="w-5 h-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="font-medium text-gray-900">+30% protein</p>
-              <p className="text-sm text-gray-500">Adds $2.00 per meal</p>
-            </div>
-          </div>
-          <div
-            className={`w-12 h-6 rounded-full p-1 transition-colors ${
-              proteinBoost ? "bg-emerald-500" : "bg-gray-300"
-            }`}
-          >
-            <div
-              className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                proteinBoost ? "translate-x-6" : "translate-x-0"
-              }`}
-            />
-          </div>
-        </div>
-      </div>
-
       {/* Substitutions (from SubstitutionGroups) */}
       {meal.substitutionGroups.length > 0 && (
         <div className="mb-6">
@@ -174,7 +146,7 @@ const OrderBuilder = ({
                 key={group.id}
                 group={group}
                 selectedOptionId={selectedModifiers[group.id]?.[0]}
-                onChange={(optionId) => onModifierChange(group.id, [optionId])}
+                onChange={(optionIds) => onModifierChange(group.id, optionIds)}
               />
             ))}
           </div>
@@ -202,7 +174,7 @@ const OrderBuilder = ({
                         ? "border-emerald-500 bg-emerald-50"
                         : "border-gray-200 bg-white hover:border-gray-300"
                     }`}
-                    onClick={() => handleMultiSelect(group.id, option.id)}
+                    onClick={() => handleMultiSelect(group, option.id)}
                   >
                     <Icon className="w-5 h-5 text-gray-600" />
                     <div className="flex-1 min-w-0">
@@ -263,7 +235,7 @@ const OrderBuilder = ({
 interface ModifierSingleSelectProps {
   group: ModifierGroup;
   selectedOptionId?: string;
-  onChange: (optionId: string) => void;
+  onChange: (optionIds: string[]) => void;
 }
 
 const ModifierSingleSelect = ({
@@ -273,6 +245,16 @@ const ModifierSingleSelect = ({
 }: ModifierSingleSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectedOption = group.options.find((o) => o.id === selectedOptionId);
+  const canClear = group.minSelection === 0;
+
+  const pickOption = (optionId: string) => {
+    if (optionId === selectedOptionId && canClear) {
+      onChange([]);
+    } else {
+      onChange([optionId]);
+    }
+    setIsOpen(false);
+  };
 
   return (
     <div className="relative">
@@ -304,6 +286,22 @@ const ModifierSingleSelect = ({
             onClick={() => setIsOpen(false)}
           />
           <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-20 overflow-hidden max-h-60 overflow-y-auto">
+            {canClear && (
+              <button
+                type="button"
+                className={`w-full px-4 py-3 text-left text-sm hover:bg-gray-50 transition-colors ${
+                  selectedOptionId == null
+                    ? "bg-emerald-50 text-emerald-700"
+                    : "text-gray-900"
+                }`}
+                onClick={() => {
+                  onChange([]);
+                  setIsOpen(false);
+                }}
+              >
+                None
+              </button>
+            )}
             {group.options.map((option) => (
               <button
                 key={option.id}
@@ -313,10 +311,7 @@ const ModifierSingleSelect = ({
                     ? "bg-emerald-50 text-emerald-700"
                     : "text-gray-900"
                 }`}
-                onClick={() => {
-                  onChange(option.id);
-                  setIsOpen(false);
-                }}
+                onClick={() => pickOption(option.id)}
               >
                 {option.name}
                 {option.extraPrice > 0 && (

@@ -6,10 +6,6 @@ import type { ApiCartItem } from "@fwe/types";
 export function getCartLineSummaryLines(line: ApiCartItem): string[] {
   const lines: string[] = [];
 
-  if (line.proteinBoost) {
-    lines.push("Protein boost (+30%)");
-  }
-
   for (const sub of line.substitutions ?? []) {
     const label = sub.groupName ? `${sub.groupName}: ${sub.optionName}` : sub.optionName;
     if (label.trim()) {
@@ -17,12 +13,16 @@ export function getCartLineSummaryLines(line: ApiCartItem): string[] {
     }
   }
 
+  // Modifiers are now flat: one row per option
+  const modsByGroup = new Map<string, string[]>();
   for (const mod of line.modifiers ?? []) {
-    const names = mod.optionNames?.filter(Boolean).join(", ");
-    if (!names) {
-      continue;
-    }
-    const label = mod.groupName ? `${mod.groupName}: ${names}` : names;
+    if (!mod.optionName) continue;
+    const existing = modsByGroup.get(mod.groupName) ?? [];
+    existing.push(mod.optionName);
+    modsByGroup.set(mod.groupName, existing);
+  }
+  for (const [groupName, optionNames] of modsByGroup) {
+    const label = groupName ? `${groupName}: ${optionNames.join(", ")}` : optionNames.join(", ");
     lines.push(label);
   }
 
