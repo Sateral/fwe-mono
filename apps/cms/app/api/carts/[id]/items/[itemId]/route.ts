@@ -81,7 +81,7 @@ export async function PUT(
     }
 
     const { id, itemId } = await params;
-    const { guest, mealId, quantity, substitutions, modifiers, proteinBoost, notes } =
+    const { guest, mealId, quantity, substitutions, modifiers, notes } =
       parsed.data;
     const userId = await resolveCartOwnerUserId(request, guest ?? null);
 
@@ -97,7 +97,6 @@ export async function PUT(
       quantity,
       substitutions,
       modifiers,
-      proteinBoost,
       notes,
     });
 

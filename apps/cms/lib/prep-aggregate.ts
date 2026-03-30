@@ -1,53 +1,15 @@
 /**
  * Shared prep aggregation for CMS dashboard and prep-sheet API.
  * Groups paid order lines by meal and canonical customization signature.
+ *
+ * With the relational schema, substitutions and modifiers are typed arrays
+ * from junction tables — no JSON parsing required.
  */
 
 import type {
   OrderModifier,
   OrderSubstitution,
 } from "@/lib/types/order-types";
-
-// ============================================
-// Parsing (aligned with production-summary)
-// ============================================
-
-export function parseOrderSubstitutions(value: unknown): OrderSubstitution[] {
-  if (!Array.isArray(value)) return [];
-  return value
-    .filter(
-      (item): item is { groupName: string; optionName: string } =>
-        typeof item === "object" &&
-        item !== null &&
-        "groupName" in item &&
-        "optionName" in item &&
-        typeof item.groupName === "string" &&
-        typeof item.optionName === "string",
-    )
-    .map((item) => ({
-      groupName: item.groupName,
-      optionName: item.optionName,
-    }));
-}
-
-export function parseOrderModifiers(value: unknown): OrderModifier[] {
-  if (!Array.isArray(value)) return [];
-  return value
-    .filter(
-      (item): item is { groupName: string; optionNames: string[] } =>
-        typeof item === "object" &&
-        item !== null &&
-        "groupName" in item &&
-        "optionNames" in item &&
-        typeof item.groupName === "string" &&
-        Array.isArray(item.optionNames) &&
-        item.optionNames.every((name: string) => typeof name === "string"),
-    )
-    .map((item) => ({
-      groupName: item.groupName,
-      optionNames: item.optionNames,
-    }));
-}
 
 // ============================================
 // Defaults: explicit "white rice" on an order still counts as standard
@@ -63,7 +25,7 @@ export type MealSubstitutionDefaultContext = {
 
 /**
  * Removes substitution choices that match the meal's default option for that group.
- * Checkout often persists defaults in JSON; prep grouping should match chef "standard" build.
+ * Checkout often persists defaults; prep grouping should match chef "standard" build.
  */
 export function effectiveSubstitutionsForPrepGrouping(
   raw: OrderSubstitution[],
@@ -93,7 +55,6 @@ export function effectiveSubstitutionsForPrepGrouping(
 export function canonicalPrepConfigKey(input: {
   substitutions: OrderSubstitution[];
   modifiers: OrderModifier[];
-  proteinBoost: boolean;
   notes: string;
 }): string {
   const sortedSubs = [...input.substitutions].sort(
@@ -101,17 +62,24 @@ export function canonicalPrepConfigKey(input: {
       a.groupName.localeCompare(b.groupName) ||
       a.optionName.localeCompare(b.optionName),
   );
-  const sortedMods = [...input.modifiers]
-    .map((m) => ({
-      groupName: m.groupName,
-      optionNames: [...m.optionNames].sort((x, y) => x.localeCompare(y)),
+
+  // Group flat modifier rows back into a map per group for canonical keying
+  const modByGroup = new Map<string, string[]>();
+  for (const m of input.modifiers) {
+    const existing = modByGroup.get(m.groupName) ?? [];
+    existing.push(m.optionName);
+    modByGroup.set(m.groupName, existing);
+  }
+  const sortedMods = Array.from(modByGroup.entries())
+    .map(([groupName, optionNames]) => ({
+      groupName,
+      optionNames: [...optionNames].sort((x, y) => x.localeCompare(y)),
     }))
     .sort((a, b) => a.groupName.localeCompare(b.groupName));
 
   return JSON.stringify({
     s: sortedSubs,
     m: sortedMods,
-    b: input.proteinBoost,
     n: input.notes,
   });
 }
@@ -119,24 +87,30 @@ export function canonicalPrepConfigKey(input: {
 export function buildPrepConfigLabel(input: {
   substitutions: OrderSubstitution[];
   modifiers: OrderModifier[];
-  proteinBoost: boolean;
   notes: string;
 }): string {
   const hasAny =
-    input.proteinBoost ||
     input.substitutions.length > 0 ||
     input.modifiers.length > 0 ||
     input.notes.length > 0;
   if (!hasAny) return "Standard";
 
   const parts: string[] = [];
-  if (input.proteinBoost) parts.push("Protein boost");
   for (const s of input.substitutions) {
     parts.push(`${s.groupName}: ${s.optionName}`);
   }
+
+  // Group flat modifier rows for display
+  const modByGroup = new Map<string, string[]>();
   for (const m of input.modifiers) {
-    parts.push(`${m.groupName}: ${m.optionNames.join(", ")}`);
+    const existing = modByGroup.get(m.groupName) ?? [];
+    existing.push(m.optionName);
+    modByGroup.set(m.groupName, existing);
   }
+  for (const [groupName, optionNames] of modByGroup) {
+    parts.push(`${groupName}: ${optionNames.join(", ")}`);
+  }
+
   if (input.notes.length > 0) {
     const truncated =
       input.notes.length > 80
@@ -157,9 +131,8 @@ export interface PrepOrderLike {
   quantity: number;
   paymentStatus: string;
   fulfillmentStatus: string;
-  substitutions: unknown;
-  modifiers: unknown;
-  proteinBoost?: boolean;
+  substitutions: OrderSubstitution[];
+  modifiers: OrderModifier[];
   notes?: string | null;
   settlementMethod?: string;
   orderIntentId?: string | null;
@@ -171,7 +144,6 @@ export interface MealPrepVariation {
   label: string;
   substitutions: OrderSubstitution[];
   modifiers: OrderModifier[];
-  proteinBoost: boolean;
   note: string;
 }
 
@@ -224,19 +196,16 @@ export function aggregatePrepByMeal(orders: PrepOrderLike[]): MealPrepSummary[] 
       entry.assignedQuantity += order.quantity;
     }
 
-    const rawSubs = parseOrderSubstitutions(order.substitutions);
     const substitutions = effectiveSubstitutionsForPrepGrouping(
-      rawSubs,
+      order.substitutions,
       order.meal,
     );
-    const modifiers = parseOrderModifiers(order.modifiers);
-    const proteinBoost = Boolean(order.proteinBoost);
+    const modifiers = order.modifiers;
     const note = (order.notes ?? "").trim();
 
     const configKey = canonicalPrepConfigKey({
       substitutions,
       modifiers,
-      proteinBoost,
       notes: note,
     });
 
@@ -248,12 +217,10 @@ export function aggregatePrepByMeal(orders: PrepOrderLike[]): MealPrepSummary[] 
         label: buildPrepConfigLabel({
           substitutions,
           modifiers,
-          proteinBoost,
           notes: note,
         }),
         substitutions,
         modifiers,
-        proteinBoost,
         note,
       };
       entry.variationMap.set(configKey, variation);
@@ -297,15 +264,13 @@ export function buildGrocerySignalsFromOrders(
   for (const order of orders) {
     if (!isOrderActiveForPrep(order)) continue;
     const q = order.quantity;
-    for (const sub of parseOrderSubstitutions(order.substitutions)) {
+    for (const sub of order.substitutions) {
       const key = `${sub.groupName}: ${sub.optionName}`;
       substitutionDemand.set(key, (substitutionDemand.get(key) ?? 0) + q);
     }
-    for (const mod of parseOrderModifiers(order.modifiers)) {
-      for (const optionName of mod.optionNames) {
-        const key = `${mod.groupName}: ${optionName}`;
-        modifierDemand.set(key, (modifierDemand.get(key) ?? 0) + q);
-      }
+    for (const mod of order.modifiers) {
+      const key = `${mod.groupName}: ${mod.optionName}`;
+      modifierDemand.set(key, (modifierDemand.get(key) ?? 0) + q);
     }
   }
 

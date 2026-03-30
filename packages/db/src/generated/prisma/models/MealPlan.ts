@@ -28,10 +28,12 @@ export type AggregateMealPlan = {
 
 export type MealPlanAvgAggregateOutputType = {
   weeklyCreditCap: number | null
+  priceAtPurchase: runtime.Decimal | null
 }
 
 export type MealPlanSumAggregateOutputType = {
   weeklyCreditCap: number | null
+  priceAtPurchase: runtime.Decimal | null
 }
 
 export type MealPlanMinAggregateOutputType = {
@@ -42,6 +44,9 @@ export type MealPlanMinAggregateOutputType = {
   startsAt: Date | null
   endsAt: Date | null
   autoRenew: boolean | null
+  priceAtPurchase: runtime.Decimal | null
+  billingInterval: string | null
+  billingCurrency: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +59,9 @@ export type MealPlanMaxAggregateOutputType = {
   startsAt: Date | null
   endsAt: Date | null
   autoRenew: boolean | null
+  priceAtPurchase: runtime.Decimal | null
+  billingInterval: string | null
+  billingCurrency: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +74,9 @@ export type MealPlanCountAggregateOutputType = {
   startsAt: number
   endsAt: number
   autoRenew: number
+  priceAtPurchase: number
+  billingInterval: number
+  billingCurrency: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -74,10 +85,12 @@ export type MealPlanCountAggregateOutputType = {
 
 export type MealPlanAvgAggregateInputType = {
   weeklyCreditCap?: true
+  priceAtPurchase?: true
 }
 
 export type MealPlanSumAggregateInputType = {
   weeklyCreditCap?: true
+  priceAtPurchase?: true
 }
 
 export type MealPlanMinAggregateInputType = {
@@ -88,6 +101,9 @@ export type MealPlanMinAggregateInputType = {
   startsAt?: true
   endsAt?: true
   autoRenew?: true
+  priceAtPurchase?: true
+  billingInterval?: true
+  billingCurrency?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +116,9 @@ export type MealPlanMaxAggregateInputType = {
   startsAt?: true
   endsAt?: true
   autoRenew?: true
+  priceAtPurchase?: true
+  billingInterval?: true
+  billingCurrency?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +131,9 @@ export type MealPlanCountAggregateInputType = {
   startsAt?: true
   endsAt?: true
   autoRenew?: true
+  priceAtPurchase?: true
+  billingInterval?: true
+  billingCurrency?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -211,6 +233,9 @@ export type MealPlanGroupByOutputType = {
   startsAt: Date
   endsAt: Date | null
   autoRenew: boolean
+  priceAtPurchase: runtime.Decimal | null
+  billingInterval: string | null
+  billingCurrency: string
   createdAt: Date
   updatedAt: Date
   _count: MealPlanCountAggregateOutputType | null
@@ -246,6 +271,9 @@ export type MealPlanWhereInput = {
   startsAt?: Prisma.DateTimeFilter<"MealPlan"> | Date | string
   endsAt?: Prisma.DateTimeNullableFilter<"MealPlan"> | Date | string | null
   autoRenew?: Prisma.BoolFilter<"MealPlan"> | boolean
+  priceAtPurchase?: Prisma.DecimalNullableFilter<"MealPlan"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.StringNullableFilter<"MealPlan"> | string | null
+  billingCurrency?: Prisma.StringFilter<"MealPlan"> | string
   createdAt?: Prisma.DateTimeFilter<"MealPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MealPlan"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -261,6 +289,9 @@ export type MealPlanOrderByWithRelationInput = {
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   autoRenew?: Prisma.SortOrder
+  priceAtPurchase?: Prisma.SortOrderInput | Prisma.SortOrder
+  billingInterval?: Prisma.SortOrderInput | Prisma.SortOrder
+  billingCurrency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -279,6 +310,9 @@ export type MealPlanWhereUniqueInput = Prisma.AtLeast<{
   startsAt?: Prisma.DateTimeFilter<"MealPlan"> | Date | string
   endsAt?: Prisma.DateTimeNullableFilter<"MealPlan"> | Date | string | null
   autoRenew?: Prisma.BoolFilter<"MealPlan"> | boolean
+  priceAtPurchase?: Prisma.DecimalNullableFilter<"MealPlan"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.StringNullableFilter<"MealPlan"> | string | null
+  billingCurrency?: Prisma.StringFilter<"MealPlan"> | string
   createdAt?: Prisma.DateTimeFilter<"MealPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MealPlan"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -294,6 +328,9 @@ export type MealPlanOrderByWithAggregationInput = {
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   autoRenew?: Prisma.SortOrder
+  priceAtPurchase?: Prisma.SortOrderInput | Prisma.SortOrder
+  billingInterval?: Prisma.SortOrderInput | Prisma.SortOrder
+  billingCurrency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MealPlanCountOrderByAggregateInput
@@ -314,6 +351,9 @@ export type MealPlanScalarWhereWithAggregatesInput = {
   startsAt?: Prisma.DateTimeWithAggregatesFilter<"MealPlan"> | Date | string
   endsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"MealPlan"> | Date | string | null
   autoRenew?: Prisma.BoolWithAggregatesFilter<"MealPlan"> | boolean
+  priceAtPurchase?: Prisma.DecimalNullableWithAggregatesFilter<"MealPlan"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.StringNullableWithAggregatesFilter<"MealPlan"> | string | null
+  billingCurrency?: Prisma.StringWithAggregatesFilter<"MealPlan"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MealPlan"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"MealPlan"> | Date | string
 }
@@ -325,6 +365,9 @@ export type MealPlanCreateInput = {
   startsAt?: Date | string
   endsAt?: Date | string | null
   autoRenew?: boolean
+  priceAtPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: string | null
+  billingCurrency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMealPlanInput
@@ -340,6 +383,9 @@ export type MealPlanUncheckedCreateInput = {
   startsAt?: Date | string
   endsAt?: Date | string | null
   autoRenew?: boolean
+  priceAtPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: string | null
+  billingCurrency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   windowUsages?: Prisma.MealPlanWindowUsageUncheckedCreateNestedManyWithoutMealPlanInput
@@ -353,6 +399,9 @@ export type MealPlanUpdateInput = {
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoRenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAtPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMealPlanNestedInput
@@ -368,6 +417,9 @@ export type MealPlanUncheckedUpdateInput = {
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoRenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAtPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   windowUsages?: Prisma.MealPlanWindowUsageUncheckedUpdateManyWithoutMealPlanNestedInput
@@ -382,6 +434,9 @@ export type MealPlanCreateManyInput = {
   startsAt?: Date | string
   endsAt?: Date | string | null
   autoRenew?: boolean
+  priceAtPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: string | null
+  billingCurrency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -393,6 +448,9 @@ export type MealPlanUpdateManyMutationInput = {
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoRenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAtPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -405,6 +463,9 @@ export type MealPlanUncheckedUpdateManyInput = {
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoRenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAtPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -422,12 +483,16 @@ export type MealPlanCountOrderByAggregateInput = {
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
   autoRenew?: Prisma.SortOrder
+  priceAtPurchase?: Prisma.SortOrder
+  billingInterval?: Prisma.SortOrder
+  billingCurrency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type MealPlanAvgOrderByAggregateInput = {
   weeklyCreditCap?: Prisma.SortOrder
+  priceAtPurchase?: Prisma.SortOrder
 }
 
 export type MealPlanMaxOrderByAggregateInput = {
@@ -438,6 +503,9 @@ export type MealPlanMaxOrderByAggregateInput = {
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
   autoRenew?: Prisma.SortOrder
+  priceAtPurchase?: Prisma.SortOrder
+  billingInterval?: Prisma.SortOrder
+  billingCurrency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -450,12 +518,16 @@ export type MealPlanMinOrderByAggregateInput = {
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
   autoRenew?: Prisma.SortOrder
+  priceAtPurchase?: Prisma.SortOrder
+  billingInterval?: Prisma.SortOrder
+  billingCurrency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type MealPlanSumOrderByAggregateInput = {
   weeklyCreditCap?: Prisma.SortOrder
+  priceAtPurchase?: Prisma.SortOrder
 }
 
 export type MealPlanScalarRelationFilter = {
@@ -499,6 +571,14 @@ export type EnumMealPlanStatusFieldUpdateOperationsInput = {
   set?: $Enums.MealPlanStatus
 }
 
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type MealPlanCreateNestedOneWithoutWindowUsagesInput = {
   create?: Prisma.XOR<Prisma.MealPlanCreateWithoutWindowUsagesInput, Prisma.MealPlanUncheckedCreateWithoutWindowUsagesInput>
   connectOrCreate?: Prisma.MealPlanCreateOrConnectWithoutWindowUsagesInput
@@ -534,6 +614,9 @@ export type MealPlanCreateWithoutUserInput = {
   startsAt?: Date | string
   endsAt?: Date | string | null
   autoRenew?: boolean
+  priceAtPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: string | null
+  billingCurrency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   windowUsages?: Prisma.MealPlanWindowUsageCreateNestedManyWithoutMealPlanInput
@@ -547,6 +630,9 @@ export type MealPlanUncheckedCreateWithoutUserInput = {
   startsAt?: Date | string
   endsAt?: Date | string | null
   autoRenew?: boolean
+  priceAtPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: string | null
+  billingCurrency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   windowUsages?: Prisma.MealPlanWindowUsageUncheckedCreateNestedManyWithoutMealPlanInput
@@ -576,6 +662,9 @@ export type MealPlanUpdateWithoutUserInput = {
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoRenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAtPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   windowUsages?: Prisma.MealPlanWindowUsageUpdateManyWithoutMealPlanNestedInput
@@ -589,6 +678,9 @@ export type MealPlanUncheckedUpdateWithoutUserInput = {
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoRenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAtPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   windowUsages?: Prisma.MealPlanWindowUsageUncheckedUpdateManyWithoutMealPlanNestedInput
@@ -602,6 +694,9 @@ export type MealPlanCreateWithoutWindowUsagesInput = {
   startsAt?: Date | string
   endsAt?: Date | string | null
   autoRenew?: boolean
+  priceAtPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: string | null
+  billingCurrency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMealPlanInput
@@ -616,6 +711,9 @@ export type MealPlanUncheckedCreateWithoutWindowUsagesInput = {
   startsAt?: Date | string
   endsAt?: Date | string | null
   autoRenew?: boolean
+  priceAtPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: string | null
+  billingCurrency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   creditLedger?: Prisma.MealPlanCreditLedgerUncheckedCreateNestedManyWithoutMealPlanInput
@@ -644,6 +742,9 @@ export type MealPlanUpdateWithoutWindowUsagesInput = {
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoRenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAtPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMealPlanNestedInput
@@ -658,6 +759,9 @@ export type MealPlanUncheckedUpdateWithoutWindowUsagesInput = {
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoRenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAtPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creditLedger?: Prisma.MealPlanCreditLedgerUncheckedUpdateManyWithoutMealPlanNestedInput
@@ -670,6 +774,9 @@ export type MealPlanCreateWithoutCreditLedgerInput = {
   startsAt?: Date | string
   endsAt?: Date | string | null
   autoRenew?: boolean
+  priceAtPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: string | null
+  billingCurrency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMealPlanInput
@@ -684,6 +791,9 @@ export type MealPlanUncheckedCreateWithoutCreditLedgerInput = {
   startsAt?: Date | string
   endsAt?: Date | string | null
   autoRenew?: boolean
+  priceAtPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: string | null
+  billingCurrency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   windowUsages?: Prisma.MealPlanWindowUsageUncheckedCreateNestedManyWithoutMealPlanInput
@@ -712,6 +822,9 @@ export type MealPlanUpdateWithoutCreditLedgerInput = {
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoRenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAtPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMealPlanNestedInput
@@ -726,6 +839,9 @@ export type MealPlanUncheckedUpdateWithoutCreditLedgerInput = {
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoRenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAtPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  billingInterval?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   windowUsages?: Prisma.MealPlanWindowUsageUncheckedUpdateManyWithoutMealPlanNestedInput
@@ -779,6 +895,9 @@ export type MealPlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   startsAt?: boolean
   endsAt?: boolean
   autoRenew?: boolean
+  priceAtPurchase?: boolean
+  billingInterval?: boolean
+  billingCurrency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -795,6 +914,9 @@ export type MealPlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   startsAt?: boolean
   endsAt?: boolean
   autoRenew?: boolean
+  priceAtPurchase?: boolean
+  billingInterval?: boolean
+  billingCurrency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -808,6 +930,9 @@ export type MealPlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   startsAt?: boolean
   endsAt?: boolean
   autoRenew?: boolean
+  priceAtPurchase?: boolean
+  billingInterval?: boolean
+  billingCurrency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -821,11 +946,14 @@ export type MealPlanSelectScalar = {
   startsAt?: boolean
   endsAt?: boolean
   autoRenew?: boolean
+  priceAtPurchase?: boolean
+  billingInterval?: boolean
+  billingCurrency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MealPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "status" | "weeklyCreditCap" | "startsAt" | "endsAt" | "autoRenew" | "createdAt" | "updatedAt", ExtArgs["result"]["mealPlan"]>
+export type MealPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "status" | "weeklyCreditCap" | "startsAt" | "endsAt" | "autoRenew" | "priceAtPurchase" | "billingInterval" | "billingCurrency" | "createdAt" | "updatedAt", ExtArgs["result"]["mealPlan"]>
 export type MealPlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   windowUsages?: boolean | Prisma.MealPlan$windowUsagesArgs<ExtArgs>
@@ -854,6 +982,9 @@ export type $MealPlanPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     startsAt: Date
     endsAt: Date | null
     autoRenew: boolean
+    priceAtPurchase: runtime.Decimal | null
+    billingInterval: string | null
+    billingCurrency: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["mealPlan"]>
@@ -1289,6 +1420,9 @@ export interface MealPlanFieldRefs {
   readonly startsAt: Prisma.FieldRef<"MealPlan", 'DateTime'>
   readonly endsAt: Prisma.FieldRef<"MealPlan", 'DateTime'>
   readonly autoRenew: Prisma.FieldRef<"MealPlan", 'Boolean'>
+  readonly priceAtPurchase: Prisma.FieldRef<"MealPlan", 'Decimal'>
+  readonly billingInterval: Prisma.FieldRef<"MealPlan", 'String'>
+  readonly billingCurrency: Prisma.FieldRef<"MealPlan", 'String'>
   readonly createdAt: Prisma.FieldRef<"MealPlan", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"MealPlan", 'DateTime'>
 }

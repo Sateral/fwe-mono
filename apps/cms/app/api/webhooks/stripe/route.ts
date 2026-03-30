@@ -5,11 +5,23 @@ import Stripe from "stripe";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import {
-  ensureOrderFromSession,
   ensureOrdersFromSession,
   getOrderIntentIdFromSession,
+  recordPaidCheckoutFulfillmentFailure,
   updateOrderIntentStatus,
 } from "@/lib/stripe-service";
+
+async function fulfillPaidCheckoutSession(session: Stripe.Checkout.Session) {
+  try {
+    return await ensureOrdersFromSession(session.id);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (session.payment_status === "paid") {
+      await recordPaidCheckoutFulfillmentFailure(session, message);
+    }
+    throw error;
+  }
+}
 
 export const dynamic = "force-dynamic";
 
@@ -76,7 +88,7 @@ export async function POST(request: Request) {
         const session = event.data.object as Stripe.Checkout.Session;
         orderIntentId = getOrderIntentIdFromSession(session);
         if (session.payment_status === "paid") {
-          const orders = await ensureOrdersFromSession(session.id);
+          const orders = await fulfillPaidCheckoutSession(session);
           orderId = orders[0]?.id ?? null;
           if (orders[0]?.orderIntentId) {
             orderIntentId = orders[0].orderIntentId;
@@ -87,7 +99,7 @@ export async function POST(request: Request) {
       case "checkout.session.async_payment_succeeded": {
         const session = event.data.object as Stripe.Checkout.Session;
         orderIntentId = getOrderIntentIdFromSession(session);
-        const orders = await ensureOrdersFromSession(session.id);
+        const orders = await fulfillPaidCheckoutSession(session);
         orderId = orders[0]?.id ?? null;
         if (orders[0]?.orderIntentId) {
           orderIntentId = orders[0].orderIntentId;

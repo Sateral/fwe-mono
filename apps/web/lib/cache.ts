@@ -34,11 +34,6 @@ import { mealsApi } from "@/lib/cms-api";
  */
 const DEFAULT_REVALIDATE = 300; // 5 minutes
 
-/**
- * Short TTL for more dynamic data.
- */
-const SHORT_REVALIDATE = 60; // 1 minute
-
 // ============================================
 // Cached Meal Functions
 // ============================================
@@ -106,36 +101,20 @@ export const getCachedFeaturedMeals = unstable_cache(
 );
 
 /**
- * Get available meals for ordering with caching.
- * Shorter TTL since this includes rotation status.
+ * Available meals for ordering — not wrapped in unstable_cache.
+ * Next.js 16 forbids `revalidate: 0`; long TTL would hide CMS rotation updates
+ * without a cross-app revalidateTag.
  */
-export const getCachedAvailableMeals = unstable_cache(
-  async () => {
-    console.log("[Cache] Fetching available meals");
-    return mealsApi.getAvailable();
-  },
-  ["available-meals"],
-  {
-    revalidate: SHORT_REVALIDATE,
-    tags: ["meals", "rotation"],
-  }
-);
+export async function getCachedAvailableMeals() {
+  console.log("[Cache] Fetching available meals");
+  return mealsApi.getAvailable();
+}
 
-/**
- * Get active rotation with caching.
- * Shorter TTL since rotations change weekly.
- */
-export const getCachedActiveRotation = unstable_cache(
-  async () => {
-    console.log("[Cache] Fetching active rotation");
-    return mealsApi.getActiveRotation();
-  },
-  ["active-rotation"],
-  {
-    revalidate: SHORT_REVALIDATE,
-    tags: ["rotation"],
-  }
-);
+/** Active rotation for checkout — same rationale as {@link getCachedAvailableMeals}. */
+export async function getCachedActiveRotation() {
+  console.log("[Cache] Fetching active rotation");
+  return mealsApi.getActiveRotation();
+}
 
 // ============================================
 // Cache Invalidation Helpers

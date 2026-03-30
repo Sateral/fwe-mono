@@ -113,16 +113,24 @@ function isRotationOnMenu(rotation: { status: RotationStatus }) {
 }
 
 /**
- * Normalize meal source: if the rotation belongs to a `RotationPeriod`,
- * use the *period's* meals (shared across 2 weeks). Otherwise fall back
- * to the rotation's own meal list (legacy / standalone rotations).
+ * Normalize meal source: period menu wins when it has entries (bi-weekly shared menu).
+ * If the period exists but has no meals yet, use the rotation's direct meal list so legacy
+ * data or partial CMS writes still surface on the storefront.
  */
 function withEffectiveMeals<T extends RotationWithEffectiveMeals>(
   rotation: T,
 ): T {
+  const periodMeals = rotation.rotationPeriod?.meals;
+  const directMeals = rotation.meals;
   const effectiveMeals = rotation.rotationPeriod
-    ? rotation.rotationPeriod.meals
-    : rotation.meals;
+    ? (Array.isArray(periodMeals) && periodMeals.length > 0
+        ? periodMeals
+        : Array.isArray(directMeals)
+          ? directMeals
+          : [])
+    : Array.isArray(directMeals)
+      ? directMeals
+      : [];
 
   return {
     ...rotation,
@@ -287,11 +295,13 @@ export const weeklyRotationService = {
   },
 
   /**
-   * The rotation customers are currently ordering *into* (n+1 cycle).
-   * Returns the rotation + delivery-week metadata + cutoff time.
+   * The fulfillment cycle customers order into (`resolveOrderableFulfillmentCycleStart`).
+   * Returns the rotation row used for that cycle's menu plus delivery metadata.
    *
-   * Compare with `getCurrentRotation` (the cycle we are in right now).
-   * Compare with `getAvailableMeals` (wraps this + filters active meals + ordering-open flag).
+   * Looks up `WeeklyRotation` in order: orderable Thursday, calendar-current Thursday,
+   * then the prior fulfillment Thursday. Menus live on `RotationPeriod`; often only one
+   * of the two weekly rows exists after setup, and when target === current a single
+   * missing row would otherwise skip the sibling fallback entirely.
    */
   async getOrderableRotation() {
     const now = getNow();
@@ -306,10 +316,32 @@ export const weeklyRotationService = {
       )}`,
     );
 
-    const rotation = await prisma.weeklyRotation.findUnique({
-      where: { weekStart: targetCycleStart },
-      include: detailedRotationInclude,
-    });
+    const candidateWeekStarts: Date[] = [];
+    const seenWeek = new Set<number>();
+    const pushCandidate = (d: Date) => {
+      const normalized = resolveFulfillmentCycleStart(d);
+      const t = normalized.getTime();
+      if (seenWeek.has(t)) return;
+      seenWeek.add(t);
+      candidateWeekStarts.push(normalized);
+    };
+
+    pushCandidate(targetCycleStart);
+    pushCandidate(currentFulfillmentStart);
+    pushCandidate(shiftFulfillmentCycle(targetCycleStart, -1));
+    pushCandidate(shiftFulfillmentCycle(currentFulfillmentStart, -1));
+
+    let rotation = null;
+    for (const weekStart of candidateWeekStarts) {
+      const row = await prisma.weeklyRotation.findUnique({
+        where: { weekStart },
+        include: detailedRotationInclude,
+      });
+      if (row && isRotationOnMenu(row)) {
+        rotation = row;
+        break;
+      }
+    }
 
     if (!rotation || !isRotationOnMenu(rotation)) {
       console.log(
@@ -326,13 +358,19 @@ export const weeklyRotationService = {
     }
 
     const normalizedRotation = withEffectiveMeals(rotation);
-    const orderCutoff = new Date(rotation.orderCutoff);
+    const rotationCycleStart = resolveFulfillmentCycleStart(rotation.weekStart);
+    const sameCycleAsOrderableTarget =
+      rotationCycleStart.getTime() === targetCycleStart.getTime();
+    const orderCutoff = sameCycleAsOrderableTarget
+      ? new Date(rotation.orderCutoff)
+      : resolveOrderCutoff(targetCycleStart);
     const deliveryWeekEnd = resolveFulfillmentCycleEnd(targetCycleStart);
 
     console.log(
       `[RotationService] Found orderable rotation: ${normalizedRotation.id}, ` +
         `fulfillment: ${buildFulfillmentCycleDisplay(targetCycleStart, deliveryWeekEnd)}, ` +
-        `cutoff: ${formatBusinessTime(orderCutoff, "EEE MMM d h:mm a")}`,
+        `cutoff: ${formatBusinessTime(orderCutoff, "EEE MMM d h:mm a")}` +
+        (sameCycleAsOrderableTarget ? "" : " (menu row from sibling cycle)"),
     );
 
     return {
@@ -521,7 +559,67 @@ export const weeklyRotationService = {
     const orderableData = await this.getOrderableRotation();
     const { rotation, deliveryWeekStart, deliveryWeekDisplay, orderCutoff } =
       orderableData;
-    const meals = (rotation?.meals || []).filter((meal) => meal.isActive);
+
+    const isMenuMeal = (meal: { isActive?: boolean | null }) =>
+      meal.isActive !== false;
+
+    type MenuMealRow = Awaited<
+      ReturnType<
+        typeof prisma.meal.findMany<{ include: typeof detailedMealInclude }>
+      >
+    >[number];
+
+    let meals: MenuMealRow[] = (rotation?.meals || []).filter(isMenuMeal);
+
+    if (meals.length === 0 && rotation?.rotationPeriodId) {
+      meals = await prisma.meal.findMany({
+        where: {
+          rotationPeriods: { some: { id: rotation.rotationPeriodId } },
+        },
+        include: detailedMealInclude,
+        orderBy: { name: "asc" },
+      });
+      meals = meals.filter(isMenuMeal);
+    }
+
+    if (meals.length === 0 && rotation?.rotationPeriodId) {
+      const siblings = await prisma.weeklyRotation.findMany({
+        where: { rotationPeriodId: rotation.rotationPeriodId },
+        include: { meals: { include: detailedMealInclude } },
+      });
+      const byId = new Map<string, MenuMealRow>();
+      for (const wr of siblings) {
+        for (const m of wr.meals) {
+          if (isMenuMeal(m)) byId.set(m.id, m);
+        }
+      }
+      meals = [...byId.values()].sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    if (meals.length === 0 && rotation) {
+      const periodKey = await resolveRotationPeriodKeyForWeek(
+        rotation.weekStart,
+      );
+      const periodForKey = await prisma.rotationPeriod.findFirst({
+        where: { key: periodKey, status: { not: "ARCHIVED" } },
+        include: {
+          meals: { include: detailedMealInclude },
+        },
+      });
+      if (periodForKey?.meals?.length) {
+        meals = periodForKey.meals.filter(isMenuMeal);
+        if (periodForKey.id !== rotation.rotationPeriodId) {
+          console.warn(
+            `[RotationService] WeeklyRotation ${rotation.id} had rotationPeriodId=${rotation.rotationPeriodId} (0 menu meals) but period key=${periodKey} (${periodForKey.id}) has ${meals.length} meals. Re-linking to canonical period.`,
+          );
+          await prisma.weeklyRotation.update({
+            where: { id: rotation.id },
+            data: { rotationPeriodId: periodForKey.id },
+          });
+        }
+      }
+    }
+
     const resolvedDeliveryWeekStart =
       deliveryWeekStart || fallbackTargetCycle;
     const resolvedDeliveryWeekDisplay =

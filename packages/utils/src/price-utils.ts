@@ -19,10 +19,8 @@ export function calculateMealUnitPrice(
   meal: MealPricingOptions,
   selectedModifiers: Record<string, string[]>,
   selectedSubstitutions: Record<string, string>,
-  proteinBoost: boolean,
 ): number {
   const basePrice = meal.price;
-  const proteinBoostPrice = proteinBoost ? 2.0 : 0;
 
   const substitutionAdjustment = Object.entries(selectedSubstitutions).reduce(
     (total, [groupId, optionId]) => {
@@ -52,7 +50,6 @@ export function calculateMealUnitPrice(
 
   return addMoney(
     basePrice,
-    proteinBoostPrice,
     substitutionAdjustment,
     addOnsTotal,
   );

@@ -6,6 +6,7 @@
     "db:generate": "turbo run generate --filter=@fwe/db",
     "db:push": "cd packages/db && bunx prisma db push",
     "db:push:reset": "cd packages/db && bunx prisma db push --force-reset --accept-data-loss",
+    "db:reset": "cd packages/db && bunx prisma migrate reset --force",
     "db:migrate": "turbo run migrate --filter=@fwe/db",
     "db:migrate:deploy": "turbo run migrate:deploy --filter=@fwe/db",
     "db:seed": "turbo run seed --filter=@fwe/db",

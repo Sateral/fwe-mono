@@ -348,6 +348,7 @@ export type UserWhereInput = {
   flavorProfile?: Prisma.XOR<Prisma.FlavorProfileNullableScalarRelationFilter, Prisma.FlavorProfileWhereInput> | null
   ownedReferralCode?: Prisma.XOR<Prisma.ReferralCodeNullableScalarRelationFilter, Prisma.ReferralCodeWhereInput> | null
   referralUse?: Prisma.XOR<Prisma.ReferralUseNullableScalarRelationFilter, Prisma.ReferralUseWhereInput> | null
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeListRelationFilter
   mergedIntoUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   mergedGuestUsers?: Prisma.UserListRelationFilter
 }
@@ -388,6 +389,7 @@ export type UserOrderByWithRelationInput = {
   flavorProfile?: Prisma.FlavorProfileOrderByWithRelationInput
   ownedReferralCode?: Prisma.ReferralCodeOrderByWithRelationInput
   referralUse?: Prisma.ReferralUseOrderByWithRelationInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeOrderByRelationAggregateInput
   mergedIntoUser?: Prisma.UserOrderByWithRelationInput
   mergedGuestUsers?: Prisma.UserOrderByRelationAggregateInput
 }
@@ -431,6 +433,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   flavorProfile?: Prisma.XOR<Prisma.FlavorProfileNullableScalarRelationFilter, Prisma.FlavorProfileWhereInput> | null
   ownedReferralCode?: Prisma.XOR<Prisma.ReferralCodeNullableScalarRelationFilter, Prisma.ReferralCodeWhereInput> | null
   referralUse?: Prisma.XOR<Prisma.ReferralUseNullableScalarRelationFilter, Prisma.ReferralUseWhereInput> | null
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeListRelationFilter
   mergedIntoUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   mergedGuestUsers?: Prisma.UserListRelationFilter
 }, "id" | "email" | "stripeCustomerId" | "guestSourceId">
@@ -532,6 +535,7 @@ export type UserCreateInput = {
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
@@ -572,6 +576,7 @@ export type UserUncheckedCreateInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -610,6 +615,7 @@ export type UserUpdateInput = {
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
@@ -650,6 +656,7 @@ export type UserUncheckedUpdateInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -850,6 +857,22 @@ export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
   upsert?: Prisma.UserUpsertWithoutOrdersInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrdersInput, Prisma.UserUpdateWithoutOrdersInput>, Prisma.UserUncheckedUpdateWithoutOrdersInput>
+}
+
+export type UserCreateNestedOneWithoutFulfillmentChangesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFulfillmentChangesInput, Prisma.UserUncheckedCreateWithoutFulfillmentChangesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFulfillmentChangesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutFulfillmentChangesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFulfillmentChangesInput, Prisma.UserUncheckedCreateWithoutFulfillmentChangesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFulfillmentChangesInput
+  upsert?: Prisma.UserUpsertWithoutFulfillmentChangesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFulfillmentChangesInput, Prisma.UserUpdateWithoutFulfillmentChangesInput>, Prisma.UserUncheckedUpdateWithoutFulfillmentChangesInput>
 }
 
 export type UserCreateNestedOneWithoutCartsInput = {
@@ -1086,6 +1109,7 @@ export type UserCreateWithoutOrdersInput = {
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
@@ -1125,6 +1149,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -1178,6 +1203,7 @@ export type UserUpdateWithoutOrdersInput = {
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
@@ -1210,6 +1236,179 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedUpdateManyWithoutUserNestedInput
+  mealPlan?: Prisma.MealPlanUncheckedUpdateOneWithoutUserNestedInput
+  flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
+  ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
+  referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
+  mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
+}
+
+export type UserCreateWithoutFulfillmentChangesInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  emailVerified?: boolean
+  image?: string | null
+  stripeCustomerId?: string | null
+  isGuest?: boolean
+  guestSource?: $Enums.GuestSource | null
+  guestSourceId?: string | null
+  guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mergedAt?: Date | string | null
+  profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
+  phone?: string | null
+  deliveryAddress?: string | null
+  deliveryCity?: string | null
+  deliveryPostal?: string | null
+  deliveryNotes?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  orderIntents?: Prisma.OrderIntentCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  checkoutSessions?: Prisma.CheckoutSessionCreateNestedManyWithoutUserInput
+  mealPlan?: Prisma.MealPlanCreateNestedOneWithoutUserInput
+  flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
+  ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
+  referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
+  mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
+}
+
+export type UserUncheckedCreateWithoutFulfillmentChangesInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  emailVerified?: boolean
+  image?: string | null
+  stripeCustomerId?: string | null
+  isGuest?: boolean
+  guestSource?: $Enums.GuestSource | null
+  guestSourceId?: string | null
+  guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mergedIntoUserId?: string | null
+  mergedAt?: Date | string | null
+  profileComplete?: boolean
+  onboardingStatus?: $Enums.OnboardingStatus
+  phone?: string | null
+  deliveryAddress?: string | null
+  deliveryCity?: string | null
+  deliveryPostal?: string | null
+  deliveryNotes?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  orderIntents?: Prisma.OrderIntentUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedCreateNestedManyWithoutUserInput
+  mealPlan?: Prisma.MealPlanUncheckedCreateNestedOneWithoutUserInput
+  flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
+  ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
+  referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
+}
+
+export type UserCreateOrConnectWithoutFulfillmentChangesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFulfillmentChangesInput, Prisma.UserUncheckedCreateWithoutFulfillmentChangesInput>
+}
+
+export type UserUpsertWithoutFulfillmentChangesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFulfillmentChangesInput, Prisma.UserUncheckedUpdateWithoutFulfillmentChangesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFulfillmentChangesInput, Prisma.UserUncheckedCreateWithoutFulfillmentChangesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFulfillmentChangesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFulfillmentChangesInput, Prisma.UserUncheckedUpdateWithoutFulfillmentChangesInput>
+}
+
+export type UserUpdateWithoutFulfillmentChangesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  guestSource?: Prisma.NullableEnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource | null
+  guestSourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  orderIntents?: Prisma.OrderIntentUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUpdateManyWithoutUserNestedInput
+  mealPlan?: Prisma.MealPlanUpdateOneWithoutUserNestedInput
+  flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
+  ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
+  referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
+  mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFulfillmentChangesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGuest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  guestSource?: Prisma.NullableEnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource | null
+  guestSourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mergedIntoUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryPostal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   orderIntents?: Prisma.OrderIntentUncheckedUpdateManyWithoutUserNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   checkoutSessions?: Prisma.CheckoutSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1254,6 +1453,7 @@ export type UserCreateWithoutCartsInput = {
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
@@ -1293,6 +1493,7 @@ export type UserUncheckedCreateWithoutCartsInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -1346,6 +1547,7 @@ export type UserUpdateWithoutCartsInput = {
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
@@ -1385,6 +1587,7 @@ export type UserUncheckedUpdateWithoutCartsInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -1422,6 +1625,7 @@ export type UserCreateWithoutOrderIntentsInput = {
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
@@ -1461,6 +1665,7 @@ export type UserUncheckedCreateWithoutOrderIntentsInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -1514,6 +1719,7 @@ export type UserUpdateWithoutOrderIntentsInput = {
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
@@ -1553,6 +1759,7 @@ export type UserUncheckedUpdateWithoutOrderIntentsInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -1590,6 +1797,7 @@ export type UserCreateWithoutCheckoutSessionsInput = {
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
@@ -1629,6 +1837,7 @@ export type UserUncheckedCreateWithoutCheckoutSessionsInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -1682,6 +1891,7 @@ export type UserUpdateWithoutCheckoutSessionsInput = {
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
@@ -1721,6 +1931,7 @@ export type UserUncheckedUpdateWithoutCheckoutSessionsInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -1759,6 +1970,7 @@ export type UserCreateWithoutMergedGuestUsersInput = {
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
 }
 
@@ -1798,6 +2010,7 @@ export type UserUncheckedCreateWithoutMergedGuestUsersInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
 }
 
 export type UserCreateOrConnectWithoutMergedGuestUsersInput = {
@@ -1840,6 +2053,7 @@ export type UserCreateWithoutMergedIntoUserInput = {
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -1878,6 +2092,7 @@ export type UserUncheckedCreateWithoutMergedIntoUserInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -1937,6 +2152,7 @@ export type UserUpdateWithoutMergedGuestUsersInput = {
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
 }
 
@@ -1976,6 +2192,7 @@ export type UserUncheckedUpdateWithoutMergedGuestUsersInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutMergedIntoUserInput = {
@@ -2059,6 +2276,7 @@ export type UserCreateWithoutMealPlanInput = {
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
@@ -2098,6 +2316,7 @@ export type UserUncheckedCreateWithoutMealPlanInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -2151,6 +2370,7 @@ export type UserUpdateWithoutMealPlanInput = {
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
@@ -2190,6 +2410,7 @@ export type UserUncheckedUpdateWithoutMealPlanInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -2227,6 +2448,7 @@ export type UserCreateWithoutFlavorProfileInput = {
   mealPlan?: Prisma.MealPlanCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
@@ -2266,6 +2488,7 @@ export type UserUncheckedCreateWithoutFlavorProfileInput = {
   mealPlan?: Prisma.MealPlanUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -2319,6 +2542,7 @@ export type UserUpdateWithoutFlavorProfileInput = {
   mealPlan?: Prisma.MealPlanUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
@@ -2358,6 +2582,7 @@ export type UserUncheckedUpdateWithoutFlavorProfileInput = {
   mealPlan?: Prisma.MealPlanUncheckedUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -2395,6 +2620,7 @@ export type UserCreateWithoutOwnedReferralCodeInput = {
   mealPlan?: Prisma.MealPlanCreateNestedOneWithoutUserInput
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
@@ -2434,6 +2660,7 @@ export type UserUncheckedCreateWithoutOwnedReferralCodeInput = {
   mealPlan?: Prisma.MealPlanUncheckedCreateNestedOneWithoutUserInput
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -2487,6 +2714,7 @@ export type UserUpdateWithoutOwnedReferralCodeInput = {
   mealPlan?: Prisma.MealPlanUpdateOneWithoutUserNestedInput
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
@@ -2526,6 +2754,7 @@ export type UserUncheckedUpdateWithoutOwnedReferralCodeInput = {
   mealPlan?: Prisma.MealPlanUncheckedUpdateOneWithoutUserNestedInput
   flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
   referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -2563,6 +2792,7 @@ export type UserCreateWithoutReferralUseInput = {
   mealPlan?: Prisma.MealPlanCreateNestedOneWithoutUserInput
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
@@ -2602,6 +2832,7 @@ export type UserUncheckedCreateWithoutReferralUseInput = {
   mealPlan?: Prisma.MealPlanUncheckedCreateNestedOneWithoutUserInput
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -2655,6 +2886,7 @@ export type UserUpdateWithoutReferralUseInput = {
   mealPlan?: Prisma.MealPlanUpdateOneWithoutUserNestedInput
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
@@ -2694,6 +2926,7 @@ export type UserUncheckedUpdateWithoutReferralUseInput = {
   mealPlan?: Prisma.MealPlanUncheckedUpdateOneWithoutUserNestedInput
   flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -2731,6 +2964,7 @@ export type UserCreateWithoutSessionsInput = {
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
@@ -2770,6 +3004,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -2823,6 +3058,7 @@ export type UserUpdateWithoutSessionsInput = {
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
@@ -2862,6 +3098,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -2899,6 +3136,7 @@ export type UserCreateWithoutAccountsInput = {
   flavorProfile?: Prisma.FlavorProfileCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeCreateNestedManyWithoutChangedByInput
   mergedIntoUser?: Prisma.UserCreateNestedOneWithoutMergedGuestUsersInput
   mergedGuestUsers?: Prisma.UserCreateNestedManyWithoutMergedIntoUserInput
 }
@@ -2938,6 +3176,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedCreateNestedOneWithoutUserInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutOwnerUserInput
   referralUse?: Prisma.ReferralUseUncheckedCreateNestedOneWithoutReferredUserInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedCreateNestedManyWithoutChangedByInput
   mergedGuestUsers?: Prisma.UserUncheckedCreateNestedManyWithoutMergedIntoUserInput
 }
 
@@ -2991,6 +3230,7 @@ export type UserUpdateWithoutAccountsInput = {
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedIntoUser?: Prisma.UserUpdateOneWithoutMergedGuestUsersNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
@@ -3030,6 +3270,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -3095,6 +3336,7 @@ export type UserUpdateWithoutMergedIntoUserInput = {
   flavorProfile?: Prisma.FlavorProfileUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -3133,6 +3375,7 @@ export type UserUncheckedUpdateWithoutMergedIntoUserInput = {
   flavorProfile?: Prisma.FlavorProfileUncheckedUpdateOneWithoutUserNestedInput
   ownedReferralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutOwnerUserNestedInput
   referralUse?: Prisma.ReferralUseUncheckedUpdateOneWithoutReferredUserNestedInput
+  fulfillmentChanges?: Prisma.FulfillmentStatusChangeUncheckedUpdateManyWithoutChangedByNestedInput
   mergedGuestUsers?: Prisma.UserUncheckedUpdateManyWithoutMergedIntoUserNestedInput
 }
 
@@ -3175,6 +3418,7 @@ export type UserCountOutputType = {
   orderIntents: number
   carts: number
   checkoutSessions: number
+  fulfillmentChanges: number
   mergedGuestUsers: number
 }
 
@@ -3185,6 +3429,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   orderIntents?: boolean | UserCountOutputTypeCountOrderIntentsArgs
   carts?: boolean | UserCountOutputTypeCountCartsArgs
   checkoutSessions?: boolean | UserCountOutputTypeCountCheckoutSessionsArgs
+  fulfillmentChanges?: boolean | UserCountOutputTypeCountFulfillmentChangesArgs
   mergedGuestUsers?: boolean | UserCountOutputTypeCountMergedGuestUsersArgs
 }
 
@@ -3243,6 +3488,13 @@ export type UserCountOutputTypeCountCheckoutSessionsArgs<ExtArgs extends runtime
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountFulfillmentChangesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FulfillmentStatusChangeWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountMergedGuestUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.UserWhereInput
 }
@@ -3284,6 +3536,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   flavorProfile?: boolean | Prisma.User$flavorProfileArgs<ExtArgs>
   ownedReferralCode?: boolean | Prisma.User$ownedReferralCodeArgs<ExtArgs>
   referralUse?: boolean | Prisma.User$referralUseArgs<ExtArgs>
+  fulfillmentChanges?: boolean | Prisma.User$fulfillmentChangesArgs<ExtArgs>
   mergedIntoUser?: boolean | Prisma.User$mergedIntoUserArgs<ExtArgs>
   mergedGuestUsers?: boolean | Prisma.User$mergedGuestUsersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3387,6 +3640,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   flavorProfile?: boolean | Prisma.User$flavorProfileArgs<ExtArgs>
   ownedReferralCode?: boolean | Prisma.User$ownedReferralCodeArgs<ExtArgs>
   referralUse?: boolean | Prisma.User$referralUseArgs<ExtArgs>
+  fulfillmentChanges?: boolean | Prisma.User$fulfillmentChangesArgs<ExtArgs>
   mergedIntoUser?: boolean | Prisma.User$mergedIntoUserArgs<ExtArgs>
   mergedGuestUsers?: boolean | Prisma.User$mergedGuestUsersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3411,6 +3665,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     flavorProfile: Prisma.$FlavorProfilePayload<ExtArgs> | null
     ownedReferralCode: Prisma.$ReferralCodePayload<ExtArgs> | null
     referralUse: Prisma.$ReferralUsePayload<ExtArgs> | null
+    fulfillmentChanges: Prisma.$FulfillmentStatusChangePayload<ExtArgs>[]
     mergedIntoUser: Prisma.$UserPayload<ExtArgs> | null
     mergedGuestUsers: Prisma.$UserPayload<ExtArgs>[]
   }
@@ -3844,6 +4099,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   flavorProfile<T extends Prisma.User$flavorProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$flavorProfileArgs<ExtArgs>>): Prisma.Prisma__FlavorProfileClient<runtime.Types.Result.GetResult<Prisma.$FlavorProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   ownedReferralCode<T extends Prisma.User$ownedReferralCodeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ownedReferralCodeArgs<ExtArgs>>): Prisma.Prisma__ReferralCodeClient<runtime.Types.Result.GetResult<Prisma.$ReferralCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   referralUse<T extends Prisma.User$referralUseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$referralUseArgs<ExtArgs>>): Prisma.Prisma__ReferralUseClient<runtime.Types.Result.GetResult<Prisma.$ReferralUsePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  fulfillmentChanges<T extends Prisma.User$fulfillmentChangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$fulfillmentChangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FulfillmentStatusChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mergedIntoUser<T extends Prisma.User$mergedIntoUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mergedIntoUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   mergedGuestUsers<T extends Prisma.User$mergedGuestUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mergedGuestUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -4513,6 +4769,30 @@ export type User$referralUseArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.ReferralUseInclude<ExtArgs> | null
   where?: Prisma.ReferralUseWhereInput
+}
+
+/**
+ * User.fulfillmentChanges
+ */
+export type User$fulfillmentChangesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FulfillmentStatusChange
+   */
+  select?: Prisma.FulfillmentStatusChangeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FulfillmentStatusChange
+   */
+  omit?: Prisma.FulfillmentStatusChangeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FulfillmentStatusChangeInclude<ExtArgs> | null
+  where?: Prisma.FulfillmentStatusChangeWhereInput
+  orderBy?: Prisma.FulfillmentStatusChangeOrderByWithRelationInput | Prisma.FulfillmentStatusChangeOrderByWithRelationInput[]
+  cursor?: Prisma.FulfillmentStatusChangeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FulfillmentStatusChangeScalarFieldEnum | Prisma.FulfillmentStatusChangeScalarFieldEnum[]
 }
 
 /**

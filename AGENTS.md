@@ -55,6 +55,7 @@ monorepo. The CMS is the source of truth for data and authentication.
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
 - `CRON_SECRET`
+- `FAILED_ORDER_ALERT_WEBHOOK_URL` (optional; Slack/custom JSON webhook when order creation fails after payment)
 
 **Web**
 

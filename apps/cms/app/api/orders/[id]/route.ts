@@ -74,6 +74,8 @@ export async function PATCH(
     const order = await orderService.updateFulfillmentStatus(
       id,
       parsed.data.fulfillmentStatus,
+      parsed.data.changedById,
+      parsed.data.reason,
     );
 
     console.log(

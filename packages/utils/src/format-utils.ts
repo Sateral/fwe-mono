@@ -5,7 +5,7 @@ export interface SubstitutionItem {
 
 export interface ModifierItem {
   groupName: string;
-  optionNames: string[];
+  optionName: string;
 }
 
 /**
@@ -20,11 +20,20 @@ export function formatSubstitutionsSummary(
 
 /**
  * Formats a list of modifiers into a concise summary string.
+ * Each modifier row is a single option (flat, not nested).
+ * Groups them by groupName for display.
  */
 export function formatModifiersSummary(modifiers?: ModifierItem[]): string {
   if (!modifiers?.length) return "";
-  return modifiers
-    .map((m) => `${m.groupName}: ${m.optionNames.join(", ")}`)
+  // Group by groupName to produce "Add-Ons: Extra Chicken, Avocado"
+  const grouped = new Map<string, string[]>();
+  for (const m of modifiers) {
+    const existing = grouped.get(m.groupName) ?? [];
+    existing.push(m.optionName);
+    grouped.set(m.groupName, existing);
+  }
+  return Array.from(grouped.entries())
+    .map(([groupName, optionNames]) => `${groupName}: ${optionNames.join(", ")}`)
     .join(", ");
 }
 
@@ -35,7 +44,6 @@ export function formatLineItemDescription(
   meal: { description?: string | null },
   substitutions?: SubstitutionItem[],
   modifiers?: ModifierItem[],
-  proteinBoost?: boolean,
   notes?: string,
   deliveryMethod?: "DELIVERY" | "PICKUP",
   pickupLocation?: string,
@@ -47,8 +55,6 @@ export function formatLineItemDescription(
 
   const mods = formatModifiersSummary(modifiers);
   if (mods) parts.push(mods);
-
-  if (proteinBoost) parts.push("+30% Protein");
 
   if (deliveryMethod === "PICKUP") {
     parts.push(`Pickup: ${pickupLocation || "Xtreme Couture"}`);

@@ -1,9 +1,9 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
 
 import { getRotations } from "@/lib/actions/weekly-rotation.actions";
 import { RotationProvider } from "@/lib/context/rotation-context";
 import { OrdersDashboard } from "./_components/orders-dashboard";
+import { OrdersRotationUrlSync } from "./_components/orders-rotation-url-sync";
 
 interface Props {
   searchParams: Promise<{ rotationId?: string }>;
@@ -11,18 +11,22 @@ interface Props {
 
 export default async function OrdersPage({ searchParams }: Props) {
   const resolvedParams = await searchParams;
-
-  if (!resolvedParams.rotationId) {
-    const rotations = await getRotations();
-    const first = rotations[0];
-    if (first) {
-      redirect(`/dashboard/orders?rotationId=${first.id}`);
-    }
-  }
+  const rotations = await getRotations();
+  const first = rotations[0];
+  const requestedId = resolvedParams.rotationId;
+  const isValidRequested =
+    Boolean(requestedId) &&
+    rotations.some((r) => r.id === requestedId);
+  const effectiveRotationId =
+    isValidRequested && requestedId ? requestedId : first?.id;
+  const shouldSyncUrl = Boolean(first) && !isValidRequested;
 
   return (
     <Suspense fallback={<OrdersDashboardSkeleton />}>
-      <RotationProvider initialRotationId={resolvedParams.rotationId}>
+      <RotationProvider initialRotationId={effectiveRotationId}>
+        {shouldSyncUrl && effectiveRotationId ? (
+          <OrdersRotationUrlSync rotationId={effectiveRotationId} />
+        ) : null}
         <OrdersDashboard />
       </RotationProvider>
     </Suspense>

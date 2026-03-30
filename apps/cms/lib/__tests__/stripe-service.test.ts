@@ -159,7 +159,6 @@ describe("stripe-service", () => {
       currency: "cad",
       substitutions: [],
       modifiers: [],
-      proteinBoost: false,
       notes: null,
       deliveryMethod: "DELIVERY",
       pickupLocation: null,

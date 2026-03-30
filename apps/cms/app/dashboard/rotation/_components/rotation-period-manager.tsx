@@ -32,7 +32,7 @@ import {
 } from "@/lib/services/rotation-schedule";
 import Link from "next/link";
 
-type RotationStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+type RotationStatus = "DRAFT" | "ARCHIVED";
 
 type Meal = {
   id: string;
@@ -360,37 +360,47 @@ export function RotationPeriodManager({
             </div>
 
             <div className="flex flex-col gap-2 mt-4">
-              {isCurrent && hasMeals && firstRotationId ? (
-                <>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link
-                      href={`/dashboard/orders?rotationId=${firstRotationId}`}
-                    >
-                      <IconListDetails className="h-4 w-4 mr-2" />
-                      View Prep List
-                    </Link>
-                  </Button>
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={`/api/reports/prep-sheet?rotationId=${firstRotationId}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <IconDownload className="h-4 w-4 mr-2" />
-                      Download Orders
-                    </a>
-                  </Button>
-                </>
-              ) : (
+              {isCurrent && hasMeals ? (
                 <>
                   <Button
                     className="w-full"
-                    variant={isCurrent ? "outline" : "default"}
+                    variant="default"
+                    size="sm"
                     onClick={() => handleEditMeals(period)}
                   >
-                    {isCurrent ? "Edit Current" : "Set Next 2 Weeks"}
+                    Edit menu
                   </Button>
+                  {firstRotationId ? (
+                    <>
+                      <Button variant="outline" size="sm" asChild>
+                        <Link
+                          href={`/dashboard/orders?rotationId=${firstRotationId}`}
+                        >
+                          <IconListDetails className="h-4 w-4 mr-2" />
+                          View Prep List
+                        </Link>
+                      </Button>
+                      <Button variant="outline" size="sm" asChild>
+                        <a
+                          href={`/api/reports/prep-sheet?rotationId=${firstRotationId}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <IconDownload className="h-4 w-4 mr-2" />
+                          Download Orders
+                        </a>
+                      </Button>
+                    </>
+                  ) : null}
                 </>
+              ) : (
+                <Button
+                  className="w-full"
+                  variant={isCurrent ? "outline" : "default"}
+                  onClick={() => handleEditMeals(period)}
+                >
+                  {isCurrent ? "Edit Current" : "Set Next 2 Weeks"}
+                </Button>
               )}
             </div>
           </div>

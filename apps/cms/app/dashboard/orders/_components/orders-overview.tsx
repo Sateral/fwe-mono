@@ -17,10 +17,6 @@ export function OrdersOverview({ orders }: OrdersOverviewProps) {
   const revenue = paidOrders.reduce((sum, o) => sum + Number(o.totalAmount), 0);
   const deliveries = paidOrders.filter((o) => o.deliveryMethod === "DELIVERY");
   const pickups = paidOrders.filter((o) => o.deliveryMethod === "PICKUP");
-  const boosts = paidOrders.reduce(
-    (sum, order) => sum + (order.proteinBoost ? order.quantity : 0),
-    0,
-  );
   const assignedMeals = paidOrders.reduce(
     (sum, order) =>
       sum + (order.orderIntent?.clientRequestId?.startsWith("assignment:") ? order.quantity : 0),
@@ -68,7 +64,7 @@ export function OrdersOverview({ orders }: OrdersOverviewProps) {
               {totalMeals}
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              {boosts} protein boosts • {assignedMeals} chef-assigned
+              {assignedMeals} chef-assigned
             </p>
           </div>
 

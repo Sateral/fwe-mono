@@ -9,7 +9,6 @@ interface OrderSummaryProps {
   quantity: number;
   selectedModifiers: Record<string, string[]>;
   selectedSubstitutions: Record<string, string>;
-  proteinBoost?: boolean;
   deliveryMethod: "DELIVERY" | "PICKUP";
   pickupLocation?: string;
   onCheckout: () => void;
@@ -26,7 +25,6 @@ const OrderSummary = ({
   quantity,
   selectedModifiers,
   selectedSubstitutions,
-  proteinBoost = false,
   deliveryMethod,
   pickupLocation,
   onCheckout,
@@ -39,7 +37,6 @@ const OrderSummary = ({
   const PrimaryIcon = primaryActionIcon === "cart" ? ShoppingBag : CreditCard;
   // Calculate base price from meal
   const basePrice = meal.price;
-  const proteinBoostPrice = proteinBoost ? 2.0 : 0;
 
   // Calculate substitution adjustments
   const substitutionAdjustment = Object.entries(selectedSubstitutions).reduce(
@@ -70,7 +67,7 @@ const OrderSummary = ({
   );
 
   const pricePerMeal =
-    basePrice + proteinBoostPrice + substitutionAdjustment + addOnsTotal;
+    basePrice + substitutionAdjustment + addOnsTotal;
   const totalPrice = pricePerMeal * quantity;
 
   // Get selected substitutions for display
@@ -120,13 +117,6 @@ const OrderSummary = ({
         <div className="flex justify-between text-sm">
           <span className="text-gray-600">Meals</span>
           <span className="font-medium text-gray-900">{quantity}</span>
-        </div>
-
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Protein boost</span>
-          <span className="font-medium text-gray-900">
-            {proteinBoost ? "+30%" : "Off"}
-          </span>
         </div>
 
         <div className="flex justify-between text-sm">

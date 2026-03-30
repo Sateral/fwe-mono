@@ -17,6 +17,7 @@ import type * as Prisma from "../internal/prismaNamespace"
  * Stores failed order creation attempts for admin recovery.
  * When a Stripe payment succeeds but order creation fails,
  * the order data is stored here for manual or automated retry.
+ * (Separate from the checkout pipeline -- this is a dead-letter queue.)
  */
 export type FailedOrderModel = runtime.Types.Result.DefaultSelection<Prisma.$FailedOrderPayload>
 
@@ -46,6 +47,7 @@ export type FailedOrderMinAggregateOutputType = {
   errorCode: string | null
   status: $Enums.FailedOrderStatus | null
   retryCount: number | null
+  adminNotifiedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
   resolvedAt: Date | null
@@ -62,6 +64,7 @@ export type FailedOrderMaxAggregateOutputType = {
   errorCode: string | null
   status: $Enums.FailedOrderStatus | null
   retryCount: number | null
+  adminNotifiedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
   resolvedAt: Date | null
@@ -79,6 +82,7 @@ export type FailedOrderCountAggregateOutputType = {
   errorCode: number
   status: number
   retryCount: number
+  adminNotifiedAt: number
   createdAt: number
   updatedAt: number
   resolvedAt: number
@@ -105,6 +109,7 @@ export type FailedOrderMinAggregateInputType = {
   errorCode?: true
   status?: true
   retryCount?: true
+  adminNotifiedAt?: true
   createdAt?: true
   updatedAt?: true
   resolvedAt?: true
@@ -121,6 +126,7 @@ export type FailedOrderMaxAggregateInputType = {
   errorCode?: true
   status?: true
   retryCount?: true
+  adminNotifiedAt?: true
   createdAt?: true
   updatedAt?: true
   resolvedAt?: true
@@ -138,6 +144,7 @@ export type FailedOrderCountAggregateInputType = {
   errorCode?: true
   status?: true
   retryCount?: true
+  adminNotifiedAt?: true
   createdAt?: true
   updatedAt?: true
   resolvedAt?: true
@@ -242,6 +249,7 @@ export type FailedOrderGroupByOutputType = {
   errorCode: string | null
   status: $Enums.FailedOrderStatus
   retryCount: number
+  adminNotifiedAt: Date | null
   createdAt: Date
   updatedAt: Date
   resolvedAt: Date | null
@@ -282,6 +290,7 @@ export type FailedOrderWhereInput = {
   errorCode?: Prisma.StringNullableFilter<"FailedOrder"> | string | null
   status?: Prisma.EnumFailedOrderStatusFilter<"FailedOrder"> | $Enums.FailedOrderStatus
   retryCount?: Prisma.IntFilter<"FailedOrder"> | number
+  adminNotifiedAt?: Prisma.DateTimeNullableFilter<"FailedOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"FailedOrder"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FailedOrder"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"FailedOrder"> | Date | string | null
@@ -299,6 +308,7 @@ export type FailedOrderOrderByWithRelationInput = {
   errorCode?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   retryCount?: Prisma.SortOrder
+  adminNotifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -319,6 +329,7 @@ export type FailedOrderWhereUniqueInput = Prisma.AtLeast<{
   errorCode?: Prisma.StringNullableFilter<"FailedOrder"> | string | null
   status?: Prisma.EnumFailedOrderStatusFilter<"FailedOrder"> | $Enums.FailedOrderStatus
   retryCount?: Prisma.IntFilter<"FailedOrder"> | number
+  adminNotifiedAt?: Prisma.DateTimeNullableFilter<"FailedOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"FailedOrder"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FailedOrder"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"FailedOrder"> | Date | string | null
@@ -336,6 +347,7 @@ export type FailedOrderOrderByWithAggregationInput = {
   errorCode?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   retryCount?: Prisma.SortOrder
+  adminNotifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -361,6 +373,7 @@ export type FailedOrderScalarWhereWithAggregatesInput = {
   errorCode?: Prisma.StringNullableWithAggregatesFilter<"FailedOrder"> | string | null
   status?: Prisma.EnumFailedOrderStatusWithAggregatesFilter<"FailedOrder"> | $Enums.FailedOrderStatus
   retryCount?: Prisma.IntWithAggregatesFilter<"FailedOrder"> | number
+  adminNotifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"FailedOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FailedOrder"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FailedOrder"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"FailedOrder"> | Date | string | null
@@ -378,6 +391,7 @@ export type FailedOrderCreateInput = {
   errorCode?: string | null
   status?: $Enums.FailedOrderStatus
   retryCount?: number
+  adminNotifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -395,6 +409,7 @@ export type FailedOrderUncheckedCreateInput = {
   errorCode?: string | null
   status?: $Enums.FailedOrderStatus
   retryCount?: number
+  adminNotifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -412,6 +427,7 @@ export type FailedOrderUpdateInput = {
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFailedOrderStatusFieldUpdateOperationsInput | $Enums.FailedOrderStatus
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  adminNotifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -429,6 +445,7 @@ export type FailedOrderUncheckedUpdateInput = {
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFailedOrderStatusFieldUpdateOperationsInput | $Enums.FailedOrderStatus
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  adminNotifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -446,6 +463,7 @@ export type FailedOrderCreateManyInput = {
   errorCode?: string | null
   status?: $Enums.FailedOrderStatus
   retryCount?: number
+  adminNotifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -463,6 +481,7 @@ export type FailedOrderUpdateManyMutationInput = {
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFailedOrderStatusFieldUpdateOperationsInput | $Enums.FailedOrderStatus
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  adminNotifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -480,6 +499,7 @@ export type FailedOrderUncheckedUpdateManyInput = {
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFailedOrderStatusFieldUpdateOperationsInput | $Enums.FailedOrderStatus
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  adminNotifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -497,6 +517,7 @@ export type FailedOrderCountOrderByAggregateInput = {
   errorCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
   retryCount?: Prisma.SortOrder
+  adminNotifiedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
@@ -517,6 +538,7 @@ export type FailedOrderMaxOrderByAggregateInput = {
   errorCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
   retryCount?: Prisma.SortOrder
+  adminNotifiedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
@@ -533,6 +555,7 @@ export type FailedOrderMinOrderByAggregateInput = {
   errorCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
   retryCount?: Prisma.SortOrder
+  adminNotifiedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
@@ -560,6 +583,7 @@ export type FailedOrderSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   errorCode?: boolean
   status?: boolean
   retryCount?: boolean
+  adminNotifiedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
@@ -577,6 +601,7 @@ export type FailedOrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   errorCode?: boolean
   status?: boolean
   retryCount?: boolean
+  adminNotifiedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
@@ -594,6 +619,7 @@ export type FailedOrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   errorCode?: boolean
   status?: boolean
   retryCount?: boolean
+  adminNotifiedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
@@ -611,13 +637,14 @@ export type FailedOrderSelectScalar = {
   errorCode?: boolean
   status?: boolean
   retryCount?: boolean
+  adminNotifiedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
   resolvedBy?: boolean
 }
 
-export type FailedOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "stripeSessionId" | "stripePaymentIntentId" | "customerEmail" | "customerName" | "orderData" | "errorMessage" | "errorCode" | "status" | "retryCount" | "createdAt" | "updatedAt" | "resolvedAt" | "resolvedBy", ExtArgs["result"]["failedOrder"]>
+export type FailedOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "stripeSessionId" | "stripePaymentIntentId" | "customerEmail" | "customerName" | "orderData" | "errorMessage" | "errorCode" | "status" | "retryCount" | "adminNotifiedAt" | "createdAt" | "updatedAt" | "resolvedAt" | "resolvedBy", ExtArgs["result"]["failedOrder"]>
 
 export type $FailedOrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FailedOrder"
@@ -633,6 +660,7 @@ export type $FailedOrderPayload<ExtArgs extends runtime.Types.Extensions.Interna
     errorCode: string | null
     status: $Enums.FailedOrderStatus
     retryCount: number
+    adminNotifiedAt: Date | null
     createdAt: Date
     updatedAt: Date
     resolvedAt: Date | null
@@ -1070,6 +1098,7 @@ export interface FailedOrderFieldRefs {
   readonly errorCode: Prisma.FieldRef<"FailedOrder", 'String'>
   readonly status: Prisma.FieldRef<"FailedOrder", 'FailedOrderStatus'>
   readonly retryCount: Prisma.FieldRef<"FailedOrder", 'Int'>
+  readonly adminNotifiedAt: Prisma.FieldRef<"FailedOrder", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"FailedOrder", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FailedOrder", 'DateTime'>
   readonly resolvedAt: Prisma.FieldRef<"FailedOrder", 'DateTime'>

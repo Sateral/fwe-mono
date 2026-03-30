@@ -9,6 +9,9 @@ const purchaseMealPlanSchema = z.object({
   weeklyCreditCap: z.number().int().min(0),
   creditAmount: z.number().int().positive(),
   autoRenew: z.boolean().optional(),
+  priceAtPurchase: z.number().min(0).optional(),
+  billingInterval: z.string().min(1).max(64).optional(),
+  billingCurrency: z.string().length(3).optional(),
 });
 
 export async function POST(request: Request) {

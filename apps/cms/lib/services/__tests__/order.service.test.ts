@@ -40,7 +40,6 @@ const input: CreateOrderInput = {
   totalAmount: 29,
   currency: "cad",
   orderIntentId: "intent_123",
-  proteinBoost: false,
   stripeSessionId: "cs_test_123",
   stripePaymentIntentId: "pi_test_123",
 };

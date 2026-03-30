@@ -168,6 +168,7 @@ export type SubstitutionGroupWhereInput = {
   mealId?: Prisma.StringFilter<"SubstitutionGroup"> | string
   meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
   options?: Prisma.SubstitutionOptionListRelationFilter
+  orderSubstitutions?: Prisma.OrderSubstitutionListRelationFilter
 }
 
 export type SubstitutionGroupOrderByWithRelationInput = {
@@ -176,6 +177,7 @@ export type SubstitutionGroupOrderByWithRelationInput = {
   mealId?: Prisma.SortOrder
   meal?: Prisma.MealOrderByWithRelationInput
   options?: Prisma.SubstitutionOptionOrderByRelationAggregateInput
+  orderSubstitutions?: Prisma.OrderSubstitutionOrderByRelationAggregateInput
 }
 
 export type SubstitutionGroupWhereUniqueInput = Prisma.AtLeast<{
@@ -187,6 +189,7 @@ export type SubstitutionGroupWhereUniqueInput = Prisma.AtLeast<{
   mealId?: Prisma.StringFilter<"SubstitutionGroup"> | string
   meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
   options?: Prisma.SubstitutionOptionListRelationFilter
+  orderSubstitutions?: Prisma.OrderSubstitutionListRelationFilter
 }, "id">
 
 export type SubstitutionGroupOrderByWithAggregationInput = {
@@ -212,6 +215,7 @@ export type SubstitutionGroupCreateInput = {
   name: string
   meal: Prisma.MealCreateNestedOneWithoutSubstitutionGroupsInput
   options?: Prisma.SubstitutionOptionCreateNestedManyWithoutGroupInput
+  orderSubstitutions?: Prisma.OrderSubstitutionCreateNestedManyWithoutGroupInput
 }
 
 export type SubstitutionGroupUncheckedCreateInput = {
@@ -219,6 +223,7 @@ export type SubstitutionGroupUncheckedCreateInput = {
   name: string
   mealId: string
   options?: Prisma.SubstitutionOptionUncheckedCreateNestedManyWithoutGroupInput
+  orderSubstitutions?: Prisma.OrderSubstitutionUncheckedCreateNestedManyWithoutGroupInput
 }
 
 export type SubstitutionGroupUpdateInput = {
@@ -226,6 +231,7 @@ export type SubstitutionGroupUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   meal?: Prisma.MealUpdateOneRequiredWithoutSubstitutionGroupsNestedInput
   options?: Prisma.SubstitutionOptionUpdateManyWithoutGroupNestedInput
+  orderSubstitutions?: Prisma.OrderSubstitutionUpdateManyWithoutGroupNestedInput
 }
 
 export type SubstitutionGroupUncheckedUpdateInput = {
@@ -233,6 +239,7 @@ export type SubstitutionGroupUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.SubstitutionOptionUncheckedUpdateManyWithoutGroupNestedInput
+  orderSubstitutions?: Prisma.OrderSubstitutionUncheckedUpdateManyWithoutGroupNestedInput
 }
 
 export type SubstitutionGroupCreateManyInput = {
@@ -283,6 +290,11 @@ export type SubstitutionGroupMinOrderByAggregateInput = {
 export type SubstitutionGroupScalarRelationFilter = {
   is?: Prisma.SubstitutionGroupWhereInput
   isNot?: Prisma.SubstitutionGroupWhereInput
+}
+
+export type SubstitutionGroupNullableScalarRelationFilter = {
+  is?: Prisma.SubstitutionGroupWhereInput | null
+  isNot?: Prisma.SubstitutionGroupWhereInput | null
 }
 
 export type SubstitutionGroupCreateNestedManyWithoutMealInput = {
@@ -341,16 +353,34 @@ export type SubstitutionGroupUpdateOneRequiredWithoutOptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SubstitutionGroupUpdateToOneWithWhereWithoutOptionsInput, Prisma.SubstitutionGroupUpdateWithoutOptionsInput>, Prisma.SubstitutionGroupUncheckedUpdateWithoutOptionsInput>
 }
 
+export type SubstitutionGroupCreateNestedOneWithoutOrderSubstitutionsInput = {
+  create?: Prisma.XOR<Prisma.SubstitutionGroupCreateWithoutOrderSubstitutionsInput, Prisma.SubstitutionGroupUncheckedCreateWithoutOrderSubstitutionsInput>
+  connectOrCreate?: Prisma.SubstitutionGroupCreateOrConnectWithoutOrderSubstitutionsInput
+  connect?: Prisma.SubstitutionGroupWhereUniqueInput
+}
+
+export type SubstitutionGroupUpdateOneWithoutOrderSubstitutionsNestedInput = {
+  create?: Prisma.XOR<Prisma.SubstitutionGroupCreateWithoutOrderSubstitutionsInput, Prisma.SubstitutionGroupUncheckedCreateWithoutOrderSubstitutionsInput>
+  connectOrCreate?: Prisma.SubstitutionGroupCreateOrConnectWithoutOrderSubstitutionsInput
+  upsert?: Prisma.SubstitutionGroupUpsertWithoutOrderSubstitutionsInput
+  disconnect?: Prisma.SubstitutionGroupWhereInput | boolean
+  delete?: Prisma.SubstitutionGroupWhereInput | boolean
+  connect?: Prisma.SubstitutionGroupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubstitutionGroupUpdateToOneWithWhereWithoutOrderSubstitutionsInput, Prisma.SubstitutionGroupUpdateWithoutOrderSubstitutionsInput>, Prisma.SubstitutionGroupUncheckedUpdateWithoutOrderSubstitutionsInput>
+}
+
 export type SubstitutionGroupCreateWithoutMealInput = {
   id?: string
   name: string
   options?: Prisma.SubstitutionOptionCreateNestedManyWithoutGroupInput
+  orderSubstitutions?: Prisma.OrderSubstitutionCreateNestedManyWithoutGroupInput
 }
 
 export type SubstitutionGroupUncheckedCreateWithoutMealInput = {
   id?: string
   name: string
   options?: Prisma.SubstitutionOptionUncheckedCreateNestedManyWithoutGroupInput
+  orderSubstitutions?: Prisma.OrderSubstitutionUncheckedCreateNestedManyWithoutGroupInput
 }
 
 export type SubstitutionGroupCreateOrConnectWithoutMealInput = {
@@ -392,12 +422,14 @@ export type SubstitutionGroupCreateWithoutOptionsInput = {
   id?: string
   name: string
   meal: Prisma.MealCreateNestedOneWithoutSubstitutionGroupsInput
+  orderSubstitutions?: Prisma.OrderSubstitutionCreateNestedManyWithoutGroupInput
 }
 
 export type SubstitutionGroupUncheckedCreateWithoutOptionsInput = {
   id?: string
   name: string
   mealId: string
+  orderSubstitutions?: Prisma.OrderSubstitutionUncheckedCreateNestedManyWithoutGroupInput
 }
 
 export type SubstitutionGroupCreateOrConnectWithoutOptionsInput = {
@@ -420,12 +452,58 @@ export type SubstitutionGroupUpdateWithoutOptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   meal?: Prisma.MealUpdateOneRequiredWithoutSubstitutionGroupsNestedInput
+  orderSubstitutions?: Prisma.OrderSubstitutionUpdateManyWithoutGroupNestedInput
 }
 
 export type SubstitutionGroupUncheckedUpdateWithoutOptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderSubstitutions?: Prisma.OrderSubstitutionUncheckedUpdateManyWithoutGroupNestedInput
+}
+
+export type SubstitutionGroupCreateWithoutOrderSubstitutionsInput = {
+  id?: string
+  name: string
+  meal: Prisma.MealCreateNestedOneWithoutSubstitutionGroupsInput
+  options?: Prisma.SubstitutionOptionCreateNestedManyWithoutGroupInput
+}
+
+export type SubstitutionGroupUncheckedCreateWithoutOrderSubstitutionsInput = {
+  id?: string
+  name: string
+  mealId: string
+  options?: Prisma.SubstitutionOptionUncheckedCreateNestedManyWithoutGroupInput
+}
+
+export type SubstitutionGroupCreateOrConnectWithoutOrderSubstitutionsInput = {
+  where: Prisma.SubstitutionGroupWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubstitutionGroupCreateWithoutOrderSubstitutionsInput, Prisma.SubstitutionGroupUncheckedCreateWithoutOrderSubstitutionsInput>
+}
+
+export type SubstitutionGroupUpsertWithoutOrderSubstitutionsInput = {
+  update: Prisma.XOR<Prisma.SubstitutionGroupUpdateWithoutOrderSubstitutionsInput, Prisma.SubstitutionGroupUncheckedUpdateWithoutOrderSubstitutionsInput>
+  create: Prisma.XOR<Prisma.SubstitutionGroupCreateWithoutOrderSubstitutionsInput, Prisma.SubstitutionGroupUncheckedCreateWithoutOrderSubstitutionsInput>
+  where?: Prisma.SubstitutionGroupWhereInput
+}
+
+export type SubstitutionGroupUpdateToOneWithWhereWithoutOrderSubstitutionsInput = {
+  where?: Prisma.SubstitutionGroupWhereInput
+  data: Prisma.XOR<Prisma.SubstitutionGroupUpdateWithoutOrderSubstitutionsInput, Prisma.SubstitutionGroupUncheckedUpdateWithoutOrderSubstitutionsInput>
+}
+
+export type SubstitutionGroupUpdateWithoutOrderSubstitutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  meal?: Prisma.MealUpdateOneRequiredWithoutSubstitutionGroupsNestedInput
+  options?: Prisma.SubstitutionOptionUpdateManyWithoutGroupNestedInput
+}
+
+export type SubstitutionGroupUncheckedUpdateWithoutOrderSubstitutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.SubstitutionOptionUncheckedUpdateManyWithoutGroupNestedInput
 }
 
 export type SubstitutionGroupCreateManyMealInput = {
@@ -437,12 +515,14 @@ export type SubstitutionGroupUpdateWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.SubstitutionOptionUpdateManyWithoutGroupNestedInput
+  orderSubstitutions?: Prisma.OrderSubstitutionUpdateManyWithoutGroupNestedInput
 }
 
 export type SubstitutionGroupUncheckedUpdateWithoutMealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.SubstitutionOptionUncheckedUpdateManyWithoutGroupNestedInput
+  orderSubstitutions?: Prisma.OrderSubstitutionUncheckedUpdateManyWithoutGroupNestedInput
 }
 
 export type SubstitutionGroupUncheckedUpdateManyWithoutMealInput = {
@@ -457,10 +537,12 @@ export type SubstitutionGroupUncheckedUpdateManyWithoutMealInput = {
 
 export type SubstitutionGroupCountOutputType = {
   options: number
+  orderSubstitutions: number
 }
 
 export type SubstitutionGroupCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   options?: boolean | SubstitutionGroupCountOutputTypeCountOptionsArgs
+  orderSubstitutions?: boolean | SubstitutionGroupCountOutputTypeCountOrderSubstitutionsArgs
 }
 
 /**
@@ -480,6 +562,13 @@ export type SubstitutionGroupCountOutputTypeCountOptionsArgs<ExtArgs extends run
   where?: Prisma.SubstitutionOptionWhereInput
 }
 
+/**
+ * SubstitutionGroupCountOutputType without action
+ */
+export type SubstitutionGroupCountOutputTypeCountOrderSubstitutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderSubstitutionWhereInput
+}
+
 
 export type SubstitutionGroupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -487,6 +576,7 @@ export type SubstitutionGroupSelect<ExtArgs extends runtime.Types.Extensions.Int
   mealId?: boolean
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
   options?: boolean | Prisma.SubstitutionGroup$optionsArgs<ExtArgs>
+  orderSubstitutions?: boolean | Prisma.SubstitutionGroup$orderSubstitutionsArgs<ExtArgs>
   _count?: boolean | Prisma.SubstitutionGroupCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["substitutionGroup"]>
 
@@ -514,6 +604,7 @@ export type SubstitutionGroupOmit<ExtArgs extends runtime.Types.Extensions.Inter
 export type SubstitutionGroupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
   options?: boolean | Prisma.SubstitutionGroup$optionsArgs<ExtArgs>
+  orderSubstitutions?: boolean | Prisma.SubstitutionGroup$orderSubstitutionsArgs<ExtArgs>
   _count?: boolean | Prisma.SubstitutionGroupCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SubstitutionGroupIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -528,6 +619,7 @@ export type $SubstitutionGroupPayload<ExtArgs extends runtime.Types.Extensions.I
   objects: {
     meal: Prisma.$MealPayload<ExtArgs>
     options: Prisma.$SubstitutionOptionPayload<ExtArgs>[]
+    orderSubstitutions: Prisma.$OrderSubstitutionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -929,6 +1021,7 @@ export interface Prisma__SubstitutionGroupClient<T, Null = never, ExtArgs extend
   readonly [Symbol.toStringTag]: "PrismaPromise"
   meal<T extends Prisma.MealDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MealDefaultArgs<ExtArgs>>): Prisma.Prisma__MealClient<runtime.Types.Result.GetResult<Prisma.$MealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   options<T extends Prisma.SubstitutionGroup$optionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubstitutionGroup$optionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubstitutionOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orderSubstitutions<T extends Prisma.SubstitutionGroup$orderSubstitutionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubstitutionGroup$orderSubstitutionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderSubstitutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1378,6 +1471,30 @@ export type SubstitutionGroup$optionsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.SubstitutionOptionScalarFieldEnum | Prisma.SubstitutionOptionScalarFieldEnum[]
+}
+
+/**
+ * SubstitutionGroup.orderSubstitutions
+ */
+export type SubstitutionGroup$orderSubstitutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderSubstitution
+   */
+  select?: Prisma.OrderSubstitutionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderSubstitution
+   */
+  omit?: Prisma.OrderSubstitutionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderSubstitutionInclude<ExtArgs> | null
+  where?: Prisma.OrderSubstitutionWhereInput
+  orderBy?: Prisma.OrderSubstitutionOrderByWithRelationInput | Prisma.OrderSubstitutionOrderByWithRelationInput[]
+  cursor?: Prisma.OrderSubstitutionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderSubstitutionScalarFieldEnum | Prisma.OrderSubstitutionScalarFieldEnum[]
 }
 
 /**

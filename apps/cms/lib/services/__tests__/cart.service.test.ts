@@ -60,7 +60,6 @@ describe("cart.service", () => {
         {
           mealId: "meal_1",
           quantity: 1,
-          proteinBoost: false,
         },
       ],
     });
@@ -112,7 +111,6 @@ describe("cart.service", () => {
         {
           mealId: "meal_1",
           quantity: 1,
-          proteinBoost: false,
         },
       ],
     });

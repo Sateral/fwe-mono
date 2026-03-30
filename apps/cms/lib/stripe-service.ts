@@ -5,10 +5,13 @@ import { Prisma } from "@fwe/db";
 import prisma from "./prisma";
 import { stripe } from "./stripe";
 import {
+  buildCreateOrderInputsFromCheckoutSnapshot,
   finalizeCartCheckoutSession,
   getCheckoutSessionIdFromCheckoutSession,
+  loadCheckoutSnapshotForStripeSession,
   updateCartCheckoutStatus,
 } from "./services/cart-checkout.service";
+import { failedOrderService } from "./services/failed-order.service";
 import { orderService } from "./services/order.service";
 
 export function getOrderIntentIdFromSession(
@@ -122,6 +125,10 @@ async function ensureLegacyOrderFromSession(sessionId: string) {
 
   const orderIntent = await prisma.orderIntent.findUnique({
     where: { id: orderIntentId },
+    include: {
+      substitutions: true,
+      modifiers: true,
+    },
   });
 
   if (!orderIntent) {
@@ -142,11 +149,18 @@ async function ensureLegacyOrderFromSession(sessionId: string) {
     totalAmount: toNumber(orderIntent.totalAmount),
     currency: orderIntent.currency,
     orderIntentId: orderIntent.id,
-    substitutions: (orderIntent.substitutions ??
-      undefined) as unknown as CreateOrderInput["substitutions"],
-    modifiers: (orderIntent.modifiers ??
-      undefined) as unknown as CreateOrderInput["modifiers"],
-    proteinBoost: orderIntent.proteinBoost,
+    substitutions: orderIntent.substitutions.map((s) => ({
+      groupName: s.groupName,
+      optionName: s.optionName,
+      groupId: s.groupId ?? undefined,
+      optionId: s.optionId ?? undefined,
+    })),
+    modifiers: orderIntent.modifiers.map((m) => ({
+      groupName: m.groupName,
+      optionName: m.optionName,
+      groupId: m.groupId ?? undefined,
+      optionId: m.optionId ?? undefined,
+    })),
     notes: orderIntent.notes ?? undefined,
     deliveryMethod: orderIntent.deliveryMethod,
     pickupLocation: orderIntent.pickupLocation ?? undefined,
@@ -201,4 +215,51 @@ export async function updateOrderIntentStatus(
       status,
     },
   });
+}
+
+/**
+ * Persist a `FailedOrder` and trigger ops alert after a paid checkout could not be finalized.
+ */
+export async function recordPaidCheckoutFulfillmentFailure(
+  session: Stripe.Checkout.Session,
+  errorMessage: string,
+) {
+  try {
+    const { paymentIntentId, chargeId, balanceTransactionId } =
+      extractPaymentIntentIds(
+        session.payment_intent as Stripe.PaymentIntent | string | null,
+      );
+
+    const snapshot = await loadCheckoutSnapshotForStripeSession(session);
+    const customerEmail =
+      session.customer_details?.email ??
+      snapshot?.customerEmail ??
+      undefined;
+    const customerName =
+      session.customer_details?.name ?? snapshot?.customerName ?? undefined;
+
+    const orders = snapshot
+      ? buildCreateOrderInputsFromCheckoutSnapshot(
+          snapshot,
+          session,
+          paymentIntentId,
+          chargeId,
+          balanceTransactionId,
+        )
+      : [];
+
+    await failedOrderService.createFailedOrder({
+      stripeSessionId: session.id,
+      stripePaymentIntentId: paymentIntentId,
+      customerEmail: customerEmail ?? undefined,
+      customerName: customerName ?? undefined,
+      orderData: { orders },
+      errorMessage,
+    });
+  } catch (e) {
+    console.error(
+      "[StripeService] Failed to record FailedOrder after checkout error",
+      e,
+    );
+  }
 }

@@ -277,6 +277,7 @@ export type SubstitutionOptionWhereInput = {
   fiberAdjust?: Prisma.IntFilter<"SubstitutionOption"> | number
   groupId?: Prisma.StringFilter<"SubstitutionOption"> | string
   group?: Prisma.XOR<Prisma.SubstitutionGroupScalarRelationFilter, Prisma.SubstitutionGroupWhereInput>
+  orderSubstitutions?: Prisma.OrderSubstitutionListRelationFilter
 }
 
 export type SubstitutionOptionOrderByWithRelationInput = {
@@ -291,6 +292,7 @@ export type SubstitutionOptionOrderByWithRelationInput = {
   fiberAdjust?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
   group?: Prisma.SubstitutionGroupOrderByWithRelationInput
+  orderSubstitutions?: Prisma.OrderSubstitutionOrderByRelationAggregateInput
 }
 
 export type SubstitutionOptionWhereUniqueInput = Prisma.AtLeast<{
@@ -308,6 +310,7 @@ export type SubstitutionOptionWhereUniqueInput = Prisma.AtLeast<{
   fiberAdjust?: Prisma.IntFilter<"SubstitutionOption"> | number
   groupId?: Prisma.StringFilter<"SubstitutionOption"> | string
   group?: Prisma.XOR<Prisma.SubstitutionGroupScalarRelationFilter, Prisma.SubstitutionGroupWhereInput>
+  orderSubstitutions?: Prisma.OrderSubstitutionListRelationFilter
 }, "id">
 
 export type SubstitutionOptionOrderByWithAggregationInput = {
@@ -355,6 +358,7 @@ export type SubstitutionOptionCreateInput = {
   fatAdjust?: number
   fiberAdjust?: number
   group: Prisma.SubstitutionGroupCreateNestedOneWithoutOptionsInput
+  orderSubstitutions?: Prisma.OrderSubstitutionCreateNestedManyWithoutOptionInput
 }
 
 export type SubstitutionOptionUncheckedCreateInput = {
@@ -368,6 +372,7 @@ export type SubstitutionOptionUncheckedCreateInput = {
   fatAdjust?: number
   fiberAdjust?: number
   groupId: string
+  orderSubstitutions?: Prisma.OrderSubstitutionUncheckedCreateNestedManyWithoutOptionInput
 }
 
 export type SubstitutionOptionUpdateInput = {
@@ -381,6 +386,7 @@ export type SubstitutionOptionUpdateInput = {
   fatAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   fiberAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   group?: Prisma.SubstitutionGroupUpdateOneRequiredWithoutOptionsNestedInput
+  orderSubstitutions?: Prisma.OrderSubstitutionUpdateManyWithoutOptionNestedInput
 }
 
 export type SubstitutionOptionUncheckedUpdateInput = {
@@ -394,6 +400,7 @@ export type SubstitutionOptionUncheckedUpdateInput = {
   fatAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   fiberAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderSubstitutions?: Prisma.OrderSubstitutionUncheckedUpdateManyWithoutOptionNestedInput
 }
 
 export type SubstitutionOptionCreateManyInput = {
@@ -501,6 +508,11 @@ export type SubstitutionOptionSumOrderByAggregateInput = {
   fiberAdjust?: Prisma.SortOrder
 }
 
+export type SubstitutionOptionNullableScalarRelationFilter = {
+  is?: Prisma.SubstitutionOptionWhereInput | null
+  isNot?: Prisma.SubstitutionOptionWhereInput | null
+}
+
 export type SubstitutionOptionCreateNestedManyWithoutGroupInput = {
   create?: Prisma.XOR<Prisma.SubstitutionOptionCreateWithoutGroupInput, Prisma.SubstitutionOptionUncheckedCreateWithoutGroupInput> | Prisma.SubstitutionOptionCreateWithoutGroupInput[] | Prisma.SubstitutionOptionUncheckedCreateWithoutGroupInput[]
   connectOrCreate?: Prisma.SubstitutionOptionCreateOrConnectWithoutGroupInput | Prisma.SubstitutionOptionCreateOrConnectWithoutGroupInput[]
@@ -543,6 +555,22 @@ export type SubstitutionOptionUncheckedUpdateManyWithoutGroupNestedInput = {
   deleteMany?: Prisma.SubstitutionOptionScalarWhereInput | Prisma.SubstitutionOptionScalarWhereInput[]
 }
 
+export type SubstitutionOptionCreateNestedOneWithoutOrderSubstitutionsInput = {
+  create?: Prisma.XOR<Prisma.SubstitutionOptionCreateWithoutOrderSubstitutionsInput, Prisma.SubstitutionOptionUncheckedCreateWithoutOrderSubstitutionsInput>
+  connectOrCreate?: Prisma.SubstitutionOptionCreateOrConnectWithoutOrderSubstitutionsInput
+  connect?: Prisma.SubstitutionOptionWhereUniqueInput
+}
+
+export type SubstitutionOptionUpdateOneWithoutOrderSubstitutionsNestedInput = {
+  create?: Prisma.XOR<Prisma.SubstitutionOptionCreateWithoutOrderSubstitutionsInput, Prisma.SubstitutionOptionUncheckedCreateWithoutOrderSubstitutionsInput>
+  connectOrCreate?: Prisma.SubstitutionOptionCreateOrConnectWithoutOrderSubstitutionsInput
+  upsert?: Prisma.SubstitutionOptionUpsertWithoutOrderSubstitutionsInput
+  disconnect?: Prisma.SubstitutionOptionWhereInput | boolean
+  delete?: Prisma.SubstitutionOptionWhereInput | boolean
+  connect?: Prisma.SubstitutionOptionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubstitutionOptionUpdateToOneWithWhereWithoutOrderSubstitutionsInput, Prisma.SubstitutionOptionUpdateWithoutOrderSubstitutionsInput>, Prisma.SubstitutionOptionUncheckedUpdateWithoutOrderSubstitutionsInput>
+}
+
 export type SubstitutionOptionCreateWithoutGroupInput = {
   id?: string
   name: string
@@ -553,6 +581,7 @@ export type SubstitutionOptionCreateWithoutGroupInput = {
   carbsAdjust?: number
   fatAdjust?: number
   fiberAdjust?: number
+  orderSubstitutions?: Prisma.OrderSubstitutionCreateNestedManyWithoutOptionInput
 }
 
 export type SubstitutionOptionUncheckedCreateWithoutGroupInput = {
@@ -565,6 +594,7 @@ export type SubstitutionOptionUncheckedCreateWithoutGroupInput = {
   carbsAdjust?: number
   fatAdjust?: number
   fiberAdjust?: number
+  orderSubstitutions?: Prisma.OrderSubstitutionUncheckedCreateNestedManyWithoutOptionInput
 }
 
 export type SubstitutionOptionCreateOrConnectWithoutGroupInput = {
@@ -609,6 +639,74 @@ export type SubstitutionOptionScalarWhereInput = {
   groupId?: Prisma.StringFilter<"SubstitutionOption"> | string
 }
 
+export type SubstitutionOptionCreateWithoutOrderSubstitutionsInput = {
+  id?: string
+  name: string
+  isDefault?: boolean
+  priceAdjustment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  calorieAdjust?: number
+  proteinAdjust?: number
+  carbsAdjust?: number
+  fatAdjust?: number
+  fiberAdjust?: number
+  group: Prisma.SubstitutionGroupCreateNestedOneWithoutOptionsInput
+}
+
+export type SubstitutionOptionUncheckedCreateWithoutOrderSubstitutionsInput = {
+  id?: string
+  name: string
+  isDefault?: boolean
+  priceAdjustment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  calorieAdjust?: number
+  proteinAdjust?: number
+  carbsAdjust?: number
+  fatAdjust?: number
+  fiberAdjust?: number
+  groupId: string
+}
+
+export type SubstitutionOptionCreateOrConnectWithoutOrderSubstitutionsInput = {
+  where: Prisma.SubstitutionOptionWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubstitutionOptionCreateWithoutOrderSubstitutionsInput, Prisma.SubstitutionOptionUncheckedCreateWithoutOrderSubstitutionsInput>
+}
+
+export type SubstitutionOptionUpsertWithoutOrderSubstitutionsInput = {
+  update: Prisma.XOR<Prisma.SubstitutionOptionUpdateWithoutOrderSubstitutionsInput, Prisma.SubstitutionOptionUncheckedUpdateWithoutOrderSubstitutionsInput>
+  create: Prisma.XOR<Prisma.SubstitutionOptionCreateWithoutOrderSubstitutionsInput, Prisma.SubstitutionOptionUncheckedCreateWithoutOrderSubstitutionsInput>
+  where?: Prisma.SubstitutionOptionWhereInput
+}
+
+export type SubstitutionOptionUpdateToOneWithWhereWithoutOrderSubstitutionsInput = {
+  where?: Prisma.SubstitutionOptionWhereInput
+  data: Prisma.XOR<Prisma.SubstitutionOptionUpdateWithoutOrderSubstitutionsInput, Prisma.SubstitutionOptionUncheckedUpdateWithoutOrderSubstitutionsInput>
+}
+
+export type SubstitutionOptionUpdateWithoutOrderSubstitutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAdjustment?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  calorieAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  proteinAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  carbsAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  fatAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  fiberAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  group?: Prisma.SubstitutionGroupUpdateOneRequiredWithoutOptionsNestedInput
+}
+
+export type SubstitutionOptionUncheckedUpdateWithoutOrderSubstitutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priceAdjustment?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  calorieAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  proteinAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  carbsAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  fatAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  fiberAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  groupId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
 export type SubstitutionOptionCreateManyGroupInput = {
   id?: string
   name: string
@@ -631,6 +729,7 @@ export type SubstitutionOptionUpdateWithoutGroupInput = {
   carbsAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   fatAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   fiberAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  orderSubstitutions?: Prisma.OrderSubstitutionUpdateManyWithoutOptionNestedInput
 }
 
 export type SubstitutionOptionUncheckedUpdateWithoutGroupInput = {
@@ -643,6 +742,7 @@ export type SubstitutionOptionUncheckedUpdateWithoutGroupInput = {
   carbsAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   fatAdjust?: Prisma.IntFieldUpdateOperationsInput | number
   fiberAdjust?: Prisma.IntFieldUpdateOperationsInput | number
+  orderSubstitutions?: Prisma.OrderSubstitutionUncheckedUpdateManyWithoutOptionNestedInput
 }
 
 export type SubstitutionOptionUncheckedUpdateManyWithoutGroupInput = {
@@ -658,6 +758,35 @@ export type SubstitutionOptionUncheckedUpdateManyWithoutGroupInput = {
 }
 
 
+/**
+ * Count Type SubstitutionOptionCountOutputType
+ */
+
+export type SubstitutionOptionCountOutputType = {
+  orderSubstitutions: number
+}
+
+export type SubstitutionOptionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  orderSubstitutions?: boolean | SubstitutionOptionCountOutputTypeCountOrderSubstitutionsArgs
+}
+
+/**
+ * SubstitutionOptionCountOutputType without action
+ */
+export type SubstitutionOptionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SubstitutionOptionCountOutputType
+   */
+  select?: Prisma.SubstitutionOptionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * SubstitutionOptionCountOutputType without action
+ */
+export type SubstitutionOptionCountOutputTypeCountOrderSubstitutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderSubstitutionWhereInput
+}
+
 
 export type SubstitutionOptionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -671,6 +800,8 @@ export type SubstitutionOptionSelect<ExtArgs extends runtime.Types.Extensions.In
   fiberAdjust?: boolean
   groupId?: boolean
   group?: boolean | Prisma.SubstitutionGroupDefaultArgs<ExtArgs>
+  orderSubstitutions?: boolean | Prisma.SubstitutionOption$orderSubstitutionsArgs<ExtArgs>
+  _count?: boolean | Prisma.SubstitutionOptionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["substitutionOption"]>
 
 export type SubstitutionOptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -717,6 +848,8 @@ export type SubstitutionOptionSelectScalar = {
 export type SubstitutionOptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "isDefault" | "priceAdjustment" | "calorieAdjust" | "proteinAdjust" | "carbsAdjust" | "fatAdjust" | "fiberAdjust" | "groupId", ExtArgs["result"]["substitutionOption"]>
 export type SubstitutionOptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   group?: boolean | Prisma.SubstitutionGroupDefaultArgs<ExtArgs>
+  orderSubstitutions?: boolean | Prisma.SubstitutionOption$orderSubstitutionsArgs<ExtArgs>
+  _count?: boolean | Prisma.SubstitutionOptionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SubstitutionOptionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   group?: boolean | Prisma.SubstitutionGroupDefaultArgs<ExtArgs>
@@ -729,6 +862,7 @@ export type $SubstitutionOptionPayload<ExtArgs extends runtime.Types.Extensions.
   name: "SubstitutionOption"
   objects: {
     group: Prisma.$SubstitutionGroupPayload<ExtArgs>
+    orderSubstitutions: Prisma.$OrderSubstitutionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1136,6 +1270,7 @@ readonly fields: SubstitutionOptionFieldRefs;
 export interface Prisma__SubstitutionOptionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   group<T extends Prisma.SubstitutionGroupDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubstitutionGroupDefaultArgs<ExtArgs>>): Prisma.Prisma__SubstitutionGroupClient<runtime.Types.Result.GetResult<Prisma.$SubstitutionGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  orderSubstitutions<T extends Prisma.SubstitutionOption$orderSubstitutionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubstitutionOption$orderSubstitutionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderSubstitutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1568,6 +1703,30 @@ export type SubstitutionOptionDeleteManyArgs<ExtArgs extends runtime.Types.Exten
    * Limit how many SubstitutionOptions to delete.
    */
   limit?: number
+}
+
+/**
+ * SubstitutionOption.orderSubstitutions
+ */
+export type SubstitutionOption$orderSubstitutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderSubstitution
+   */
+  select?: Prisma.OrderSubstitutionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderSubstitution
+   */
+  omit?: Prisma.OrderSubstitutionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderSubstitutionInclude<ExtArgs> | null
+  where?: Prisma.OrderSubstitutionWhereInput
+  orderBy?: Prisma.OrderSubstitutionOrderByWithRelationInput | Prisma.OrderSubstitutionOrderByWithRelationInput[]
+  cursor?: Prisma.OrderSubstitutionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderSubstitutionScalarFieldEnum | Prisma.OrderSubstitutionScalarFieldEnum[]
 }
 
 /**

@@ -58,10 +58,11 @@ export interface OrderSubstitution {
 
 /**
  * Modifier choice made by customer for an order.
+ * Flat: one row per selected modifier option.
  */
 export interface OrderModifier {
   groupName: string;
-  optionNames: string[];
+  optionName: string;
 }
 
 // ============================================

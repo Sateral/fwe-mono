@@ -49,6 +49,9 @@ model SubstitutionGroup {
   meal    Meal                 @relation(fields: [mealId], references: [id], onDelete: Cascade)
   options SubstitutionOption[]
 
+  // Soft-reference back-links from order-level junction tables
+  orderSubstitutions OrderSubstitution[]
+
   @@index([mealId])
 }
 
@@ -65,6 +68,9 @@ model SubstitutionOption {
   groupId         String
   group           SubstitutionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
+  // Soft-reference back-links from order-level junction tables
+  orderSubstitutions OrderSubstitution[]
+
   @@index([groupId])
 }
 
@@ -78,6 +84,9 @@ model ModifierGroup {
   meal         Meal             @relation(fields: [mealId], references: [id], onDelete: Cascade)
   options      ModifierOption[]
 
+  // Soft-reference back-links from order-level junction tables
+  orderModifiers OrderModifier[]
+
   @@index([mealId])
 }
 
@@ -87,6 +96,9 @@ model ModifierOption {
   extraPrice      Decimal       @default(0) @db.Decimal(10, 2)
   modifierGroupId String
   modifierGroup   ModifierGroup @relation(fields: [modifierGroupId], references: [id], onDelete: Cascade)
+
+  // Soft-reference back-links from order-level junction tables
+  orderModifiers OrderModifier[]
 
   @@index([modifierGroupId])
 }
@@ -125,10 +137,9 @@ model Order {
   unitPrice   Decimal @db.Decimal(10, 2) // Price per meal at time of order
   totalAmount Decimal @db.Decimal(10, 2) // Final amount charged
 
-  // Customizations (for chef preparation)
-  substitutions Json? // [{ groupName, optionName }]
-  modifiers     Json? // [{ groupName, optionNames: string[] }]
-  proteinBoost  Boolean @default(false)
+  // Customizations (relational junction tables — soft-reference pattern)
+  substitutions OrderSubstitution[]
+  modifiers     OrderModifier[]
   notes         String? @db.Text
 
   // Fulfillment
@@ -152,7 +163,16 @@ model Order {
   orderIntent   OrderIntent? @relation("OrderIntentToOrder", fields: [orderIntentId], references: [id])
   referralUse   ReferralUse?
 
-  paymentEvents PaymentEvent[]
+  // Direct link to checkout session (Item 3)
+  checkoutSessionId String?
+  checkoutSession   CheckoutSession? @relation(fields: [checkoutSessionId], references: [id])
+
+  // Multi-meal transaction grouping (Item 4)
+  orderGroupId String?
+  orderGroup   OrderGroup? @relation(fields: [orderGroupId], references: [id])
+
+  paymentEvents        PaymentEvent[]
+  fulfillmentChanges   FulfillmentStatusChange[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -171,6 +191,172 @@ model Order {
   @@index([customerEmail])
   @@index([stripeSessionId])
   @@index([stripePaymentIntentId])
+  @@index([checkoutSessionId])
+  @@index([orderGroupId])
+}
+
+// ============================================
+// Order Customization Junction Tables (Soft-Reference Pattern)
+// ============================================
+//
+// Snapshot strings (groupName, optionName) are immutable — they preserve
+// the exact text the customer saw at order time even if the catalog option
+// is later renamed or deleted.
+//
+// Nullable FK IDs (groupId, optionId) enable clean aggregation queries
+// for the prep manifest without JSON parsing. They are set to NULL via
+// onDelete: SetNull if the referenced option is removed.
+// ============================================
+
+model OrderSubstitution {
+  id         String              @id @default(cuid())
+  orderId    String
+  order      Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  groupName  String              // Immutable snapshot
+  optionName String              // Immutable snapshot
+  groupId    String?
+  group      SubstitutionGroup?  @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  optionId   String?
+  option     SubstitutionOption? @relation(fields: [optionId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([groupId])
+  @@index([optionId])
+}
+
+model OrderModifier {
+  id         String          @id @default(cuid())
+  orderId    String
+  order      Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  groupName  String          // Immutable snapshot
+  optionName String          // Immutable snapshot (one row per selected option)
+  groupId    String?
+  group      ModifierGroup?  @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  optionId   String?
+  option     ModifierOption? @relation(fields: [optionId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([groupId])
+  @@index([optionId])
+}
+
+// ============================================
+// Cart-Level Customization Tables (plain string IDs, no FK)
+// ============================================
+//
+// Cart/Checkout/Intent items store groupId and optionId as plain strings
+// (not foreign keys) since these are transient/snapshot records that don't
+// need referential integrity enforcement. Only Order-level junction tables
+// carry actual FK relations for prep manifest aggregation.
+// ============================================
+
+model CartItemSubstitution {
+  id         String   @id @default(cuid())
+  cartItemId String
+  cartItem   CartItem @relation(fields: [cartItemId], references: [id], onDelete: Cascade)
+  groupName  String
+  optionName String
+  groupId    String?  // Reference ID, not FK
+  optionId   String?  // Reference ID, not FK
+
+  @@index([cartItemId])
+}
+
+model CartItemModifier {
+  id         String   @id @default(cuid())
+  cartItemId String
+  cartItem   CartItem @relation(fields: [cartItemId], references: [id], onDelete: Cascade)
+  groupName  String
+  optionName String   // One row per selected option
+  groupId    String?
+  optionId   String?
+
+  @@index([cartItemId])
+}
+
+model IntentSubstitution {
+  id            String      @id @default(cuid())
+  orderIntentId String
+  orderIntent   OrderIntent @relation(fields: [orderIntentId], references: [id], onDelete: Cascade)
+  groupName     String
+  optionName    String
+  groupId       String?
+  optionId      String?
+
+  @@index([orderIntentId])
+}
+
+model IntentModifier {
+  id            String      @id @default(cuid())
+  orderIntentId String
+  orderIntent   OrderIntent @relation(fields: [orderIntentId], references: [id], onDelete: Cascade)
+  groupName     String
+  optionName    String
+  groupId       String?
+  optionId      String?
+
+  @@index([orderIntentId])
+}
+
+model CheckoutItemSubstitution {
+  id                    String              @id @default(cuid())
+  checkoutSessionItemId String
+  checkoutSessionItem   CheckoutSessionItem @relation(fields: [checkoutSessionItemId], references: [id], onDelete: Cascade)
+  groupName             String
+  optionName            String
+  groupId               String?
+  optionId              String?
+
+  @@index([checkoutSessionItemId])
+}
+
+model CheckoutItemModifier {
+  id                    String              @id @default(cuid())
+  checkoutSessionItemId String
+  checkoutSessionItem   CheckoutSessionItem @relation(fields: [checkoutSessionItemId], references: [id], onDelete: Cascade)
+  groupName             String
+  optionName            String
+  groupId               String?
+  optionId              String?
+
+  @@index([checkoutSessionItemId])
+}
+
+// ============================================
+// Order Group (Multi-Meal Transaction)
+// ============================================
+
+model OrderGroup {
+  id                    String           @id @default(cuid())
+  checkoutSessionId     String           @unique
+  checkoutSession       CheckoutSession  @relation(fields: [checkoutSessionId], references: [id])
+  stripeSessionId       String?          @unique
+  stripePaymentIntentId String?          @unique
+  stripeChargeId        String?
+  totalAmount           Decimal          @db.Decimal(10, 2)
+  currency              String           @default("cad")
+  orders                Order[]
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+}
+
+// ============================================
+// Fulfillment Status Audit Log (Item 5)
+// ============================================
+
+model FulfillmentStatusChange {
+  id          String            @id @default(cuid())
+  orderId     String
+  order       Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fromStatus  FulfillmentStatus
+  toStatus    FulfillmentStatus
+  changedById String?
+  changedBy   User?             @relation("FulfillmentChanges", fields: [changedById], references: [id], onDelete: SetNull)
+  reason      String?           @db.Text
+  createdAt   DateTime          @default(now())
+
+  @@index([orderId])
+  @@index([createdAt])
 }
 
 enum ModifierType {
@@ -202,10 +388,10 @@ enum OrderIntentStatus {
   CANCELLED
 }
 
+// Item 10: Retired PUBLISHED — only DRAFT and ARCHIVED remain
 enum RotationStatus {
-  DRAFT      // On menu unless ARCHIVED; legacy PUBLISHED treated like DRAFT in app code paths
-  PUBLISHED  // Kept for existing rows; storefront uses not-ARCHIVED
-  ARCHIVED   // Hidden from menu and period lists
+  DRAFT
+  ARCHIVED
 }
 
 enum DeliveryMethod {
@@ -266,6 +452,14 @@ enum ReferralCodeStatus {
   DISABLED
 }
 
+// Item 12: Price source for cart items
+enum PriceSource {
+  STANDARD        // Calculated from meal base + mods + subs
+  MEAL_PLAN        // $0 via credit redemption
+  DISCOUNT         // Manual or coupon discount
+  MANUAL_OVERRIDE  // Admin-set price
+}
+
 model RotationPeriod {
   id        String         @id @default(cuid())
   key       String         @unique
@@ -306,14 +500,14 @@ model WeeklyRotation {
 // Cart + Checkout Pipeline
 // ============================================
 //
-// Lifecycle:  Cart  →  CheckoutSession (snapshot)  →  OrderIntent (per-item)  →  Order (paid)
+// Lifecycle:  Cart  ->  CheckoutSession (snapshot)  ->  OrderIntent (per-item)  ->  Order (paid)
 //
-// Cart / CartItem         – Live, mutable shopping cart. Customers edit freely.
-// CheckoutSession / Item  – Immutable snapshot taken at checkout start. Protects
+// Cart / CartItem         - Live, mutable shopping cart. Customers edit freely.
+// CheckoutSession / Item  - Immutable snapshot taken at checkout start. Protects
 //                           against cart edits between "pay" click and webhook.
-// OrderIntent             – One per cart item. Tracks pre-payment status through
-//                           the Stripe lifecycle (CREATED → SESSION_CREATED → PAID).
-// Order                   – Final paid record, created by the webhook handler.
+// OrderIntent             - One per cart item. Tracks pre-payment status through
+//                           the Stripe lifecycle (CREATED -> SESSION_CREATED -> PAID).
+// Order                   - Final paid record, created by the webhook handler.
 //
 // Why the redundancy? If a customer edits their cart after clicking "pay" but
 // before the payment webhook fires, the snapshot ensures the webhook creates
@@ -346,13 +540,18 @@ model CartItem {
   rotationId   String?
   rotation     WeeklyRotation? @relation(fields: [rotationId], references: [id], onDelete: SetNull)
   quantity     Int
-  unitPrice    Decimal @db.Decimal(10, 2)
-  substitutions Json?
-  modifiers     Json?
-  proteinBoost  Boolean @default(false)
-  notes         String? @db.Text
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  unitPrice    Decimal         @db.Decimal(10, 2)
+
+  // Customizations (relational junction tables)
+  substitutions CartItemSubstitution[]
+  modifiers     CartItemModifier[]
+  notes         String?         @db.Text
+
+  // Item 12: Price source tracking
+  priceSource  PriceSource     @default(STANDARD)
+
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
 
   @@index([cartId])
   @@index([mealId])
@@ -366,7 +565,7 @@ model CartItem {
 /// Stores failed order creation attempts for admin recovery.
 /// When a Stripe payment succeeds but order creation fails,
 /// the order data is stored here for manual or automated retry.
-/// (Separate from the checkout pipeline — this is a dead-letter queue.)
+/// (Separate from the checkout pipeline -- this is a dead-letter queue.)
 model FailedOrder {
   id String @id @default(cuid())
 
@@ -389,6 +588,9 @@ model FailedOrder {
   status     FailedOrderStatus @default(PENDING)
   retryCount Int               @default(0)
 
+  // Item 6: Admin notification tracking
+  adminNotifiedAt DateTime?
+
   // Timestamps
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
@@ -405,7 +607,7 @@ model FailedOrder {
 
 /// Pre-payment intent for a single cart item.
 /// Created during checkout, before the Stripe session.
-/// Tracks status from CREATED → SESSION_CREATED → PAID/FAILED.
+/// Tracks status from CREATED -> SESSION_CREATED -> PAID/FAILED.
 model OrderIntent {
   id String @id @default(cuid())
 
@@ -426,9 +628,9 @@ model OrderIntent {
   currency    String @default("cad")
   settlementMethod SettlementMethod @default(STRIPE)
 
-  substitutions Json?
-  modifiers     Json?
-  proteinBoost  Boolean @default(false)
+  // Customizations (relational junction tables)
+  substitutions IntentSubstitution[]
+  modifiers     IntentModifier[]
   notes         String? @db.Text
 
   deliveryMethod DeliveryMethod @default(DELIVERY)
@@ -478,6 +680,12 @@ model CheckoutSession {
 
   items CheckoutSessionItem[]
 
+  // Item 3: Orders linked to this checkout session
+  orders Order[]
+
+  // Item 4: Order group for multi-meal transactions
+  orderGroup OrderGroup?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -512,9 +720,9 @@ model CheckoutSessionItem {
   totalAmount Decimal @db.Decimal(10, 2)
   currency    String @default("cad")
 
-  substitutions Json?
-  modifiers     Json?
-  proteinBoost  Boolean @default(false)
+  // Customizations (relational junction tables)
+  substitutions CheckoutItemSubstitution[]
+  modifiers     CheckoutItemModifier[]
   notes         String? @db.Text
 
   deliveryMethod DeliveryMethod @default(DELIVERY)
@@ -584,6 +792,9 @@ model User {
   referralUse      ReferralUse?   @relation("ReferralUseReferredUser")
   stripeCustomerId String? @unique @map(name: "stripe_customer_id")
 
+  // Fulfillment audit trail (Item 5)
+  fulfillmentChanges FulfillmentStatusChange[] @relation("FulfillmentChanges")
+
   isGuest           Boolean     @default(false)
   guestSource       GuestSource?
   guestSourceId     String?     @unique
@@ -620,6 +831,12 @@ model MealPlan {
   startsAt        DateTime                @default(now())
   endsAt          DateTime?
   autoRenew       Boolean                 @default(true)
+
+  // Item 9: Price/billing snapshot
+  priceAtPurchase  Decimal?               @db.Decimal(10, 2)
+  billingInterval  String?                // e.g. "weekly", "monthly"
+  billingCurrency  String                 @default("cad")
+
   windowUsages    MealPlanWindowUsage[]
   creditLedger    MealPlanCreditLedger[]
   createdAt       DateTime                @default(now())

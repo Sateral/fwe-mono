@@ -46,11 +46,11 @@ export function serializeMeal(meal: MealRecord): ApiMeal {
     fiber: meal.fiber,
     createdAt: meal.createdAt.toISOString(),
     updatedAt: meal.updatedAt.toISOString(),
-    substitutionGroups: meal.substitutionGroups.map((group) => ({
+    substitutionGroups: (meal.substitutionGroups ?? []).map((group) => ({
       id: group.id,
       name: group.name,
       mealId: group.mealId,
-      options: group.options.map((option) => ({
+      options: (group.options ?? []).map((option) => ({
         id: option.id,
         name: option.name,
         isDefault: option.isDefault,
@@ -63,21 +63,21 @@ export function serializeMeal(meal: MealRecord): ApiMeal {
         groupId: option.groupId,
       })),
     })),
-    modifierGroups: meal.modifierGroups.map((group) => ({
+    modifierGroups: (meal.modifierGroups ?? []).map((group) => ({
       id: group.id,
       name: group.name,
       type: group.type,
       minSelection: group.minSelection,
       maxSelection: group.maxSelection,
       mealId: group.mealId,
-      options: group.options.map((option) => ({
+      options: (group.options ?? []).map((option) => ({
         id: option.id,
         name: option.name,
         extraPrice: serializeMoney(option.extraPrice),
         modifierGroupId: option.modifierGroupId,
       })),
     })),
-    tags: meal.tags.map((tag) => ({
+    tags: (meal.tags ?? []).map((tag) => ({
       id: tag.id,
       name: tag.name,
       color: tag.color,
@@ -97,13 +97,26 @@ export function serializeOrder(order: OrderRecord): ApiOrder {
     mealId: order.mealId,
     settlementMethod: order.settlementMethod,
     orderIntentId: order.orderIntentId,
+    checkoutSessionId: order.checkoutSessionId,
+    orderGroupId: order.orderGroupId,
     assignedByChef: order.orderIntent?.clientRequestId?.startsWith("assignment:") ?? false,
     quantity: order.quantity,
     unitPrice: serializeMoney(order.unitPrice),
     totalAmount: serializeMoney(order.totalAmount),
-    substitutions: (order.substitutions as ApiOrder["substitutions"]) ?? null,
-    modifiers: (order.modifiers as ApiOrder["modifiers"]) ?? null,
-    proteinBoost: order.proteinBoost,
+    substitutions: order.substitutions.map((s) => ({
+      id: s.id,
+      groupName: s.groupName,
+      optionName: s.optionName,
+      groupId: s.groupId,
+      optionId: s.optionId,
+    })),
+    modifiers: order.modifiers.map((m) => ({
+      id: m.id,
+      groupName: m.groupName,
+      optionName: m.optionName,
+      groupId: m.groupId,
+      optionId: m.optionId,
+    })),
     notes: order.notes,
     deliveryMethod: order.deliveryMethod,
     pickupLocation: order.pickupLocation,
@@ -153,9 +166,20 @@ export function serializeCart(cart: CartRecord): ApiCart {
       rotationId: item.rotationId,
       quantity: item.quantity,
       unitPrice: serializeMoney(item.unitPrice),
-      substitutions: item.substitutions as ApiCart["items"][number]["substitutions"],
-      modifiers: item.modifiers as ApiCart["items"][number]["modifiers"],
-      proteinBoost: item.proteinBoost,
+      substitutions: item.substitutions.map((s) => ({
+        id: s.id,
+        groupId: s.groupId,
+        groupName: s.groupName,
+        optionId: s.optionId,
+        optionName: s.optionName,
+      })),
+      modifiers: item.modifiers.map((m) => ({
+        id: m.id,
+        groupId: m.groupId,
+        groupName: m.groupName,
+        optionId: m.optionId,
+        optionName: m.optionName,
+      })),
       notes: item.notes,
       meal: {
         id: item.meal.id,

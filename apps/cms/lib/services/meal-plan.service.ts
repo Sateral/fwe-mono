@@ -24,6 +24,11 @@ type PurchaseMealPlanInput = {
   weeklyCreditCap: number;
   creditAmount: number;
   autoRenew?: boolean;
+  /** Snapshot of recurring price agreed at purchase (major units). */
+  priceAtPurchase?: number;
+  /** e.g. weekly, monthly */
+  billingInterval?: string;
+  billingCurrency?: string;
 };
 
 function clampNonNegative(value: number) {
@@ -58,12 +63,25 @@ export const mealPlanService = {
           weeklyCreditCap: input.weeklyCreditCap,
           autoRenew: input.autoRenew ?? true,
           status: "ACTIVE",
+          priceAtPurchase:
+            input.priceAtPurchase != null ? input.priceAtPurchase : null,
+          billingInterval: input.billingInterval ?? null,
+          billingCurrency: input.billingCurrency ?? "cad",
         },
         update: {
           weeklyCreditCap: input.weeklyCreditCap,
           autoRenew: input.autoRenew ?? true,
           status: "ACTIVE",
           endsAt: null,
+          ...(input.priceAtPurchase != null
+            ? { priceAtPurchase: input.priceAtPurchase }
+            : {}),
+          ...(input.billingInterval != null
+            ? { billingInterval: input.billingInterval }
+            : {}),
+          ...(input.billingCurrency != null
+            ? { billingCurrency: input.billingCurrency }
+            : {}),
         },
       });
 

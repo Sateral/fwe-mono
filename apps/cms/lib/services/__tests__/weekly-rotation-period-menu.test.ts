@@ -26,7 +26,7 @@ describe("weeklyRotationService period menu authority", () => {
     vi.restoreAllMocks();
   });
 
-  it("uses the linked rotation period menu even when it is empty", async () => {
+  it("falls back to rotation-level meals when the period menu is empty", async () => {
     prismaMock.weeklyRotation.findUnique.mockResolvedValue({
       id: "rotation_1",
       weekStart: new Date("2026-01-08T05:00:00.000Z"),
@@ -48,6 +48,6 @@ describe("weeklyRotationService period menu authority", () => {
       new Date("2026-01-12T05:00:00.000Z"),
     );
 
-    expect(rotation?.meals).toEqual([]);
+    expect(rotation?.meals).toEqual([{ id: "legacy_meal" }]);
   });
 });
