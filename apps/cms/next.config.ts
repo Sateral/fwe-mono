@@ -4,6 +4,19 @@ import type { NextConfig } from "next";
 dotenv.config({ path: "../../.env" });
 
 const nextConfig: NextConfig = {
+  // Allow UploadThing images
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.ufs.sh",
+      },
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+      },
+    ],
+  },
   // Allow cross-origin requests from commerce frontend
   async headers() {
     return [
