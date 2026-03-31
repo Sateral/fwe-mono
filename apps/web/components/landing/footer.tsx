@@ -91,20 +91,12 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="pt-6 sm:pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4 text-[11px] sm:text-xs text-gray-400">
           <p>Copyright © 2026 Free Will Eats - All Rights Reserved</p>
-          <div className="flex gap-6 sm:gap-8">
-            <Link
-              href="#"
-              className="hover:text-white transition-colors font-medium"
-            >
-              Terms of Service
-            </Link>
-            <Link
-              href="#"
-              className="hover:text-white transition-colors font-medium"
-            >
-              Privacy Policy
-            </Link>
-          </div>
+          <Link
+            href="/privacy"
+            className="hover:text-white transition-colors font-medium"
+          >
+            Privacy Policy
+          </Link>
         </div>
       </Container>
     </footer>
