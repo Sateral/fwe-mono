@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Container from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { Calendar, MessageSquare } from "lucide-react";
@@ -27,9 +28,14 @@ const FinalHook = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
-              <Button className="rounded-full h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-medium bg-gray-900 hover:bg-gray-800 text-white shadow-lg hover:shadow-xl transition-all">
-                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                Build a plan
+              <Button
+                asChild
+                className="rounded-full h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-medium bg-gray-900 hover:bg-gray-800 text-white shadow-lg hover:shadow-xl transition-all"
+              >
+                <Link href="/menu">
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  View Menu
+                </Link>
               </Button>
               <Button
                 variant="outline"
