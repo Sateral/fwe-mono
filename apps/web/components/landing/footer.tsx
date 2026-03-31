@@ -25,9 +25,14 @@ const Footer = () => {
               </span>
             </h2>
           </div>
-          <Button className="bg-primary hover:bg-primary/90 hover:cursor-pointer text-white rounded-full px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-medium group">
-            Get in touch
-            <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          <Button
+            asChild
+            className="bg-primary hover:bg-primary/90 hover:cursor-pointer text-white rounded-full px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-medium group"
+          >
+            <Link href="/menu">
+              View Menu
+              <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </Link>
           </Button>
         </div>
 
@@ -62,21 +67,30 @@ const Footer = () => {
 
           {/* Socials */}
           <div className="flex gap-3 sm:gap-4">
-            {[Youtube, Facebook, Instagram].map((Icon, i) => (
-              <Link
-                key={i}
-                href="#"
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
-              >
-                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300" />
-              </Link>
-            ))}
+            {/* {[Youtube, Facebook, Instagram].map((Icon, i) => ( */}
+            <Link
+              href="https://www.instagram.com/freewilleats/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+            >
+              <Instagram className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300" />
+            </Link>
+            {/* Commented out for now - Facebook and YouTube
+            <Link
+              key={i}
+              href="#"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
+            >
+              <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300" />
+            </Link>
+            ))} */}
           </div>
         </div>
 
         {/* Bottom Section */}
         <div className="pt-6 sm:pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4 text-[11px] sm:text-xs text-gray-400">
-          <p>Copyright © 2025 Free Will Eats - All Rights Reserved</p>
+          <p>Copyright © 2026 Free Will Eats - All Rights Reserved</p>
           <div className="flex gap-6 sm:gap-8">
             <Link
               href="#"

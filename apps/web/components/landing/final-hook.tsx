@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Container from "@/components/container";
 import { Button } from "@/components/ui/button";
-import { Calendar, MessageSquare } from "lucide-react";
+import { Calendar } from "lucide-react";
 
 const FinalHook = () => {
   return (
@@ -27,24 +27,15 @@ const FinalHook = () => {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
-              <Button
-                asChild
-                className="rounded-full h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-medium bg-gray-900 hover:bg-gray-800 text-white shadow-lg hover:shadow-xl transition-all"
-              >
-                <Link href="/menu">
-                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                  View Menu
-                </Link>
-              </Button>
-              <Button
-                variant="outline"
-                className="rounded-full h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-medium border-gray-200 hover:bg-gray-50"
-              >
-                <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                Get in Contact
-              </Button>
-            </div>
+            <Button
+              asChild
+              className="rounded-full h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-medium bg-gray-900 hover:bg-gray-800 text-white shadow-lg hover:shadow-xl transition-all"
+            >
+              <Link href="/menu">
+                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                View Menu
+              </Link>
+            </Button>
           </div>
         </div>
       </Container>
