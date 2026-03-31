@@ -54,7 +54,9 @@ export function extractPaymentIntentIds(
 }
 
 function toNumber(value: Prisma.Decimal | number) {
-  return typeof value === "number" ? value : new Prisma.Decimal(value).toNumber();
+  return typeof value === "number"
+    ? value
+    : new Prisma.Decimal(value).toNumber();
 }
 
 export async function ensureOrderFromSession(sessionId: string) {
@@ -126,6 +128,7 @@ async function ensureLegacyOrderFromSession(sessionId: string) {
   const orderIntent = await prisma.orderIntent.findUnique({
     where: { id: orderIntentId },
     include: {
+      meal: { select: { name: true } },
       substitutions: true,
       modifiers: true,
     },
@@ -133,6 +136,10 @@ async function ensureLegacyOrderFromSession(sessionId: string) {
 
   if (!orderIntent) {
     throw new Error(`OrderIntent ${orderIntentId} not found`);
+  }
+
+  if (!orderIntent.mealId || !orderIntent.meal) {
+    throw new Error(`OrderIntent ${orderIntentId} has no associated meal`);
   }
 
   const { paymentIntentId, chargeId, balanceTransactionId } =
@@ -143,6 +150,7 @@ async function ensureLegacyOrderFromSession(sessionId: string) {
   const orderInput: CreateOrderInput = {
     userId: orderIntent.userId,
     mealId: orderIntent.mealId,
+    mealName: orderIntent.meal.name,
     rotationId: orderIntent.rotationId,
     quantity: orderIntent.quantity,
     unitPrice: toNumber(orderIntent.unitPrice),
@@ -232,9 +240,7 @@ export async function recordPaidCheckoutFulfillmentFailure(
 
     const snapshot = await loadCheckoutSnapshotForStripeSession(session);
     const customerEmail =
-      session.customer_details?.email ??
-      snapshot?.customerEmail ??
-      undefined;
+      session.customer_details?.email ?? snapshot?.customerEmail ?? undefined;
     const customerName =
       session.customer_details?.name ?? snapshot?.customerName ?? undefined;
 

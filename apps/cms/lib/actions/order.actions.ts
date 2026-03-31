@@ -78,7 +78,8 @@ export async function getOrdersForDeliveryWeek(deliveryWeekDate: Date) {
  */
 export async function getProductionSummary(
   orders: Array<{
-    mealId: string;
+    mealId: string | null;
+    mealName: string;
     quantity: number;
     meal: { name: string } | null;
   }>,

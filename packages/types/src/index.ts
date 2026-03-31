@@ -110,7 +110,8 @@ export interface ApiOrderModifier {
 export interface ApiOrder {
   id: string;
   userId: string;
-  mealId: string;
+  mealId: string | null;
+  mealName: string;
   settlementMethod: SettlementMethod;
   orderIntentId?: string | null;
   checkoutSessionId?: string | null;
@@ -145,7 +146,7 @@ export interface ApiOrder {
   customerIsGuest: boolean;
   createdAt: string;
   updatedAt: string;
-  meal: ApiMeal;
+  meal: ApiMeal | null;
   rotationId: string;
   user?: {
     id: string;

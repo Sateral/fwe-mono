@@ -126,8 +126,9 @@ model Order {
   customerIsGuest         Boolean @default(false)
 
   // Meal reference
-  mealId String
-  meal   Meal   @relation(fields: [mealId], references: [id])
+  mealId   String?
+  meal     Meal?  @relation(fields: [mealId], references: [id], onDelete: SetNull)
+  mealName String // Snapshot of meal name at order time for archive purposes
 
   // Pricing
   quantity    Int
@@ -533,7 +534,7 @@ model CartItem {
   cartId       String
   cart         Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade)
   mealId       String
-  meal         Meal            @relation(fields: [mealId], references: [id])
+  meal         Meal            @relation(fields: [mealId], references: [id], onDelete: Cascade)
   rotationId   String?
   rotation     WeeklyRotation? @relation(fields: [rotationId], references: [id], onDelete: SetNull)
   quantity     Int
@@ -613,8 +614,8 @@ model OrderIntent {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  mealId String
-  meal   Meal   @relation(fields: [mealId], references: [id])
+  mealId String?
+  meal   Meal?  @relation(fields: [mealId], references: [id], onDelete: SetNull)
 
   rotationId String
   rotation   WeeklyRotation @relation(fields: [rotationId], references: [id])
@@ -702,8 +703,8 @@ model CheckoutSessionItem {
   orderIntentId String @unique
   orderIntent   OrderIntent @relation(fields: [orderIntentId], references: [id], onDelete: Cascade)
 
-  mealId String
-  meal   Meal   @relation(fields: [mealId], references: [id])
+  mealId String?
+  meal   Meal?  @relation(fields: [mealId], references: [id], onDelete: SetNull)
 
   mealName     String
   mealSlug     String

@@ -196,6 +196,7 @@ export const OrderScalarFieldEnum = {
   customerDeliveryNotes: 'customerDeliveryNotes',
   customerIsGuest: 'customerIsGuest',
   mealId: 'mealId',
+  mealName: 'mealName',
   quantity: 'quantity',
   unitPrice: 'unitPrice',
   totalAmount: 'totalAmount',

@@ -139,7 +139,9 @@ const checkoutSnapshotInclude = {
 
 /** Safely convert `Prisma.Decimal | number` → plain `number`. */
 function toNumber(value: Prisma.Decimal | number) {
-  return typeof value === "number" ? value : new Prisma.Decimal(value).toNumber();
+  return typeof value === "number"
+    ? value
+    : new Prisma.Decimal(value).toNumber();
 }
 
 /** True when a Prisma error is a unique-constraint violation (P2002). */
@@ -163,10 +165,7 @@ function getCheckoutSessionIdFromSession(session: Stripe.Checkout.Session) {
   return session.metadata?.checkoutSessionId || null;
 }
 
-function getCheckoutSessionClientRequestId(
-  cartId: string,
-  requestId?: string,
-) {
+function getCheckoutSessionClientRequestId(cartId: string, requestId?: string) {
   return requestId ? `${requestId}:${cartId}` : cartId;
 }
 
@@ -245,7 +244,10 @@ function buildLineItemFromSnapshot(item: CheckoutSnapshotItem) {
 function buildStripeMetadata(
   cart: CheckoutCart,
   snapshot: CheckoutSnapshot,
-  items: Array<{ substitutions: CustomizationRow[]; modifiers: CustomizationRow[] }>,
+  items: Array<{
+    substitutions: CustomizationRow[];
+    modifiers: CustomizationRow[];
+  }>,
   deliveryMethod: "DELIVERY" | "PICKUP",
   pickupLocation?: string,
 ) {
@@ -286,7 +288,11 @@ async function ensureOrderIntentForCartItem(
   pickupLocation: string | undefined,
   requestId?: string,
 ) {
-  const clientRequestId = getOrderIntentClientRequestId(cart.id, item.id, requestId);
+  const clientRequestId = getOrderIntentClientRequestId(
+    cart.id,
+    item.id,
+    requestId,
+  );
   const existing = await prisma.orderIntent.findFirst({
     where: {
       clientRequestId,
@@ -304,7 +310,8 @@ async function ensureOrderIntentForCartItem(
         totalAmount: toNumber(item.unitPrice) * item.quantity,
         notes: item.notes,
         deliveryMethod,
-        pickupLocation: deliveryMethod === "PICKUP" ? pickupLocation : undefined,
+        pickupLocation:
+          deliveryMethod === "PICKUP" ? pickupLocation : undefined,
         // Junction tables for OrderIntent are handled separately if needed
       },
     });
@@ -324,7 +331,8 @@ async function ensureOrderIntentForCartItem(
         settlementMethod: cart.settlementMethod,
         notes: item.notes,
         deliveryMethod,
-        pickupLocation: deliveryMethod === "PICKUP" ? pickupLocation : undefined,
+        pickupLocation:
+          deliveryMethod === "PICKUP" ? pickupLocation : undefined,
         status: "CREATED",
         substitutions: {
           create: item.substitutions.map((s) => ({
@@ -375,14 +383,13 @@ async function getCheckoutCart(cartId: string) {
  * Find an existing snapshot by `clientRequestId` or by active status.
  * Used to resume a checkout that was started but not completed.
  */
-async function getExistingCheckoutSnapshot(
-  cartId: string,
-  requestId?: string,
-) {
+async function getExistingCheckoutSnapshot(cartId: string, requestId?: string) {
   return prisma.checkoutSession.findFirst({
     where: {
       OR: [
-        { clientRequestId: getCheckoutSessionClientRequestId(cartId, requestId) },
+        {
+          clientRequestId: getCheckoutSessionClientRequestId(cartId, requestId),
+        },
         { cartId, status: "SESSION_CREATED" },
       ],
     },
@@ -436,6 +443,7 @@ export function buildCreateOrderInputsFromCheckoutSnapshot(
     return {
       userId: snapshot.userId,
       mealId: item.mealId,
+      mealName: item.mealName,
       rotationId: item.rotationId,
       quantity: item.quantity,
       unitPrice: toNumber(item.unitPrice),
@@ -476,8 +484,13 @@ async function finalizeMealPlanCart(
   deliveryMethod: "DELIVERY" | "PICKUP",
   pickupLocation: string | undefined,
 ) {
-  const creditsRequired = cart.items.reduce((sum, item) => sum + item.quantity, 0);
-  const mealPlanSummary = await mealPlanService.getPlanSummaryByUserId(cart.userId);
+  const creditsRequired = cart.items.reduce(
+    (sum, item) => sum + item.quantity,
+    0,
+  );
+  const mealPlanSummary = await mealPlanService.getPlanSummaryByUserId(
+    cart.userId,
+  );
 
   if (!mealPlanSummary) {
     throw new Error("No active meal plan found");
@@ -518,6 +531,7 @@ async function finalizeMealPlanCart(
           data: {
             userId: cart.userId,
             mealId: item.mealId,
+            mealName: item.meal.name,
             rotationId: item.rotationId ?? orderIntents[index]!.rotationId,
             settlementMethod: cart.settlementMethod,
             quantity: item.quantity,
@@ -607,9 +621,7 @@ async function createStripeSessionFromSnapshot(
       customer_email: snapshot.customerEmail,
       currency: "cad",
       client_reference_id: cart.id,
-      line_items: snapshot.items.map((item) =>
-        buildLineItemFromSnapshot(item),
-      ),
+      line_items: snapshot.items.map((item) => buildLineItemFromSnapshot(item)),
       metadata,
       success_url: `${WEB_BASE_URL}/order/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${WEB_BASE_URL}/menu`,
@@ -740,7 +752,9 @@ async function createFreshStripeSession(
   }
 
   if (!snapshot) {
-    throw new Error(`Checkout snapshot could not be created for cart ${cart.id}`);
+    throw new Error(
+      `Checkout snapshot could not be created for cart ${cart.id}`,
+    );
   }
 
   // Step 3 — Stripe Session
@@ -869,7 +883,9 @@ export async function createStripeCheckoutSessionForCart(
 
   const deliveryMethod = input.deliveryMethod ?? "DELIVERY";
   const pickupLocation =
-    deliveryMethod === "PICKUP" ? input.pickupLocation ?? undefined : undefined;
+    deliveryMethod === "PICKUP"
+      ? (input.pickupLocation ?? undefined)
+      : undefined;
 
   // --- Settlement: Meal-Plan Credits ---
   if (cart.settlementMethod === "MEAL_PLAN_CREDITS") {
@@ -883,7 +899,10 @@ export async function createStripeCheckoutSessionForCart(
   // --- Settlement: Stripe ---
 
   // Case 1 & 2: Existing snapshot — reuse or retry
-  const existingSnapshot = await getExistingCheckoutSnapshot(cart.id, input.requestId);
+  const existingSnapshot = await getExistingCheckoutSnapshot(
+    cart.id,
+    input.requestId,
+  );
   if (existingSnapshot?.stripeSessionId) {
     const existingSession = await stripe.checkout.sessions.retrieve(
       existingSnapshot.stripeSessionId,
@@ -903,7 +922,7 @@ export async function createStripeCheckoutSessionForCart(
       await stripe.checkout.sessions.expire(existingSnapshot.stripeSessionId!);
       await prisma.checkoutSession.update({
         where: { id: existingSnapshot.id },
-        data: { 
+        data: {
           status: "EXPIRED",
           clientRequestId: `${existingSnapshot.clientRequestId}:expired:${Date.now()}`,
         },
@@ -922,14 +941,24 @@ export async function createStripeCheckoutSessionForCart(
       });
 
       // Fall through to create a fresh checkout below
-      return createFreshStripeSession(cart, input, deliveryMethod, pickupLocation);
+      return createFreshStripeSession(
+        cart,
+        input,
+        deliveryMethod,
+        pickupLocation,
+      );
     }
 
     // Case 2: Expired/failed — rebuild Stripe session from snapshot
   }
 
   if (existingSnapshot) {
-    return createStripeSessionFromSnapshot(cart, existingSnapshot, deliveryMethod, pickupLocation);
+    return createStripeSessionFromSnapshot(
+      cart,
+      existingSnapshot,
+      deliveryMethod,
+      pickupLocation,
+    );
   }
 
   // Case 3: Fresh checkout
@@ -962,11 +991,16 @@ export async function finalizeCartCheckoutSession(sessionId: string) {
   }
 
   // --- Extract Stripe payment details ---
-  const paymentIntent = session.payment_intent as Stripe.PaymentIntent | string | null;
+  const paymentIntent = session.payment_intent as
+    | Stripe.PaymentIntent
+    | string
+    | null;
   const paymentIntentId =
     typeof paymentIntent === "string" ? paymentIntent : paymentIntent?.id;
-  const latestCharge = typeof paymentIntent === "string" ? null : paymentIntent?.latest_charge;
-  const stripeChargeId = typeof latestCharge === "string" ? latestCharge : latestCharge?.id;
+  const latestCharge =
+    typeof paymentIntent === "string" ? null : paymentIntent?.latest_charge;
+  const stripeChargeId =
+    typeof latestCharge === "string" ? latestCharge : latestCharge?.id;
   const stripeBalanceTransactionId =
     typeof latestCharge === "string"
       ? undefined
@@ -984,7 +1018,10 @@ export async function finalizeCartCheckoutSession(sessionId: string) {
       .map((order) => [order.orderIntentId as string, order]),
   );
 
-  const lineTotal = snapshot.items.reduce((sum, item) => sum + toNumber(item.totalAmount), 0);
+  const lineTotal = snapshot.items.reduce(
+    (sum, item) => sum + toNumber(item.totalAmount),
+    0,
+  );
   const stripeTotalMajor =
     session.amount_total != null && session.amount_total > 0
       ? session.amount_total / 100
@@ -994,7 +1031,10 @@ export async function finalizeCartCheckoutSession(sessionId: string) {
     throw new Error(`Invalid checkout total for session ${sessionId}`);
   }
   const orderGroupCurrency =
-    (typeof session.currency === "string" ? session.currency : null)?.toLowerCase() ??
+    (typeof session.currency === "string"
+      ? session.currency
+      : null
+    )?.toLowerCase() ??
     snapshot.items[0]?.currency?.toLowerCase() ??
     "cad";
 
@@ -1114,7 +1154,7 @@ export async function updateCartCheckoutStatus(
       stripePaymentIntentId:
         typeof session.payment_intent === "string"
           ? session.payment_intent
-          : session.payment_intent?.id ?? null,
+          : (session.payment_intent?.id ?? null),
     },
   });
 

@@ -6,10 +6,7 @@
  * from junction tables — no JSON parsing required.
  */
 
-import type {
-  OrderModifier,
-  OrderSubstitution,
-} from "@/lib/types/order-types";
+import type { OrderModifier, OrderSubstitution } from "@/lib/types/order-types";
 
 // ============================================
 // Defaults: explicit "white rice" on an order still counts as standard
@@ -113,9 +110,7 @@ export function buildPrepConfigLabel(input: {
 
   if (input.notes.length > 0) {
     const truncated =
-      input.notes.length > 80
-        ? `${input.notes.slice(0, 77)}...`
-        : input.notes;
+      input.notes.length > 80 ? `${input.notes.slice(0, 77)}...` : input.notes;
     parts.push(`Note: ${truncated}`);
   }
   return parts.join(" · ");
@@ -126,7 +121,8 @@ export function buildPrepConfigLabel(input: {
 // ============================================
 
 export interface PrepOrderLike {
-  mealId: string;
+  mealId: string | null;
+  mealName: string;
   meal?: ({ name: string } & MealSubstitutionDefaultContext) | null;
   quantity: number;
   paymentStatus: string;
@@ -161,7 +157,9 @@ export function isOrderActiveForPrep(order: PrepOrderLike): boolean {
   );
 }
 
-export function aggregatePrepByMeal(orders: PrepOrderLike[]): MealPrepSummary[] {
+export function aggregatePrepByMeal(
+  orders: PrepOrderLike[],
+): MealPrepSummary[] {
   const summary = new Map<
     string,
     {
@@ -175,18 +173,21 @@ export function aggregatePrepByMeal(orders: PrepOrderLike[]): MealPrepSummary[] 
 
   for (const order of orders) {
     if (!isOrderActiveForPrep(order)) continue;
+    // Skip orders where the meal was deleted
+    if (!order.mealId) continue;
 
-    if (!summary.has(order.mealId)) {
-      summary.set(order.mealId, {
-        mealId: order.mealId,
-        mealName: order.meal?.name ?? "Unknown meal",
+    const mealId = order.mealId;
+    if (!summary.has(mealId)) {
+      summary.set(mealId, {
+        mealId,
+        mealName: order.mealName || order.meal?.name || "Unknown meal",
         totalQuantity: 0,
         assignedQuantity: 0,
         variationMap: new Map(),
       });
     }
 
-    const entry = summary.get(order.mealId)!;
+    const entry = summary.get(mealId)!;
     entry.totalQuantity += order.quantity;
 
     if (
@@ -287,5 +288,7 @@ export function buildGrocerySignalsFromOrders(
     })),
   ];
 
-  return out.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+  return out.sort(
+    (a, b) => b.count - a.count || a.label.localeCompare(b.label),
+  );
 }

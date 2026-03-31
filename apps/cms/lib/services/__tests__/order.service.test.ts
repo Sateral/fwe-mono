@@ -34,6 +34,7 @@ import { orderService } from "../order.service";
 const input: CreateOrderInput = {
   userId: "user_123",
   mealId: "meal_123",
+  mealName: "Test Meal",
   rotationId: "rotation_123",
   quantity: 2,
   unitPrice: 14.5,
@@ -85,7 +86,9 @@ describe("order.service", () => {
     prismaMock.order.findFirst
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce(existing);
-    prismaMock.weeklyRotation.findUnique.mockResolvedValue({ id: input.rotationId });
+    prismaMock.weeklyRotation.findUnique.mockResolvedValue({
+      id: input.rotationId,
+    });
     prismaMock.order.create.mockRejectedValue(
       new Error("Duplicate order already persisted"),
     );

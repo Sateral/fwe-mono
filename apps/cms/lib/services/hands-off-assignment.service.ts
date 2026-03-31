@@ -36,12 +36,18 @@ type AssignmentResult = {
   assignedUsers: string[];
 };
 
-function getAssignmentRequestId(userId: string, rotationId: string, mealId: string) {
+function getAssignmentRequestId(
+  userId: string,
+  rotationId: string,
+  mealId: string,
+) {
   return `assignment:${userId}:${rotationId}:${mealId}`;
 }
 
 function toNumber(value: Prisma.Decimal | number) {
-  return typeof value === "number" ? value : new Prisma.Decimal(value).toNumber();
+  return typeof value === "number"
+    ? value
+    : new Prisma.Decimal(value).toNumber();
 }
 
 function normalizeText(value: string) {
@@ -50,13 +56,19 @@ function normalizeText(value: string) {
 
 function buildMealSearchBlob(meal: RotationMeal) {
   return normalizeText(
-    [meal.name, meal.description ?? "", ...meal.tags.map((tag) => tag.name)].join(" "),
+    [
+      meal.name,
+      meal.description ?? "",
+      ...meal.tags.map((tag) => tag.name),
+    ].join(" "),
   );
 }
 
 function matchesRestriction(meal: RotationMeal, restrictions: string[]) {
   const searchable = buildMealSearchBlob(meal);
-  return restrictions.some((restriction) => searchable.includes(normalizeText(restriction)));
+  return restrictions.some((restriction) =>
+    searchable.includes(normalizeText(restriction)),
+  );
 }
 
 function scoreMeal(meal: RotationMeal, user: EligibleUser) {
@@ -79,7 +91,11 @@ function scoreMeal(meal: RotationMeal, user: EligibleUser) {
   return score;
 }
 
-function buildAssignmentCart(rotationId: string, userId: string, meals: RotationMeal[]) {
+function buildAssignmentCart(
+  rotationId: string,
+  userId: string,
+  meals: RotationMeal[],
+) {
   return {
     id: `assignment:${userId}:${rotationId}`,
     userId,
@@ -124,7 +140,9 @@ export const handsOffAssignmentService = {
     const assignedUsers: string[] = [];
 
     for (const user of eligibleUsers) {
-      const mealPlanSummary = await mealPlanService.getPlanSummaryByUserId(user.id);
+      const mealPlanSummary = await mealPlanService.getPlanSummaryByUserId(
+        user.id,
+      );
       if (!mealPlanSummary) continue;
 
       const maxAssignments = Math.min(
@@ -155,9 +173,13 @@ export const handsOffAssignmentService = {
 
       const restrictions = user.flavorProfile?.restrictions ?? [];
       const candidateMeals = rotation.meals
-        .filter((meal) => !matchesRestriction(meal as RotationMeal, restrictions))
+        .filter(
+          (meal) => !matchesRestriction(meal as RotationMeal, restrictions),
+        )
         .sort((a, b) => {
-          const scoreDiff = scoreMeal(b as RotationMeal, user) - scoreMeal(a as RotationMeal, user);
+          const scoreDiff =
+            scoreMeal(b as RotationMeal, user) -
+            scoreMeal(a as RotationMeal, user);
           return scoreDiff !== 0 ? scoreDiff : a.name.localeCompare(b.name);
         })
         .slice(0, maxAssignments) as RotationMeal[];
@@ -174,7 +196,11 @@ export const handsOffAssignmentService = {
         );
 
         for (const meal of candidateMeals) {
-          const clientRequestId = getAssignmentRequestId(user.id, rotation.id, meal.id);
+          const clientRequestId = getAssignmentRequestId(
+            user.id,
+            rotation.id,
+            meal.id,
+          );
           const orderIntent =
             (await tx.orderIntent.findFirst({
               where: { clientRequestId },
@@ -206,6 +232,7 @@ export const handsOffAssignmentService = {
               data: {
                 userId: user.id,
                 mealId: meal.id,
+                mealName: meal.name,
                 rotationId: rotation.id,
                 settlementMethod: "MEAL_PLAN_CREDITS",
                 orderIntentId: orderIntent.id,

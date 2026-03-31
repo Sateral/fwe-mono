@@ -1,6 +1,6 @@
 "use client";
 
-import { Dumbbell, Wheat, Droplets, Leaf } from "lucide-react";
+import { Dumbbell, Wheat, Droplets } from "lucide-react";
 import { RadialBar, RadialBarChart, PolarAngleAxis } from "recharts";
 import {
   ChartConfig,
@@ -24,7 +24,6 @@ const NutritionBreakdown = ({
   let carbs = meal.carbs;
   let fat = meal.fat;
   let calories = meal.calories;
-  let fiber = meal.fiber;
 
   // Apply substitution adjustments
   Object.entries(selectedSubstitutions).forEach(([groupId, optionId]) => {
@@ -36,7 +35,6 @@ const NutritionBreakdown = ({
       carbs += option.carbsAdjust;
       fat += option.fatAdjust;
       calories += option.calorieAdjust;
-      fiber += option.fiberAdjust;
     }
   });
 
@@ -54,14 +52,10 @@ const NutritionBreakdown = ({
       label: "Fat",
       color: "#f97316",
     },
-    fiber: {
-      label: "Fiber",
-      color: "#22c55e",
-    },
   } satisfies ChartConfig;
 
   // Calculate max value for scaling the radial chart
-  const maxValue = Math.max(protein, carbs, fat, fiber, 1);
+  const maxValue = Math.max(protein, carbs, fat, 1);
 
   // Chart data - each macro as a percentage of the max
   const chartData = [
@@ -83,18 +77,12 @@ const NutritionBreakdown = ({
       actualValue: fat,
       fill: chartConfig.fat.color,
     },
-    {
-      name: "Fiber",
-      value: (fiber / maxValue) * 100,
-      actualValue: fiber,
-      fill: chartConfig.fiber.color,
-    },
   ];
 
   return (
     <div className="space-y-6">
       {/* Macro Cards */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <div className="bg-white border rounded-xl p-4">
           <div className="flex items-center gap-2 text-gray-500 text-xs mb-1">
             <span>Protein</span>
@@ -122,15 +110,6 @@ const NutritionBreakdown = ({
             <span>{fat}g</span>
           </div>
         </div>
-        <div className="bg-white border rounded-xl p-4">
-          <div className="flex items-center gap-2 text-gray-500 text-xs mb-1">
-            <span>Fiber</span>
-          </div>
-          <div className="flex items-center gap-2 text-black font-semibold">
-            <Leaf className="w-4 h-4 text-green-400" />
-            <span>{fiber}g</span>
-          </div>
-        </div>
       </div>
 
       {/* Nutrition Chart Section */}
@@ -156,10 +135,6 @@ const NutritionBreakdown = ({
             <div className="flex items-center gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />
               <span className="text-xs text-gray-400">Fat</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-              <span className="text-xs text-gray-400">Fiber</span>
             </div>
           </div>
         </div>

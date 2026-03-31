@@ -264,7 +264,7 @@ export type CheckoutSessionItemGroupByOutputType = {
   id: string
   checkoutSessionId: string
   orderIntentId: string
-  mealId: string
+  mealId: string | null
   mealName: string
   mealSlug: string
   mealImageUrl: string | null
@@ -307,7 +307,7 @@ export type CheckoutSessionItemWhereInput = {
   id?: Prisma.StringFilter<"CheckoutSessionItem"> | string
   checkoutSessionId?: Prisma.StringFilter<"CheckoutSessionItem"> | string
   orderIntentId?: Prisma.StringFilter<"CheckoutSessionItem"> | string
-  mealId?: Prisma.StringFilter<"CheckoutSessionItem"> | string
+  mealId?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
   mealName?: Prisma.StringFilter<"CheckoutSessionItem"> | string
   mealSlug?: Prisma.StringFilter<"CheckoutSessionItem"> | string
   mealImageUrl?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
@@ -323,7 +323,7 @@ export type CheckoutSessionItemWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"CheckoutSessionItem"> | Date | string
   checkoutSession?: Prisma.XOR<Prisma.CheckoutSessionScalarRelationFilter, Prisma.CheckoutSessionWhereInput>
   orderIntent?: Prisma.XOR<Prisma.OrderIntentScalarRelationFilter, Prisma.OrderIntentWhereInput>
-  meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
+  meal?: Prisma.XOR<Prisma.MealNullableScalarRelationFilter, Prisma.MealWhereInput> | null
   rotation?: Prisma.XOR<Prisma.WeeklyRotationScalarRelationFilter, Prisma.WeeklyRotationWhereInput>
   substitutions?: Prisma.CheckoutItemSubstitutionListRelationFilter
   modifiers?: Prisma.CheckoutItemModifierListRelationFilter
@@ -333,7 +333,7 @@ export type CheckoutSessionItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   checkoutSessionId?: Prisma.SortOrder
   orderIntentId?: Prisma.SortOrder
-  mealId?: Prisma.SortOrder
+  mealId?: Prisma.SortOrderInput | Prisma.SortOrder
   mealName?: Prisma.SortOrder
   mealSlug?: Prisma.SortOrder
   mealImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -362,7 +362,7 @@ export type CheckoutSessionItemWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CheckoutSessionItemWhereInput[]
   NOT?: Prisma.CheckoutSessionItemWhereInput | Prisma.CheckoutSessionItemWhereInput[]
   checkoutSessionId?: Prisma.StringFilter<"CheckoutSessionItem"> | string
-  mealId?: Prisma.StringFilter<"CheckoutSessionItem"> | string
+  mealId?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
   mealName?: Prisma.StringFilter<"CheckoutSessionItem"> | string
   mealSlug?: Prisma.StringFilter<"CheckoutSessionItem"> | string
   mealImageUrl?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
@@ -378,7 +378,7 @@ export type CheckoutSessionItemWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"CheckoutSessionItem"> | Date | string
   checkoutSession?: Prisma.XOR<Prisma.CheckoutSessionScalarRelationFilter, Prisma.CheckoutSessionWhereInput>
   orderIntent?: Prisma.XOR<Prisma.OrderIntentScalarRelationFilter, Prisma.OrderIntentWhereInput>
-  meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
+  meal?: Prisma.XOR<Prisma.MealNullableScalarRelationFilter, Prisma.MealWhereInput> | null
   rotation?: Prisma.XOR<Prisma.WeeklyRotationScalarRelationFilter, Prisma.WeeklyRotationWhereInput>
   substitutions?: Prisma.CheckoutItemSubstitutionListRelationFilter
   modifiers?: Prisma.CheckoutItemModifierListRelationFilter
@@ -388,7 +388,7 @@ export type CheckoutSessionItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   checkoutSessionId?: Prisma.SortOrder
   orderIntentId?: Prisma.SortOrder
-  mealId?: Prisma.SortOrder
+  mealId?: Prisma.SortOrderInput | Prisma.SortOrder
   mealName?: Prisma.SortOrder
   mealSlug?: Prisma.SortOrder
   mealImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -416,7 +416,7 @@ export type CheckoutSessionItemScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"CheckoutSessionItem"> | string
   checkoutSessionId?: Prisma.StringWithAggregatesFilter<"CheckoutSessionItem"> | string
   orderIntentId?: Prisma.StringWithAggregatesFilter<"CheckoutSessionItem"> | string
-  mealId?: Prisma.StringWithAggregatesFilter<"CheckoutSessionItem"> | string
+  mealId?: Prisma.StringNullableWithAggregatesFilter<"CheckoutSessionItem"> | string | null
   mealName?: Prisma.StringWithAggregatesFilter<"CheckoutSessionItem"> | string
   mealSlug?: Prisma.StringWithAggregatesFilter<"CheckoutSessionItem"> | string
   mealImageUrl?: Prisma.StringNullableWithAggregatesFilter<"CheckoutSessionItem"> | string | null
@@ -448,7 +448,7 @@ export type CheckoutSessionItemCreateInput = {
   updatedAt?: Date | string
   checkoutSession: Prisma.CheckoutSessionCreateNestedOneWithoutItemsInput
   orderIntent: Prisma.OrderIntentCreateNestedOneWithoutCheckoutSessionItemsInput
-  meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
+  meal?: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput
   substitutions?: Prisma.CheckoutItemSubstitutionCreateNestedManyWithoutCheckoutSessionItemInput
   modifiers?: Prisma.CheckoutItemModifierCreateNestedManyWithoutCheckoutSessionItemInput
@@ -458,7 +458,7 @@ export type CheckoutSessionItemUncheckedCreateInput = {
   id?: string
   checkoutSessionId: string
   orderIntentId: string
-  mealId: string
+  mealId?: string | null
   mealName: string
   mealSlug: string
   mealImageUrl?: string | null
@@ -492,7 +492,7 @@ export type CheckoutSessionItemUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   checkoutSession?: Prisma.CheckoutSessionUpdateOneRequiredWithoutItemsNestedInput
   orderIntent?: Prisma.OrderIntentUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutCheckoutSessionItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   substitutions?: Prisma.CheckoutItemSubstitutionUpdateManyWithoutCheckoutSessionItemNestedInput
   modifiers?: Prisma.CheckoutItemModifierUpdateManyWithoutCheckoutSessionItemNestedInput
@@ -502,7 +502,7 @@ export type CheckoutSessionItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   orderIntentId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealName?: Prisma.StringFieldUpdateOperationsInput | string
   mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
   mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -524,7 +524,7 @@ export type CheckoutSessionItemCreateManyInput = {
   id?: string
   checkoutSessionId: string
   orderIntentId: string
-  mealId: string
+  mealId?: string | null
   mealName: string
   mealSlug: string
   mealImageUrl?: string | null
@@ -560,7 +560,7 @@ export type CheckoutSessionItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   orderIntentId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealName?: Prisma.StringFieldUpdateOperationsInput | string
   mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
   mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -934,7 +934,7 @@ export type CheckoutSessionItemScalarWhereInput = {
   id?: Prisma.StringFilter<"CheckoutSessionItem"> | string
   checkoutSessionId?: Prisma.StringFilter<"CheckoutSessionItem"> | string
   orderIntentId?: Prisma.StringFilter<"CheckoutSessionItem"> | string
-  mealId?: Prisma.StringFilter<"CheckoutSessionItem"> | string
+  mealId?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
   mealName?: Prisma.StringFilter<"CheckoutSessionItem"> | string
   mealSlug?: Prisma.StringFilter<"CheckoutSessionItem"> | string
   mealImageUrl?: Prisma.StringNullableFilter<"CheckoutSessionItem"> | string | null
@@ -966,7 +966,7 @@ export type CheckoutSessionItemCreateWithoutSubstitutionsInput = {
   updatedAt?: Date | string
   checkoutSession: Prisma.CheckoutSessionCreateNestedOneWithoutItemsInput
   orderIntent: Prisma.OrderIntentCreateNestedOneWithoutCheckoutSessionItemsInput
-  meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
+  meal?: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput
   modifiers?: Prisma.CheckoutItemModifierCreateNestedManyWithoutCheckoutSessionItemInput
 }
@@ -975,7 +975,7 @@ export type CheckoutSessionItemUncheckedCreateWithoutSubstitutionsInput = {
   id?: string
   checkoutSessionId: string
   orderIntentId: string
-  mealId: string
+  mealId?: string | null
   mealName: string
   mealSlug: string
   mealImageUrl?: string | null
@@ -1024,7 +1024,7 @@ export type CheckoutSessionItemUpdateWithoutSubstitutionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   checkoutSession?: Prisma.CheckoutSessionUpdateOneRequiredWithoutItemsNestedInput
   orderIntent?: Prisma.OrderIntentUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutCheckoutSessionItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   modifiers?: Prisma.CheckoutItemModifierUpdateManyWithoutCheckoutSessionItemNestedInput
 }
@@ -1033,7 +1033,7 @@ export type CheckoutSessionItemUncheckedUpdateWithoutSubstitutionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   orderIntentId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealName?: Prisma.StringFieldUpdateOperationsInput | string
   mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
   mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1066,7 +1066,7 @@ export type CheckoutSessionItemCreateWithoutModifiersInput = {
   updatedAt?: Date | string
   checkoutSession: Prisma.CheckoutSessionCreateNestedOneWithoutItemsInput
   orderIntent: Prisma.OrderIntentCreateNestedOneWithoutCheckoutSessionItemsInput
-  meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
+  meal?: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput
   substitutions?: Prisma.CheckoutItemSubstitutionCreateNestedManyWithoutCheckoutSessionItemInput
 }
@@ -1075,7 +1075,7 @@ export type CheckoutSessionItemUncheckedCreateWithoutModifiersInput = {
   id?: string
   checkoutSessionId: string
   orderIntentId: string
-  mealId: string
+  mealId?: string | null
   mealName: string
   mealSlug: string
   mealImageUrl?: string | null
@@ -1124,7 +1124,7 @@ export type CheckoutSessionItemUpdateWithoutModifiersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   checkoutSession?: Prisma.CheckoutSessionUpdateOneRequiredWithoutItemsNestedInput
   orderIntent?: Prisma.OrderIntentUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutCheckoutSessionItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   substitutions?: Prisma.CheckoutItemSubstitutionUpdateManyWithoutCheckoutSessionItemNestedInput
 }
@@ -1133,7 +1133,7 @@ export type CheckoutSessionItemUncheckedUpdateWithoutModifiersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   orderIntentId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealName?: Prisma.StringFieldUpdateOperationsInput | string
   mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
   mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1166,7 +1166,7 @@ export type CheckoutSessionItemCreateWithoutRotationInput = {
   updatedAt?: Date | string
   checkoutSession: Prisma.CheckoutSessionCreateNestedOneWithoutItemsInput
   orderIntent: Prisma.OrderIntentCreateNestedOneWithoutCheckoutSessionItemsInput
-  meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
+  meal?: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
   substitutions?: Prisma.CheckoutItemSubstitutionCreateNestedManyWithoutCheckoutSessionItemInput
   modifiers?: Prisma.CheckoutItemModifierCreateNestedManyWithoutCheckoutSessionItemInput
 }
@@ -1175,7 +1175,7 @@ export type CheckoutSessionItemUncheckedCreateWithoutRotationInput = {
   id?: string
   checkoutSessionId: string
   orderIntentId: string
-  mealId: string
+  mealId?: string | null
   mealName: string
   mealSlug: string
   mealImageUrl?: string | null
@@ -1233,7 +1233,7 @@ export type CheckoutSessionItemCreateWithoutOrderIntentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   checkoutSession: Prisma.CheckoutSessionCreateNestedOneWithoutItemsInput
-  meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
+  meal?: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput
   substitutions?: Prisma.CheckoutItemSubstitutionCreateNestedManyWithoutCheckoutSessionItemInput
   modifiers?: Prisma.CheckoutItemModifierCreateNestedManyWithoutCheckoutSessionItemInput
@@ -1242,7 +1242,7 @@ export type CheckoutSessionItemCreateWithoutOrderIntentInput = {
 export type CheckoutSessionItemUncheckedCreateWithoutOrderIntentInput = {
   id?: string
   checkoutSessionId: string
-  mealId: string
+  mealId?: string | null
   mealName: string
   mealSlug: string
   mealImageUrl?: string | null
@@ -1301,7 +1301,7 @@ export type CheckoutSessionItemCreateWithoutCheckoutSessionInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   orderIntent: Prisma.OrderIntentCreateNestedOneWithoutCheckoutSessionItemsInput
-  meal: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
+  meal?: Prisma.MealCreateNestedOneWithoutCheckoutSessionItemsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutCheckoutSessionItemsInput
   substitutions?: Prisma.CheckoutItemSubstitutionCreateNestedManyWithoutCheckoutSessionItemInput
   modifiers?: Prisma.CheckoutItemModifierCreateNestedManyWithoutCheckoutSessionItemInput
@@ -1310,7 +1310,7 @@ export type CheckoutSessionItemCreateWithoutCheckoutSessionInput = {
 export type CheckoutSessionItemUncheckedCreateWithoutCheckoutSessionInput = {
   id?: string
   orderIntentId: string
-  mealId: string
+  mealId?: string | null
   mealName: string
   mealSlug: string
   mealImageUrl?: string | null
@@ -1438,7 +1438,7 @@ export type CheckoutSessionItemCreateManyRotationInput = {
   id?: string
   checkoutSessionId: string
   orderIntentId: string
-  mealId: string
+  mealId?: string | null
   mealName: string
   mealSlug: string
   mealImageUrl?: string | null
@@ -1469,7 +1469,7 @@ export type CheckoutSessionItemUpdateWithoutRotationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   checkoutSession?: Prisma.CheckoutSessionUpdateOneRequiredWithoutItemsNestedInput
   orderIntent?: Prisma.OrderIntentUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutCheckoutSessionItemsNestedInput
   substitutions?: Prisma.CheckoutItemSubstitutionUpdateManyWithoutCheckoutSessionItemNestedInput
   modifiers?: Prisma.CheckoutItemModifierUpdateManyWithoutCheckoutSessionItemNestedInput
 }
@@ -1478,7 +1478,7 @@ export type CheckoutSessionItemUncheckedUpdateWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   orderIntentId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealName?: Prisma.StringFieldUpdateOperationsInput | string
   mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
   mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1499,7 +1499,7 @@ export type CheckoutSessionItemUncheckedUpdateManyWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   orderIntentId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealName?: Prisma.StringFieldUpdateOperationsInput | string
   mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
   mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1517,7 +1517,7 @@ export type CheckoutSessionItemUncheckedUpdateManyWithoutRotationInput = {
 export type CheckoutSessionItemCreateManyOrderIntentInput = {
   id?: string
   checkoutSessionId: string
-  mealId: string
+  mealId?: string | null
   mealName: string
   mealSlug: string
   mealImageUrl?: string | null
@@ -1548,7 +1548,7 @@ export type CheckoutSessionItemUpdateWithoutOrderIntentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   checkoutSession?: Prisma.CheckoutSessionUpdateOneRequiredWithoutItemsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutCheckoutSessionItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   substitutions?: Prisma.CheckoutItemSubstitutionUpdateManyWithoutCheckoutSessionItemNestedInput
   modifiers?: Prisma.CheckoutItemModifierUpdateManyWithoutCheckoutSessionItemNestedInput
@@ -1557,7 +1557,7 @@ export type CheckoutSessionItemUpdateWithoutOrderIntentInput = {
 export type CheckoutSessionItemUncheckedUpdateWithoutOrderIntentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutSessionId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealName?: Prisma.StringFieldUpdateOperationsInput | string
   mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
   mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1578,7 +1578,7 @@ export type CheckoutSessionItemUncheckedUpdateWithoutOrderIntentInput = {
 export type CheckoutSessionItemUncheckedUpdateManyWithoutOrderIntentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutSessionId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealName?: Prisma.StringFieldUpdateOperationsInput | string
   mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
   mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1597,7 +1597,7 @@ export type CheckoutSessionItemUncheckedUpdateManyWithoutOrderIntentInput = {
 export type CheckoutSessionItemCreateManyCheckoutSessionInput = {
   id?: string
   orderIntentId: string
-  mealId: string
+  mealId?: string | null
   mealName: string
   mealSlug: string
   mealImageUrl?: string | null
@@ -1628,7 +1628,7 @@ export type CheckoutSessionItemUpdateWithoutCheckoutSessionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orderIntent?: Prisma.OrderIntentUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutCheckoutSessionItemsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput
   substitutions?: Prisma.CheckoutItemSubstitutionUpdateManyWithoutCheckoutSessionItemNestedInput
   modifiers?: Prisma.CheckoutItemModifierUpdateManyWithoutCheckoutSessionItemNestedInput
@@ -1637,7 +1637,7 @@ export type CheckoutSessionItemUpdateWithoutCheckoutSessionInput = {
 export type CheckoutSessionItemUncheckedUpdateWithoutCheckoutSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderIntentId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealName?: Prisma.StringFieldUpdateOperationsInput | string
   mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
   mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1658,7 +1658,7 @@ export type CheckoutSessionItemUncheckedUpdateWithoutCheckoutSessionInput = {
 export type CheckoutSessionItemUncheckedUpdateManyWithoutCheckoutSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderIntentId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mealName?: Prisma.StringFieldUpdateOperationsInput | string
   mealSlug?: Prisma.StringFieldUpdateOperationsInput | string
   mealImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1734,7 +1734,7 @@ export type CheckoutSessionItemSelect<ExtArgs extends runtime.Types.Extensions.I
   updatedAt?: boolean
   checkoutSession?: boolean | Prisma.CheckoutSessionDefaultArgs<ExtArgs>
   orderIntent?: boolean | Prisma.OrderIntentDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.CheckoutSessionItem$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
   substitutions?: boolean | Prisma.CheckoutSessionItem$substitutionsArgs<ExtArgs>
   modifiers?: boolean | Prisma.CheckoutSessionItem$modifiersArgs<ExtArgs>
@@ -1761,7 +1761,7 @@ export type CheckoutSessionItemSelectCreateManyAndReturn<ExtArgs extends runtime
   updatedAt?: boolean
   checkoutSession?: boolean | Prisma.CheckoutSessionDefaultArgs<ExtArgs>
   orderIntent?: boolean | Prisma.OrderIntentDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.CheckoutSessionItem$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["checkoutSessionItem"]>
 
@@ -1785,7 +1785,7 @@ export type CheckoutSessionItemSelectUpdateManyAndReturn<ExtArgs extends runtime
   updatedAt?: boolean
   checkoutSession?: boolean | Prisma.CheckoutSessionDefaultArgs<ExtArgs>
   orderIntent?: boolean | Prisma.OrderIntentDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.CheckoutSessionItem$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["checkoutSessionItem"]>
 
@@ -1813,7 +1813,7 @@ export type CheckoutSessionItemOmit<ExtArgs extends runtime.Types.Extensions.Int
 export type CheckoutSessionItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   checkoutSession?: boolean | Prisma.CheckoutSessionDefaultArgs<ExtArgs>
   orderIntent?: boolean | Prisma.OrderIntentDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.CheckoutSessionItem$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
   substitutions?: boolean | Prisma.CheckoutSessionItem$substitutionsArgs<ExtArgs>
   modifiers?: boolean | Prisma.CheckoutSessionItem$modifiersArgs<ExtArgs>
@@ -1822,13 +1822,13 @@ export type CheckoutSessionItemInclude<ExtArgs extends runtime.Types.Extensions.
 export type CheckoutSessionItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   checkoutSession?: boolean | Prisma.CheckoutSessionDefaultArgs<ExtArgs>
   orderIntent?: boolean | Prisma.OrderIntentDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.CheckoutSessionItem$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
 }
 export type CheckoutSessionItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   checkoutSession?: boolean | Prisma.CheckoutSessionDefaultArgs<ExtArgs>
   orderIntent?: boolean | Prisma.OrderIntentDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.CheckoutSessionItem$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
 }
 
@@ -1837,7 +1837,7 @@ export type $CheckoutSessionItemPayload<ExtArgs extends runtime.Types.Extensions
   objects: {
     checkoutSession: Prisma.$CheckoutSessionPayload<ExtArgs>
     orderIntent: Prisma.$OrderIntentPayload<ExtArgs>
-    meal: Prisma.$MealPayload<ExtArgs>
+    meal: Prisma.$MealPayload<ExtArgs> | null
     rotation: Prisma.$WeeklyRotationPayload<ExtArgs>
     substitutions: Prisma.$CheckoutItemSubstitutionPayload<ExtArgs>[]
     modifiers: Prisma.$CheckoutItemModifierPayload<ExtArgs>[]
@@ -1846,7 +1846,7 @@ export type $CheckoutSessionItemPayload<ExtArgs extends runtime.Types.Extensions
     id: string
     checkoutSessionId: string
     orderIntentId: string
-    mealId: string
+    mealId: string | null
     mealName: string
     mealSlug: string
     mealImageUrl: string | null
@@ -2256,7 +2256,7 @@ export interface Prisma__CheckoutSessionItemClient<T, Null = never, ExtArgs exte
   readonly [Symbol.toStringTag]: "PrismaPromise"
   checkoutSession<T extends Prisma.CheckoutSessionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CheckoutSessionDefaultArgs<ExtArgs>>): Prisma.Prisma__CheckoutSessionClient<runtime.Types.Result.GetResult<Prisma.$CheckoutSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   orderIntent<T extends Prisma.OrderIntentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderIntentDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderIntentClient<runtime.Types.Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  meal<T extends Prisma.MealDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MealDefaultArgs<ExtArgs>>): Prisma.Prisma__MealClient<runtime.Types.Result.GetResult<Prisma.$MealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  meal<T extends Prisma.CheckoutSessionItem$mealArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CheckoutSessionItem$mealArgs<ExtArgs>>): Prisma.Prisma__MealClient<runtime.Types.Result.GetResult<Prisma.$MealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   rotation<T extends Prisma.WeeklyRotationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WeeklyRotationDefaultArgs<ExtArgs>>): Prisma.Prisma__WeeklyRotationClient<runtime.Types.Result.GetResult<Prisma.$WeeklyRotationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   substitutions<T extends Prisma.CheckoutSessionItem$substitutionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CheckoutSessionItem$substitutionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheckoutItemSubstitutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   modifiers<T extends Prisma.CheckoutSessionItem$modifiersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CheckoutSessionItem$modifiersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheckoutItemModifierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2699,6 +2699,25 @@ export type CheckoutSessionItemDeleteManyArgs<ExtArgs extends runtime.Types.Exte
    * Limit how many CheckoutSessionItems to delete.
    */
   limit?: number
+}
+
+/**
+ * CheckoutSessionItem.meal
+ */
+export type CheckoutSessionItem$mealArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Meal
+   */
+  select?: Prisma.MealSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Meal
+   */
+  omit?: Prisma.MealOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MealInclude<ExtArgs> | null
+  where?: Prisma.MealWhereInput
 }
 
 /**

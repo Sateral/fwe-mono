@@ -677,6 +677,11 @@ export type MealOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type MealNullableScalarRelationFilter = {
+  is?: Prisma.MealWhereInput | null
+  isNot?: Prisma.MealWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -781,10 +786,12 @@ export type MealCreateNestedOneWithoutOrdersInput = {
   connect?: Prisma.MealWhereUniqueInput
 }
 
-export type MealUpdateOneRequiredWithoutOrdersNestedInput = {
+export type MealUpdateOneWithoutOrdersNestedInput = {
   create?: Prisma.XOR<Prisma.MealCreateWithoutOrdersInput, Prisma.MealUncheckedCreateWithoutOrdersInput>
   connectOrCreate?: Prisma.MealCreateOrConnectWithoutOrdersInput
   upsert?: Prisma.MealUpsertWithoutOrdersInput
+  disconnect?: Prisma.MealWhereInput | boolean
+  delete?: Prisma.MealWhereInput | boolean
   connect?: Prisma.MealWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.MealUpdateToOneWithWhereWithoutOrdersInput, Prisma.MealUpdateWithoutOrdersInput>, Prisma.MealUncheckedUpdateWithoutOrdersInput>
 }
@@ -885,10 +892,12 @@ export type MealCreateNestedOneWithoutOrderIntentsInput = {
   connect?: Prisma.MealWhereUniqueInput
 }
 
-export type MealUpdateOneRequiredWithoutOrderIntentsNestedInput = {
+export type MealUpdateOneWithoutOrderIntentsNestedInput = {
   create?: Prisma.XOR<Prisma.MealCreateWithoutOrderIntentsInput, Prisma.MealUncheckedCreateWithoutOrderIntentsInput>
   connectOrCreate?: Prisma.MealCreateOrConnectWithoutOrderIntentsInput
   upsert?: Prisma.MealUpsertWithoutOrderIntentsInput
+  disconnect?: Prisma.MealWhereInput | boolean
+  delete?: Prisma.MealWhereInput | boolean
   connect?: Prisma.MealWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.MealUpdateToOneWithWhereWithoutOrderIntentsInput, Prisma.MealUpdateWithoutOrderIntentsInput>, Prisma.MealUncheckedUpdateWithoutOrderIntentsInput>
 }
@@ -899,10 +908,12 @@ export type MealCreateNestedOneWithoutCheckoutSessionItemsInput = {
   connect?: Prisma.MealWhereUniqueInput
 }
 
-export type MealUpdateOneRequiredWithoutCheckoutSessionItemsNestedInput = {
+export type MealUpdateOneWithoutCheckoutSessionItemsNestedInput = {
   create?: Prisma.XOR<Prisma.MealCreateWithoutCheckoutSessionItemsInput, Prisma.MealUncheckedCreateWithoutCheckoutSessionItemsInput>
   connectOrCreate?: Prisma.MealCreateOrConnectWithoutCheckoutSessionItemsInput
   upsert?: Prisma.MealUpsertWithoutCheckoutSessionItemsInput
+  disconnect?: Prisma.MealWhereInput | boolean
+  delete?: Prisma.MealWhereInput | boolean
   connect?: Prisma.MealWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.MealUpdateToOneWithWhereWithoutCheckoutSessionItemsInput, Prisma.MealUpdateWithoutCheckoutSessionItemsInput>, Prisma.MealUncheckedUpdateWithoutCheckoutSessionItemsInput>
 }
