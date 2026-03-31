@@ -50,9 +50,16 @@ export async function GET(request: Request) {
       },
     });
 
-    const summary = aggregatePrepByMeal(orders);
+    // Filter to only orders that have a meal (exclude orders where meal was deleted)
+    const ordersWithMeals = orders.filter(
+      (o) => o.meal !== null && o.mealId !== null,
+    );
 
-    const manifest = orders.map((order) => {
+    const summary = aggregatePrepByMeal(
+      ordersWithMeals as Parameters<typeof aggregatePrepByMeal>[0],
+    );
+
+    const manifest = ordersWithMeals.map((order) => {
       const effective = getEffectiveOrderFulfillment(order);
       const address =
         order.deliveryMethod === "PICKUP"
@@ -66,7 +73,7 @@ export async function GET(request: Request) {
         address,
         deliveryMethod: order.deliveryMethod,
         pickupLocation: order.pickupLocation,
-        meal: order.meal.name,
+        meal: order.meal!.name,
         quantity: order.quantity,
         details: {
           assignedByChef:

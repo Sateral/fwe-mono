@@ -259,7 +259,7 @@ export type OrderIntentGroupByOutputType = {
   id: string
   clientRequestId: string | null
   userId: string
-  mealId: string
+  mealId: string | null
   rotationId: string
   quantity: number
   unitPrice: runtime.Decimal
@@ -301,7 +301,7 @@ export type OrderIntentWhereInput = {
   id?: Prisma.StringFilter<"OrderIntent"> | string
   clientRequestId?: Prisma.StringNullableFilter<"OrderIntent"> | string | null
   userId?: Prisma.StringFilter<"OrderIntent"> | string
-  mealId?: Prisma.StringFilter<"OrderIntent"> | string
+  mealId?: Prisma.StringNullableFilter<"OrderIntent"> | string | null
   rotationId?: Prisma.StringFilter<"OrderIntent"> | string
   quantity?: Prisma.IntFilter<"OrderIntent"> | number
   unitPrice?: Prisma.DecimalFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -315,7 +315,7 @@ export type OrderIntentWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"OrderIntent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderIntent"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
+  meal?: Prisma.XOR<Prisma.MealNullableScalarRelationFilter, Prisma.MealWhereInput> | null
   rotation?: Prisma.XOR<Prisma.WeeklyRotationScalarRelationFilter, Prisma.WeeklyRotationWhereInput>
   substitutions?: Prisma.IntentSubstitutionListRelationFilter
   modifiers?: Prisma.IntentModifierListRelationFilter
@@ -328,7 +328,7 @@ export type OrderIntentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   clientRequestId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
-  mealId?: Prisma.SortOrder
+  mealId?: Prisma.SortOrderInput | Prisma.SortOrder
   rotationId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -358,7 +358,7 @@ export type OrderIntentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.OrderIntentWhereInput[]
   NOT?: Prisma.OrderIntentWhereInput | Prisma.OrderIntentWhereInput[]
   userId?: Prisma.StringFilter<"OrderIntent"> | string
-  mealId?: Prisma.StringFilter<"OrderIntent"> | string
+  mealId?: Prisma.StringNullableFilter<"OrderIntent"> | string | null
   rotationId?: Prisma.StringFilter<"OrderIntent"> | string
   quantity?: Prisma.IntFilter<"OrderIntent"> | number
   unitPrice?: Prisma.DecimalFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -372,7 +372,7 @@ export type OrderIntentWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"OrderIntent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderIntent"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  meal?: Prisma.XOR<Prisma.MealScalarRelationFilter, Prisma.MealWhereInput>
+  meal?: Prisma.XOR<Prisma.MealNullableScalarRelationFilter, Prisma.MealWhereInput> | null
   rotation?: Prisma.XOR<Prisma.WeeklyRotationScalarRelationFilter, Prisma.WeeklyRotationWhereInput>
   substitutions?: Prisma.IntentSubstitutionListRelationFilter
   modifiers?: Prisma.IntentModifierListRelationFilter
@@ -385,7 +385,7 @@ export type OrderIntentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   clientRequestId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
-  mealId?: Prisma.SortOrder
+  mealId?: Prisma.SortOrderInput | Prisma.SortOrder
   rotationId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
@@ -412,7 +412,7 @@ export type OrderIntentScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
   clientRequestId?: Prisma.StringNullableWithAggregatesFilter<"OrderIntent"> | string | null
   userId?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
-  mealId?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
+  mealId?: Prisma.StringNullableWithAggregatesFilter<"OrderIntent"> | string | null
   rotationId?: Prisma.StringWithAggregatesFilter<"OrderIntent"> | string
   quantity?: Prisma.IntWithAggregatesFilter<"OrderIntent"> | number
   unitPrice?: Prisma.DecimalWithAggregatesFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -442,7 +442,7 @@ export type OrderIntentCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrderIntentsInput
-  meal: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
+  meal?: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrderIntentsInput
   substitutions?: Prisma.IntentSubstitutionCreateNestedManyWithoutOrderIntentInput
   modifiers?: Prisma.IntentModifierCreateNestedManyWithoutOrderIntentInput
@@ -455,7 +455,7 @@ export type OrderIntentUncheckedCreateInput = {
   id?: string
   clientRequestId?: string | null
   userId: string
-  mealId: string
+  mealId?: string | null
   rotationId: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -490,7 +490,7 @@ export type OrderIntentUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrderIntentsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutOrderIntentsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutOrderIntentsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrderIntentsNestedInput
   substitutions?: Prisma.IntentSubstitutionUpdateManyWithoutOrderIntentNestedInput
   modifiers?: Prisma.IntentModifierUpdateManyWithoutOrderIntentNestedInput
@@ -503,7 +503,7 @@ export type OrderIntentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -527,7 +527,7 @@ export type OrderIntentCreateManyInput = {
   id?: string
   clientRequestId?: string | null
   userId: string
-  mealId: string
+  mealId?: string | null
   rotationId: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -562,7 +562,7 @@ export type OrderIntentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -949,7 +949,7 @@ export type OrderIntentScalarWhereInput = {
   id?: Prisma.StringFilter<"OrderIntent"> | string
   clientRequestId?: Prisma.StringNullableFilter<"OrderIntent"> | string | null
   userId?: Prisma.StringFilter<"OrderIntent"> | string
-  mealId?: Prisma.StringFilter<"OrderIntent"> | string
+  mealId?: Prisma.StringNullableFilter<"OrderIntent"> | string | null
   rotationId?: Prisma.StringFilter<"OrderIntent"> | string
   quantity?: Prisma.IntFilter<"OrderIntent"> | number
   unitPrice?: Prisma.DecimalFilter<"OrderIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -979,7 +979,7 @@ export type OrderIntentCreateWithoutOrderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrderIntentsInput
-  meal: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
+  meal?: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrderIntentsInput
   substitutions?: Prisma.IntentSubstitutionCreateNestedManyWithoutOrderIntentInput
   modifiers?: Prisma.IntentModifierCreateNestedManyWithoutOrderIntentInput
@@ -991,7 +991,7 @@ export type OrderIntentUncheckedCreateWithoutOrderInput = {
   id?: string
   clientRequestId?: string | null
   userId: string
-  mealId: string
+  mealId?: string | null
   rotationId: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1041,7 +1041,7 @@ export type OrderIntentUpdateWithoutOrderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrderIntentsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutOrderIntentsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutOrderIntentsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrderIntentsNestedInput
   substitutions?: Prisma.IntentSubstitutionUpdateManyWithoutOrderIntentNestedInput
   modifiers?: Prisma.IntentModifierUpdateManyWithoutOrderIntentNestedInput
@@ -1053,7 +1053,7 @@ export type OrderIntentUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1087,7 +1087,7 @@ export type OrderIntentCreateWithoutSubstitutionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrderIntentsInput
-  meal: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
+  meal?: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrderIntentsInput
   modifiers?: Prisma.IntentModifierCreateNestedManyWithoutOrderIntentInput
   order?: Prisma.OrderCreateNestedOneWithoutOrderIntentInput
@@ -1099,7 +1099,7 @@ export type OrderIntentUncheckedCreateWithoutSubstitutionsInput = {
   id?: string
   clientRequestId?: string | null
   userId: string
-  mealId: string
+  mealId?: string | null
   rotationId: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1149,7 +1149,7 @@ export type OrderIntentUpdateWithoutSubstitutionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrderIntentsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutOrderIntentsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutOrderIntentsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrderIntentsNestedInput
   modifiers?: Prisma.IntentModifierUpdateManyWithoutOrderIntentNestedInput
   order?: Prisma.OrderUpdateOneWithoutOrderIntentNestedInput
@@ -1161,7 +1161,7 @@ export type OrderIntentUncheckedUpdateWithoutSubstitutionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1195,7 +1195,7 @@ export type OrderIntentCreateWithoutModifiersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrderIntentsInput
-  meal: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
+  meal?: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrderIntentsInput
   substitutions?: Prisma.IntentSubstitutionCreateNestedManyWithoutOrderIntentInput
   order?: Prisma.OrderCreateNestedOneWithoutOrderIntentInput
@@ -1207,7 +1207,7 @@ export type OrderIntentUncheckedCreateWithoutModifiersInput = {
   id?: string
   clientRequestId?: string | null
   userId: string
-  mealId: string
+  mealId?: string | null
   rotationId: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1257,7 +1257,7 @@ export type OrderIntentUpdateWithoutModifiersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrderIntentsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutOrderIntentsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutOrderIntentsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrderIntentsNestedInput
   substitutions?: Prisma.IntentSubstitutionUpdateManyWithoutOrderIntentNestedInput
   order?: Prisma.OrderUpdateOneWithoutOrderIntentNestedInput
@@ -1269,7 +1269,7 @@ export type OrderIntentUncheckedUpdateWithoutModifiersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1303,7 +1303,7 @@ export type OrderIntentCreateWithoutRotationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrderIntentsInput
-  meal: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
+  meal?: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
   substitutions?: Prisma.IntentSubstitutionCreateNestedManyWithoutOrderIntentInput
   modifiers?: Prisma.IntentModifierCreateNestedManyWithoutOrderIntentInput
   order?: Prisma.OrderCreateNestedOneWithoutOrderIntentInput
@@ -1315,7 +1315,7 @@ export type OrderIntentUncheckedCreateWithoutRotationInput = {
   id?: string
   clientRequestId?: string | null
   userId: string
-  mealId: string
+  mealId?: string | null
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1375,7 +1375,7 @@ export type OrderIntentCreateWithoutCheckoutSessionItemsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrderIntentsInput
-  meal: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
+  meal?: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrderIntentsInput
   substitutions?: Prisma.IntentSubstitutionCreateNestedManyWithoutOrderIntentInput
   modifiers?: Prisma.IntentModifierCreateNestedManyWithoutOrderIntentInput
@@ -1387,7 +1387,7 @@ export type OrderIntentUncheckedCreateWithoutCheckoutSessionItemsInput = {
   id?: string
   clientRequestId?: string | null
   userId: string
-  mealId: string
+  mealId?: string | null
   rotationId: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1437,7 +1437,7 @@ export type OrderIntentUpdateWithoutCheckoutSessionItemsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrderIntentsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutOrderIntentsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutOrderIntentsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrderIntentsNestedInput
   substitutions?: Prisma.IntentSubstitutionUpdateManyWithoutOrderIntentNestedInput
   modifiers?: Prisma.IntentModifierUpdateManyWithoutOrderIntentNestedInput
@@ -1449,7 +1449,7 @@ export type OrderIntentUncheckedUpdateWithoutCheckoutSessionItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1483,7 +1483,7 @@ export type OrderIntentCreateWithoutPaymentEventsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrderIntentsInput
-  meal: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
+  meal?: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrderIntentsInput
   substitutions?: Prisma.IntentSubstitutionCreateNestedManyWithoutOrderIntentInput
   modifiers?: Prisma.IntentModifierCreateNestedManyWithoutOrderIntentInput
@@ -1495,7 +1495,7 @@ export type OrderIntentUncheckedCreateWithoutPaymentEventsInput = {
   id?: string
   clientRequestId?: string | null
   userId: string
-  mealId: string
+  mealId?: string | null
   rotationId: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1545,7 +1545,7 @@ export type OrderIntentUpdateWithoutPaymentEventsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrderIntentsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutOrderIntentsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutOrderIntentsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrderIntentsNestedInput
   substitutions?: Prisma.IntentSubstitutionUpdateManyWithoutOrderIntentNestedInput
   modifiers?: Prisma.IntentModifierUpdateManyWithoutOrderIntentNestedInput
@@ -1557,7 +1557,7 @@ export type OrderIntentUncheckedUpdateWithoutPaymentEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1590,7 +1590,7 @@ export type OrderIntentCreateWithoutUserInput = {
   status?: $Enums.OrderIntentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  meal: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
+  meal?: Prisma.MealCreateNestedOneWithoutOrderIntentsInput
   rotation: Prisma.WeeklyRotationCreateNestedOneWithoutOrderIntentsInput
   substitutions?: Prisma.IntentSubstitutionCreateNestedManyWithoutOrderIntentInput
   modifiers?: Prisma.IntentModifierCreateNestedManyWithoutOrderIntentInput
@@ -1602,7 +1602,7 @@ export type OrderIntentCreateWithoutUserInput = {
 export type OrderIntentUncheckedCreateWithoutUserInput = {
   id?: string
   clientRequestId?: string | null
-  mealId: string
+  mealId?: string | null
   rotationId: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1734,7 +1734,7 @@ export type OrderIntentCreateManyRotationInput = {
   id?: string
   clientRequestId?: string | null
   userId: string
-  mealId: string
+  mealId?: string | null
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1763,7 +1763,7 @@ export type OrderIntentUpdateWithoutRotationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrderIntentsNestedInput
-  meal?: Prisma.MealUpdateOneRequiredWithoutOrderIntentsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutOrderIntentsNestedInput
   substitutions?: Prisma.IntentSubstitutionUpdateManyWithoutOrderIntentNestedInput
   modifiers?: Prisma.IntentModifierUpdateManyWithoutOrderIntentNestedInput
   order?: Prisma.OrderUpdateOneWithoutOrderIntentNestedInput
@@ -1775,7 +1775,7 @@ export type OrderIntentUncheckedUpdateWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1798,7 +1798,7 @@ export type OrderIntentUncheckedUpdateManyWithoutRotationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1815,7 +1815,7 @@ export type OrderIntentUncheckedUpdateManyWithoutRotationInput = {
 export type OrderIntentCreateManyUserInput = {
   id?: string
   clientRequestId?: string | null
-  mealId: string
+  mealId?: string | null
   rotationId: string
   quantity: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1844,7 +1844,7 @@ export type OrderIntentUpdateWithoutUserInput = {
   status?: Prisma.EnumOrderIntentStatusFieldUpdateOperationsInput | $Enums.OrderIntentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  meal?: Prisma.MealUpdateOneRequiredWithoutOrderIntentsNestedInput
+  meal?: Prisma.MealUpdateOneWithoutOrderIntentsNestedInput
   rotation?: Prisma.WeeklyRotationUpdateOneRequiredWithoutOrderIntentsNestedInput
   substitutions?: Prisma.IntentSubstitutionUpdateManyWithoutOrderIntentNestedInput
   modifiers?: Prisma.IntentModifierUpdateManyWithoutOrderIntentNestedInput
@@ -1856,7 +1856,7 @@ export type OrderIntentUpdateWithoutUserInput = {
 export type OrderIntentUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1879,7 +1879,7 @@ export type OrderIntentUncheckedUpdateWithoutUserInput = {
 export type OrderIntentUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mealId?: Prisma.StringFieldUpdateOperationsInput | string
+  mealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rotationId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1970,7 +1970,7 @@ export type OrderIntentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.OrderIntent$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
   substitutions?: boolean | Prisma.OrderIntent$substitutionsArgs<ExtArgs>
   modifiers?: boolean | Prisma.OrderIntent$modifiersArgs<ExtArgs>
@@ -1998,7 +1998,7 @@ export type OrderIntentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.OrderIntent$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["orderIntent"]>
 
@@ -2020,7 +2020,7 @@ export type OrderIntentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.OrderIntent$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["orderIntent"]>
 
@@ -2046,7 +2046,7 @@ export type OrderIntentSelectScalar = {
 export type OrderIntentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientRequestId" | "userId" | "mealId" | "rotationId" | "quantity" | "unitPrice" | "totalAmount" | "currency" | "settlementMethod" | "notes" | "deliveryMethod" | "pickupLocation" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["orderIntent"]>
 export type OrderIntentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.OrderIntent$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
   substitutions?: boolean | Prisma.OrderIntent$substitutionsArgs<ExtArgs>
   modifiers?: boolean | Prisma.OrderIntent$modifiersArgs<ExtArgs>
@@ -2057,12 +2057,12 @@ export type OrderIntentInclude<ExtArgs extends runtime.Types.Extensions.Internal
 }
 export type OrderIntentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.OrderIntent$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
 }
 export type OrderIntentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  meal?: boolean | Prisma.MealDefaultArgs<ExtArgs>
+  meal?: boolean | Prisma.OrderIntent$mealArgs<ExtArgs>
   rotation?: boolean | Prisma.WeeklyRotationDefaultArgs<ExtArgs>
 }
 
@@ -2070,7 +2070,7 @@ export type $OrderIntentPayload<ExtArgs extends runtime.Types.Extensions.Interna
   name: "OrderIntent"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
-    meal: Prisma.$MealPayload<ExtArgs>
+    meal: Prisma.$MealPayload<ExtArgs> | null
     rotation: Prisma.$WeeklyRotationPayload<ExtArgs>
     substitutions: Prisma.$IntentSubstitutionPayload<ExtArgs>[]
     modifiers: Prisma.$IntentModifierPayload<ExtArgs>[]
@@ -2082,7 +2082,7 @@ export type $OrderIntentPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     clientRequestId: string | null
     userId: string
-    mealId: string
+    mealId: string | null
     rotationId: string
     quantity: number
     unitPrice: runtime.Decimal
@@ -2490,7 +2490,7 @@ readonly fields: OrderIntentFieldRefs;
 export interface Prisma__OrderIntentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  meal<T extends Prisma.MealDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MealDefaultArgs<ExtArgs>>): Prisma.Prisma__MealClient<runtime.Types.Result.GetResult<Prisma.$MealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  meal<T extends Prisma.OrderIntent$mealArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderIntent$mealArgs<ExtArgs>>): Prisma.Prisma__MealClient<runtime.Types.Result.GetResult<Prisma.$MealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   rotation<T extends Prisma.WeeklyRotationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WeeklyRotationDefaultArgs<ExtArgs>>): Prisma.Prisma__WeeklyRotationClient<runtime.Types.Result.GetResult<Prisma.$WeeklyRotationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   substitutions<T extends Prisma.OrderIntent$substitutionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderIntent$substitutionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IntentSubstitutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   modifiers<T extends Prisma.OrderIntent$modifiersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderIntent$modifiersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IntentModifierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2935,6 +2935,25 @@ export type OrderIntentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many OrderIntents to delete.
    */
   limit?: number
+}
+
+/**
+ * OrderIntent.meal
+ */
+export type OrderIntent$mealArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Meal
+   */
+  select?: Prisma.MealSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Meal
+   */
+  omit?: Prisma.MealOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MealInclude<ExtArgs> | null
+  where?: Prisma.MealWhereInput
 }
 
 /**

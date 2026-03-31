@@ -55,7 +55,9 @@ export const orderService = {
     const existingOrder = await db.order.findFirst({
       where: {
         OR: [
-          ...(input.orderIntentId ? [{ orderIntentId: input.orderIntentId }] : []),
+          ...(input.orderIntentId
+            ? [{ orderIntentId: input.orderIntentId }]
+            : []),
         ],
       },
       include: this.orderInclude,
@@ -89,6 +91,7 @@ export const orderService = {
         data: {
           userId: input.userId,
           mealId: input.mealId,
+          mealName: input.mealName,
           rotationId,
           settlementMethod: input.settlementMethod ?? "STRIPE",
           customerName: input.customerName,
@@ -146,7 +149,9 @@ export const orderService = {
       const recoveredOrder = await db.order.findFirst({
         where: {
           OR: [
-            ...(input.orderIntentId ? [{ orderIntentId: input.orderIntentId }] : []),
+            ...(input.orderIntentId
+              ? [{ orderIntentId: input.orderIntentId }]
+              : []),
           ],
         },
         include: this.orderInclude,

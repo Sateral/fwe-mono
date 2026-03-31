@@ -5,9 +5,15 @@ import type { cartService } from "@/lib/services/cart.service";
 import type { orderService } from "@/lib/services/order.service";
 import type { weeklyRotationService } from "@/lib/services/weekly-rotation.service";
 
-type MealRecord = NonNullable<Awaited<ReturnType<typeof mealService.getMealById>>>;
-type CartRecord = NonNullable<Awaited<ReturnType<typeof cartService.getCartById>>>;
-type OrderRecord = NonNullable<Awaited<ReturnType<typeof orderService.getOrderById>>>;
+type MealRecord = NonNullable<
+  Awaited<ReturnType<typeof mealService.getMealById>>
+>;
+type CartRecord = NonNullable<
+  Awaited<ReturnType<typeof cartService.getCartById>>
+>;
+type OrderRecord = NonNullable<
+  Awaited<ReturnType<typeof orderService.getOrderById>>
+>;
 type RotationRecord = NonNullable<
   Awaited<ReturnType<typeof weeklyRotationService.getCurrentRotation>>
 >;
@@ -95,11 +101,13 @@ export function serializeOrder(order: OrderRecord): ApiOrder {
     id: order.id,
     userId: order.userId,
     mealId: order.mealId,
+    mealName: order.mealName,
     settlementMethod: order.settlementMethod,
     orderIntentId: order.orderIntentId,
     checkoutSessionId: order.checkoutSessionId,
     orderGroupId: order.orderGroupId,
-    assignedByChef: order.orderIntent?.clientRequestId?.startsWith("assignment:") ?? false,
+    assignedByChef:
+      order.orderIntent?.clientRequestId?.startsWith("assignment:") ?? false,
     quantity: order.quantity,
     unitPrice: serializeMoney(order.unitPrice),
     totalAmount: serializeMoney(order.totalAmount),
@@ -141,7 +149,7 @@ export function serializeOrder(order: OrderRecord): ApiOrder {
     customerIsGuest: order.customerIsGuest,
     createdAt: order.createdAt.toISOString(),
     updatedAt: order.updatedAt.toISOString(),
-    meal: serializeMeal(order.meal),
+    meal: order.meal ? serializeMeal(order.meal) : null,
     rotationId: order.rotationId,
     user: order.user
       ? {

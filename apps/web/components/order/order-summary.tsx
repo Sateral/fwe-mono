@@ -2,7 +2,7 @@
 
 import { forwardRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Bookmark, CreditCard, Loader2, ShoppingBag } from "lucide-react";
+import { CreditCard, Loader2, ShoppingBag } from "lucide-react";
 import type { Meal } from "@/types";
 
 interface OrderSummaryProps {
@@ -13,7 +13,6 @@ interface OrderSummaryProps {
   deliveryMethod: "DELIVERY" | "PICKUP";
   pickupLocation?: string;
   onCheckout: () => void;
-  onSaveForLater: () => void;
   isCheckingOut?: boolean;
   checkoutLabel?: string;
   /** Use bag icon for add-to-cart flows; card for direct payment. */
@@ -31,7 +30,6 @@ const OrderSummary = forwardRef<HTMLDivElement, OrderSummaryProps>(
       deliveryMethod,
       pickupLocation,
       onCheckout,
-      onSaveForLater,
       isCheckingOut = false,
       checkoutLabel = "Place Order",
       primaryActionIcon = "payment",
@@ -162,18 +160,10 @@ const OrderSummary = forwardRef<HTMLDivElement, OrderSummaryProps>(
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 mt-4">
+        {/* Action Button */}
+        <div className="mt-4">
           <Button
-            variant="outline"
-            className="flex-1 py-6 rounded-full border-gray-300"
-            onClick={onSaveForLater}
-          >
-            <Bookmark className="w-4 h-4 mr-2" />
-            Save for later
-          </Button>
-          <Button
-            className="flex-1 py-6 rounded-full bg-primary hover:bg-primary/90"
+            className="w-full py-6 rounded-full bg-primary hover:bg-primary/90"
             onClick={onCheckout}
             disabled={isCheckingOut || primaryDisabled}
           >

@@ -31,35 +31,39 @@ export const createOrderSchema = z
   .object({
     userId: z.string().min(1, "User ID is required"),
     mealId: z.string().min(1, "Meal ID is required"),
+    mealName: z.string().min(1, "Meal name is required"),
     rotationId: z.string().min(1, "Rotation ID is required"),
     quantity: z.number().int().min(1, "Quantity must be at least 1"),
     unitPrice: z.number().min(0, "Unit price cannot be negative"),
     totalAmount: z.number().min(0, "Total amount cannot be negative"),
     settlementMethod: settlementMethodSchema.optional(),
     currency: z.string().length(3).optional().default("cad"),
-  orderIntentId: z.string().optional(),
-  checkoutSessionId: z.string().optional(),
-  orderGroupId: z.string().optional(),
-  substitutions: z.array(orderSubstitutionSchema).optional(),
-  modifiers: z.array(orderModifierSchema).optional(),
-  notes: z.string().optional(),
-  deliveryMethod: z.enum(["DELIVERY", "PICKUP"]).optional(),
-  pickupLocation: z.string().optional(),
-  customerName: z.string().min(1).optional(),
-  customerEmail: z.string().email().optional(),
-  customerPhone: z.string().min(1).optional(),
-  customerDeliveryAddress: z.string().min(1).optional(),
-  customerDeliveryCity: z.string().min(1).optional(),
-  customerDeliveryPostal: z.string().min(1).optional(),
-  customerDeliveryNotes: z.string().optional(),
-  customerIsGuest: z.boolean().optional(),
-  stripeSessionId: z.string().min(1, "Stripe session ID is required").optional(),
-  stripePaymentIntentId: z
-    .string()
-    .min(1, "Stripe payment intent ID is required")
-    .optional(),
-  stripeChargeId: z.string().optional(),
-  stripeBalanceTransactionId: z.string().optional(),
+    orderIntentId: z.string().optional(),
+    checkoutSessionId: z.string().optional(),
+    orderGroupId: z.string().optional(),
+    substitutions: z.array(orderSubstitutionSchema).optional(),
+    modifiers: z.array(orderModifierSchema).optional(),
+    notes: z.string().optional(),
+    deliveryMethod: z.enum(["DELIVERY", "PICKUP"]).optional(),
+    pickupLocation: z.string().optional(),
+    customerName: z.string().min(1).optional(),
+    customerEmail: z.string().email().optional(),
+    customerPhone: z.string().min(1).optional(),
+    customerDeliveryAddress: z.string().min(1).optional(),
+    customerDeliveryCity: z.string().min(1).optional(),
+    customerDeliveryPostal: z.string().min(1).optional(),
+    customerDeliveryNotes: z.string().optional(),
+    customerIsGuest: z.boolean().optional(),
+    stripeSessionId: z
+      .string()
+      .min(1, "Stripe session ID is required")
+      .optional(),
+    stripePaymentIntentId: z
+      .string()
+      .min(1, "Stripe payment intent ID is required")
+      .optional(),
+    stripeChargeId: z.string().optional(),
+    stripeBalanceTransactionId: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     const method = data.settlementMethod ?? "STRIPE";
@@ -112,7 +116,9 @@ export type CreateOrderInput = z.infer<typeof createOrderSchema>;
 export type UpdateFulfillmentStatusInput = z.infer<
   typeof updateFulfillmentStatusSchema
 >;
-export type UpdatePaymentStatusInput = z.infer<typeof updatePaymentStatusSchema>;
+export type UpdatePaymentStatusInput = z.infer<
+  typeof updatePaymentStatusSchema
+>;
 export type FulfillmentStatus = z.infer<typeof fulfillmentStatusSchema>;
 export type PaymentStatus = z.infer<typeof paymentStatusSchema>;
 export type OrderSubstitution = z.infer<typeof orderSubstitutionSchema>;

@@ -33,9 +33,14 @@ function renderOrderCard(order: Order) {
   const substitutions = order.substitutions as OrderSubstitution[] | null;
 
   return (
-    <div key={order.id} className="bg-white rounded-2xl border border-gray-200 p-6 mb-4">
+    <div
+      key={order.id}
+      className="bg-white rounded-2xl border border-gray-200 p-6 mb-4"
+    >
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">{order.meal.name}</h2>
+        <h2 className="text-lg font-semibold text-gray-900">
+          {order.mealName}
+        </h2>
         <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
           {order.fulfillmentStatus}
         </span>
@@ -78,7 +83,10 @@ function renderOrderCard(order: Order) {
               </div>
 
               {substitutions?.map((sub, i) => (
-                <div key={`${order.id}-${i}`} className="flex justify-between text-sm pl-6">
+                <div
+                  key={`${order.id}-${i}`}
+                  className="flex justify-between text-sm pl-6"
+                >
                   <span className="text-gray-500">{sub.groupName}</span>
                   <span className="text-gray-900">{sub.optionName}</span>
                 </div>
@@ -127,8 +135,8 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
               Confirming Your Order
             </h1>
             <p className="text-gray-600 mb-8">
-              We received your payment and are creating your order in our kitchen
-              system. This page will update automatically.
+              We received your payment and are creating your order in our
+              kitchen system. This page will update automatically.
             </p>
             <ProcessingClient sessionId={session_id} />
             <div className="mt-8">
@@ -163,7 +171,8 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
             </h1>
             <p className="text-gray-600">
               We received {orderSession.orders.length} item
-              {orderSession.orders.length === 1 ? "" : "s"} in this checkout session.
+              {orderSession.orders.length === 1 ? "" : "s"} in this checkout
+              session.
             </p>
           </div>
 
@@ -171,11 +180,15 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
             <div className="flex justify-between items-center">
               <div>
                 <p className="text-sm text-gray-500">Session</p>
-                <p className="font-mono text-sm text-gray-900">{orderSession.sessionId}</p>
+                <p className="font-mono text-sm text-gray-900">
+                  {orderSession.sessionId}
+                </p>
               </div>
               <div className="text-right">
                 <p className="text-sm text-gray-500">Grand total</p>
-                <p className="text-2xl font-bold text-gray-900">${grandTotal.toFixed(2)} CAD</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  ${grandTotal.toFixed(2)} CAD
+                </p>
               </div>
             </div>
           </div>
@@ -183,11 +196,19 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
           {orderSession.orders.map(renderOrderCard)}
 
           <div className="bg-gray-50 rounded-2xl p-6 mb-6">
-            <h3 className="font-semibold text-gray-900 mb-4">What happens next?</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">
+              What happens next?
+            </h3>
             <div className="space-y-3">
-              <p className="text-gray-600">Our chefs will start preparing your meals fresh.</p>
-              <p className="text-gray-600">You&apos;ll receive updates on your order status.</p>
-              <p className="text-gray-600">Your order will be delivered or prepared for pickup.</p>
+              <p className="text-gray-600">
+                Our chefs will start preparing your meals fresh.
+              </p>
+              <p className="text-gray-600">
+                You&apos;ll receive updates on your order status.
+              </p>
+              <p className="text-gray-600">
+                Your order will be delivered or prepared for pickup.
+              </p>
             </div>
           </div>
 

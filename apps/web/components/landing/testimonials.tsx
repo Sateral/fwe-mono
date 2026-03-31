@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Container from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,40 +9,39 @@ interface Testimonial {
   role: string; // e.g., "Foodie", "Busy Mom" - optional context
   content: string;
   rating: number;
-  avatar: string;
+  initials: string;
+  color: string;
 }
 
-// TODO: Replace MOCK_TESTIMONIALS with real data from CMS API or a testimonials table
-const MOCK_TESTIMONIALS: Testimonial[] = [
+const TESTIMONIALS: Testimonial[] = [
   {
     id: "1",
-    name: "John Doe",
-    role: "Regular Customer",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit.",
+    name: "Daniel",
+    role: "Programmer",
+    content: "Food is great and saves me a lot of time during the week.",
     rating: 5,
-    avatar:
-      "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=200",
+    initials: "D",
+    color: "bg-amber-500",
   },
   {
     id: "2",
-    name: "Jane Smith",
-    role: "Healthy Eater",
+    name: "Evindar",
+    role: "Regular Customer",
     content:
-      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit.",
+      "Good portions, tastes fresh, and delivery is always on time. Been a customer for a while and the quality has been consistent every time.",
     rating: 5,
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
+    initials: "E",
+    color: "bg-blue-500",
   },
   {
     id: "3",
-    name: "Mike Johnson",
-    role: "Chef",
+    name: "Sebi",
+    role: "Student",
     content:
-      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit.",
+      "Better than anything I could make myself. Saves so much time after a long day of classes and studying.",
     rating: 5,
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
+    initials: "S",
+    color: "bg-emerald-500",
   },
 ];
 
@@ -71,7 +69,7 @@ const Testimonials = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          {MOCK_TESTIMONIALS.map((testimonial) => (
+          {TESTIMONIALS.map((testimonial) => (
             <TestimonialCard key={testimonial.id} testimonial={testimonial} />
           ))}
         </div>
@@ -91,14 +89,12 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => (
 
       <div className="flex items-center justify-between mt-auto pt-4 sm:pt-6 border-t border-gray-50">
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-gray-100">
-            <Image
-              src={testimonial.avatar}
-              alt={testimonial.name}
-              fill
-              className="object-cover"
-              sizes="48px"
-            />
+          <div
+            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center ${testimonial.color}`}
+          >
+            <span className="text-white font-semibold text-sm sm:text-base">
+              {testimonial.initials}
+            </span>
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-gray-900 text-sm sm:text-base">

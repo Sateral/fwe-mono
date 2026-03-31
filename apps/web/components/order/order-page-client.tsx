@@ -426,9 +426,6 @@ const OrderPageClient = ({
               deliveryMethod={deliveryMethod}
               pickupLocation={pickupLocation}
               onCheckout={handleAddToCart}
-              onSaveForLater={() =>
-                editCartItemId ? router.push("/cart") : router.push("/menu")
-              }
               isCheckingOut={isAddingToCart}
               checkoutLabel={editCartItemId ? "Save to cart" : "Add to cart"}
               primaryActionIcon="cart"
