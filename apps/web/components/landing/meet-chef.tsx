@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Container from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,15 +48,13 @@ const MeetChef = () => {
           </div>
         </div>
 
-        {/* Right Column: Image */}
-        <div className="relative h-[500px] lg:h-[600px] w-full rounded-4xl overflow-hidden shadow-xl">
-          <Image
-            src="/images/self-portrait.jpg"
-            alt="Chef cooking in the kitchen"
-            fill
-            className="object-cover"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            priority
+        {/* Right Column: Video */}
+        <div className="flex items-center justify-center">
+          <video
+            src="https://m442dxa43u.ufs.sh/f/TNpuVpfVedFJXyd3V3lge2v9P7DMYbrQdGn3hSVfuow5asLE"
+            controls
+            playsInline
+            className="rounded-4xl shadow-xl max-w-full"
           />
         </div>
       </div>
