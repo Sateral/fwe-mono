@@ -32,7 +32,7 @@ export default async function Page() {
 
       <SectionCards
         totalRevenue={metrics.totalRevenue}
-        activeMealsCount={metrics.activeMealsCount}
+        totalMealsCount={metrics.totalMealsCount}
         totalOrdersCount={metrics.totalOrdersCount}
       />
       <ChartAreaInteractive data={revenueChartData} />

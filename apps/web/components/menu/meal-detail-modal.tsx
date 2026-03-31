@@ -3,15 +3,7 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  X,
-  ShoppingCart,
-  Info,
-  ChefHat,
-  Clock,
-  Flame,
-  Dumbbell,
-} from "lucide-react";
+import { X, ShoppingCart, Flame, Dumbbell } from "lucide-react";
 import type { Meal } from "@/types";
 import { useEffect, useCallback } from "react";
 
@@ -142,51 +134,31 @@ const MealDetailModal = ({ meal, isOpen, onClose }: MealDetailModalProps) => {
               </div>
 
               {/* Description */}
-              <p className="text-gray-600 text-sm leading-relaxed mb-6">
+              <p className="text-gray-600 text-sm leading-relaxed mb-4">
                 {meal.description ||
                   "A delicious, chef-prepared meal made with fresh ingredients."}
               </p>
 
-              {/* Info Cards */}
-              <div className="grid grid-cols-2 gap-3 mb-6">
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <div className="flex items-center gap-2 text-gray-600 text-xs mb-1">
-                    <ChefHat className="w-4 h-4" />
-                    <span>Chef&apos;s notes</span>
-                  </div>
-                  <p className="text-sm text-gray-900">
-                    Balanced flavors and textures with a focus on fresh,
-                    seasonal ingredients.
+              {meal.ingredients ? (
+                <div className="mb-6">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+                    Ingredients
+                  </h3>
+                  <p className="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">
+                    {meal.ingredients}
                   </p>
                 </div>
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <div className="flex items-center gap-2 text-gray-600 text-xs mb-1">
-                    <Clock className="w-4 h-4" />
-                    <span>Prep time</span>
-                  </div>
-                  <p className="text-sm text-gray-900">
-                    Ready in 10-15 minutes after delivery.
-                  </p>
-                </div>
-              </div>
+              ) : null}
 
-              {/* Action Buttons */}
-              <div className="flex gap-3 mt-auto">
+              <div className="mt-auto">
                 <Button
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-6 rounded-full"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-6 rounded-full"
                   asChild
                 >
                   <a href={`/order/${meal.slug}`}>
                     <ShoppingCart className="w-4 h-4 mr-2" />
                     Order Now
                   </a>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="py-6 px-6 rounded-full border-gray-300"
-                >
-                  <Info className="w-4 h-4 mr-2" />
-                  Nutrition
                 </Button>
               </div>
             </div>

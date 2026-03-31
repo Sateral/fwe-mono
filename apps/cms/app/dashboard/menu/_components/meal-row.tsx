@@ -54,8 +54,8 @@ export function MealRow({ meal }: MealRowProps) {
         <TableCell>{meal.slug}</TableCell>
         <TableCell>${Number(meal.price).toFixed(2)}</TableCell>
         <TableCell>
-          <Badge variant={meal.isActive ? "default" : "secondary"}>
-            {meal.isActive ? "Active" : "Draft"}
+          <Badge variant={meal.isFeatured ? "default" : "secondary"}>
+            {meal.isFeatured ? "Featured" : "Standard"}
           </Badge>
         </TableCell>
         <TableCell className="text-right">

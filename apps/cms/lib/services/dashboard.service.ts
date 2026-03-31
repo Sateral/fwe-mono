@@ -3,7 +3,7 @@ import { toPlainObject } from "@/lib/utils";
 
 export const dashboardService = {
   async getMetrics() {
-    const [totalRevenueAgg, activeMealsCount, totalOrdersCount, recentOrders] =
+    const [totalRevenueAgg, totalMealsCount, totalOrdersCount, recentOrders] =
       await Promise.all([
         prisma.order.aggregate({
           _sum: {
@@ -13,11 +13,7 @@ export const dashboardService = {
             paymentStatus: "PAID",
           },
         }),
-        prisma.meal.count({
-          where: {
-            isActive: true,
-          },
-        }),
+        prisma.meal.count(),
         prisma.order.count(),
         prisma.order.findMany({
           take: 5,
@@ -34,7 +30,7 @@ export const dashboardService = {
 
     return toPlainObject({
       totalRevenue: Number(totalRevenue),
-      activeMealsCount,
+      totalMealsCount,
       totalOrdersCount,
       recentOrders,
     });

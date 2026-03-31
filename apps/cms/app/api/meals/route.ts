@@ -16,7 +16,6 @@ import { mealService } from "@/lib/services/meal.service";
  * Query params:
  * - featured=true: Only featured meals
  * - tag=TagName: Filter by dietary tag
- * - includeInactive=true: Include inactive meals for admin/internal tools
  */
 export async function GET(request: Request) {
   const authError = requireInternalAuth(request);
@@ -26,7 +25,6 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const featured = searchParams.get("featured");
     const tag = searchParams.get("tag");
-    const includeInactive = searchParams.get("includeInactive") === "true";
 
     let meals;
 
@@ -37,10 +35,8 @@ export async function GET(request: Request) {
       console.log(`[API] GET /api/meals?tag=${tag}`);
       meals = await mealService.getMealsByTag(tag);
     } else {
-      console.log(
-        `[API] GET /api/meals (${includeInactive ? "including inactive" : "active only"})`,
-      );
-      meals = await mealService.getMeals({ includeInactive });
+      console.log("[API] GET /api/meals (full catalog)");
+      meals = await mealService.getMeals();
     }
 
     return NextResponse.json(serializeMeals(meals));

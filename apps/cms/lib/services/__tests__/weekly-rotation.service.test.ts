@@ -75,11 +75,7 @@ describe("weekly-rotation.service", () => {
       weekStart: new Date("2026-01-15T05:00:00.000Z"),
       weekEnd: new Date("2026-01-22T04:59:59.999Z"),
       orderCutoff: new Date("2026-01-15T19:59:59.999Z"),
-      meals: [
-        { id: "period-1", isActive: true },
-        { id: "period-2", isActive: true },
-        { id: "period-3", isActive: true },
-      ],
+      meals: [{ id: "period-1" }, { id: "period-2" }, { id: "period-3" }],
       rotationPeriod: null,
     });
 
@@ -89,18 +85,15 @@ describe("weekly-rotation.service", () => {
   });
 
   it("lists active menu meals without meal type filtering", async () => {
-    prismaMock.meal.findMany.mockResolvedValue([
-      { id: "meal-1", isActive: true },
-    ]);
+    prismaMock.meal.findMany.mockResolvedValue([{ id: "meal-1" }]);
 
     const meals = await weeklyRotationService.getMenuMeals();
 
     expect(prismaMock.meal.findMany).toHaveBeenCalledWith({
-      where: { isActive: true },
       include: { tags: true },
       orderBy: { updatedAt: "desc" },
     });
-    expect(meals).toEqual([{ id: "meal-1", isActive: true }]);
+    expect(meals).toEqual([{ id: "meal-1" }]);
   });
 
   it("falls back to calendar-current rotation when orderable week has no row", async () => {
@@ -122,7 +115,7 @@ describe("weekly-rotation.service", () => {
             weekStart: currentFulfillment,
             weekEnd: new Date("2026-04-02T03:59:59.999Z"),
             orderCutoff: new Date("2026-03-26T19:59:59.999Z"),
-            meals: [{ id: "m1", isActive: true, name: "Bowl" }],
+            meals: [{ id: "m1", name: "Bowl" }],
             rotationPeriod: null,
           });
         }
@@ -162,7 +155,7 @@ describe("weekly-rotation.service", () => {
             weekStart: older,
             weekEnd: new Date("2026-03-26T03:59:59.999Z"),
             orderCutoff: new Date("2026-03-19T19:59:59.999Z"),
-            meals: [{ id: "m1", isActive: true, name: "Bowl" }],
+            meals: [{ id: "m1", name: "Bowl" }],
             rotationPeriod: null,
           });
         }

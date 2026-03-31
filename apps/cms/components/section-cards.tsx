@@ -17,13 +17,13 @@ import {
 
 interface SectionCardsProps {
   totalRevenue: number;
-  activeMealsCount: number;
+  totalMealsCount: number;
   totalOrdersCount: number;
 }
 
 export function SectionCards({
   totalRevenue,
-  activeMealsCount,
+  totalMealsCount,
   totalOrdersCount,
 }: SectionCardsProps) {
   return (
@@ -52,9 +52,9 @@ export function SectionCards({
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Active Meals</CardDescription>
+          <CardDescription>Meals in catalog</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {activeMealsCount}
+            {totalMealsCount}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -65,9 +65,11 @@ export function SectionCards({
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Currently available on menu
+            Total meal records
           </div>
-          <div className="text-muted-foreground">Manage in Menu section</div>
+          <div className="text-muted-foreground">
+            Shown on the menu via weekly rotation
+          </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">

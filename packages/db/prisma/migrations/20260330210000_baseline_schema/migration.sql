@@ -58,9 +58,9 @@ CREATE TABLE "Meal" (
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "description" TEXT,
+    "ingredients" TEXT,
     "imageUrl" TEXT,
     "isFeatured" BOOLEAN NOT NULL DEFAULT false,
-    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "price" DECIMAL(10,2) NOT NULL DEFAULT 0,
     "calories" INTEGER NOT NULL DEFAULT 0,
     "protein" INTEGER NOT NULL DEFAULT 0,
@@ -643,13 +643,7 @@ CREATE TABLE "_DietaryTagToMeal" (
 CREATE UNIQUE INDEX "Meal_slug_key" ON "Meal"("slug");
 
 -- CreateIndex
-CREATE INDEX "Meal_isActive_idx" ON "Meal"("isActive");
-
--- CreateIndex
 CREATE INDEX "Meal_isFeatured_idx" ON "Meal"("isFeatured");
-
--- CreateIndex
-CREATE INDEX "Meal_isActive_isFeatured_idx" ON "Meal"("isActive", "isFeatured");
 
 -- CreateIndex
 CREATE INDEX "SubstitutionGroup_mealId_idx" ON "SubstitutionGroup"("mealId");
