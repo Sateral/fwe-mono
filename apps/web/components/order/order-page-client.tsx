@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ApiCart } from "@fwe/types";
 import type { CreateCartInput } from "@fwe/validators";
 
@@ -82,7 +82,7 @@ const OrderPageClient = ({
   const setCartNavCount = useSetCartNavCount();
   const isAuthenticated = Boolean(initialCustomer?.email);
   const [quantity, setQuantity] = useState(
-    () => initialEditBuilder?.quantity ?? 4,
+    () => initialEditBuilder?.quantity ?? 1,
   );
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [selectedModifiers, setSelectedModifiers] = useState<
@@ -111,6 +111,57 @@ const OrderPageClient = ({
       initialEditBuilder?.selectedSubstitutions ??
       defaultSubstitutionsFromMeal(meal),
   );
+
+  // Calculate total price for sticky indicator
+  const totalPrice = useMemo(() => {
+    const basePrice = meal.price;
+
+    const substitutionAdjustment = Object.entries(selectedSubstitutions).reduce(
+      (total, [groupId, optionId]) => {
+        const group = meal.substitutionGroups.find((g) => g.id === groupId);
+        if (!group) return total;
+        const option = group.options.find((o) => o.id === optionId);
+        return total + (option?.priceAdjustment || 0);
+      },
+      0,
+    );
+
+    const addOnsTotal = Object.entries(selectedModifiers).reduce(
+      (total, [groupId, optionIds]) => {
+        const group = meal.modifierGroups.find((g) => g.id === groupId);
+        if (!group) return total;
+        return (
+          total +
+          optionIds.reduce((optionTotal, optionId) => {
+            const option = group.options.find((o) => o.id === optionId);
+            return optionTotal + (option?.extraPrice || 0);
+          }, 0)
+        );
+      },
+      0,
+    );
+
+    const pricePerMeal = basePrice + substitutionAdjustment + addOnsTotal;
+    return pricePerMeal * quantity;
+  }, [meal, selectedSubstitutions, selectedModifiers, quantity]);
+
+  // Track if order summary total is in view
+  const [totalElement, setTotalElement] = useState<HTMLDivElement | null>(null);
+  const [isTotalInView, setIsTotalInView] = useState(true);
+
+  useEffect(() => {
+    if (!totalElement) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsTotalInView(entry?.isIntersecting ?? true);
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(totalElement);
+    return () => observer.disconnect();
+  }, [totalElement]);
 
   const handleModifierChange = (groupId: string, optionIds: string[]) => {
     setSelectedModifiers((prev) => ({
@@ -251,6 +302,23 @@ const OrderPageClient = ({
 
   return (
     <div className="bg-background min-h-screen pt-24 pb-12">
+      {/* Sticky total price indicator */}
+      <div
+        className={`fixed top-20 right-4 z-50 bg-white border border-gray-200 rounded-xl shadow-lg px-4 py-3 transition-all duration-300 ${
+          isTotalInView
+            ? "opacity-0 translate-x-4 pointer-events-none"
+            : "opacity-100 translate-x-0"
+        }`}
+      >
+        <p className="text-xs text-gray-500">Total</p>
+        <p className="text-lg font-bold text-gray-900">
+          ${totalPrice.toFixed(2)}
+        </p>
+        <p className="text-xs text-gray-400">
+          {quantity} meal{quantity !== 1 ? "s" : ""}
+        </p>
+      </div>
+
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Meal Details */}
@@ -350,6 +418,7 @@ const OrderPageClient = ({
             ) : null}
 
             <OrderSummary
+              ref={setTotalElement}
               meal={meal}
               quantity={quantity}
               selectedModifiers={selectedModifiers}
@@ -358,14 +427,10 @@ const OrderPageClient = ({
               pickupLocation={pickupLocation}
               onCheckout={handleAddToCart}
               onSaveForLater={() =>
-                editCartItemId
-                  ? router.push("/cart")
-                  : router.push("/menu")
+                editCartItemId ? router.push("/cart") : router.push("/menu")
               }
               isCheckingOut={isAddingToCart}
-              checkoutLabel={
-                editCartItemId ? "Save to cart" : "Add to cart"
-              }
+              checkoutLabel={editCartItemId ? "Save to cart" : "Add to cart"}
               primaryActionIcon="cart"
             />
           </div>

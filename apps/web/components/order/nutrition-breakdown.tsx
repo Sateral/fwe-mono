@@ -209,21 +209,13 @@ const NutritionBreakdown = ({
             </RadialBarChart>
           </ChartContainer>
 
-          {/* Info Cards */}
+          {/* Info Card */}
           <div className="flex flex-col gap-3 flex-1">
             <div className="bg-gray-100 border rounded-lg p-3">
               <p className="text-gray-400 text-xs mb-0.5">Price</p>
               <p className="text-black font-medium text-lg">
                 ${meal.price.toFixed(2)}
               </p>
-            </div>
-            <div className="bg-gray-100 border rounded-lg p-3">
-              <p className="text-gray-400 text-xs mb-0.5">Allergens</p>
-              <p className="text-black font-medium">None</p>
-            </div>
-            <div className="bg-gray-100 border rounded-lg p-3">
-              <p className="text-gray-400 text-xs mb-0.5">Shelf life</p>
-              <p className="text-black font-medium">4-5 days refrigerated</p>
             </div>
           </div>
         </div>

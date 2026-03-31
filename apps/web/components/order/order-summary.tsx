@@ -1,5 +1,6 @@
 "use client";
 
+import { forwardRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Bookmark, CreditCard, Loader2, ShoppingBag } from "lucide-react";
 import type { Meal } from "@/types";
@@ -20,181 +21,187 @@ interface OrderSummaryProps {
   primaryDisabled?: boolean;
 }
 
-const OrderSummary = ({
-  meal,
-  quantity,
-  selectedModifiers,
-  selectedSubstitutions,
-  deliveryMethod,
-  pickupLocation,
-  onCheckout,
-  onSaveForLater,
-  isCheckingOut = false,
-  checkoutLabel = "Place Order",
-  primaryActionIcon = "payment",
-  primaryDisabled = false,
-}: OrderSummaryProps) => {
-  const PrimaryIcon = primaryActionIcon === "cart" ? ShoppingBag : CreditCard;
-  // Calculate base price from meal
-  const basePrice = meal.price;
-
-  // Calculate substitution adjustments
-  const substitutionAdjustment = Object.entries(selectedSubstitutions).reduce(
-    (total, [groupId, optionId]) => {
-      const group = meal.substitutionGroups.find((g) => g.id === groupId);
-      if (!group) return total;
-      const option = group.options.find((o) => o.id === optionId);
-      return total + (option?.priceAdjustment || 0);
+const OrderSummary = forwardRef<HTMLDivElement, OrderSummaryProps>(
+  (
+    {
+      meal,
+      quantity,
+      selectedModifiers,
+      selectedSubstitutions,
+      deliveryMethod,
+      pickupLocation,
+      onCheckout,
+      onSaveForLater,
+      isCheckingOut = false,
+      checkoutLabel = "Place Order",
+      primaryActionIcon = "payment",
+      primaryDisabled = false,
     },
-    0
-  );
+    ref,
+  ) => {
+    const PrimaryIcon = primaryActionIcon === "cart" ? ShoppingBag : CreditCard;
+    // Calculate base price from meal
+    const basePrice = meal.price;
 
-  // Calculate add-ons total per meal (from multi-select modifiers)
-  const addOnsTotal = Object.entries(selectedModifiers).reduce(
-    (total, [groupId, optionIds]) => {
-      const group = meal.modifierGroups.find((g) => g.id === groupId);
-      if (!group) return total;
+    // Calculate substitution adjustments
+    const substitutionAdjustment = Object.entries(selectedSubstitutions).reduce(
+      (total, [groupId, optionId]) => {
+        const group = meal.substitutionGroups.find((g) => g.id === groupId);
+        if (!group) return total;
+        const option = group.options.find((o) => o.id === optionId);
+        return total + (option?.priceAdjustment || 0);
+      },
+      0,
+    );
 
-      return (
-        total +
-        optionIds.reduce((optionTotal, optionId) => {
-          const option = group.options.find((o) => o.id === optionId);
-          return optionTotal + (option?.extraPrice || 0);
-        }, 0)
-      );
-    },
-    0
-  );
+    // Calculate add-ons total per meal (from multi-select modifiers)
+    const addOnsTotal = Object.entries(selectedModifiers).reduce(
+      (total, [groupId, optionIds]) => {
+        const group = meal.modifierGroups.find((g) => g.id === groupId);
+        if (!group) return total;
 
-  const pricePerMeal =
-    basePrice + substitutionAdjustment + addOnsTotal;
-  const totalPrice = pricePerMeal * quantity;
+        return (
+          total +
+          optionIds.reduce((optionTotal, optionId) => {
+            const option = group.options.find((o) => o.id === optionId);
+            return optionTotal + (option?.extraPrice || 0);
+          }, 0)
+        );
+      },
+      0,
+    );
 
-  // Get selected substitutions for display
-  const substitutions = Object.entries(selectedSubstitutions)
-    .map(([groupId, optionId]) => {
-      const group = meal.substitutionGroups.find((g) => g.id === groupId);
-      if (!group) return null;
-      const option = group.options.find((o) => o.id === optionId);
-      return option?.name;
-    })
-    .filter(Boolean);
+    const pricePerMeal = basePrice + substitutionAdjustment + addOnsTotal;
+    const totalPrice = pricePerMeal * quantity;
 
-  // Get selected add-ons for display
-  const addOns = Object.entries(selectedModifiers)
-    .flatMap(([groupId, optionIds]) => {
-      const group = meal.modifierGroups.find((g) => g.id === groupId);
-      if (!group || group.type !== "MULTI_SELECT") return [];
-      return optionIds
-        .map((optionId) => {
-          const option = group.options.find((o) => o.id === optionId);
-          return option?.name;
-        })
-        .filter(Boolean);
-    })
-    .filter(Boolean);
+    // Get selected substitutions for display
+    const substitutions = Object.entries(selectedSubstitutions)
+      .map(([groupId, optionId]) => {
+        const group = meal.substitutionGroups.find((g) => g.id === groupId);
+        if (!group) return null;
+        const option = group.options.find((o) => o.id === optionId);
+        return option?.name;
+      })
+      .filter(Boolean);
 
-  return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-gray-900">Order summary</h3>
-        <div className="text-right">
-          <p className="text-xs text-gray-500">Per meal</p>
-          <p className="text-lg font-bold text-gray-900">
-            ${pricePerMeal.toFixed(2)}
-          </p>
-        </div>
-      </div>
+    // Get selected add-ons for display
+    const addOns = Object.entries(selectedModifiers)
+      .flatMap(([groupId, optionIds]) => {
+        const group = meal.modifierGroups.find((g) => g.id === groupId);
+        if (!group || group.type !== "MULTI_SELECT") return [];
+        return optionIds
+          .map((optionId) => {
+            const option = group.options.find((o) => o.id === optionId);
+            return option?.name;
+          })
+          .filter(Boolean);
+      })
+      .filter(Boolean);
 
-      <p className="text-xs text-gray-500 mb-4">
-        Taxes and <span className="text-primary font-medium">delivery</span>{" "}
-        are finalized at checkout. Delivery or pickup is chosen on your cart.
-      </p>
-
-      {/* Summary Details */}
-      <div className="space-y-3 py-4 border-t border-gray-100">
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Meals</span>
-          <span className="font-medium text-gray-900">{quantity}</span>
-        </div>
-
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Delivery</span>
-          <span className="font-medium text-gray-900 text-right max-w-[60%]">
-            {deliveryMethod === "PICKUP"
-              ? `Pickup at ${pickupLocation || "Xtreme Couture"}`
-              : "Delivery"}
-          </span>
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold text-gray-900">Order summary</h3>
+          <div className="text-right">
+            <p className="text-xs text-gray-500">Per meal</p>
+            <p className="text-lg font-bold text-gray-900">
+              ${pricePerMeal.toFixed(2)}
+            </p>
+          </div>
         </div>
 
-        {substitutions.length > 0 && (
+        <p className="text-xs text-gray-500 mb-4">
+          Taxes and <span className="text-primary font-medium">delivery</span>{" "}
+          are finalized at checkout. Delivery or pickup is chosen on your cart.
+        </p>
+
+        {/* Summary Details */}
+        <div className="space-y-3 py-4 border-t border-gray-100">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Substitutions</span>
+            <span className="text-gray-600">Meals</span>
+            <span className="font-medium text-gray-900">{quantity}</span>
+          </div>
+
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-600">Delivery</span>
             <span className="font-medium text-gray-900 text-right max-w-[60%]">
-              {substitutions.join(", ")}
+              {deliveryMethod === "PICKUP"
+                ? `Pickup at ${pickupLocation || "Xtreme Couture"}`
+                : "Delivery"}
             </span>
           </div>
-        )}
 
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Add-ons</span>
-          <span className="font-medium text-gray-900">
-            {addOns.length > 0 ? addOns.join(", ") : "None"}
-          </span>
-        </div>
-      </div>
+          {substitutions.length > 0 && (
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Substitutions</span>
+              <span className="font-medium text-gray-900 text-right max-w-[60%]">
+                {substitutions.join(", ")}
+              </span>
+            </div>
+          )}
 
-      {/* Total */}
-      <div className="py-4 border-t border-gray-100">
-        <div className="flex justify-between items-end">
-          <span className="text-gray-900 font-medium">Total</span>
-          <div className="text-right">
-            <p className="text-2xl font-bold text-gray-900">
-              ${totalPrice.toFixed(2)}
-            </p>
-            <p className="text-xs text-gray-500">{quantity} meals total</p>
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-600">Add-ons</span>
+            <span className="font-medium text-gray-900">
+              {addOns.length > 0 ? addOns.join(", ") : "None"}
+            </span>
           </div>
         </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="flex gap-3 mt-4">
-        <Button
-          variant="outline"
-          className="flex-1 py-6 rounded-full border-gray-300"
-          onClick={onSaveForLater}
-        >
-          <Bookmark className="w-4 h-4 mr-2" />
-          Save for later
-        </Button>
-        <Button
-          className="flex-1 py-6 rounded-full bg-primary hover:bg-primary/90"
-          onClick={onCheckout}
-          disabled={isCheckingOut || primaryDisabled}
-        >
-          {isCheckingOut ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Processing...
-            </>
-          ) : (
-            <>
-              <PrimaryIcon className="w-4 h-4 mr-2" />
-              {checkoutLabel}
-            </>
-          )}
-        </Button>
-      </div>
+        {/* Total */}
+        <div ref={ref} className="py-4 border-t border-gray-100">
+          <div className="flex justify-between items-end">
+            <span className="text-gray-900 font-medium">Total</span>
+            <div className="text-right">
+              <p className="text-2xl font-bold text-gray-900">
+                ${totalPrice.toFixed(2)}
+              </p>
+              <p className="text-xs text-gray-500">{quantity} meals total</p>
+            </div>
+          </div>
+        </div>
 
-      {/* Legal Text */}
-      <p className="text-xs text-gray-400 text-center mt-4">
-        By continuing, you agree to our{" "}
-        <span className="text-gray-600 underline">Terms</span> and acknowledge
-        our <span className="text-gray-600 underline">Privacy Policy</span>.
-      </p>
-    </div>
-  );
-};
+        {/* Action Buttons */}
+        <div className="flex gap-3 mt-4">
+          <Button
+            variant="outline"
+            className="flex-1 py-6 rounded-full border-gray-300"
+            onClick={onSaveForLater}
+          >
+            <Bookmark className="w-4 h-4 mr-2" />
+            Save for later
+          </Button>
+          <Button
+            className="flex-1 py-6 rounded-full bg-primary hover:bg-primary/90"
+            onClick={onCheckout}
+            disabled={isCheckingOut || primaryDisabled}
+          >
+            {isCheckingOut ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              <>
+                <PrimaryIcon className="w-4 h-4 mr-2" />
+                {checkoutLabel}
+              </>
+            )}
+          </Button>
+        </div>
+
+        {/* Legal Text */}
+        <p className="text-xs text-gray-400 text-center mt-4">
+          By continuing, you agree to our{" "}
+          <span className="text-gray-600 underline">Terms</span> and acknowledge
+          our <span className="text-gray-600 underline">Privacy Policy</span>.
+        </p>
+      </div>
+    );
+  },
+);
+
+OrderSummary.displayName = "OrderSummary";
 
 export default OrderSummary;
