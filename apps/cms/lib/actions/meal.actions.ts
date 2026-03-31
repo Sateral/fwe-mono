@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
+import { deleteMealImage } from "@/lib/actions/meal-image.actions";
 import { mealService } from "@/lib/services/meal.service";
 import { toPlainObject } from "@/lib/utils";
 
@@ -25,7 +26,7 @@ async function requireAdmin() {
 // ============ MEALS ============
 
 export async function getMeals() {
-  return toPlainObject(await mealService.getMeals({ includeInactive: true }));
+  return toPlainObject(await mealService.getMeals());
 }
 
 export async function getMeal(id: string) {
@@ -87,6 +88,18 @@ export async function deleteMeal(id: string) {
   }
 
   try {
+    // Get meal to check for image
+    const meal = await mealService.getMealById(id);
+
+    // Delete image from UploadThing if exists
+    if (meal?.imageUrl) {
+      const deleteResult = await deleteMealImage(meal.imageUrl);
+      if (!deleteResult.success) {
+        console.warn("Failed to delete meal image:", deleteResult.error);
+        // Continue with meal deletion even if image deletion fails
+      }
+    }
+
     await mealService.deleteMeal(id);
     revalidatePath("/dashboard/menu");
     return { success: true };

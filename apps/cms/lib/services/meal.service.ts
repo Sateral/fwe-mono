@@ -5,9 +5,8 @@ import prisma from "@/lib/prisma";
 
 export const mealService = {
   // MEALS
-  async getMeals(options?: { includeInactive?: boolean }) {
+  async getMeals() {
     return await prisma.meal.findMany({
-      where: options?.includeInactive ? undefined : { isActive: true },
       include: {
         substitutionGroups: {
           include: {
@@ -75,7 +74,7 @@ export const mealService = {
    */
   async getFeaturedMeals() {
     return await prisma.meal.findMany({
-      where: { isFeatured: true, isActive: true },
+      where: { isFeatured: true },
       include: {
         substitutionGroups: {
           include: {
@@ -102,7 +101,6 @@ export const mealService = {
   async getMealsByTag(tagName: string) {
     return await prisma.meal.findMany({
       where: {
-        isActive: true,
         tags: {
           some: { name: tagName },
         },

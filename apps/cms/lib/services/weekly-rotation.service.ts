@@ -123,11 +123,11 @@ function withEffectiveMeals<T extends RotationWithEffectiveMeals>(
   const periodMeals = rotation.rotationPeriod?.meals;
   const directMeals = rotation.meals;
   const effectiveMeals = rotation.rotationPeriod
-    ? (Array.isArray(periodMeals) && periodMeals.length > 0
-        ? periodMeals
-        : Array.isArray(directMeals)
-          ? directMeals
-          : [])
+    ? Array.isArray(periodMeals) && periodMeals.length > 0
+      ? periodMeals
+      : Array.isArray(directMeals)
+        ? directMeals
+        : []
     : Array.isArray(directMeals)
       ? directMeals
       : [];
@@ -541,7 +541,7 @@ export const weeklyRotationService = {
    * Public-API endpoint for the storefront menu page.
    *
    * Wraps `getOrderableRotation`, then:
-   * - Filters to active meals only.
+   * - Uses rotation-linked meals only (visibility is rotation-based).
    * - Adds the `isOrderingOpen` flag.
    * - Adds display strings for the current / delivery week.
    * - Falls back to computed dates if no rotation row exists yet.
@@ -560,16 +560,13 @@ export const weeklyRotationService = {
     const { rotation, deliveryWeekStart, deliveryWeekDisplay, orderCutoff } =
       orderableData;
 
-    const isMenuMeal = (meal: { isActive?: boolean | null }) =>
-      meal.isActive !== false;
-
     type MenuMealRow = Awaited<
       ReturnType<
         typeof prisma.meal.findMany<{ include: typeof detailedMealInclude }>
       >
     >[number];
 
-    let meals: MenuMealRow[] = (rotation?.meals || []).filter(isMenuMeal);
+    let meals: MenuMealRow[] = rotation?.meals || [];
 
     if (meals.length === 0 && rotation?.rotationPeriodId) {
       meals = await prisma.meal.findMany({
@@ -579,7 +576,6 @@ export const weeklyRotationService = {
         include: detailedMealInclude,
         orderBy: { name: "asc" },
       });
-      meals = meals.filter(isMenuMeal);
     }
 
     if (meals.length === 0 && rotation?.rotationPeriodId) {
@@ -590,7 +586,7 @@ export const weeklyRotationService = {
       const byId = new Map<string, MenuMealRow>();
       for (const wr of siblings) {
         for (const m of wr.meals) {
-          if (isMenuMeal(m)) byId.set(m.id, m);
+          byId.set(m.id, m);
         }
       }
       meals = [...byId.values()].sort((a, b) => a.name.localeCompare(b.name));
@@ -607,7 +603,7 @@ export const weeklyRotationService = {
         },
       });
       if (periodForKey?.meals?.length) {
-        meals = periodForKey.meals.filter(isMenuMeal);
+        meals = periodForKey.meals;
         if (periodForKey.id !== rotation.rotationPeriodId) {
           console.warn(
             `[RotationService] WeeklyRotation ${rotation.id} had rotationPeriodId=${rotation.rotationPeriodId} (0 menu meals) but period key=${periodKey} (${periodForKey.id}) has ${meals.length} meals. Re-linking to canonical period.`,
@@ -620,8 +616,7 @@ export const weeklyRotationService = {
       }
     }
 
-    const resolvedDeliveryWeekStart =
-      deliveryWeekStart || fallbackTargetCycle;
+    const resolvedDeliveryWeekStart = deliveryWeekStart || fallbackTargetCycle;
     const resolvedDeliveryWeekDisplay =
       deliveryWeekDisplay ||
       buildFulfillmentCycleDisplay(fallbackTargetCycle, fallbackEnd);
@@ -685,19 +680,17 @@ export const weeklyRotationService = {
     };
   },
 
-  /** All active meals (for admin meal picker, sorted by last updated). */
+  /** All catalog meals (for admin meal picker, sorted by last updated). */
   async getMenuMeals() {
     return await prisma.meal.findMany({
-      where: { isActive: true },
       include: { tags: true },
       orderBy: { updatedAt: "desc" },
     });
   },
 
-  /** All active meals (for rotation period editor, sorted alphabetically). */
+  /** All catalog meals (for rotation period editor, sorted alphabetically). */
   async getRotatingMeals() {
     return await prisma.meal.findMany({
-      where: { isActive: true },
       include: { tags: true },
       orderBy: { name: "asc" },
     });

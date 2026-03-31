@@ -55,6 +55,7 @@ monorepo. The CMS is the source of truth for data and authentication.
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
 - `CRON_SECRET`
+- `UPLOADTHING_TOKEN` (get from https://uploadthing.com/dashboard)
 - `FAILED_ORDER_ALERT_WEBHOOK_URL` (optional; Slack/custom JSON webhook when order creation fails after payment)
 
 **Web**
@@ -67,9 +68,16 @@ monorepo. The CMS is the source of truth for data and authentication.
 
 ## Prisma (packages/db)
 
-- Schema and migrations live in `packages/db/prisma`.
+- Schema and **versioned migrations** live in `packages/db/prisma`.
 - Prisma Client is generated to `packages/db/src/generated/prisma`.
 - The shared Prisma client is exported from `@fwe/db`.
+
+**Workflow**
+
+- **Apply pending migrations** (local, CI, production): `bun run db:migrate` or `bun run db:migrate:deploy` (both run `prisma migrate deploy`; no shadow DB). `packages/db` sets `PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK=1` on those commands to avoid Neon advisory-lock timeouts.
+- On Neon, set `DIRECT_URL` to a **non-pooler** URL in `.env`; `prisma.config.ts` uses it for the CLI when present (pooler URLs can break migrate or hit “persistence not initialized”).
+- **Create a new migration** after editing `schema.prisma`: from `packages/db`, run `bun run migrate:dev` (`prisma migrate dev`; needs a Postgres that allows Prisma’s shadow DB, e.g. local Docker).
+- **Optional:** `bun run db:push` only for throwaway local experiments. Do not use `db push` against production.
 
 Common commands (from repo root):
 
@@ -77,12 +85,15 @@ Common commands (from repo root):
 bun run db:generate
 bun run db:migrate
 bun run db:migrate:deploy
-bun run db:studio
 bun run db:seed
- bun run db:up
- bun run db:down
- bun run db:logs
+bun run db:studio
+bun run db:reset
+bun run db:up
+bun run db:down
+bun run db:logs
 ```
+
+If a database already matches the schema but has no (or stale) `_prisma_migrations` rows, use Prisma’s [baselining](https://www.prisma.io/docs/guides/migrate/developing-with-prisma-migrate/baselining) flow (e.g. `migrate resolve`) rather than re-applying SQL.
 
 ---
 
@@ -131,3 +142,4 @@ bun run dev --filter=cms
 - Run `bun run check-types` after structural changes.
 - Do not introduce non-ASCII characters unless already used in a file.
 - Always use the brainstorm skill
+- NEVER write raw SQL and do migrations outside of prisma. Only ever use prisma and prisma schema to modify the DB.

@@ -43,9 +43,13 @@ export const mealSchema = z.object({
     .nullable()
     .optional()
     .transform((v) => v ?? ""),
+  ingredients: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? ""),
   imageUrl: z.string().nullable().optional(),
   isFeatured: z.boolean().default(false),
-  isActive: z.boolean().default(true),
   // Direct meal pricing & macros
   price: z.coerce.number().min(0, "Price must be positive"),
   calories: z.coerce.number().min(0),

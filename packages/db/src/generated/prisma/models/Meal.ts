@@ -49,9 +49,9 @@ export type MealMinAggregateOutputType = {
   name: string | null
   slug: string | null
   description: string | null
+  ingredients: string | null
   imageUrl: string | null
   isFeatured: boolean | null
-  isActive: boolean | null
   price: runtime.Decimal | null
   calories: number | null
   protein: number | null
@@ -67,9 +67,9 @@ export type MealMaxAggregateOutputType = {
   name: string | null
   slug: string | null
   description: string | null
+  ingredients: string | null
   imageUrl: string | null
   isFeatured: boolean | null
-  isActive: boolean | null
   price: runtime.Decimal | null
   calories: number | null
   protein: number | null
@@ -85,9 +85,9 @@ export type MealCountAggregateOutputType = {
   name: number
   slug: number
   description: number
+  ingredients: number
   imageUrl: number
   isFeatured: number
-  isActive: number
   price: number
   calories: number
   protein: number
@@ -123,9 +123,9 @@ export type MealMinAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  ingredients?: true
   imageUrl?: true
   isFeatured?: true
-  isActive?: true
   price?: true
   calories?: true
   protein?: true
@@ -141,9 +141,9 @@ export type MealMaxAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  ingredients?: true
   imageUrl?: true
   isFeatured?: true
-  isActive?: true
   price?: true
   calories?: true
   protein?: true
@@ -159,9 +159,9 @@ export type MealCountAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  ingredients?: true
   imageUrl?: true
   isFeatured?: true
-  isActive?: true
   price?: true
   calories?: true
   protein?: true
@@ -264,9 +264,9 @@ export type MealGroupByOutputType = {
   name: string
   slug: string
   description: string | null
+  ingredients: string | null
   imageUrl: string | null
   isFeatured: boolean
-  isActive: boolean
   price: runtime.Decimal
   calories: number
   protein: number
@@ -305,9 +305,9 @@ export type MealWhereInput = {
   name?: Prisma.StringFilter<"Meal"> | string
   slug?: Prisma.StringFilter<"Meal"> | string
   description?: Prisma.StringNullableFilter<"Meal"> | string | null
+  ingredients?: Prisma.StringNullableFilter<"Meal"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Meal"> | string | null
   isFeatured?: Prisma.BoolFilter<"Meal"> | boolean
-  isActive?: Prisma.BoolFilter<"Meal"> | boolean
   price?: Prisma.DecimalFilter<"Meal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFilter<"Meal"> | number
   protein?: Prisma.IntFilter<"Meal"> | number
@@ -332,9 +332,9 @@ export type MealOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  ingredients?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   price?: Prisma.SortOrder
   calories?: Prisma.SortOrder
   protein?: Prisma.SortOrder
@@ -362,9 +362,9 @@ export type MealWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MealWhereInput | Prisma.MealWhereInput[]
   name?: Prisma.StringFilter<"Meal"> | string
   description?: Prisma.StringNullableFilter<"Meal"> | string | null
+  ingredients?: Prisma.StringNullableFilter<"Meal"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Meal"> | string | null
   isFeatured?: Prisma.BoolFilter<"Meal"> | boolean
-  isActive?: Prisma.BoolFilter<"Meal"> | boolean
   price?: Prisma.DecimalFilter<"Meal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFilter<"Meal"> | number
   protein?: Prisma.IntFilter<"Meal"> | number
@@ -389,9 +389,9 @@ export type MealOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  ingredients?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   price?: Prisma.SortOrder
   calories?: Prisma.SortOrder
   protein?: Prisma.SortOrder
@@ -415,9 +415,9 @@ export type MealScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Meal"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Meal"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Meal"> | string | null
+  ingredients?: Prisma.StringNullableWithAggregatesFilter<"Meal"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Meal"> | string | null
   isFeatured?: Prisma.BoolWithAggregatesFilter<"Meal"> | boolean
-  isActive?: Prisma.BoolWithAggregatesFilter<"Meal"> | boolean
   price?: Prisma.DecimalWithAggregatesFilter<"Meal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntWithAggregatesFilter<"Meal"> | number
   protein?: Prisma.IntWithAggregatesFilter<"Meal"> | number
@@ -433,9 +433,9 @@ export type MealCreateInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -460,9 +460,9 @@ export type MealUncheckedCreateInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -487,9 +487,9 @@ export type MealUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -514,9 +514,9 @@ export type MealUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -541,9 +541,9 @@ export type MealCreateManyInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -559,9 +559,9 @@ export type MealUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -577,9 +577,9 @@ export type MealUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -595,9 +595,9 @@ export type MealCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  ingredients?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   price?: Prisma.SortOrder
   calories?: Prisma.SortOrder
   protein?: Prisma.SortOrder
@@ -622,9 +622,9 @@ export type MealMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  ingredients?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   price?: Prisma.SortOrder
   calories?: Prisma.SortOrder
   protein?: Prisma.SortOrder
@@ -640,9 +640,9 @@ export type MealMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  ingredients?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   price?: Prisma.SortOrder
   calories?: Prisma.SortOrder
   protein?: Prisma.SortOrder
@@ -912,9 +912,9 @@ export type MealCreateWithoutSubstitutionGroupsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -938,9 +938,9 @@ export type MealUncheckedCreateWithoutSubstitutionGroupsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -980,9 +980,9 @@ export type MealUpdateWithoutSubstitutionGroupsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1006,9 +1006,9 @@ export type MealUncheckedUpdateWithoutSubstitutionGroupsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1032,9 +1032,9 @@ export type MealCreateWithoutModifierGroupsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1058,9 +1058,9 @@ export type MealUncheckedCreateWithoutModifierGroupsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1100,9 +1100,9 @@ export type MealUpdateWithoutModifierGroupsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1126,9 +1126,9 @@ export type MealUncheckedUpdateWithoutModifierGroupsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1152,9 +1152,9 @@ export type MealCreateWithoutTagsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1178,9 +1178,9 @@ export type MealUncheckedCreateWithoutTagsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1228,9 +1228,9 @@ export type MealScalarWhereInput = {
   name?: Prisma.StringFilter<"Meal"> | string
   slug?: Prisma.StringFilter<"Meal"> | string
   description?: Prisma.StringNullableFilter<"Meal"> | string | null
+  ingredients?: Prisma.StringNullableFilter<"Meal"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Meal"> | string | null
   isFeatured?: Prisma.BoolFilter<"Meal"> | boolean
-  isActive?: Prisma.BoolFilter<"Meal"> | boolean
   price?: Prisma.DecimalFilter<"Meal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFilter<"Meal"> | number
   protein?: Prisma.IntFilter<"Meal"> | number
@@ -1246,9 +1246,9 @@ export type MealCreateWithoutOrdersInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1272,9 +1272,9 @@ export type MealUncheckedCreateWithoutOrdersInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1314,9 +1314,9 @@ export type MealUpdateWithoutOrdersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1340,9 +1340,9 @@ export type MealUncheckedUpdateWithoutOrdersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1366,9 +1366,9 @@ export type MealCreateWithoutRotationPeriodsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1392,9 +1392,9 @@ export type MealUncheckedCreateWithoutRotationPeriodsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1439,9 +1439,9 @@ export type MealCreateWithoutRotationsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1465,9 +1465,9 @@ export type MealUncheckedCreateWithoutRotationsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1512,9 +1512,9 @@ export type MealCreateWithoutCartItemsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1538,9 +1538,9 @@ export type MealUncheckedCreateWithoutCartItemsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1580,9 +1580,9 @@ export type MealUpdateWithoutCartItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1606,9 +1606,9 @@ export type MealUncheckedUpdateWithoutCartItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1632,9 +1632,9 @@ export type MealCreateWithoutOrderIntentsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1658,9 +1658,9 @@ export type MealUncheckedCreateWithoutOrderIntentsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1700,9 +1700,9 @@ export type MealUpdateWithoutOrderIntentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1726,9 +1726,9 @@ export type MealUncheckedUpdateWithoutOrderIntentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1752,9 +1752,9 @@ export type MealCreateWithoutCheckoutSessionItemsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1778,9 +1778,9 @@ export type MealUncheckedCreateWithoutCheckoutSessionItemsInput = {
   name: string
   slug: string
   description?: string | null
+  ingredients?: string | null
   imageUrl?: string | null
   isFeatured?: boolean
-  isActive?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: number
   protein?: number
@@ -1820,9 +1820,9 @@ export type MealUpdateWithoutCheckoutSessionItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1846,9 +1846,9 @@ export type MealUncheckedUpdateWithoutCheckoutSessionItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1872,9 +1872,9 @@ export type MealUpdateWithoutTagsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1898,9 +1898,9 @@ export type MealUncheckedUpdateWithoutTagsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1924,9 +1924,9 @@ export type MealUncheckedUpdateManyWithoutTagsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1942,9 +1942,9 @@ export type MealUpdateWithoutRotationPeriodsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1968,9 +1968,9 @@ export type MealUncheckedUpdateWithoutRotationPeriodsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1994,9 +1994,9 @@ export type MealUncheckedUpdateManyWithoutRotationPeriodsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2012,9 +2012,9 @@ export type MealUpdateWithoutRotationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2038,9 +2038,9 @@ export type MealUncheckedUpdateWithoutRotationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2064,9 +2064,9 @@ export type MealUncheckedUpdateManyWithoutRotationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ingredients?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   calories?: Prisma.IntFieldUpdateOperationsInput | number
   protein?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2185,9 +2185,9 @@ export type MealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   name?: boolean
   slug?: boolean
   description?: boolean
+  ingredients?: boolean
   imageUrl?: boolean
   isFeatured?: boolean
-  isActive?: boolean
   price?: boolean
   calories?: boolean
   protein?: boolean
@@ -2213,9 +2213,9 @@ export type MealSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   slug?: boolean
   description?: boolean
+  ingredients?: boolean
   imageUrl?: boolean
   isFeatured?: boolean
-  isActive?: boolean
   price?: boolean
   calories?: boolean
   protein?: boolean
@@ -2231,9 +2231,9 @@ export type MealSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   slug?: boolean
   description?: boolean
+  ingredients?: boolean
   imageUrl?: boolean
   isFeatured?: boolean
-  isActive?: boolean
   price?: boolean
   calories?: boolean
   protein?: boolean
@@ -2249,9 +2249,9 @@ export type MealSelectScalar = {
   name?: boolean
   slug?: boolean
   description?: boolean
+  ingredients?: boolean
   imageUrl?: boolean
   isFeatured?: boolean
-  isActive?: boolean
   price?: boolean
   calories?: boolean
   protein?: boolean
@@ -2262,7 +2262,7 @@ export type MealSelectScalar = {
   updatedAt?: boolean
 }
 
-export type MealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "imageUrl" | "isFeatured" | "isActive" | "price" | "calories" | "protein" | "carbs" | "fat" | "fiber" | "createdAt" | "updatedAt", ExtArgs["result"]["meal"]>
+export type MealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "ingredients" | "imageUrl" | "isFeatured" | "price" | "calories" | "protein" | "carbs" | "fat" | "fiber" | "createdAt" | "updatedAt", ExtArgs["result"]["meal"]>
 export type MealInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   substitutionGroups?: boolean | Prisma.Meal$substitutionGroupsArgs<ExtArgs>
   modifierGroups?: boolean | Prisma.Meal$modifierGroupsArgs<ExtArgs>
@@ -2296,9 +2296,9 @@ export type $MealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: string
     slug: string
     description: string | null
+    ingredients: string | null
     imageUrl: string | null
     isFeatured: boolean
-    isActive: boolean
     price: runtime.Decimal
     calories: number
     protein: number
@@ -2743,9 +2743,9 @@ export interface MealFieldRefs {
   readonly name: Prisma.FieldRef<"Meal", 'String'>
   readonly slug: Prisma.FieldRef<"Meal", 'String'>
   readonly description: Prisma.FieldRef<"Meal", 'String'>
+  readonly ingredients: Prisma.FieldRef<"Meal", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Meal", 'String'>
   readonly isFeatured: Prisma.FieldRef<"Meal", 'Boolean'>
-  readonly isActive: Prisma.FieldRef<"Meal", 'Boolean'>
   readonly price: Prisma.FieldRef<"Meal", 'Decimal'>
   readonly calories: Prisma.FieldRef<"Meal", 'Int'>
   readonly protein: Prisma.FieldRef<"Meal", 'Int'>

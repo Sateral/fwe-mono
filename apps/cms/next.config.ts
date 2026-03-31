@@ -4,29 +4,20 @@ import type { NextConfig } from "next";
 dotenv.config({ path: "../../.env" });
 
 const nextConfig: NextConfig = {
-  // Allow cross-origin requests from commerce frontend
-  async headers() {
-    return [
+  // Allow UploadThing images
+  images: {
+    remotePatterns: [
       {
-        // API routes that commerce can access
-        source: "/api/:path*",
-        headers: [
-          {
-            key: "Access-Control-Allow-Origin",
-            value: process.env.WEB_BASE_URL || "http://localhost:3000",
-          },
-          {
-            key: "Access-Control-Allow-Methods",
-            value: "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-          },
-          {
-            key: "Access-Control-Allow-Headers",
-            value: "Content-Type, Authorization",
-          },
-        ],
+        protocol: "https",
+        hostname: "*.ufs.sh",
       },
-    ];
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+      },
+    ],
   },
+  // CORS is handled dynamically in middleware.ts to support multiple trusted origins
 };
 
 export default nextConfig;

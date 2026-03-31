@@ -84,28 +84,28 @@ const MOCK_MENU_ITEMS: MenuItem[] = [
 
 const FeaturedMenu = () => {
   return (
-    <section className="bg-gray-50/50 py-20">
+    <section className="bg-gray-50/50 py-12 sm:py-16 lg:py-20">
       <Container>
-        <div className="flex flex-col items-center text-center space-y-4 mb-12">
+        <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4 mb-8 sm:mb-12">
           <Badge
             variant="secondary"
-            className="px-4 py-1.5 text-sm font-normal rounded-full gap-2 bg-gray-200 hover:bg-gray-200 text-gray-700 border-0"
+            className="px-3 py-1 text-xs sm:text-sm font-normal rounded-full gap-2 bg-gray-200 hover:bg-gray-200 text-gray-700 border-0"
           >
-            <BookOpen className="w-4 h-4" />
+            <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             Meals
           </Badge>
 
           <div className="space-y-2 max-w-2xl">
-            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900">
               Featured Menu Selection
             </h2>
-            <p className="text-lg text-gray-500">
+            <p className="text-base sm:text-lg text-gray-500">
               Discover the most popular and delicious chef-prepared meals
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
           {MOCK_MENU_ITEMS.map((item) => (
             <MenuCard key={item.id} item={item} />
           ))}
@@ -114,9 +114,9 @@ const FeaturedMenu = () => {
         <div className="flex justify-center">
           <Button
             variant="outline"
-            className="rounded-full h-12 text-base group"
+            className="rounded-full h-10 sm:h-12 text-sm sm:text-base group"
           >
-            <div className="flex flex-row items-center justify-center gap-3 px-1">
+            <div className="flex flex-row items-center justify-center gap-2 sm:gap-3 px-1">
               View More
               <ChevronRight className="size-4 transition-transform group-hover:translate-x-1" />
             </div>
@@ -128,37 +128,39 @@ const FeaturedMenu = () => {
 };
 
 const MenuCard = ({ item }: { item: MenuItem }) => (
-  <Card className="overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-300 group bg-white rounded-4xl p-6">
-    <div className="relative h-64 w-full overflow-hidden">
-      <div className="relative h-full w-full rounded-3xl overflow-hidden">
+  <Card className="overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-300 group bg-white rounded-2xl sm:rounded-4xl p-4 sm:p-6">
+    <div className="relative h-48 sm:h-64 w-full overflow-hidden">
+      <div className="relative h-full w-full rounded-xl sm:rounded-3xl overflow-hidden">
         <Image
           src={item.image}
           alt={item.title}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>
     </div>
-    <CardContent className="p-0">
-      <div className="flex justify-between items-start mb-2">
-        <h3 className="text-xl font-bold text-gray-900">{item.title}</h3>
-        <span className="text-lg font-semibold text-gray-900">
+    <CardContent className="p-0 pt-3 sm:pt-0">
+      <div className="flex justify-between items-start mb-1.5 sm:mb-2">
+        <h3 className="text-lg sm:text-xl font-bold text-gray-900">
+          {item.title}
+        </h3>
+        <span className="text-base sm:text-lg font-semibold text-gray-900">
           ${item.price}
         </span>
       </div>
 
-      <p className="text-gray-500 text-sm mb-6 line-clamp-2">
+      <p className="text-gray-500 text-xs sm:text-sm mb-4 sm:mb-6 line-clamp-2">
         {item.description}
       </p>
 
       <div className="flex items-center justify-between mt-auto">
-        <div className="flex gap-2">
+        <div className="flex gap-1.5 sm:gap-2">
           {item.tags.map((tag, index) => (
             <Badge
               key={index}
               variant={tag.variant}
-              className={`px-3 py-1 rounded-full gap-1.5 font-normal ${tag.className}`}
+              className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full gap-1 sm:gap-1.5 font-normal text-xs ${tag.className}`}
             >
               {tag.icon}
               {tag.label}
@@ -168,10 +170,10 @@ const MenuCard = ({ item }: { item: MenuItem }) => (
 
         <Link
           href="#"
-          className="inline-flex items-center text-sm font-semibold text-gray-900 hover:text-gray-700 transition-colors"
+          className="inline-flex items-center text-xs sm:text-sm font-semibold text-gray-900 hover:text-gray-700 transition-colors"
         >
           More
-          <ChevronRight className="w-4 h-4 ml-0.5" />
+          <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-0.5" />
         </Link>
       </div>
     </CardContent>

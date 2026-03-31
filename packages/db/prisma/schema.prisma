@@ -12,9 +12,9 @@ model Meal {
   name        String
   slug        String   @unique
   description String?  @db.Text
+  ingredients String?  @db.Text
   imageUrl    String?
   isFeatured  Boolean  @default(false)
-  isActive    Boolean  @default(true)
 
   // Default pricing & macros
   price    Decimal @default(0) @db.Decimal(10, 2)
@@ -36,10 +36,7 @@ model Meal {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
 
-  // Performance indexes
-  @@index([isActive])                   // Fast active meal filtering
-  @@index([isFeatured])                 // Fast featured meal queries
-  @@index([isActive, isFeatured])       // Compound index for common query
+  @@index([isFeatured])
 }
 
 model SubstitutionGroup {

@@ -31,9 +31,9 @@ export interface ApiMeal {
   name: string;
   slug: string;
   description: string | null;
+  ingredients: string | null;
   imageUrl: string | null;
   isFeatured: boolean;
-  isActive: boolean;
   price: number;
   calories: number;
   protein: number;

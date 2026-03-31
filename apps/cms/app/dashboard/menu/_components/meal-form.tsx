@@ -36,6 +36,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { MealImageUpload } from "@/components/meal-image-upload";
 
 interface MealFormProps {
   initialData?: MealFormInput | null;
@@ -53,8 +54,8 @@ export function MealForm({ initialData, tags, onSubmit }: MealFormProps) {
       name: "",
       slug: "",
       description: "",
+      ingredients: "",
       imageUrl: "",
-      isActive: true,
       isFeatured: false,
       price: 0,
       calories: 0,
@@ -109,11 +110,16 @@ export function MealForm({ initialData, tags, onSubmit }: MealFormProps) {
               {initialData ? "Edit Meal" : "Create Meal"}
             </h1>
             <p className="text-sm text-muted-foreground">
-              Configure meal details, pricing, and customer customization options.
+              Configure meal details, pricing, and customer customization
+              options.
             </p>
           </div>
           <div className="flex gap-2">
-            <Button type="button" variant="outline" onClick={() => router.back()}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+            >
               Cancel
             </Button>
             <Button type="submit">Save Meal</Button>
@@ -180,50 +186,68 @@ export function MealForm({ initialData, tags, onSubmit }: MealFormProps) {
                     </FormItem>
                   )}
                 />
-                <div className="flex gap-4">
-                  <FormField
-                    control={form.control}
-                    name="isActive"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm w-full">
-                        <div className="space-y-0.5">
-                          <FormLabel className="text-base">
-                            Active Status
-                          </FormLabel>
-                          <FormDescription>
-                            Visible on the menu.
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="isFeatured"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm w-full">
-                        <div className="space-y-0.5">
-                          <FormLabel className="text-base">Featured</FormLabel>
-                          <FormDescription>
-                            Highlight this meal.
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="ingredients"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ingredients</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="One per line or comma-separated..."
+                          {...field}
+                          value={field.value ?? ""}
+                          rows={4}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Shown on the storefront meal detail when set. Menu
+                        visibility is controlled by weekly rotation.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="isFeatured"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">Featured</FormLabel>
+                        <FormDescription>
+                          Highlight this meal on the homepage when featured.
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Meal Image</FormLabel>
+                      <FormControl>
+                        <MealImageUpload
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Upload a photo of the meal. Recommended: 16:9 aspect
+                        ratio.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </CardContent>
             </Card>
 

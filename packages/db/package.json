@@ -11,8 +11,9 @@
     "check-types": "tsc --noEmit",
     "generate": "prisma generate",
     "db:push": "prisma db push",
-    "migrate": "prisma migrate dev",
-    "migrate:deploy": "prisma migrate deploy",
+    "migrate": "PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK=1 prisma migrate deploy",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK=1 prisma migrate deploy",
     "studio": "prisma studio",
     "seed": "prisma db seed"
   },
