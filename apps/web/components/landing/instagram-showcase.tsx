@@ -84,14 +84,14 @@ const InstagramShowcase = () => {
   }, [api]);
 
   return (
-    <section className="py-20 overflow-hidden">
+    <section className="py-12 sm:py-16 lg:py-20 overflow-hidden">
       <Container>
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-          <div className="space-y-4">
-            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-12 gap-4 sm:gap-6">
+          <div className="space-y-2 sm:space-y-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900">
               My Showcase
             </h2>
-            <p className="text-lg text-gray-500">
+            <p className="text-base sm:text-lg text-gray-500">
               Follow my journey on Instagram
             </p>
           </div>
@@ -107,11 +107,11 @@ const InstagramShowcase = () => {
             }}
             className="w-full"
           >
-            <CarouselContent className="-ml-4">
+            <CarouselContent className="-ml-3 sm:-ml-4">
               {MOCK_REELS.map((reel) => (
                 <CarouselItem
                   key={reel.id}
-                  className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                  className="pl-3 sm:pl-4 basis-2/3 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
                 >
                   <ReelCard reel={reel} />
                 </CarouselItem>
@@ -121,26 +121,26 @@ const InstagramShowcase = () => {
         </div>
 
         {/* Controls & Tracker */}
-        <div className="flex items-center gap-4 mt-8">
+        <div className="flex items-center gap-3 sm:gap-4 mt-6 sm:mt-8">
           <div className="flex gap-2">
             <Button
               variant="outline"
               size="icon"
-              className="rounded-full w-12 h-12 border-gray-200"
+              className="rounded-full w-10 h-10 sm:w-12 sm:h-12 border-gray-200"
               onClick={() => api?.scrollPrev()}
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
             <Button
               variant="outline"
               size="icon"
-              className="rounded-full w-12 h-12 border-gray-200"
+              className="rounded-full w-10 h-10 sm:w-12 sm:h-12 border-gray-200"
               onClick={() => api?.scrollNext()}
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
           </div>
-          <div className="text-sm font-medium text-gray-500">
+          <div className="text-xs sm:text-sm font-medium text-gray-500">
             Slide {current} of {count}
           </div>
         </div>
@@ -150,33 +150,33 @@ const InstagramShowcase = () => {
 };
 
 const ReelCard = ({ reel }: { reel: Reel }) => (
-  <Card className="w-full aspect-9/16 relative overflow-hidden rounded-4xl border-0 group cursor-pointer">
+  <Card className="w-full aspect-9/16 relative overflow-hidden rounded-2xl sm:rounded-4xl border-0 group cursor-pointer">
     <Image
       src={reel.thumbnail}
       alt="Instagram Reel"
       fill
       className="object-cover transition-transform duration-500 group-hover:scale-105"
-      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      sizes="(max-width: 640px) 66vw, (max-width: 1024px) 50vw, 25vw"
     />
 
     {/* Overlay Gradient */}
     <div className="absolute inset-0 bg-linear-to-b from-black/10 via-transparent to-black/60" />
 
     {/* Content */}
-    <div className="absolute inset-0 p-6 flex flex-col justify-between text-white">
+    <div className="absolute inset-0 p-4 sm:p-6 flex flex-col justify-between text-white">
       <div className="flex justify-between items-end mt-auto">
-        <div className="flex items-center gap-2 text-xs font-medium">
-          <Instagram className="w-4 h-4" />
+        <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-medium">
+          <Instagram className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           <span>@freewilleats</span>
         </div>
 
-        <div className="flex gap-4 text-xs font-medium">
+        <div className="flex gap-3 sm:gap-4 text-[10px] sm:text-xs font-medium">
           <div className="flex items-center gap-1">
-            <Heart className="w-4 h-4" />
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span>{reel.likes}</span>
           </div>
           <div className="flex items-center gap-1">
-            <MessageCircle className="w-4 h-4" />
+            <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span>{reel.comments}</span>
           </div>
         </div>
